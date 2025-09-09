@@ -9,8 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Lock, CheckCircle, ArrowLeft } from "lucide-react"
 import { Logo } from "../common/logo"
+import { LanguageSwitcher } from "../common/language-switcher"
+import { useTranslation } from "@/hooks/useTranslation"
 
 export function ResetPasswordForm() {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -56,24 +59,26 @@ export function ResetPasswordForm() {
         <div className="w-full max-w-md">
           {!isSuccess ? (
             <div className="space-y-6">
-              {/* Mobile logo */}
-              <Logo/>
+              <div className="flex justify-between items-center">
+                <Logo />
+                <LanguageSwitcher />
+              </div>
 
               <div className="text-center lg:text-left">
-                <h2 className="text-3xl font-bold text-slate-900 mb-2">Reset your password</h2>
-                <p className="text-slate-600">Enter your new password below to complete the reset process.</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">{t('auth.resetPassword.title')}</h2>
+                <p className="text-slate-600">{t('auth.resetPassword.subtitle')}</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="password">New password</Label>
+                  <Label htmlFor="password">{t('auth.resetPassword.newPasswordLabel')}</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your new password"
-                      className="pl-10 pr-10"
+                      placeholder={t('auth.resetPassword.newPasswordPlaceholder')}
+                      className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       required
@@ -81,7 +86,7 @@ export function ResetPasswordForm() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 rtl:right-auto rtl:left-3"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -107,14 +112,14 @@ export function ResetPasswordForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm new password</Label>
+                  <Label htmlFor="confirmPassword">{t('auth.resetPassword.confirmPasswordLabel')}</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your new password"
-                      className="pl-10 pr-10"
+                      placeholder={t('auth.resetPassword.confirmPasswordPlaceholder')}
+                      className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                       required
@@ -122,7 +127,7 @@ export function ResetPasswordForm() {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 rtl:right-auto rtl:left-3"
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -133,7 +138,7 @@ export function ResetPasswordForm() {
                 </div>
 
                 <div className="bg-slate-50 rounded-lg p-4">
-                  <h4 className="font-medium text-slate-900 mb-2">Password requirements:</h4>
+                  <h4 className="font-medium text-slate-900 mb-2">Password requirements</h4>
                   <ul className="text-sm text-slate-600 space-y-1">
                     <li className="flex items-center space-x-2">
                       <div
@@ -167,7 +172,7 @@ export function ResetPasswordForm() {
                   className="w-full"
                   disabled={isLoading || formData.password !== formData.confirmPassword || passwordStrength < 3}
                 >
-                  {isLoading ? "Resetting password..." : "Reset password"}
+                  {isLoading ? t('auth.resetPassword.resettingPassword') : t('auth.resetPassword.resetPasswordButton')}
                 </Button>
               </form>
 
@@ -176,8 +181,8 @@ export function ResetPasswordForm() {
                   href="/auth/login"
                   className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to sign in
+                  <ArrowLeft className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2 rtl:rotate-180" />
+                  {t('auth.resetPassword.backToLogin')}
                 </Link>
               </div>
             </div>

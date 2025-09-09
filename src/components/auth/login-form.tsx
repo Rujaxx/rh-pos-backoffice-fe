@@ -3,15 +3,18 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Eye, EyeOff, Mail, Lock, Github } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
 import { Logo } from "../common/logo"
+import { LanguageSwitcher } from "../common/language-switcher"
+import { useTranslation } from "@/hooks/useTranslation"
 
 export function LoginForm() {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -35,24 +38,27 @@ export function LoginForm() {
     <div className="min-h-screen flex">
       <div className="w-full flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
-          <Logo />
+          <div className="flex justify-between items-center mb-6">
+            <Logo />
+            <LanguageSwitcher />
+          </div>
 
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome back</h2>
-            <p className="text-slate-600">Sign in to your account to continue managing your content</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">{t('auth.login.title')}</h2>
+            <p className="text-slate-600">{t('auth.login.subtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">{t('auth.login.emailLabel')}</Label>
               <div className="relative mt-1">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                 <Input
                   id="email"
                   type="email"
                   required
-                  className="pl-10"
-                  placeholder="Enter your email"
+                  className="pl-10 rtl:pl-3 rtl:pr-10"
+                  placeholder={t('auth.login.emailPlaceholder')}
                   value={formData.email}
                   onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                 />
@@ -60,21 +66,21 @@ export function LoginForm() {
             </div>
 
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('auth.login.passwordLabel')}</Label>
               <div className="relative mt-1">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  className="pl-10 pr-10"
-                  placeholder="Enter your password"
+                  className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
+                  placeholder={t('auth.login.passwordPlaceholder')}
                   value={formData.password}
                   onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 rtl:right-auto rtl:left-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -83,29 +89,29 @@ export function LoginForm() {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <Checkbox
                   id="remember"
                   checked={formData.rememberMe}
                   onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, rememberMe: checked as boolean }))}
                 />
                 <Label htmlFor="remember" className="text-sm text-slate-600">
-                  Remember me
+                  {t('auth.login.rememberMe')}
                 </Label>
               </div>
               <Link href="/auth/forgot" className="text-sm text-slate-900 hover:text-slate-700 font-medium">
-                Forgot password?
+                {t('auth.login.forgotPassword')}
               </Link>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? t('auth.login.signingIn') : t('auth.login.signInButton')}
             </Button> 
 
             <div className="text-center">
-              <span className="text-slate-600">Don't have an account? </span>
+              <span className="text-slate-600">{t('auth.login.noAccount')} </span>
               <Link href="/auth/register" className="text-slate-900 hover:text-slate-700 font-medium">
-                Sign up
+                {t('auth.login.signUpLink')}
               </Link>
             </div>
           </form>

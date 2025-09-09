@@ -9,8 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Mail, ArrowLeft, CheckCircle, Clock, Shield } from "lucide-react"
 import { Logo } from "../common/logo"
+import { LanguageSwitcher } from "../common/language-switcher"
+import { useTranslation } from "@/hooks/useTranslation"
 
 export function ForgotForm() {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [email, setEmail] = useState("")
@@ -39,32 +42,28 @@ export function ForgotForm() {
         <div className="w-full max-w-md">
           {!isSuccess ? (
             <div className="space-y-6">
-              {/* Mobile logo */}
-              <Logo />
-              {/* <div className="flex items-center justify-center mb-8">
-                <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-white font-bold text-xl">RH</span>
-                </div>
-                <h1 className="text-2xl font-bold text-slate-900">POS</h1>
-              </div> */}
+              <div className="flex justify-between items-center">
+                <Logo />
+                <LanguageSwitcher />
+              </div>
 
               <div className="text-center lg:text-left">
-                <h2 className="text-3xl font-bold text-slate-900 mb-2">Forgot your password?</h2>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">{t('auth.forgot.title')}</h2>
                 <p className="text-slate-600">
-                  No worries! Enter your email address and we'll send you a link to reset your password.
+                  {t('auth.forgot.subtitle')}
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email address</Label>
+                  <Label htmlFor="email">{t('auth.forgot.emailLabel')}</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter your email address"
-                      className="pl-10"
+                      placeholder={t('auth.forgot.emailPlaceholder')}
+                      className="pl-10 rtl:pl-3 rtl:pr-10"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -73,7 +72,7 @@ export function ForgotForm() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending reset link..." : "Send reset link"}
+                  {isLoading ? t('auth.forgot.sendingLink') : t('auth.forgot.sendResetLink')}
                 </Button>
               </form>
 
@@ -82,8 +81,8 @@ export function ForgotForm() {
                   href="/auth/login"
                   className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to sign in
+                  <ArrowLeft className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2 rtl:rotate-180" />
+                  {t('auth.forgot.backToLogin')}
                 </Link>
               </div>
             </div>
