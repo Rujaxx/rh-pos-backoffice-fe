@@ -12,7 +12,7 @@ type Locale = 'en' | 'ar'
 interface I18nContextType {
   locale: Locale
   setLocale: (locale: Locale) => void
-  messages: Record<string, any>
+  messages: Record<string, string>
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined)

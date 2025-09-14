@@ -38,10 +38,6 @@ export function RegisterForm() {
     window.location.href = "/dashboard"
   }
 
-  const handleSocialRegister = (provider: string) => {
-    console.log(`Register with ${provider}`)
-  }
-
   return (
     <div className="min-h-screen flex">
       <div className="w-full flex items-center justify-center p-8 bg-white">

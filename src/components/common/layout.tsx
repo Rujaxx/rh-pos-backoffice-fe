@@ -4,83 +4,71 @@ import type { ReactNode } from "react"
 import Sidebar from "./sidebar"
 import TopNav from "./top-nav"
 import { useEffect, useState } from "react"
+import { useI18n } from "@/providers/i18n-provider"
+import { SidebarProvider, useSidebar } from "@/providers/sidebar-provider"
 
 interface LayoutProps {
   children: ReactNode
 }
 
-export default function Layout({ children }: LayoutProps) {
+function LayoutContent({ children }: LayoutProps) {
+  const { locale } = useI18n()
+  const { menuState, isHovered, isMobile } = useSidebar()
   const [mounted, setMounted] = useState(false)
-  const [menuState, setMenuState] = useState<"full" | "collapsed" | "hidden">("full")
-  const [isHovered, setIsHovered] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  
+  const isRTL = locale === 'ar'
 
   useEffect(() => {
     setMounted(true)
-  }, [])
-
-  // Listen for menu state changes and hover state
-  useEffect(() => {
-    const checkMenuState = () => {
-      if (typeof window !== "undefined") {
-        if ((window as any).menuState) {
-          setMenuState((window as any).menuState)
-        }
-        if ((window as any).isHovered !== undefined) {
-          setIsHovered((window as any).isHovered)
-        }
-        if ((window as any).isMobile !== undefined) {
-          setIsMobile((window as any).isMobile)
-        }
-      }
-    }
-
-    // Check initial state
-    checkMenuState()
-
-    // Set up interval to check for changes
-    const interval = setInterval(checkMenuState, 50) // More frequent updates for hover
-
-    return () => clearInterval(interval)
   }, [])
 
   if (!mounted) {
     return null
   }
 
-  // Calculate margin based on menu state and hover - only for desktop
-  const getMarginLeft = () => {
+  // Calculate margin based on menu state, hover, and language direction - only for desktop
+  const getSidebarMargin = () => {
     if (isMobile) {
-      return "0" // No margin on mobile, sidebar is overlay
+      return { marginLeft: "0", marginRight: "0" } // No margin on mobile, sidebar is overlay
     }
+    
+    let marginValue = "0"
     if (menuState === "hidden") {
-      return "0"
+      marginValue = "0"
+    } else if (menuState === "collapsed" && isHovered) {
+      marginValue = "16rem" // 256px - full width
+    } else if (menuState === "collapsed") {
+      marginValue = "4rem" // 64px - collapsed width
+    } else {
+      marginValue = "16rem" // 256px - full width
     }
-    // If collapsed and hovered, expand temporarily
-    if (menuState === "collapsed" && isHovered) {
-      return "16rem" // 256px - full width
-    }
-    if (menuState === "collapsed") {
-      return "4rem" // 64px - collapsed width
-    }
-    return "16rem" // 256px - full width
+    
+    // Apply margin to the correct side based on language direction
+    return isRTL 
+      ? { marginLeft: "0", marginRight: marginValue }
+      : { marginLeft: marginValue, marginRight: "0" }
   }
 
   return (
-    <div className={`flex h-screen`}>
+    <div className={`flex h-screen ${isRTL ? 'flex-row-reverse' : ''}`}>
       <Sidebar />
       <div
         className="w-full flex flex-1 flex-col transition-all duration-300 ease-in-out min-w-0"
-        style={{
-          marginLeft: getMarginLeft(),
-        }}
+        style={getSidebarMargin()}
       >
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
           <TopNav />
         </header>
         <main className="flex-1 overflow-auto p-3 sm:p-6 bg-white dark:bg-[#0F0F12] min-w-0">{children}</main>
       </div>
-
     </div>
+  )
+}
+
+export default function Layout({ children }: LayoutProps) {
+  return (
+    <SidebarProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </SidebarProvider>
   )
 }

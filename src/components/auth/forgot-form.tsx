@@ -103,12 +103,12 @@ export function ForgotForm() {
               <div>
                 <h2 className="text-3xl font-bold text-slate-900 mb-2">Check your email</h2>
                 <p className="text-slate-600 mb-4">
-                  We've sent a password reset link to <strong>{email}</strong>
+                  We&apos;ve sent a password reset link to <strong>{email}</strong>
                 </p>
               </div>
 
               <div className="bg-slate-50 rounded-lg p-6 text-left">
-                <h3 className="font-semibold text-slate-900 mb-4">What's next?</h3>
+                <h3 className="font-semibold text-slate-900 mb-4">What&apos;s next?</h3>
                 <div className="space-y-3">
                   <div className="flex items-start space-x-3">
                     <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">

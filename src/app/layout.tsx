@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from '@/providers/i18n-provider';
+import { Toaster } from "@/components/ui/sonner";
+import { ErrorBoundary } from "@/components/error-boundary/error-boundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +45,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansArabic.variable} antialiased`}
       >
         <I18nProvider>
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+          <Toaster />
         </I18nProvider>
       </body>
     </html>

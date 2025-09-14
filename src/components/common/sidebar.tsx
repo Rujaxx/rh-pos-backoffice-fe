@@ -12,17 +12,14 @@ import {
   FileText,
   TrendingUp,
   Activity,
-  Target,
   UserPlus,
   Clock,
-  Timer,
   DollarSign,
   ChefHat,
   UtensilsCrossed,
   Store,
   Receipt,
   Calendar,
-  Bell,
   Utensils,
   Users,
   CreditCard,
@@ -32,17 +29,18 @@ import {
   HelpCircle,
 } from "lucide-react"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import Image from "next/image"
+import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/hooks/useTranslation"
-
-type MenuState = "full" | "collapsed" | "hidden"
+import { useI18n } from "@/providers/i18n-provider"
+import { useSidebar } from "@/providers/sidebar-provider"
 
 interface SubMenuItem {
   id: string
   label: string
   href: string
-  icon?: React.ComponentType<any>
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
   badge?: string
   isNew?: boolean
   children?: SubMenuItem[]
@@ -52,7 +50,7 @@ interface MenuItem {
   id: string
   label: string
   href?: string
-  icon: React.ComponentType<any>
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
   badge?: string
   isNew?: boolean
   children?: SubMenuItem[]
@@ -64,8 +62,9 @@ interface MenuSection {
   items: MenuItem[]
 }
 
+
 // Function to generate POS menu data with translations
-const getPOSMenuData = (t: any): MenuSection[] => [
+const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
   {
     id: "overview",
     label: t("navigation.overview"),
@@ -127,21 +126,7 @@ const getPOSMenuData = (t: any): MenuSection[] => [
         id: "brands",
         label: t("navigation.brands"),
         href: "/brands",
-        icon: Building2,
-        children: [
-          {
-            id: "all-brands",
-            label: t("navigation.allBrands"),
-            href: "/brands/all",
-            icon: Building2,
-          },
-          {
-            id: "brand-settings",
-            label: t("navigation.brandSettings"),
-            href: "/brands/settings",
-            icon: Settings,
-          },
-        ],
+        icon: Building2
       },
       {
         id: "restaurants",
@@ -360,80 +345,21 @@ let menuData: MenuSection[] = []
 
 export default function Sidebar() {
   const { t } = useTranslation()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [menuState, setMenuState] = useState<MenuState>("full")
-  const [isHovered, setIsHovered] = useState(false)
-  const [previousDesktopState, setPreviousDesktopState] = useState<MenuState>("full")
-  const [isMobile, setIsMobile] = useState(false)
+  const { locale } = useI18n()
+  const {
+    menuState,
+    isHovered,
+    setIsHovered,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+    isMobile
+  } = useSidebar()
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  
+  const isRTL = locale === 'ar'
 
   // Update menu data with translations
   menuData = getPOSMenuData(t)
-
-  // Cycle through menu states: full -> collapsed -> hidden -> full
-  const toggleMenuState = () => {
-    setMenuState((prev) => {
-      switch (prev) {
-        case "full":
-          return "collapsed"
-        case "collapsed":
-          return "hidden"
-        case "hidden":
-          return "full"
-        default:
-          return "full"
-      }
-    })
-  }
-
-  // Function to set menu state from theme customizer
-  const setMenuStateFromCustomizer = (state: MenuState) => {
-    if (!isMobile) {
-      setMenuState(state)
-    }
-  }
-
-  // Handle responsive behavior
-  useEffect(() => {
-    const handleResize = () => {
-      const isDesktop = window.innerWidth >= 1024 // lg breakpoint
-      setIsMobile(!isDesktop)
-
-      if (!isDesktop) {
-        // On mobile/tablet, save current desktop state and set to hidden
-        if (menuState !== "hidden") {
-          setPreviousDesktopState(menuState)
-          setMenuState("hidden")
-        }
-      } else {
-        // On desktop, restore previous state if coming from mobile
-        if (menuState === "hidden" && previousDesktopState !== "hidden") {
-          setMenuState(previousDesktopState)
-        }
-      }
-    }
-
-    // Check on mount
-    handleResize()
-
-    // Add event listener
-    window.addEventListener("resize", handleResize)
-
-    return () => window.removeEventListener("resize", handleResize)
-  }, [menuState, previousDesktopState])
-
-  // Export functions to window for TopNav and ThemeCustomizer to access
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      ;(window as any).toggleMenuState = toggleMenuState
-      ;(window as any).menuState = menuState
-      ;(window as any).isHovered = isHovered
-      ;(window as any).isMobile = isMobile
-      ;(window as any).setIsMobileMenuOpen = setIsMobileMenuOpen
-      ;(window as any).isMobileMenuOpen = isMobileMenuOpen
-      ;(window as any).setMenuStateFromCustomizer = setMenuStateFromCustomizer
-    }
-  }, [menuState, isHovered, isMobile, isMobileMenuOpen])
 
   function handleNavigation() {
     if (isMobile) {
@@ -468,13 +394,18 @@ export default function Sidebar() {
     const showText = menuState === "full" || (menuState === "collapsed" && isHovered) || (isMobile && isMobileMenuOpen)
     const showExpandIcon = hasChildren && showText
 
-    const paddingLeft = level === 0 ? "px-3" : level === 1 ? "pl-8 pr-3" : "pl-12 pr-3"
+    // Adjust padding based on RTL and level
+    const getPaddingClasses = () => {
+      if (level === 0) return "px-3"
+      if (level === 1) return isRTL ? "pr-8 pl-3" : "pl-8 pr-3"
+      return isRTL ? "pr-12 pl-3" : "pl-12 pr-3"
+    }
 
     const content = (
       <div
         className={cn(
           "flex items-center py-2 text-sm rounded-md transition-colors sidebar-menu-item hover:bg-gray-50 dark:hover:bg-[#1F1F23] relative group cursor-pointer",
-          paddingLeft,
+          getPaddingClasses(),
         )}
         onClick={() => {
           if (hasChildren) {
@@ -491,10 +422,10 @@ export default function Sidebar() {
 
         {showText && (
           <>
-            <span className="ml-3 flex-1 transition-opacity duration-200 sidebar-menu-text">{item.label}</span>
+            <span className={`${isRTL ? 'mr-3' : 'ml-3'} flex-1 transition-opacity duration-200 sidebar-menu-text`}>{item.label}</span>
 
             {/* Badges and indicators */}
-            <div className="flex items-center space-x-1">
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-1`}>
               {item.isNew && (
                 <span className="px-1.5 py-0.5 text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">
                   New
@@ -516,9 +447,13 @@ export default function Sidebar() {
 
         {/* Tooltip for collapsed state when not hovered and not mobile */}
         {menuState === "collapsed" && !isHovered && !isMobile && (
-          <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+          <div className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${
+            isRTL 
+              ? 'right-full mr-2' 
+              : 'left-full ml-2'
+          }`}>
             {item.label}
-            {item.badge && <span className="ml-1 text-blue-300">({item.badge})</span>}
+            {item.badge && <span className={`text-blue-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>({item.badge})</span>}
           </div>
         )}
       </div>
@@ -559,24 +494,30 @@ export default function Sidebar() {
         {/* Mobile sidebar overlay */}
         <nav
           className={`
-            fixed inset-y-0 left-0 z-[70] w-64 bg-white dark:bg-[#0F0F12] 
-            border-r border-gray-200 dark:border-[#1F1F23] 
+            fixed inset-y-0 z-[70] w-64 bg-white dark:bg-[#0F0F12] 
             transform transition-transform duration-300 ease-in-out
-            ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+            ${isRTL 
+              ? `right-0 border-l border-gray-200 dark:border-[#1F1F23] ${
+                  isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+                }` 
+              : `left-0 border-r border-gray-200 dark:border-[#1F1F23] ${
+                  isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                }`
+            }
           `}
         >
           <div className="h-full flex flex-col">
             {/* Header */}
             <div className="h-16 px-3 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
               <Link
-                href="https://cmsfullform.com/"
+                href="/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full"
               >
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
+                <Image
+                  src="/logo.png"
+                  alt="RHPOS"
                   width={32}
                   height={32}
                   className="flex-shrink-0"
@@ -631,9 +572,15 @@ export default function Sidebar() {
   return (
     <nav
       className={`
-        fixed inset-y-0 left-0 z-[60] bg-white dark:bg-[#0F0F12] 
-        border-r border-gray-200 dark:border-[#1F1F23] transition-all duration-300 ease-in-out
-        ${menuState === "hidden" ? "w-0 border-r-0" : getSidebarWidth()}
+        fixed inset-y-0 z-[60] bg-white dark:bg-[#0F0F12] 
+        transition-all duration-300 ease-in-out
+        ${menuState === "hidden" 
+          ? "w-0 border-0" 
+          : `${getSidebarWidth()} ${isRTL 
+              ? 'right-0 border-l border-gray-200 dark:border-[#1F1F23]' 
+              : 'left-0 border-r border-gray-200 dark:border-[#1F1F23]'
+            }`
+        }
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -647,41 +594,41 @@ export default function Sidebar() {
           <div className="h-16 px-3 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
             {showText ? (
               <Link
-                href="https://cmsfullform.com/"
+                href="https://www.rhposs.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full"
               >
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
+                <Image
+                  src="/logo.png"
+                  alt="RHPOS"
                   width={32}
                   height={32}
                   className="flex-shrink-0 hidden dark:block"
                 />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
+                <Image
+                  src="/logo.png"
+                  alt="RHPOS"
                   width={32}
                   height={32}
                   className="flex-shrink-0 block dark:hidden"
                 />
                 <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white transition-opacity duration-200">
-                  CMSFullForm
+                  RHPOS
                 </span>
               </Link>
             ) : (
               <div className="flex justify-center w-full">
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
+                <Image
+                  src="/logo.png"
+                  alt="RHPOS"
                   width={32}
                   height={32}
                   className="flex-shrink-0 hidden dark:block"
                 />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
+                <Image
+                  src="/logo.png"
+                  alt="RHPOS"
                   width={32}
                   height={32}
                   className="flex-shrink-0 block dark:hidden"
