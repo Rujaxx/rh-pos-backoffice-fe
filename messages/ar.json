@@ -264,5 +264,9 @@
   "brands.form.trnGstDescription": "رقم التسجيل الضريبي أو رقم ضريبة السلع والخدمات",
   "brands.form.panLabel": "رقم PAN",
   "brands.form.panPlaceholder": "أدخل رقم PAN",
-  "brands.form.panDescription": "رقم الحساب الدائم"
+  "brands.form.panDescription": "رقم الحساب الدائم",
+
+  "theme.light": "فاتح",
+  "theme.dark": "داكن",
+  "theme.system": "النظام"
 }

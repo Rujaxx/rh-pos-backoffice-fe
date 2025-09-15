@@ -264,5 +264,9 @@
   "brands.form.trnGstDescription": "Tax Registration Number or GST Number",
   "brands.form.panLabel": "PAN Number",
   "brands.form.panPlaceholder": "Enter PAN number",
-  "brands.form.panDescription": "Permanent Account Number"
+  "brands.form.panDescription": "Permanent Account Number",
+
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "theme.system": "System"
 }
