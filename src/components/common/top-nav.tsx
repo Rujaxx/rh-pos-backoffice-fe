@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import { useState } from "react"
 import { LanguageSwitcher } from "./language-switcher"
+import { ThemeToggle } from "./theme-toggle"
 import { useTranslation } from "@/hooks/useTranslation"
 import { useI18n } from "@/providers/i18n-provider"
 import { useSidebar } from "@/providers/sidebar-provider"
@@ -152,6 +153,9 @@ export default function TopNav() {
 
         {/* Language Switcher */}
         <LanguageSwitcher />
+        
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* Notifications */}
         <Button variant="ghost" size="sm" className="relative p-2">

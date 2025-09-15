@@ -3,6 +3,7 @@
 import React from "react"
 import Image from "next/image"
 import { UseFormReturn, Controller, FieldPath, ControllerRenderProps } from "react-hook-form"
+import { useI18n } from "@/providers/i18n-provider"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
@@ -182,6 +183,9 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
   description,
   className,
 }: RHFSwitchProps<TFormValues>) {
+  const { locale } = useI18n()
+  const isRTL = locale === 'ar'
+  
   return (
     <FormFieldWrapper form={form} name={name} label={label} description={description}>
       {(field) => (
@@ -189,6 +193,7 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
           checked={Boolean(field.value)}
           onCheckedChange={field.onChange}
           className={className}
+          rtl={isRTL}
         />
       )}
     </FormFieldWrapper>

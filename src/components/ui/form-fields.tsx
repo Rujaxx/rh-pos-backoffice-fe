@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { MultilingualText } from "@/types/brand"
 import { Languages, Globe } from "lucide-react"
+import { useI18n } from "@/providers/i18n-provider"
 
 interface FormFieldProps {
   label: string
@@ -239,13 +240,17 @@ export function FormSwitch({
   error,
   className
 }: FormSwitchProps) {
+  const { locale } = useI18n()
+  const isRTL = locale === 'ar'
+  
   return (
     <FormField label={label} required={required} error={error} className={className}>
-      <div className="flex items-center space-x-2">
+      <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}>
         <Switch
           checked={value}
           onCheckedChange={onChange}
           id={`switch-${label.toLowerCase().replace(/\s+/g, '-')}`}
+          rtl={isRTL}
         />
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
