@@ -1,8 +1,7 @@
 "use client"
 
-import { Menu, Search, Bell, Settings, User, ChevronDown, Building2, Store } from "lucide-react"
+import { Menu, Bell, Settings, User, ChevronDown, Building2, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -132,24 +131,8 @@ export default function TopNav() {
         </div>
       </div>
 
-      {/* Center - Search (hidden on mobile) */}
-      <div className={`hidden md:flex flex-1 max-w-md ${isRTL ? 'mx-4' : 'mx-4'}`}>
-        <div className="relative w-full">
-          <Search className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 ${isRTL ? 'right-3' : 'left-3'}`} />
-          <Input
-            type="search"
-            placeholder={t('dashboard.searchPlaceholder')}
-            className={`bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${isRTL ? 'pr-10 pl-3' : 'pl-10 pr-3'}`}
-          />
-        </div>
-      </div>
-
       {/* Right side - Actions and Profile */}
       <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}>
-        {/* Mobile Search */}
-        <Button variant="ghost" size="sm" className="md:hidden p-2">
-          <Search className="h-4 w-4" />
-        </Button>
 
         {/* Language Switcher */}
         <LanguageSwitcher />
