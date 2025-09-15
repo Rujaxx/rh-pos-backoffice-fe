@@ -55,6 +55,7 @@
     "eslint-config-next": "15.5.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "tailwindcss-rtl": "^0.9.0",
     "tw-animate-css": "^1.3.7",
