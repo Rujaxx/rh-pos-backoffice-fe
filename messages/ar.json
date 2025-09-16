@@ -135,6 +135,7 @@
   "navigation.restaurants": "المطاعم",
   "navigation.allRestaurants": "جميع المطاعم",
   "navigation.locations": "المواقع",
+  "navigation.users": "مُسْتَخْدِم",
   "navigation.schedules": "الجداول الزمنية",
   "navigation.activeOrders": "الطلبات النشطة",
   "navigation.pendingOrders": "الطلبات المعلقة",
@@ -268,5 +269,66 @@
 
   "theme.light": "فاتح",
   "theme.dark": "داكن",
-  "theme.system": "النظام"
+  "theme.system": "النظام",
+
+  "common.active": "نشط",
+  "common.inactive": "غير نشط",
+
+  "users.title": "إدارة المستخدمين",
+  "users.description": "إدارة جميع حسابات الموظفين الذين لديهم وصول إلى نظام نقاط البيع في المطعم. أضافة موظفين جدد، إدارة الوصول الحالي، والحفاظ على إشراف واضح على أذونات النظام.",
+  "users.addUser": "إضافة مستخدم",
+  "users.searchPlaceholder": "البحث في المستخدمين...",
+
+  "users.table.user": "المستخدم",
+  "users.table.role": "الدور",
+  "users.table.contact": "جهة الاتصال",
+  "users.table.restaurants": "المطاعم",
+  "users.table.status": "الحالة",
+  "users.table.lastLogin": "آخر تسجيل دخول",
+
+  "users.form.personalInfo": "المعلومات الشخصية",
+  "users.form.firstNameLabel": "الاسم الأول",
+  "users.form.firstNamePlaceholder": "أدخل الاسم الأول",
+  "users.form.lastNameLabel": "اسم العائلة",
+  "users.form.lastNamePlaceholder": "أدخل اسم العائلة",
+  "users.form.usernameLabel": "اسم المستخدم",
+  "users.form.usernamePlaceholder": "أدخل اسم المستخدم",
+  "users.form.usernameDescription": "معرف فريد لتسجيل الدخول. يُسمح بالحروف والأرقام والشرطات السفلية والعادية فقط.",
+  "users.form.emailLabel": "عنوان البريد الإلكتروني",
+  "users.form.emailPlaceholder": "أدخل عنوان البريد الإلكتروني",
+  "users.form.phoneLabel": "رقم الهاتف",
+  "users.form.phonePlaceholder": "أدخل رقم الهاتف",
+
+  "users.form.profileInfo": "معلومات الملف الشخصي",
+  "users.form.profileImageLabel": "صورة الملف الشخصي",
+  "users.form.profileImageDescription": "ارفع صورة الملف الشخصي (الحجم الموصى به: 400x400 بكسل)",
+  "users.form.activeStatusLabel": "حالة الحساب",
+  "users.form.activeStatusDescription": "قم بالتبديل لتنشيط أو إلغاء تنشيط هذا الحساب",
+
+  "users.form.roleInfo": "الدور والأذونات",
+  "users.form.roleLabel": "الدور",
+  "users.form.rolePlaceholder": "اختر دور المستخدم",
+  "users.form.designationLabel": "المسمى الوظيفي",
+  "users.form.designationPlaceholder": "أدخل المسمى الوظيفي",
+  "users.form.designationDescription": "المسمى الوظيفي أو المنصب (مثال: مدير أول، كاشير رئيسي)",
+
+  "users.form.restaurantAccess": "الوصول للمطاعم",
+  "users.form.restaurantLabel": "المطاعم المسندة",
+  "users.form.restaurantDescription": "اختر المطاعم التي يمكن لهذا المستخدم الوصول إليها",
+
+  "users.create.title": "إنشاء مستخدم جديد",
+  "users.create.description": "املأ المعلومات أدناه لإنشاء حساب مستخدم جديد.",
+  "users.create.success": "تم إنشاء المستخدم بنجاح!",
+  "users.create.error": "فشل في إنشاء المستخدم",
+
+  "users.edit.title": "تعديل المستخدم",
+  "users.edit.description": "قم بتحديث معلومات المستخدم أدناه.",
+
+  "users.update.success": "تم تحديث المستخدم بنجاح!",
+  "users.update.error": "فشل في تحديث المستخدم",
+
+  "users.delete.title": "حذف المستخدم",
+  "users.delete.description": "هل أنت متأكد من رغبتك في حذف {name}؟ هذا الإجراء لا يمكن التراجع عنه وسيتم إلغاء جميع أذونات الوصول.",
+  "users.delete.success": "تم حذف المستخدم بنجاح!",
+  "users.delete.error": "فشل في حذف المستخدم"
 }

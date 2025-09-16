@@ -129,6 +129,7 @@
   "navigation.financialReports": "Financial Reports",
   "navigation.realTime": "Real-time",
   "navigation.operations": "Operations",
+  "navigation.users": "Users",
   "navigation.brands": "Brands",
   "navigation.allBrands": "All Brands",
   "navigation.brandSettings": "Brand Settings",
@@ -268,5 +269,66 @@
 
   "theme.light": "Light",
   "theme.dark": "Dark",
-  "theme.system": "System"
+  "theme.system": "System",
+
+  "common.active": "Active",
+  "common.inactive": "Inactive",
+
+  "users.title": "User Management",
+  "users.description": "Manage all staff accounts that have access to the restaurant's POS system. Add new employees, manage existing access, and maintain clear oversight of system permissions.",
+  "users.addUser": "Add User",
+  "users.searchPlaceholder": "Search users...",
+
+  "users.table.user": "User",
+  "users.table.role": "Role",
+  "users.table.contact": "Contact",
+  "users.table.restaurants": "Restaurants",
+  "users.table.status": "Status",
+  "users.table.lastLogin": "Last Login",
+
+  "users.form.personalInfo": "Personal Information",
+  "users.form.firstNameLabel": "First Name",
+  "users.form.firstNamePlaceholder": "Enter first name",
+  "users.form.lastNameLabel": "Last Name",
+  "users.form.lastNamePlaceholder": "Enter last name",
+  "users.form.usernameLabel": "Username",
+  "users.form.usernamePlaceholder": "Enter username",
+  "users.form.usernameDescription": "Unique identifier for login. Only letters, numbers, underscores, and hyphens allowed.",
+  "users.form.emailLabel": "Email Address",
+  "users.form.emailPlaceholder": "Enter email address",
+  "users.form.phoneLabel": "Phone Number",
+  "users.form.phonePlaceholder": "Enter phone number",
+
+  "users.form.profileInfo": "Profile Information",
+  "users.form.profileImageLabel": "Profile Image",
+  "users.form.profileImageDescription": "Upload a profile picture (recommended size: 400x400px)",
+  "users.form.activeStatusLabel": "Account Status",
+  "users.form.activeStatusDescription": "Toggle to activate or deactivate this user account",
+
+  "users.form.roleInfo": "Role & Permissions",
+  "users.form.roleLabel": "Role",
+  "users.form.rolePlaceholder": "Select user role",
+  "users.form.designationLabel": "Designation",
+  "users.form.designationPlaceholder": "Enter job designation",
+  "users.form.designationDescription": "Job title or position (e.g., Senior Manager, Lead Cashier)",
+
+  "users.form.restaurantAccess": "Restaurant Access",
+  "users.form.restaurantLabel": "Assigned Restaurants",
+  "users.form.restaurantDescription": "Select which restaurants this user can access",
+
+  "users.create.title": "Create New User",
+  "users.create.description": "Fill in the information below to create a new user account.",
+  "users.create.success": "User created successfully!",
+  "users.create.error": "Failed to create user",
+
+  "users.edit.title": "Edit User",
+  "users.edit.description": "Update the user information below.",
+
+  "users.update.success": "User updated successfully!",
+  "users.update.error": "Failed to update user",
+
+  "users.delete.title": "Delete User",
+  "users.delete.description": "Are you sure you want to delete {name}? This action cannot be undone and will revoke all access permissions.",
+  "users.delete.success": "User deleted successfully!",
+  "users.delete.error": "Failed to delete user"
 }

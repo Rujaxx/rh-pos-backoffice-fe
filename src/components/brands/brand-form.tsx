@@ -1,27 +1,27 @@
-"use client"
+'use client';
 
-import React from "react"
-import { useTranslation } from "@/hooks/useTranslation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
   RHFMultilingualInput,
   RHFSwitch,
   RHFAddressForm,
   RHFFileUpload,
-} from "@/components/ui/form-components"
-import { brandSchema, BrandFormData } from "@/lib/validations"
-import { Brand } from "@/types/brand"
+} from '@/components/ui/form-components';
+import { brandSchema, BrandFormData } from '@/lib/validations';
+import { Brand } from '@/types/brand';
 
 interface BrandFormContentProps {
-  form: ReturnType<typeof useForm<BrandFormData>>
+  form: ReturnType<typeof useForm<BrandFormData>>;
 }
 
 export function BrandFormContent({ form }: BrandFormContentProps) {
-  const { t } = useTranslation()
-  
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -39,7 +39,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               label={t('brands.form.brandNameLabel')}
               placeholder={{
                 en: t('brands.form.brandNamePlaceholderEn'),
-                ar: t('brands.form.brandNamePlaceholderAr')
+                ar: t('brands.form.brandNamePlaceholderAr'),
               }}
             />
 
@@ -50,7 +50,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               type="textarea"
               placeholder={{
                 en: t('brands.form.descriptionPlaceholderEn'),
-                ar: t('brands.form.descriptionPlaceholderAr')
+                ar: t('brands.form.descriptionPlaceholderAr'),
               }}
             />
 
@@ -118,7 +118,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               description={t('brands.form.phoneDescription')}
             />
           </div>
-          
+
           <RHFAddressForm
             form={form}
             name="address"
@@ -163,7 +163,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
         </CardContent>
       </Card>
     </>
-  )
+  );
 }
 
 // Hook for brand form logic
@@ -171,27 +171,27 @@ export function useBrandForm(editingBrand?: Brand | null) {
   const form = useForm<BrandFormData>({
     resolver: zodResolver(brandSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
-      description: { en: "", ar: "" },
-      logo: "",
-      menuLink: "",
-      website: "",
+      name: { en: '', ar: '' },
+      description: { en: '', ar: '' },
+      logo: '',
+      menuLink: '',
+      website: '',
       isActive: true,
-      phone: "",
-      fssaiNo: "",
-      trnOrGstNo: "",
-      panNo: "",
+      phone: '',
+      fssaiNo: '',
+      trnOrGstNo: '',
+      panNo: '',
       address: {
-        street: "",
-        city: "",
-        state: "",
-        country: "",
-        zipCode: "",
+        street: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: '',
         latitude: undefined,
         longitude: undefined,
       },
     },
-  })
+  });
 
   // Reset form when editing brand changes
   React.useEffect(() => {
@@ -201,43 +201,43 @@ export function useBrandForm(editingBrand?: Brand | null) {
         description: editingBrand.description,
         logo: editingBrand.logo,
         menuLink: editingBrand.menuLink,
-        website: editingBrand.website || "",
+        website: editingBrand.website || '',
         isActive: editingBrand.isActive ?? true,
-        phone: editingBrand.phone || "",
-        fssaiNo: editingBrand.fssaiNo || "",
-        trnOrGstNo: editingBrand.trnOrGstNo || "",
-        panNo: editingBrand.panNo || "",
+        phone: editingBrand.phone || '',
+        fssaiNo: editingBrand.fssaiNo || '',
+        trnOrGstNo: editingBrand.trnOrGstNo || '',
+        panNo: editingBrand.panNo || '',
         address: editingBrand.address,
-      })
+      });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
-        description: { en: "", ar: "" },
-        logo: "",
-        menuLink: "",
-        website: "",
+        name: { en: '', ar: '' },
+        description: { en: '', ar: '' },
+        logo: '',
+        menuLink: '',
+        website: '',
         isActive: true,
-        phone: "",
-        fssaiNo: "",
-        trnOrGstNo: "",
-        panNo: "",
+        phone: '',
+        fssaiNo: '',
+        trnOrGstNo: '',
+        panNo: '',
         address: {
-          street: "",
-          city: "",
-          state: "",
-          country: "",
-          zipCode: "",
+          street: '',
+          city: '',
+          state: '',
+          country: '',
+          zipCode: '',
           latitude: undefined,
           longitude: undefined,
         },
-      })
+      });
     }
-  }, [editingBrand, form])
+  }, [editingBrand, form]);
 
   return {
     form,
     isEditing: !!editingBrand,
-  }
+  };
 }
 
-export default BrandFormContent
+export default BrandFormContent;
