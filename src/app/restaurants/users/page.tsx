@@ -27,9 +27,10 @@ import {
   UserX,
   Building2,
 } from 'lucide-react';
-import { User, UserRole, Restaurant, UserTableAction } from '@/types/user';
-import { UserFormData } from '@/lib/validations/user';
+import { User, UserRole, Restaurant, UserTableAction } from '@/types/user.type';
+import { UserFormData } from '@/lib/validations/user.validation';
 import { toast } from 'sonner';
+import { useIntl } from 'react-intl';
 
 // Mock Data - Replace with actual API calls
 const mockRoles: UserRole[] = [
@@ -58,17 +59,26 @@ const mockRoles: UserRole[] = [
 const mockRestaurants: Restaurant[] = [
   {
     _id: 'r1',
-    name: 'Downtown Branch',
+    name: {
+      en: 'Downtown Branch',
+      ar: 'فرع وسط المدينة',
+    },
     location: 'Downtown',
   },
   {
     _id: 'r2',
-    name: 'Mall Branch',
+    name: {
+      en: 'Mall Branch',
+      ar: 'فرع المركز التجاري',
+    },
     location: 'Shopping Mall',
   },
   {
     _id: 'r3',
-    name: 'Airport Branch',
+    name: {
+      en: 'Airport Branch',
+      ar: 'فرع المطار',
+    },
     location: 'Airport Terminal',
   },
 ];
@@ -85,7 +95,7 @@ const mockUsers: User[] = [
     designation: 'Restaurant Manager',
     restaurants: ['r1', 'r2'],
     isActive: true,
-    profileImage: 'https://placeholder.co/40x40/aqua/black?text=JD',
+    profileImage: 'https://placehold.co/40x40/aqua/black?font=robot&text=JD',
     lastLogin: new Date('2024-01-15'),
     createdAt: new Date('2024-01-01'),
   },
@@ -137,6 +147,7 @@ function UsersPage() {
   const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [loading, setLoading] = useState(false);
+  const locale = useIntl().locale as 'en' | 'ar';
 
   // Modal hooks
   const { isOpen, editingItem, openModal, closeModal } = useModal<User>();
@@ -233,7 +244,7 @@ function UsersPage() {
             );
             return restaurant ? (
               <Badge key={restaurantId} variant="outline" className="text-xs">
-                {restaurant.name}
+                {restaurant.name[locale]}
               </Badge>
             ) : null;
           })}
@@ -401,7 +412,7 @@ function UsersPage() {
               <Building2 className="h-8 w-8" />
               {t('users.title')}
             </h1>
-            <p className="text-muted-foreground">{t('brands.subtitle')}</p>
+            <p className="text-muted-foreground">{t('users.subtitle')}</p>
           </div>
           <Button
             onClick={() => openModal()}

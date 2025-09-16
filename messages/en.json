@@ -275,6 +275,7 @@
   "common.inactive": "Inactive",
 
   "users.title": "User Management",
+  "users.subtitle": "Manage all users that have access to the POS system",
   "users.description": "Manage all staff accounts that have access to the restaurant's POS system. Add new employees, manage existing access, and maintain clear oversight of system permissions.",
   "users.addUser": "Add User",
   "users.searchPlaceholder": "Search users...",

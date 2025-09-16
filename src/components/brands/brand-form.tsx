@@ -12,8 +12,8 @@ import {
   RHFAddressForm,
   RHFFileUpload,
 } from '@/components/ui/form-components';
-import { brandSchema, BrandFormData } from '@/lib/validations';
-import { Brand } from '@/types/brand';
+import { brandSchema, BrandFormData } from '@/lib/validations/brand.validation';
+import { Brand } from '@/types/brand.type';
 
 interface BrandFormContentProps {
   form: ReturnType<typeof useForm<BrandFormData>>;

@@ -11,8 +11,8 @@ import {
   RHFSwitch,
   RHFFileUpload,
 } from '@/components/ui/form-components';
-import { userSchema, UserFormData } from '@/lib/validations/user';
-import { User, UserRole, Restaurant } from '@/types/user';
+import { userSchema, UserFormData } from '@/lib/validations/user.validation';
+import { User, UserRole, Restaurant } from '@/types/user.type';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   FormControl,
@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
+import { useIntl } from 'react-intl';
 
 interface UserFormContentProps {
   form: ReturnType<typeof useForm<UserFormData>>;
@@ -35,6 +36,7 @@ export function UserFormContent({
   restaurants,
 }: UserFormContentProps) {
   const { t } = useTranslation();
+  const locale = useIntl().locale as 'en' | 'ar';
 
   // Convert roles to select options
   const roleOptions = roles.map((role) => ({
@@ -195,7 +197,7 @@ export function UserFormContent({
                               </FormControl>
                               <div className="space-y-1 leading-none">
                                 <FormLabel className="text-sm font-normal">
-                                  {restaurant.name}
+                                  {restaurant.name[locale]}
                                 </FormLabel>
                                 {restaurant.location && (
                                   <Badge variant="outline" className="text-xs">

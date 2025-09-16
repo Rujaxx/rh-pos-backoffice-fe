@@ -27,21 +27,11 @@ export interface UserRole {
 
 export interface Restaurant {
   _id: string;
-  name: string;
+  name: {
+    en: string;
+    ar: string;
+  };
   location?: string;
-}
-
-export interface UserFormData extends Record<string, unknown> {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  phone?: string;
-  role: string; // Role ID
-  designation: string;
-  restaurants: string[]; // Array of restaurant IDs
-  isActive: boolean;
-  profileImage?: string;
 }
 
 export interface UserTableColumn {

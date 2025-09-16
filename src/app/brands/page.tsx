@@ -16,8 +16,8 @@ import { BrandFormContent, useBrandForm } from '@/components/brands/brand-form';
 import Layout from '@/components/common/layout';
 import Image from 'next/image';
 import { Plus, Edit, Trash2, ExternalLink, Building2 } from 'lucide-react';
-import { Brand, TableAction } from '@/types/brand';
-import { BrandFormData } from '@/lib/validations';
+import { Brand, TableAction } from '@/types/brand.type';
+import { BrandFormData } from '@/lib/validations/brand.validation';
 import { toast } from 'sonner';
 
 // Mock data - replace with actual API calls
