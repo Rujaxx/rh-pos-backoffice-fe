@@ -400,21 +400,5 @@
   "restaurants.form.eBillSettingsLabel": "إعدادات الفواتير الإلكترونية",
   "restaurants.form.eBillSettings.onEmail": "الفواتير الإلكترونية بالبريد الإلكتروني",
   "restaurants.form.eBillSettings.onWhatsapp": "الفواتير الإلكترونية بالواتساب",
-  "restaurants.form.eBillSettings.onSms": "الفواتير الإلكترونية بالرسائل النصية",
-
-  "locations.title": "إدارة المواقع",
-  "locations.subtitle": "إدارة مواقع المطاعم ومناطق التوصيل",
-  "locations.addNewLocation": "إضافة موقع جديد",
-  "locations.allLocations": "جميع المواقع",
-  "locations.searchPlaceholder": "البحث في المواقع...",
-  "locations.restaurant": "المطعم",
-  "locations.area": "المنطقة",
-  "locations.deliveryZone": "منطقة التوصيل",
-  "locations.coordinates": "الإحداثيات",
-  "locations.status": "الحالة",
-  "locations.active": "نشط",
-  "locations.inactive": "غير نشط",
-  "locations.edit": "تعديل",
-  "locations.delete": "حذف",
-  "locations.view": "عرض على الخريطة"
+  "restaurants.form.eBillSettings.onSms": "الفواتير الإلكترونية بالرسائل النصية"
 }

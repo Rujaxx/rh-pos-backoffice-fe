@@ -13,7 +13,7 @@ import {
   RHFSelect,
   RHFFileUpload,
 } from "@/components/ui/form-components"
-import { restaurantSchema, RestaurantFormData } from "@/lib/validations/restaurants"
+import { restaurantSchema, RestaurantFormData } from "@/lib/validations/restaurant.validation"
 import { Restaurant } from "@/types/restaurant"
 
 interface RestaurantFormContentProps {

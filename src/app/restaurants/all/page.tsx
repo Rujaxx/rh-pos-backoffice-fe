@@ -12,7 +12,7 @@ import Layout from "@/components/common/layout"
 import Image from "next/image"
 import { Plus, Edit, Trash2, Building2 } from "lucide-react"
 import { Restaurant, TableAction } from "@/types/restaurant"
-import { RestaurantFormData } from "@/lib/validations/restaurants"
+import { RestaurantFormData } from "@/lib/validations/restaurant.validation"
 import { toast } from "sonner"
 
 
