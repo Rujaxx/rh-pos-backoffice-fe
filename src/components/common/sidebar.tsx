@@ -355,7 +355,7 @@ export default function Sidebar() {
     isMobile
   } = useSidebar()
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
-  
+
   const isRTL = locale === 'ar'
 
   // Update menu data with translations
@@ -410,10 +410,6 @@ export default function Sidebar() {
         onClick={() => {
           if (hasChildren) {
             toggleExpanded(itemId)
-          } else if (item.href) {
-            // Navigate to the href
-            window.location.href = item.href
-            handleNavigation()
           }
         }}
         title={menuState === "collapsed" && !isHovered && !isMobile ? item.label : undefined}
@@ -447,11 +443,10 @@ export default function Sidebar() {
 
         {/* Tooltip for collapsed state when not hovered and not mobile */}
         {menuState === "collapsed" && !isHovered && !isMobile && (
-          <div className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${
-            isRTL 
-              ? 'right-full mr-2' 
+          <div className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${isRTL
+              ? 'right-full mr-2'
               : 'left-full ml-2'
-          }`}>
+            }`}>
             {item.label}
             {item.badge && <span className={`text-blue-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>({item.badge})</span>}
           </div>
@@ -461,7 +456,13 @@ export default function Sidebar() {
 
     return (
       <div>
-        {item.href && !hasChildren ? <Link href={item.href}>{content}</Link> : content}
+        {item.href && !hasChildren ? (
+          <Link href={item.href} onClick={handleNavigation}>
+            {content}
+          </Link>
+        ) : (
+          content
+        )}
         {hasChildren && isExpanded && showText && (
           <div className="mt-1 space-y-1">
             {item.children!.map((child) => (
@@ -471,6 +472,7 @@ export default function Sidebar() {
         )}
       </div>
     )
+
   }
 
   // Calculate sidebar width - expand when collapsed and hovered, or full width on mobile
@@ -496,13 +498,11 @@ export default function Sidebar() {
           className={`
             fixed inset-y-0 z-[70] w-64 bg-white dark:bg-[#0F0F12] 
             transform transition-transform duration-300 ease-in-out
-            ${isRTL 
-              ? `right-0 border-l border-gray-200 dark:border-[#1F1F23] ${
-                  isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-                }` 
-              : `left-0 border-r border-gray-200 dark:border-[#1F1F23] ${
-                  isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-                }`
+            ${isRTL
+              ? `right-0 border-l border-gray-200 dark:border-[#1F1F23] ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+              }`
+              : `left-0 border-r border-gray-200 dark:border-[#1F1F23] ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+              }`
             }
           `}
         >
@@ -574,12 +574,12 @@ export default function Sidebar() {
       className={`
         fixed inset-y-0 z-[60] bg-white dark:bg-[#0F0F12] 
         transition-all duration-300 ease-in-out
-        ${menuState === "hidden" 
-          ? "w-0 border-0" 
-          : `${getSidebarWidth()} ${isRTL 
-              ? 'right-0 border-l border-gray-200 dark:border-[#1F1F23]' 
-              : 'left-0 border-r border-gray-200 dark:border-[#1F1F23]'
-            }`
+        ${menuState === "hidden"
+          ? "w-0 border-0"
+          : `${getSidebarWidth()} ${isRTL
+            ? 'right-0 border-l border-gray-200 dark:border-[#1F1F23]'
+            : 'left-0 border-r border-gray-200 dark:border-[#1F1F23]'
+          }`
         }
       `}
       onMouseEnter={() => setIsHovered(true)}
