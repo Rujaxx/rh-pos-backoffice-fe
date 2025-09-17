@@ -25,19 +25,18 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
 
 
   const brandOptions = [
-    { value: "1", label: "Pizza Palace" },
-    { value: "2", label: "Burger House" },
-    { value: "3", label: "Sushi Express" },
+    { value: "1", label: t("restaurants.form.brands.pizzaPalace") },
+    { value: "2", label: t("restaurants.form.brands.burgerHouse") }
   ]
 
   const timezoneOptions = [
-    { value: "UTC", label: "UTC" },
-    { value: "America/New_York", label: "Eastern Time" },
-    { value: "America/Chicago", label: "Central Time" },
-    { value: "America/Denver", label: "Mountain Time" },
-    { value: "America/Los_Angeles", label: "Pacific Time" },
-    { value: "Asia/Dubai", label: "Dubai Time" },
-    { value: "Asia/Riyadh", label: "Saudi Arabia Time" },
+    { value: "UTC", label: t("restaurants.form.timezon.utc") },
+    { value: "America/New_York", label: t("restaurants.form.timezon.eastern") },
+    { value: "America/Chicago", label: t("restaurants.form.timezon.central") },
+    { value: "America/Denver", label: t("restaurants.form.timezon.mountain") },
+    { value: "America/Los_Angeles", label: t("restaurants.form.timezon.pacific") },
+    { value: "Asia/Dubai", label: t("restaurants.form.timezon.dubai") },
+    { value: "Asia/Riyadh", label: t("restaurants.form.timezon.saudiArabia") },
   ]
 
   const resetBillOptions = [
