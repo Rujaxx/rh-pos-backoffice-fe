@@ -378,7 +378,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
       name: { en: "", ar: "" },
       description: { en: "", ar: "" },
       brandId: "",
-      isActive: false,
+      isActive: true,
       logo: "",
       address: {
         street: "",
@@ -441,7 +441,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         name: editingRestaurant.name,
         description: editingRestaurant.description,
         brandId: editingRestaurant.brandId,
-        isActive: editingRestaurant.isActive ?? false,
+        isActive: editingRestaurant.isActive ?? true,
         logo: editingRestaurant.logo || "",
         address: editingRestaurant.address,
         timezone: editingRestaurant.timezone,
@@ -473,7 +473,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         name: { en: "", ar: "" },
         description: { en: "", ar: "" },
         brandId: "",
-        isActive: false,
+        isActive: true,
         logo: "",
         address: {
           street: "",
