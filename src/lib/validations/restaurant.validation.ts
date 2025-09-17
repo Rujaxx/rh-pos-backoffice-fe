@@ -45,7 +45,7 @@ export const restaurantSchema = z.object({
     timezone: z.string().min(1, "Timezone is required"),
     startDayTime: z.number().min(0).max(23, "Start day time must be between 0-23"),
     endDayTime: z.number().min(0).max(23, "End day time must be between 0-23"),
-    nextResetBill: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
+    nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
     nextResetBillDate: z.string().min(0),
     notificationPhone: z.array(z.string()),
     notificationEmails: z.array(z.string().email("Invalid email format")),

@@ -153,7 +153,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
 
             <RHFSelect
               form={form}
-              name="nextResetBill"
+              name="nextResetBillFreq"
               label={t('restaurants.form.nextResetBillLabel')}
               placeholder={t('restaurants.form.nextResetBillPlaceholder')}
               options={resetBillOptions}
@@ -392,7 +392,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
       timezone: "",
       startDayTime: 9,
       endDayTime: 23,
-      nextResetBill: "daily",
+      nextResetBillFreq: "daily",
       nextResetBillDate: "",
       notificationPhone: [],
       notificationEmails: [],
@@ -429,6 +429,14 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
   // Reset form when editing restaurant changes
   React.useEffect(() => {
     if (editingRestaurant) {
+      const resetBillFreq =
+        editingRestaurant.nextResetBillFreq === "daily" ||
+          editingRestaurant.nextResetBillFreq === "weekly" ||
+          editingRestaurant.nextResetBillFreq === "monthly" ||
+          editingRestaurant.nextResetBillFreq === "yearly"
+          ? editingRestaurant.nextResetBillFreq
+          : "daily";
+
       form.reset({
         name: editingRestaurant.name,
         description: editingRestaurant.description,
@@ -439,7 +447,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         timezone: editingRestaurant.timezone,
         startDayTime: editingRestaurant.startDayTime,
         endDayTime: editingRestaurant.endDayTime,
-        nextResetBill: editingRestaurant.nextResetBill,
+        nextResetBillFreq: resetBillFreq,
         nextResetBillDate: editingRestaurant.nextResetBillDate,
         notificationPhone: editingRestaurant.notificationPhone || [],
         notificationEmails: editingRestaurant.notificationEmails || [],
@@ -479,7 +487,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         timezone: "",
         startDayTime: 9,
         endDayTime: 23,
-        nextResetBill: "daily",
+        nextResetBillFreq: "daily",
         nextResetBillDate: "",
         notificationPhone: [],
         notificationEmails: [],

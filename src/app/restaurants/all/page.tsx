@@ -14,6 +14,7 @@ import { Plus, Edit, Trash2, Building2 } from "lucide-react"
 import { Restaurant, TableAction } from "@/types/restaurant"
 import { RestaurantFormData } from "@/lib/validations/restaurant.validation"
 import { toast } from "sonner"
+import { useI18n } from "@/providers/i18n-provider"
 
 
 const mockRestaurants: Restaurant[] = [
@@ -22,7 +23,10 @@ const mockRestaurants: Restaurant[] = [
     name: { en: "Pizza Palace - Downtown", ar: "قصر البيتزا - وسط المدينة" },
     description: { en: "The flagship restaurant of Pizza Palace.", ar: "المطعم الرئيسي لقصر البيتزا." },
     brandId: "1",
-    brandName: "Pizza Palace",
+    brandName: {
+      en: "Pizza Palace - Downtown",
+      ar: "قصر البيتزا - وسط المدينة"
+    },
     logo: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop&crop=center",
     isActive: true,
     address: {
@@ -37,7 +41,7 @@ const mockRestaurants: Restaurant[] = [
     timezone: "America/New_York",
     startDayTime: 9,
     endDayTime: 23,
-    nextResetBill: "daily",
+    nextResetBillFreq: "daily",
     nextResetBillDate: "17-09-2025",
     notificationPhone: ["+11234567890"],
     notificationEmails: ["ny-manager@pizzapalace.com"],
@@ -68,7 +72,10 @@ const mockRestaurants: Restaurant[] = [
     name: { en: "Burger House - Central", ar: "بيت البرغر - المركزي" },
     description: { en: "Central location with a spacious dine-in area.", ar: "موقع مركزي مع منطقة تناول طعام واسعة." },
     brandId: "2",
-    brandName: "Burger House",
+    brandName: {
+      en: "Burger House",
+      ar: "بيت البرجر - المركزية"
+    },
     logo: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=100&h=100&fit=crop&crop=center",
     isActive: false,
     address: {
@@ -83,7 +90,7 @@ const mockRestaurants: Restaurant[] = [
     timezone: "America/Los_Angeles",
     startDayTime: 10,
     endDayTime: 22,
-    nextResetBill: "yearly",
+    nextResetBillFreq: "yearly",
     nextResetBillDate: "17-09-2026",
     notificationPhone: ["+11987654321"],
     notificationEmails: ["la-manager@burgerhouse.com"],
@@ -113,6 +120,7 @@ const mockRestaurants: Restaurant[] = [
 
 export default function RestaurantsPage() {
   const { t } = useTranslation()
+  const { locale } = useI18n()
   const [restaurants, setRestaurants] = useState<Restaurant[]>(mockRestaurants)
   const [loading, setLoading] = useState(false)
 
@@ -157,12 +165,7 @@ export default function RestaurantsPage() {
       label: t('restaurants.name'),
       accessor: (restaurant: Restaurant) => (
         <div>
-          <div className="font-medium">{restaurant.name.en}</div>
-          {restaurant.name.ar && (
-            <div className="text-sm text-muted-foreground" dir="rtl">
-              {restaurant.name.ar}
-            </div>
-          )}
+          <div className="font-medium">{restaurant.name[locale] || restaurant.name.en}</div>
         </div>
       ),
       sortable: true
@@ -172,7 +175,7 @@ export default function RestaurantsPage() {
       label: t('restaurants.brand'),
       accessor: (restaurant: Restaurant) => (
         <Badge variant="outline">
-          {restaurant.brandName}
+          {restaurant.brandName[locale] || restaurant.brandName.en}
         </Badge>
       ),
       sortable: true
@@ -190,7 +193,7 @@ export default function RestaurantsPage() {
       label: t('restaurants.nextResetBill'),
       accessor: (restaurant: Restaurant) => (
         <div className="font-medium">
-          {t(`restaurants.resetBill.${restaurant.nextResetBill}`)}
+          {t(`restaurants.resetBill.${restaurant.nextResetBillFreq}`)}
         </div>
       ),
       sortable: true
@@ -229,12 +232,6 @@ export default function RestaurantsPage() {
           <div className="text-muted-foreground">{restaurant.notificationEmails[0] || "N/A"}</div>
         </div>
       )
-    },
-    {
-      id: "createdAt",
-      label: t('restaurants.created'),
-      accessor: (restaurant: Restaurant) => restaurant.createdAt?.toLocaleDateString() || "N/A",
-      sortable: true
     }
   ]
 
@@ -269,12 +266,19 @@ export default function RestaurantsPage() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
 
+      // Find the brand or use a default value
+      const foundBrand = mockRestaurants.find(b => b.brandId === data.brandId)
+      const brandName = foundBrand?.brandName || {
+        en: "Unknown Brand",
+        ar: "علامة تجارية غير معروفة"
+      }
+
       const newRestaurant: Restaurant = {
         _id: Date.now().toString(),
         ...data,
+        brandName, // Use the properly handled brandName
         createdAt: new Date(),
         updatedAt: new Date(),
-        brandName: mockRestaurants.find(b => b.brandId === data.brandId)?.brandName || "Unknown Brand",
         inventoryWarehouse: "",
         createdBy: "",
         updatedBy: ""

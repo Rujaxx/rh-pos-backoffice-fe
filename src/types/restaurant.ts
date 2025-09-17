@@ -27,14 +27,14 @@ export interface Restaurant extends Record<string, unknown> {
   name: MultilingualText;
   description: MultilingualText;
   brandId: string;
-  brandName?: string; // For display purposes
+  brandName: MultilingualText,
   logo?: string;
   address: Address;
   timezone: string;
   startDayTime: number;
   endDayTime: number;
-  nextResetBill: ResetBillFrequency;
-  nextResetBillDate: string;
+  nextResetBillFreq: ResetBillFrequency;
+  nextResetBillDate?: string;
   notificationPhone: string[];
   notificationEmails: string[];
   isActive?: boolean;
