@@ -410,32 +410,5 @@
   "restaurants.form.eBillSettingsLabel": "E-Bill Settings",
   "restaurants.form.eBillSettings.onEmail": "Email E-Bills",
   "restaurants.form.eBillSettings.onWhatsapp": "WhatsApp E-Bills",
-  "restaurants.form.eBillSettings.onSms": "SMS E-Bills",
-
-  "tableSection.name": "Table Section",
-  "tableSection.restaurant": "Restaurant Name",
-  "tableSection.searchPlaceholder": "Search Table Sections...",
-  "tableSection.title": "Table Section Management",
-  "tableSection.subtitle": "Manage all your restaurant table sections",
-  "tableSection.addNewTableSection": "Add New Section",
-  "tableSection.allTableSections": "Table Sections List",
-  "tableSection.edit": "Edit",
-  "tableSection.delete": "Delete",
-  "tableSection.status": "Status",
-  "tableSection.addSuccess": "Table section added successfully",
-  "tableSection.editSuccess": "Table section updated successfully",
-  "tableSection.deleteSuccess": "Table section deleted successfully",
-  "tableSection.addTitle": "Add Table Section",
-  "tableSection.editTitle": "Edit Table Section",
-  "tableSection.deleteConfirmationTitle": "Delete Table Section",
-  "tableSection.deleteConfirmationDescription": "Are you sure you want to delete the section '{name}'? This action cannot be undone.",
-
-  "tableSection.form.basicInfo": "Basic Information",
-  "tableSection.form.restaurantLabel": "Restaurant",
-  "tableSection.form.restaurantPlaceholder": "Select a restaurant",
-  "tableSection.form.nameLabel": "Section Name",
-  "tableSection.form.namePlaceholderEn": "Enter section name in English",
-  "tableSection.form.namePlaceholderAr": "أدخل اسم القسم بالعربية",
-  "tableSection.form.activeStatusLabel": "Active Status",
-  "tableSection.form.activeStatusDescription": "Toggle to activate or deactivate this restaurant"
+  "restaurants.form.eBillSettings.onSms": "SMS E-Bills"
 }

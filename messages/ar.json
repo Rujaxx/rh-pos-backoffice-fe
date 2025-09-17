@@ -409,30 +409,5 @@
   "restaurants.form.eBillSettingsLabel": "إعدادات الفواتير الإلكترونية",
   "restaurants.form.eBillSettings.onEmail": "الفواتير الإلكترونية بالبريد الإلكتروني",
   "restaurants.form.eBillSettings.onWhatsapp": "الفواتير الإلكترونية بالواتساب",
-  "restaurants.form.eBillSettings.onSms": "الفواتير الإلكترونية بالرسائل النصية",
-
-  "tableSection.name": "اسم قسم الطاولات",
-  "tableSection.restaurant": "اسم المطعم",
-  "tableSection.searchPlaceholder": "ابحث في أقسام الطاولات...",
-  "tableSection.title": "إدارة أقسام الطاولات",
-  "tableSection.subtitle": "إدارة جميع أقسام الطاولات في مطعمك",
-  "tableSection.status": "الحالة",
-  "tableSection.addNewTableSection": "إضافة قسم جديد",
-  "tableSection.allTableSections": "قائمة أقسام الطاولات",
-  "tableSection.addSuccess": "تم إضافة قسم الطاولات بنجاح",
-  "tableSection.editSuccess": "تم تحديث قسم الطاولات بنجاح",
-  "tableSection.deleteSuccess": "تم حذف قسم الطاولات بنجاح",
-  "tableSection.addTitle": "إضافة قسم طاولات",
-  "tableSection.editTitle": "تعديل قسم الطاولات",
-  "tableSection.deleteConfirmationTitle": "حذف قسم الطاولات",
-  "tableSection.deleteConfirmationDescription": "هل أنت متأكد من أنك تريد حذف القسم '{name}'؟ لا يمكن التراجع عن هذا الإجراء.",
-
-  "tableSection.form.basicInfo": "المعلومات الأساسية",
-  "tableSection.form.restaurantLabel": "المطعم",
-  "tableSection.form.restaurantPlaceholder": "اختر مطعم",
-  "tableSection.form.nameLabel": "اسم القسم",
-  "tableSection.form.namePlaceholderEn": "Enter section name in English",
-  "tableSection.form.namePlaceholderAr": "أدخل اسم القسم بالعربية",
-  "tableSection.form.activeStatusLabel": "حالة النشاط",
-  "tableSection.form.activeStatusDescription": "قم بالتبديل لتنشيط أو إلغاء تنشيط هذا المطعم"
+  "restaurants.form.eBillSettings.onSms": "الفواتير الإلكترونية بالرسائل النصية"
 }
