@@ -24,8 +24,8 @@ const mockRestaurants: Restaurant[] = [
     description: { en: "The flagship restaurant of Pizza Palace.", ar: "المطعم الرئيسي لقصر البيتزا." },
     brandId: "1",
     brandName: {
-      en: "Pizza Palace - Downtown",
-      ar: "قصر البيتزا - وسط المدينة"
+      en: "Pizza Palace",
+      ar: "قصر البيتزا"
     },
     logo: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&h=100&fit=crop&crop=center",
     isActive: true,
