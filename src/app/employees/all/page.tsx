@@ -63,19 +63,7 @@ function AllEmployeesPage() {
   } = usePermissionsModal();
 
   // Form hook
-  const { form, isEditing } = useUserForm(
-    editingItem,
-    mockRoles,
-    mockRestaurants
-  );
-
-  // Helper function to get restaurant names from IDs
-  // const getRestaurantNames = (restaurantIds: string[]): string => {
-  //   return restaurantIds
-  //     .map((id) => mockRestaurants.find((r) => r._id === id)?.name)
-  //     .filter(Boolean)
-  //     .join(', ');
-  // };
+  const { form, isEditing } = useUserForm(editingItem);
 
   // Table columns configuration
   const columns = [

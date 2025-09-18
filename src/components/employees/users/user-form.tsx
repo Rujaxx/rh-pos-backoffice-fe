@@ -46,6 +46,42 @@ export function UserFormContent({
 
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-semibold">
+            {t('users.form.restaurantAccess')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FormField
+            control={form.control}
+            name="restaurants"
+            render={({ field }) => {
+              const restaurantOptions = restaurants.map((restaurant) => ({
+                value: restaurant._id,
+                label: restaurant.name[locale],
+              }));
+
+              return (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-medium">
+                    {t('users.form.restaurantLabel')}
+                  </FormLabel>
+                  <FormControl>
+                    <MultiSelectDropdown
+                      options={restaurantOptions}
+                      value={field.value || []}
+                      onChange={(val) => field.onChange(val)}
+                      placeholder={t('users.form.restaurantDescription')}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+        </CardContent>
+      </Card>
       {/* Personal Information */}
       <Card>
         <CardHeader className="pb-4">
@@ -122,54 +158,12 @@ export function UserFormContent({
           </div>
         </CardContent>
       </Card>
-
-      {/* Restaurant Assignment */}
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">
-            {t('users.form.restaurantAccess')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <FormField
-            control={form.control}
-            name="restaurants"
-            render={({ field }) => {
-              const restaurantOptions = restaurants.map((restaurant) => ({
-                value: restaurant._id,
-                label: restaurant.name[locale],
-              }));
-
-              return (
-                <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-medium">
-                    {t('users.form.restaurantLabel')}
-                  </FormLabel>
-                  <FormControl>
-                    <MultiSelectDropdown
-                      options={restaurantOptions}
-                      value={field.value || []}
-                      onChange={(val) => field.onChange(val)}
-                      placeholder={t('users.form.restaurantDescription')}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-        </CardContent>
-      </Card>
     </div>
   );
 }
 
 // Hook for user form logic
-export function useUserForm(
-  editingUser?: User | null,
-  roles: UserRole[] = [],
-  restaurants: Restaurant[] = []
-) {
+export function useUserForm(editingUser?: User | null) {
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
