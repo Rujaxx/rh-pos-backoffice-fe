@@ -39,8 +39,8 @@ const mockRestaurants: Restaurant[] = [
       longitude: -74.0060
     },
     timezone: "America/New_York",
-    startDayTime: 9,
-    endDayTime: 23,
+    startDayTime: "9",
+    endDayTime: "23",
     nextResetBillFreq: "daily",
     nextResetBillDate: "17-09-2025",
     notificationPhone: ["+11234567890"],
@@ -88,8 +88,8 @@ const mockRestaurants: Restaurant[] = [
       longitude: -118.2437
     },
     timezone: "America/Los_Angeles",
-    startDayTime: 10,
-    endDayTime: 22,
+    startDayTime: "10",
+    endDayTime: "22",
     nextResetBillFreq: "yearly",
     nextResetBillDate: "17-09-2026",
     notificationPhone: ["+11987654321"],

@@ -132,9 +132,9 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
                 name="startDayTime"
                 label={t('restaurants.form.startDayTimeLabel')}
                 placeholder="9"
-                type="number"
-                min="0"
-                max="23"
+                // type="number"
+                // min="0"
+                // max="23"
                 description={t('restaurants.form.startDayTimeDescription')}
               />
 
@@ -143,9 +143,9 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
                 name="endDayTime"
                 label={t('restaurants.form.endDayTimeLabel')}
                 placeholder="23"
-                type="number"
-                min="0"
-                max="23"
+                // type="number"
+                // min="0"
+                // max="23"
                 description={t('restaurants.form.endDayTimeDescription')}
               />
             </div>
@@ -389,8 +389,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         longitude: undefined,
       },
       timezone: "",
-      startDayTime: 9,
-      endDayTime: 23,
+      startDayTime: "9",
+      endDayTime: "23",
       nextResetBillFreq: "daily",
       nextResetBillDate: "",
       notificationPhone: [],
@@ -484,8 +484,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
           longitude: undefined,
         },
         timezone: "",
-        startDayTime: 9,
-        endDayTime: 23,
+        startDayTime: "9",
+        endDayTime: "23",
         nextResetBillFreq: "daily",
         nextResetBillDate: "",
         notificationPhone: [],

@@ -31,8 +31,8 @@ export interface Restaurant extends Record<string, unknown> {
   logo?: string;
   address: Address;
   timezone: string;
-  startDayTime: number;
-  endDayTime: number;
+  startDayTime: string;
+  endDayTime: string;
   nextResetBillFreq: ResetBillFrequency;
   nextResetBillDate?: string;
   notificationPhone: string[];

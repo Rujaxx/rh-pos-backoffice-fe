@@ -43,8 +43,23 @@ export const restaurantSchema = z.object({
     address: addressSchema,
     logo: z.string().min(0),
     timezone: z.string().min(1, "Timezone is required"),
-    startDayTime: z.number().min(0).max(23, "Start day time must be between 0-23"),
-    endDayTime: z.number().min(0).max(23, "End day time must be between 0-23"),
+    startDayTime: z.string()
+        .min(1, "Start day time is required")
+        .refine((val) => /^\d+$/.test(val), {
+            message: "Start day time must be a valid number",
+        })
+        .refine((val) => Number(val) >= 0 && Number(val) <= 23, {
+            message: "Start day time must be between 0-23",
+        }),
+
+    endDayTime: z.string()
+        .min(1, "End day time is required")
+        .refine((val) => /^\d+$/.test(val), {
+            message: "End day time must be a valid number",
+        })
+        .refine((val) => Number(val) >= 0 && Number(val) <= 23, {
+            message: "End day time must be between 0-23",
+        }),
     nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
     nextResetBillDate: z.string().min(0),
     notificationPhone: z.array(z.string()),
