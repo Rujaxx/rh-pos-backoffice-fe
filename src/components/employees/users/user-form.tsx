@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useIntl } from 'react-intl';
-import { MultiSelectDropdown } from '@/components/ui/multiSelectDropdown';
+import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
 
 interface UserFormContentProps {
   form: ReturnType<typeof useForm<UserFormData>>;
