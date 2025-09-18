@@ -108,6 +108,7 @@
   "navigation.dashboard": "POS Dashboard",
   "navigation.orders": "Active Orders",
   "navigation.tables": "Table Management",
+  "navigation.tableSections": "Table Sections",
   "navigation.menu": "Menu Editor",
   "navigation.reports": "Sales Reports",
   "navigation.settings": "POS Settings",
