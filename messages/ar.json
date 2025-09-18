@@ -343,6 +343,6 @@
   "table.addSuccess": "تمت إضافة الطاولة بنجاح",
   "table.editSuccess": "تم تحديث الطاولة بنجاح",
   "table.deleteSuccess": "تم حذف الطاولة بنجاح",
-  "restaurants.active": "نشط",
-  "restaurants.inactive": "غير نشط"
+  "tables.active": "نشط",
+  "tables.inactive": "غير نشط"
 }
