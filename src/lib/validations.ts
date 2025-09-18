@@ -60,30 +60,30 @@ export function validateFormData<T>(schema: z.ZodSchema<T>, data: unknown): {
     if (error instanceof z.ZodError) {
       const errors: Record<string, string> = {}
       const fieldErrors: Record<string, string[]> = {}
-      
+
       error.issues.forEach((err) => {
         const path = err.path.join('.')
         const message = err.message
-        
+
         // Store the first error message for each field path
         if (!errors[path]) {
           errors[path] = message
         }
-        
+
         // Store all error messages for each field (useful for multiple validation rules)
         if (!fieldErrors[path]) {
           fieldErrors[path] = []
         }
         fieldErrors[path].push(message)
       })
-      
+
       return { success: false, errors, fieldErrors }
     }
-    
+
     // Handle non-Zod errors
-    return { 
-      success: false, 
-      errors: { general: error instanceof Error ? error.message : "Validation failed" } 
+    return {
+      success: false,
+      errors: { general: error instanceof Error ? error.message : "Validation failed" }
     }
   }
 }
@@ -97,13 +97,13 @@ export function safeValidateFormData<T>(schema: z.ZodSchema<T>, data: unknown): 
 
 // Validation helper specifically for form submissions
 export function validateFormSubmission<T>(
-  schema: z.ZodSchema<T>, 
+  schema: z.ZodSchema<T>,
   data: unknown,
   onSuccess?: (data: T) => void,
   onError?: (errors: Record<string, string>) => void
 ): boolean {
   const result = validateFormData(schema, data)
-  
+
   if (result.success && result.data) {
     onSuccess?.(result.data)
     return true
@@ -111,7 +111,7 @@ export function validateFormSubmission<T>(
     onError?.(result.errors)
     return false
   }
-  
+
   return false
 }
 
@@ -133,14 +133,14 @@ export function formatValidationErrors(errors: Record<string, string>): string[]
           .replace(/^./, str => str.toUpperCase())
       })
       .join(' → ')
-    
+
     return `${readableField}: ${message}`
   })
 }
 
 // Helper to get nested field errors for react-hook-form integration
 export function getNestedFieldError(
-  errors: Record<string, string> | undefined, 
+  errors: Record<string, string> | undefined,
   fieldPath: string
 ): string | undefined {
   return errors?.[fieldPath]
