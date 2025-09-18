@@ -1,3 +1,5 @@
+import { MultilingualText } from './common/common.type';
+
 export interface User extends Record<string, unknown> {
   _id?: string;
   firstName: string;
@@ -19,10 +21,11 @@ export interface User extends Record<string, unknown> {
   updatedAt?: Date;
 }
 
-export interface UserRole {
+export interface UserRole extends Record<string, unknown> {
   _id: string;
-  name: string;
+  name: MultilingualText;
   permissions: string[];
+  isActive: boolean;
 }
 
 export interface Restaurant {

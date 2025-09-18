@@ -39,3 +39,10 @@ export const userSchema = z.object({
 });
 
 export type UserFormData = z.infer<typeof userSchema>;
+
+// Permission form schema
+export const permissionSchema = z.object({
+  permissions: z.array(z.string()).nonempty(),
+});
+
+export type PermissionFormData = z.infer<typeof permissionSchema>;

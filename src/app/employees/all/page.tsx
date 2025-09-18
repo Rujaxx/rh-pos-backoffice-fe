@@ -15,135 +15,32 @@ import {
 import {
   UserFormContent,
   useUserForm,
-} from '@/components/restaurant/users/user-form';
+} from '@/components/employees/users/user-form';
+import {
+  UserPermissionsModal,
+  usePermissionsModal,
+} from '@/components/employees/users/user-permissions-modal';
 import Layout from '@/components/common/layout';
 import Image from 'next/image';
 import {
   Plus,
   Edit,
-  Trash2,
   Users,
-  UserCheck,
   UserX,
+  Trash2,
+  Shield,
+  UserCheck,
   Building2,
 } from 'lucide-react';
-import { User, UserRole, Restaurant, UserTableAction } from '@/types/user.type';
+import { User, UserTableAction } from '@/types/user.type';
 import { UserFormData } from '@/lib/validations/user.validation';
 import { toast } from 'sonner';
 import { useIntl } from 'react-intl';
+import { mockRoles } from '@/mock/roles';
+import { mockRestaurants } from '@/mock/restaurants';
+import { mockUsers } from '@/mock/users';
 
-// Mock Data - Replace with actual API calls
-const mockRoles: UserRole[] = [
-  {
-    _id: '1',
-    name: 'Manager',
-    permissions: ['read', 'write', 'delete'],
-  },
-  {
-    _id: '2',
-    name: 'Cashier',
-    permissions: ['read', 'write'],
-  },
-  {
-    _id: '3',
-    name: 'Kitchen Staff',
-    permissions: ['read'],
-  },
-  {
-    _id: '4',
-    name: 'Waiter',
-    permissions: ['read', 'write'],
-  },
-];
-
-const mockRestaurants: Restaurant[] = [
-  {
-    _id: 'r1',
-    name: {
-      en: 'Downtown Branch',
-      ar: 'فرع وسط المدينة',
-    },
-    location: 'Downtown',
-  },
-  {
-    _id: 'r2',
-    name: {
-      en: 'Mall Branch',
-      ar: 'فرع المركز التجاري',
-    },
-    location: 'Shopping Mall',
-  },
-  {
-    _id: 'r3',
-    name: {
-      en: 'Airport Branch',
-      ar: 'فرع المطار',
-    },
-    location: 'Airport Terminal',
-  },
-];
-
-const mockUsers: User[] = [
-  {
-    _id: '1',
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'johndoe',
-    email: 'john.doe@example.com',
-    phone: '+1234567890',
-    role: mockRoles[0],
-    designation: 'Restaurant Manager',
-    restaurants: ['r1', 'r2'],
-    isActive: true,
-    profileImage: 'https://placehold.co/40x40/aqua/black?font=robot&text=JD',
-    lastLogin: new Date('2024-01-15'),
-    createdAt: new Date('2024-01-01'),
-  },
-  {
-    _id: '2',
-    firstName: 'Sarah',
-    lastName: 'Smith',
-    username: 'sarahsmith',
-    email: 'sarah.smith@example.com',
-    phone: '+1234567891',
-    role: mockRoles[1],
-    designation: 'Lead Cashier',
-    restaurants: ['r1'],
-    isActive: true,
-    lastLogin: new Date('2024-01-14'),
-    createdAt: new Date('2024-01-05'),
-  },
-  {
-    _id: '3',
-    firstName: 'Mike',
-    lastName: 'Johnson',
-    username: 'mikejohnson',
-    email: 'mike.johnson@example.com',
-    phone: '+1234567892',
-    role: mockRoles[2],
-    designation: 'Head Chef',
-    restaurants: ['r2', 'r3'],
-    isActive: false,
-    lastLogin: new Date('2024-01-10'),
-    createdAt: new Date('2024-01-03'),
-  },
-  {
-    _id: '4',
-    firstName: 'Emma',
-    lastName: 'Wilson',
-    username: 'emmawilson',
-    email: 'emma.wilson@example.com',
-    phone: '+1234567893',
-    role: mockRoles[3],
-    designation: 'Senior Waiter',
-    restaurants: ['r1', 'r2', 'r3'],
-    isActive: true,
-    lastLogin: new Date('2024-01-16'),
-    createdAt: new Date('2024-01-08'),
-  },
-];
-
-function UsersPage() {
+function AllEmployeesPage() {
   const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [loading, setLoading] = useState(false);
@@ -158,6 +55,12 @@ function UsersPage() {
     closeConfirmationModal,
     executeConfirmation,
   } = useConfirmationModal();
+  const {
+    isPermissionsModalOpen,
+    selectedUser,
+    openPermissionsModal,
+    closePermissionsModal,
+  } = usePermissionsModal();
 
   // Form hook
   const { form, isEditing } = useUserForm(
@@ -214,7 +117,7 @@ function UsersPage() {
       sortable: true,
       accessor: (user: User) => (
         <div>
-          <div className="font-medium text-sm">{user.role.name}</div>
+          <div className="font-medium text-sm">{user.role.name[locale]}</div>
           <div className="text-xs text-muted-foreground">
             {user.designation}
           </div>
@@ -296,6 +199,12 @@ function UsersPage() {
       label: t('common.edit'),
       icon: Edit,
       onClick: (user) => openModal(user),
+      variant: 'default',
+    },
+    {
+      label: t('users.permissions'),
+      icon: Shield,
+      onClick: (user) => openPermissionsModal(user),
       variant: 'default',
     },
     {
@@ -402,6 +311,36 @@ function UsersPage() {
     }
   };
 
+  // Permissions update handler
+  const handleUpdatePermissions = async (
+    userId: string,
+    permissions: string[]
+  ) => {
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setUsers((prev) =>
+        prev.map((user) => {
+          if (user._id === userId) {
+            return {
+              ...user,
+              role: {
+                ...user.role,
+                permissions,
+              },
+              updatedAt: new Date(),
+            };
+          }
+          return user;
+        })
+      );
+    } catch (error) {
+      console.error('Update permissions error:', error);
+      throw error;
+    }
+  };
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -457,6 +396,15 @@ function UsersPage() {
           />
         </CrudModal>
 
+        {/* User Permissions Modal */}
+        <UserPermissionsModal
+          isOpen={isPermissionsModalOpen}
+          onClose={closePermissionsModal}
+          user={selectedUser}
+          onPermissionsUpdate={handleUpdatePermissions}
+          loading={loading}
+        />
+
         {/* Confirmation Modal */}
         <ConfirmationModal
           isOpen={isConfirmationOpen}
@@ -474,4 +422,4 @@ function UsersPage() {
   );
 }
 
-export default UsersPage;
+export default AllEmployeesPage;
