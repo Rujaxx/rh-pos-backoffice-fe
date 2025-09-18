@@ -91,8 +91,8 @@ export default function TableSectionPage() {
             accessor: (tableSection: TableSection) => (
                 <Badge variant={tableSection.isActive ? "default" : "secondary"}>
                     {tableSection.isActive
-                        ? t('restaurants.active')
-                        : t('restaurants.inactive')
+                        ? t('tables.active')
+                        : t('tables.inactive')
                     }
                 </Badge>
             ),

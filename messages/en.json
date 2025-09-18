@@ -344,5 +344,7 @@
   "table.form.bulkLabelPrefix": "Table Label Prefix",
   "table.addSuccess": "Table added successfully",
   "table.editSuccess": "Table updated successfully",
-  "table.deleteSuccess": "Table deleted successfully"
+  "table.deleteSuccess": "Table deleted successfully",
+  "tables.active": "Active",
+  "tables.inactive": "Inactive"
 }

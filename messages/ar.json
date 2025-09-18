@@ -269,7 +269,7 @@
   "theme.light": "فاتح",
   "theme.dark": "داكن",
   "theme.system": "النظام",
-  
+
   "tableSection.name": "اسم قسم الطاولات",
   "tableSection.restaurant": "اسم المطعم",
   "tableSection.searchPlaceholder": "ابحث في أقسام الطاولات...",
@@ -342,5 +342,7 @@
   "table.deleteConfirmationDescription": "هل أنت متأكد من أنك تريد حذف الطاولة \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
   "table.addSuccess": "تمت إضافة الطاولة بنجاح",
   "table.editSuccess": "تم تحديث الطاولة بنجاح",
-  "table.deleteSuccess": "تم حذف الطاولة بنجاح"
+  "table.deleteSuccess": "تم حذف الطاولة بنجاح",
+  "restaurants.active": "نشط",
+  "restaurants.inactive": "غير نشط"
 }
