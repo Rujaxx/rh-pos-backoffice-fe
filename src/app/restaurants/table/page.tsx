@@ -58,7 +58,7 @@ export default function TablePage() {
         executeConfirmation,
     } = useConfirmationModal()
 
-    const { form } = useTableForm(editingTable)
+    const { form, isEditing } = useTableForm(editingTable)
 
     const columns = [
         {
@@ -97,33 +97,40 @@ export default function TablePage() {
 
     const actions: TableAction<Table>[] = [
         {
-            label: t("common.edit"),
+            label: t("table.edit"),
             icon: Edit,
             onClick: (table) => openModal(table),
         },
         {
-            label: t("common.delete"),
+            label: t("table.delete"),
             icon: Trash2,
             variant: "destructive",
             onClick: (table) =>
                 openConfirmationModal(() => handleDeleteTable(table), {
                     title: t("table.deleteConfirmationTitle"),
                     description: t("table.deleteConfirmationDescription", { name: table.label }),
-                    confirmButtonText: t("common.delete"),
+                    confirmButtonText: t("table.delete"),
                     variant: "destructive",
                 }),
-            disabled: (table) => table.isAvailable, // block deleting available tables
+            disabled: (table) => table.isAvailable,
         },
     ]
 
     const handleCreateTable = async (data: TableFormData) => {
         setLoading(true)
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise((resolve) => setTimeout(resolve, 500))
 
-            const newTable: Table = {
-                id: Date.now().toString(),
-                ...data,
+            const count = data.isBulk && data.bulkCount ? parseInt(data.bulkCount) : 1
+            const prefix = data.bulkLabelPrefix || "T"
+
+            const newTables: Table[] = Array.from({ length: count }, (_, i) => ({
+                id: (Date.now() + i).toString(),
+                restaurantId: data.restaurantId,
+                tableSectionId: data.tableSectionId,
+                label: data.isBulk ? `${prefix}${i + 1}` : (data.label as string),
+                capacity: data.capacity,
+                isAvailable: data.isAvailable,
                 createdBy: "",
                 updatedBy: "",
                 restaurantName:
@@ -131,10 +138,12 @@ export default function TablePage() {
                         en: "Unknown",
                         ar: "غير معروف",
                     },
-            }
+                createdAt: new Date(),
+            }))
 
-            setTables((prev) => [newTable, ...prev])
+            setTables((prev) => [...newTables, ...prev])
             toast.success(t("table.addSuccess"))
+            closeModal()
         } catch (error) {
             toast.error(t("common.error"))
             throw error
@@ -147,12 +156,15 @@ export default function TablePage() {
         if (!editingTable) return
         setLoading(true)
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise((resolve) => setTimeout(resolve, 500))
 
             const updatedTable: Table = {
                 ...editingTable,
-                ...data,
-                createdBy: "",
+                restaurantId: data.restaurantId,
+                tableSectionId: data.tableSectionId,
+                label: data.label as string,
+                capacity: data.capacity,
+                isAvailable: data.isAvailable,
                 updatedBy: "",
                 restaurantName:
                     mockTables.find((r) => r.restaurantId === data.restaurantId)?.restaurantName || {
@@ -165,6 +177,7 @@ export default function TablePage() {
                 prev.map((table) => (table.id === editingTable.id ? updatedTable : table)),
             )
             toast.success(t("table.editSuccess"))
+            closeModal()
         } catch (error) {
             toast.error(t("common.error"))
             throw error
@@ -176,7 +189,7 @@ export default function TablePage() {
     const handleDeleteTable = async (tableToDelete: Table) => {
         setLoading(true)
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise((resolve) => setTimeout(resolve, 500))
             setTables((prev) => prev.filter((t) => t.id !== tableToDelete.id))
             toast.success(t("table.deleteSuccess"))
         } catch {
@@ -187,15 +200,15 @@ export default function TablePage() {
     }
 
     const handleFormSubmit = async (data: TableFormData) => {
-        if (editingTable) {
+        if (isEditing) {
             await handleUpdateTable(data)
         } else {
             await handleCreateTable(data)
         }
     }
 
-    const getModalTitle = () =>
-        editingTable ? t("table.editTitle") : t("table.form.addTitle")
+    const getModalTitle = () => (isEditing ? t("table.edit") : t("table.form.createTitle"))
+    const getModalDescription = () => (isEditing ? "" : t("table.form.createDescription"))
 
     return (
         <Layout>
@@ -208,13 +221,9 @@ export default function TablePage() {
                         </h1>
                         <p className="text-muted-foreground">{t("table.subtitle")}</p>
                     </div>
-                    <Button
-                        onClick={() => openModal()}
-                        className="flex items-center gap-2"
-                        disabled={loading}
-                    >
+                    <Button onClick={() => openModal()} className="flex items-center gap-2" disabled={loading}>
                         <Plus className="h-4 w-4" />
-                        {t("table.addNew")}
+                        {t("table.addNewTable")}
                     </Button>
                 </div>
 
@@ -240,8 +249,9 @@ export default function TablePage() {
                     isOpen={isOpen}
                     onClose={closeModal}
                     title={getModalTitle()}
-                    form={form}
-                    onSubmit={handleFormSubmit}
+                    description={getModalDescription()}
+                    form={form} // ✅ required
+                    onSubmit={handleFormSubmit} // ✅ required
                     loading={loading}
                 >
                     <TableFormContent form={form} />

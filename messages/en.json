@@ -449,7 +449,11 @@
   "table.addNew": "Add new Table",
   "table.available": "Available",
   "table.unavailable": "Unavailable",
+  "table.deleteConfirmationTitle": "Delete Table",
+  "table.deleteConfirmationDescription": "Are you sure you want to delete the table \"{name}\"? This action cannot be undone.",
 
+  "table.form.createTitle": "Create Table",
+  "table.form.createDescription": "Provide the details below to create a new table or multiple tables at once.",
   "table.form.addTitle": "Add Table",
   "table.form.basicInfo": "Basic Information",
   "table.form.restaurantLabel": "Restaurant",
@@ -466,6 +470,11 @@
   "table.form.capacityPlaceholder": "Enter seating capacity",
   "table.form.availabilityLabel": "Availability",
   "table.form.availabilityDescription": "Toggle to set whether this table is available for reservations",
-  "table.deleteConfirmationTitle": "Delete Table",
-  "table.deleteConfirmationDescription": "Are you sure you want to delete the table \"{name}\"? This action cannot be undone."
+  "table.form.bulkAdd": "Bulk Add Tables",
+  "table.form.bulkAddDescription": "Enable this to add multiple tables at once.",
+  "table.form.bulkCount": "Number of Tables",
+  "table.form.bulkLabelPrefix": "Table Label Prefix",
+  "table.addSuccess": "Table added successfully",
+  "table.editSuccess": "Table updated successfully",
+  "table.deleteSuccess": "Table deleted successfully"
 }

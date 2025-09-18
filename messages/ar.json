@@ -448,6 +448,8 @@
   "table.available": " متاح",
   "table.unavailable": "غير متاح",
 
+  "table.form.createTitle": "إنشاء طاولة",
+  "table.form.createDescription": "قم بتقديم التفاصيل أدناه لإنشاء طاولة جديدة أو عدة طاولات دفعة واحدة.",
   "table.form.addTitle": " إضافة طاولة",
   "table.form.basicInfo": "المعلومات الأساسية",
   "table.form.restaurantLabel": "المطعم",
@@ -464,6 +466,13 @@
   "table.form.capacityPlaceholder": "أدخل سعة المقاعد",
   "table.form.availabilityLabel": "التوفر",
   "table.form.availabilityDescription": "قم بالتبديل لتحديد ما إذا كانت الطاولة متاحة للحجوزات",
+  "table.form.bulkAdd": "إضافة جداول جماعية",
+  "table.form.bulkAddDescription": "تمكين هذا لإضافة عدة جداول مرة واحدة.",
+  "table.form.bulkCount": "عدد الجداول",
+  "table.form.bulkLabelPrefix": "بادئة تسمية الجدول",
   "table.deleteConfirmationTitle": "حذف طاولة",
-  "table.deleteConfirmationDescription": "هل أنت متأكد من أنك تريد حذف الطاولة \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء."
+  "table.deleteConfirmationDescription": "هل أنت متأكد من أنك تريد حذف الطاولة \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+  "table.addSuccess": "تمت إضافة الطاولة بنجاح",
+  "table.editSuccess": "تم تحديث الطاولة بنجاح",
+  "table.deleteSuccess": "تم حذف الطاولة بنجاح"
 }
