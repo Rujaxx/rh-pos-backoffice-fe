@@ -69,6 +69,9 @@ interface RHFInputProps<TFormValues extends Record<string, unknown>> {
   placeholder?: string
   type?: string
   className?: string
+  min?: string
+  max?: string
+  disabled?: boolean
 }
 
 export function RHFInput<TFormValues extends Record<string, unknown>>({
@@ -79,6 +82,9 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
   placeholder,
   type = "text",
   className,
+  min,
+  max,
+  disabled,
 }: RHFInputProps<TFormValues>) {
   return (
     <FormFieldWrapper form={form} name={name} label={label} description={description}>
@@ -89,6 +95,9 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
           type={type}
           placeholder={placeholder}
           className={cn("w-full", className)}
+          min={min}
+          max={max}
+          disabled={disabled}
         />
       )}
     </FormFieldWrapper>
@@ -185,7 +194,7 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
 }: RHFSwitchProps<TFormValues>) {
   const { locale } = useI18n()
   const isRTL = locale === 'ar'
-  
+
   return (
     <FormFieldWrapper form={form} name={name} label={label} description={description}>
       {(field) => (
@@ -378,7 +387,7 @@ export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
   className,
 }: RHFAddressFormProps<TFormValues>) {
   const { t } = useTranslation()
-  
+
   return (
     <div className={className}>
       <Card>
