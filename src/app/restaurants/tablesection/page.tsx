@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table"
 import { CrudModal, ConfirmationModal, useModal, useConfirmationModal } from "@/components/ui/crud-modal"
-import { TableSectionFormContent, useTableSectionForm } from "@/components/restaurants/tableSection-form"
+import { TableSectionFormContent, useTableSectionForm } from "@/components/restaurants/tablesection-form"
 import Layout from "@/components/common/layout"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Building2 } from "lucide-react"
-import { TableSection, TableAction } from "@/types/tableSection"
-import { TableSectionFormData } from "@/lib/validations/tablesection.validation"
+import { TableSection, TableAction } from "@/types/tablesection"
+import { TableSectionFormData } from "@/lib/validations/tableSection.validation"
 import { toast } from "sonner"
 import { useI18n } from "@/providers/i18n-provider"
 
@@ -91,8 +91,8 @@ export default function TableSectionPage() {
             accessor: (tableSection: TableSection) => (
                 <Badge variant={tableSection.isActive ? "default" : "secondary"}>
                     {tableSection.isActive
-                        ? t('restaurants.active')
-                        : t('restaurants.inactive')
+                        ? t('tables.active')
+                        : t('tables.inactive')
                     }
                 </Badge>
             ),

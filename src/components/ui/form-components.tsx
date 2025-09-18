@@ -71,6 +71,7 @@ interface RHFInputProps<TFormValues extends Record<string, unknown>> {
   className?: string
   min?: string
   max?: string
+  step?: string
   disabled?: boolean
 }
 
@@ -84,6 +85,7 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
   className,
   min,
   max,
+  step,
   disabled,
 }: RHFInputProps<TFormValues>) {
   return (
@@ -97,6 +99,7 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
           className={cn("w-full", className)}
           min={min}
           max={max}
+          step={step}
           disabled={disabled}
         />
       )}
