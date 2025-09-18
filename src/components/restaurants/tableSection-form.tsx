@@ -11,7 +11,7 @@ import {
     RHFSwitch,
 } from "@/components/ui/form-components"
 import { TableSectionSchema, TableSectionFormData } from "@/lib/validations/tableSection.validation"
-import { TableSection } from "@/types/tableSection"
+import { TableSection } from "@/types/tablesection"
 
 interface TableSectionFormContentProps {
     form: UseFormReturn<TableSectionFormData>
