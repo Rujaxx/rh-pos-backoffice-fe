@@ -197,7 +197,7 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
 }: RHFSwitchProps<TFormValues>) {
   const { locale } = useI18n()
   const isRTL = locale === 'ar'
-
+  
   return (
     <FormFieldWrapper form={form} name={name} label={label} description={description}>
       {(field) => (
@@ -390,7 +390,7 @@ export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
   className,
 }: RHFAddressFormProps<TFormValues>) {
   const { t } = useTranslation()
-
+  
   return (
     <div className={className}>
       <Card>

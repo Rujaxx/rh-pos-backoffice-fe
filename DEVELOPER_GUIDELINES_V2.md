@@ -1,6 +1,7 @@
 # RH POS Backoffice Frontend Development Guidelines
 
 ## Table of Contents
+
 1. [Project Structure](#1-project-structure)
 2. [Creating New Pages](#2-creating-new-pages)
 3. [Forms Implementation](#3-forms-implementation)
@@ -14,6 +15,7 @@
 ## 1. Project Structure
 
 ### 1.1. Directory Layout
+
 ```
 src/
   app/                    # Next.js 13+ app directory
@@ -35,6 +37,7 @@ messages/
 ## 2. Creating New Pages
 
 ### 2.1. Page Structure
+
 ```tsx
 // src/app/{module}/page.tsx
 export default function ModulePage() {
@@ -47,17 +50,19 @@ export default function ModulePage() {
         </Button>
       </div>
       <ModuleTable data={data} />
-      <CreateModuleModal 
-        open={showCreateModal} 
-        onOpenChange={setShowCreateModal} 
+      <CreateModuleModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
       />
     </div>
-  )
+  );
 }
 ```
 
 ### 2.2. Sidenav Integration
+
 Add your route to `src/components/common/sidebar.tsx`:
+
 ```tsx
 {
   path: "/module",
@@ -70,9 +75,10 @@ Add your route to `src/components/common/sidebar.tsx`:
 ## 3. Forms Implementation
 
 ### 3.1. Schema Definition
+
 ```tsx
 // src/lib/validations/{module}.ts
-import { z } from "zod"
+import { z } from "zod";
 
 export const moduleSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -80,35 +86,36 @@ export const moduleSchema = z.object({
   status: z.enum(["active", "inactive"]),
   translations: z.object({
     en: z.string(),
-    ar: z.string()
-  })
-})
+    ar: z.string(),
+  }),
+});
 
-export type ModuleFormData = z.infer<typeof moduleSchema>
+export type ModuleFormData = z.infer<typeof moduleSchema>;
 ```
 
 ### 3.2. Form Component
+
 ```tsx
 // src/components/{module}/module-form.tsx
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormField,
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage
-} from "@/components/ui/form"
+  FormMessage,
+} from "@/components/ui/form";
 
 export function ModuleForm() {
   const form = useForm<ModuleFormData>({
     resolver: zodResolver(moduleSchema),
     defaultValues: {
       name: "",
-      status: "active"
-    }
-  })
+      status: "active",
+    },
+  });
 
   return (
     <Form {...form}>
@@ -127,11 +134,12 @@ export function ModuleForm() {
       />
       {/* Other fields */}
     </Form>
-  )
+  );
 }
 ```
 
 ### 3.3. Form Validation
+
 ```tsx
 const onSubmit = async (data: ModuleFormData) => {
   const result = validateFormSubmission(
@@ -139,39 +147,39 @@ const onSubmit = async (data: ModuleFormData) => {
     data,
     (validData) => {
       // Success handling
-      toast.success(t("module.messages.created"))
+      toast.success(t("module.messages.created"));
     },
     (errors) => {
       // Error handling
-      toast.error(formatValidationErrors(errors)[0])
-    }
-  )
-}
+      toast.error(formatValidationErrors(errors)[0]);
+    },
+  );
+};
 ```
 
 ## 4. Table Implementation
 
 ### 4.1. Column Definition
+
 ```tsx
 // src/components/{module}/module-table.tsx
 const columns: ColumnDef<Module>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={t("module.table.name")}
-      />
-    )
+      <DataTableColumnHeader column={column} title={t("module.table.name")} />
+    ),
   },
   {
     accessorKey: "status",
     header: t("module.table.status"),
     cell: ({ row }) => (
-      <Badge variant={row.getValue("status") === "active" ? "success" : "secondary"}>
+      <Badge
+        variant={row.getValue("status") === "active" ? "success" : "secondary"}
+      >
         {t(`module.status.${row.getValue("status")}`)}
       </Badge>
-    )
+    ),
   },
   {
     id: "actions",
@@ -181,12 +189,13 @@ const columns: ColumnDef<Module>[] = [
         onEdit={() => handleEdit(row.original)}
         onDelete={() => handleDelete(row.original.id)}
       />
-    )
-  }
-]
+    ),
+  },
+];
 ```
 
 ### 4.2. Table Component
+
 ```tsx
 export function ModuleTable({ data }: Props) {
   return (
@@ -197,31 +206,32 @@ export function ModuleTable({ data }: Props) {
       pagination
       sorting
     />
-  )
+  );
 }
 ```
 
 ## 5. Validation
 
 ### 5.1. Custom Validation Rules
+
 ```tsx
 // src/lib/validations/{module}.ts
-export const customFieldValidation = z.string().refine(
-  (value) => customValidationLogic(value),
-  {
-    message: "Custom validation message"
-  }
-)
+export const customFieldValidation = z
+  .string()
+  .refine((value) => customValidationLogic(value), {
+    message: "Custom validation message",
+  });
 ```
 
 ### 5.2. Error Handling
+
 ```tsx
 try {
-  const validData = await validateFormData(moduleSchema, formData)
+  const validData = await validateFormData(moduleSchema, formData);
   // Process valid data
 } catch (error) {
   if (error instanceof z.ZodError) {
-    const errors = formatValidationErrors(error)
+    const errors = formatValidationErrors(error);
     // Handle validation errors
   }
 }
@@ -230,7 +240,9 @@ try {
 ## 6. Internationalization
 
 ### 6.1. Translation Structure
+
 Follow the established dot notation pattern in `messages/en.json`:
+
 ```json
 {
   "module.title": "Module Name",
@@ -247,6 +259,7 @@ Follow the established dot notation pattern in `messages/en.json`:
 ```
 
 ### 6.2. Using Translations
+
 ```tsx
 const { t } = useTranslation()
 
@@ -258,11 +271,13 @@ const { t } = useTranslation()
 ## 7. State Management
 
 ### 7.1. Local State
+
 - Use React's useState for component-level state
 - Use useReducer for complex state logic
 - Implement proper loading and error states
 
 ### 7.2. Form State
+
 - Use React Hook Form for form state management
 - Implement proper validation states
 - Show appropriate error messages
@@ -270,18 +285,17 @@ const { t } = useTranslation()
 ## 8. UI Components
 
 ### 8.1. Available Components
+
 - Use shadcn/ui components for consistency
 - Use our custom wrapper components when available
 - Follow the established design patterns
 
 ### 8.2. Modal Implementation
-```tsx
-import { CrudModal } from "@/components/ui/crud-modal"
 
-export function CreateModuleModal({ 
-  open, 
-  onOpenChange 
-}: CrudModalProps) {
+```tsx
+import { CrudModal } from "@/components/ui/crud-modal";
+
+export function CreateModuleModal({ open, onOpenChange }: CrudModalProps) {
   return (
     <CrudModal
       title={t("module.create.title")}
@@ -290,37 +304,43 @@ export function CreateModuleModal({
     >
       <ModuleForm />
     </CrudModal>
-  )
+  );
 }
 ```
 
 ## 9. Best Practices
 
 ### 9.1. Code Organization
+
 - Keep components small and focused
 - Use custom hooks for reusable logic
 - Follow the established naming conventions
 - Use TypeScript for better type safety
 
 ### 9.2. Performance
+
 - Implement proper memoization (useMemo, useCallback)
 - Use proper key props in lists
 - Optimize re-renders
 - Lazy load components when appropriate
 
 ### 9.3. Error Handling
+
 - Implement proper error boundaries
 - Show appropriate error states
 - Handle API errors gracefully
 - Provide meaningful error messages
 
 ### 9.4. Testing
+
 - Write unit tests for critical functionality
 - Test error cases and edge conditions
 - Use proper mocking for external dependencies
 
 ## Reference Implementation
+
 Check the brands module for a complete example:
+
 - `src/app/brands/page.tsx`
 - `src/components/brands/brand-form.tsx`
 - `src/components/brands/brand-table.tsx`

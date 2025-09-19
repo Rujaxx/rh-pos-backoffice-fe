@@ -1,4 +1,6 @@
-import { MultilingualText, TableAction } from "./brand"; // same as you used for Restaurant
+// same as you used for Restaurant
+import { TableAction } from "@/types/brand.type";
+import { MultilingualText } from "@/types/common/common.type";
 
 export type { TableAction }
 
@@ -19,4 +21,3 @@ export interface TableSectionColumn {
     sortable?: boolean;
     filterable?: boolean;
 }
-

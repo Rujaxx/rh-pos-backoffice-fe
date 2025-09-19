@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { MultilingualText } from "@/types/brand"
+import { MultilingualText } from "@/types/common/common.type"
 import { Languages, Globe } from "lucide-react"
 import { useI18n } from "@/providers/i18n-provider"
 

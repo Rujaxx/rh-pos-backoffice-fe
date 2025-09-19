@@ -1,6 +1,7 @@
-import { Address, MultilingualText, TableAction } from "./brand"
+import { Address, TableAction } from './brand.type';
+import { MultilingualText } from './common/common.type';
 
-export type { TableAction }
+export type { TableAction };
 
 export interface SendReportsSettings {
   email: boolean;
@@ -27,7 +28,7 @@ export interface Restaurant extends Record<string, unknown> {
   name: MultilingualText;
   description: MultilingualText;
   brandId: string;
-  brandName: MultilingualText,
+  brandName: MultilingualText;
   logo?: string;
   address: Address;
   timezone: string;
