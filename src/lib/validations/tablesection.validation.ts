@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { multilingualTextSchema } from "../validations";
+import { multilingualTextSchema } from "./common/common.validation";
 
 
 export const TableSectionSchema = z.object({

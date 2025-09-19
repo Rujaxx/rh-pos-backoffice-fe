@@ -5,11 +5,13 @@ Welcome! Thank you for considering contributing to the RH POS Backoffice Fronten
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - Git
 - VS Code (recommended)
 
 ### Setup
+
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -30,6 +32,7 @@ npm run dev
 Please read our [Branching Strategy Guidelines](./.github/BRANCHING_STRATEGY.md) for detailed information about our Git workflow.
 
 **Quick Reference:**
+
 - `main` - Production-ready code
 - `develop` - Integration branch
 - `feature/TICKET-ID-description` - New features
@@ -49,8 +52,9 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) format:
 ```
 
 **Types:**
+
 - `feat`: New features
-- `fix`: Bug fixes  
+- `fix`: Bug fixes
 - `ui`: UI/UX improvements
 - `i18n`: Internationalization updates
 - `refactor`: Code refactoring
@@ -59,9 +63,10 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) format:
 - `chore`: Build/tooling changes
 
 **Examples:**
+
 ```bash
 feat(brands): add brand creation form with validation
-fix(auth): resolve login form validation issues  
+fix(auth): resolve login form validation issues
 ui(dashboard): improve mobile responsive layout
 i18n(nav): add Arabic translations for navigation menu
 ```
@@ -69,11 +74,14 @@ i18n(nav): add Arabic translations for navigation menu
 ## 🔍 Code Quality
 
 ### Pre-commit Hooks
+
 Our Husky setup automatically runs:
+
 - `lint-staged` - Lints and formats staged files
 - `npm run build` - Ensures code compiles
 
 ### Manual Quality Checks
+
 ```bash
 # Lint code
 npm run lint
@@ -82,7 +90,7 @@ npm run lint:fix
 # Type checking
 npm run type-check
 
-# Format code  
+# Format code
 npm run format
 npm run format:check
 
@@ -95,12 +103,14 @@ npm run build
 This project supports English and Arabic languages with RTL layout.
 
 ### Requirements for i18n Changes
+
 - [ ] Add translation keys to both `messages/en.json` and `messages/ar.json`
 - [ ] Test in both languages using the language switcher
 - [ ] Verify RTL layout works correctly in Arabic
 - [ ] Ensure proper text direction and spacing
 
 ### Testing i18n Changes
+
 1. Switch to Arabic language in the app
 2. Verify all new text is translated
 3. Check RTL layout alignment
@@ -112,7 +122,8 @@ This project supports English and Arabic languages with RTL layout.
 Use our [Bug Report Template](./.github/ISSUE_TEMPLATE/bug_report.md) when creating bug reports.
 
 **Essential Information:**
-- Device/browser information  
+
+- Device/browser information
 - Language (English/Arabic)
 - Steps to reproduce
 - Expected vs actual behavior
@@ -123,6 +134,7 @@ Use our [Bug Report Template](./.github/ISSUE_TEMPLATE/bug_report.md) when creat
 Use our [Feature Request Template](./.github/ISSUE_TEMPLATE/feature_request.md) for new features.
 
 **Include:**
+
 - Clear problem statement
 - Proposed solution
 - POS-specific context
@@ -132,6 +144,7 @@ Use our [Feature Request Template](./.github/ISSUE_TEMPLATE/feature_request.md) 
 ## 🔄 Pull Request Process
 
 ### Before Creating a PR
+
 - [ ] Branch is up to date with target branch
 - [ ] All commits follow conventional commit format
 - [ ] Code has been self-reviewed
@@ -141,6 +154,7 @@ Use our [Feature Request Template](./.github/ISSUE_TEMPLATE/feature_request.md) 
 - [ ] Mobile responsive design verified
 
 ### PR Checklist
+
 Use our [PR Template](./.github/pull_request_template.md) which includes:
 
 - [ ] Clear description of changes
@@ -151,6 +165,7 @@ Use our [PR Template](./.github/pull_request_template.md) which includes:
 - [ ] Accessibility checked
 
 ### Review Process
+
 1. **Self-review**: Review your own code first
 2. **Automated checks**: All CI checks must pass
 3. **Peer review**: At least 1 approval required
@@ -161,6 +176,7 @@ Use our [PR Template](./.github/pull_request_template.md) which includes:
 ## 🏗️ Development Guidelines
 
 ### Code Style
+
 - Follow existing patterns in the codebase
 - Use TypeScript for type safety
 - Keep components small and focused
@@ -168,12 +184,13 @@ Use our [PR Template](./.github/pull_request_template.md) which includes:
 - Add comments for complex logic
 
 ### Component Structure
+
 ```tsx
 // 1. Imports
-import React from 'react'
-import { useTranslation } from '@/hooks/useTranslation'
+import React from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
-// 2. Types/Interfaces  
+// 2. Types/Interfaces
 interface MyComponentProps {
   // props definition
 }
@@ -181,27 +198,25 @@ interface MyComponentProps {
 // 3. Component
 export function MyComponent({ prop1, prop2 }: MyComponentProps) {
   // 4. Hooks
-  const { t } = useTranslation()
-  
+  const { t } = useTranslation();
+
   // 5. Logic
   // component logic here
-  
+
   // 6. Render
-  return (
-    <div>
-      {/* JSX here */}
-    </div>
-  )
+  return <div>{/* JSX here */}</div>;
 }
 ```
 
 ### RTL Support Guidelines
+
 - Use logical CSS properties when possible (`margin-inline-start` vs `margin-left`)
-- Test all UI changes in both LTR and RTL modes  
+- Test all UI changes in both LTR and RTL modes
 - Use `dir="rtl"` or `dir="ltr"` for specific content
 - Consider text expansion in Arabic translations
 
 ### File Structure
+
 ```
 src/
 ├── app/                 # Next.js app directory
@@ -218,12 +233,14 @@ src/
 ## 🧪 Testing
 
 ### Current Testing Strategy
+
 - **Type checking**: TypeScript compilation
 - **Linting**: ESLint with Next.js rules
 - **Build testing**: Ensure successful builds
 - **Manual testing**: Feature and regression testing
 
 ### Testing Checklist
+
 - [ ] Feature works as expected
 - [ ] No TypeScript errors
 - [ ] No lint errors or warnings
@@ -237,6 +254,7 @@ src/
 ## 📦 Dependencies
 
 ### Adding Dependencies
+
 1. Check if the functionality exists in the codebase
 2. Consider bundle size impact
 3. Ensure compatibility with Next.js and React 19
@@ -246,15 +264,16 @@ src/
 # Production dependencies
 npm install package-name
 
-# Development dependencies  
+# Development dependencies
 npm install -D package-name
 ```
 
 ## 🔧 Development Tools
 
 ### Recommended VS Code Extensions
+
 - **ESLint**: Code linting
-- **Prettier**: Code formatting  
+- **Prettier**: Code formatting
 - **TypeScript Importer**: Auto imports
 - **Tailwind CSS IntelliSense**: CSS class autocomplete
 - **Git Graph**: Visualize git branches
@@ -262,6 +281,7 @@ npm install -D package-name
 - **Conventional Commits**: Commit message helper
 
 ### Useful Commands
+
 ```bash
 # Development
 npm run dev              # Start dev server
@@ -282,6 +302,7 @@ npm run prepare         # Setup Husky hooks
 ## 🆘 Getting Help
 
 ### Resources
+
 - **Branching Strategy**: [.github/BRANCHING_STRATEGY.md](./.github/BRANCHING_STRATEGY.md)
 - **Issue Templates**: `.github/ISSUE_TEMPLATE/`
 - **Next.js Docs**: https://nextjs.org/docs
@@ -289,12 +310,14 @@ npm run prepare         # Setup Husky hooks
 - **React Hook Form**: https://react-hook-form.com/
 
 ### Communication
+
 - **Bug Reports**: Create GitHub issue with bug template
-- **Feature Requests**: Create GitHub issue with feature template  
+- **Feature Requests**: Create GitHub issue with feature template
 - **Questions**: Ask in team chat or GitHub Discussions
 - **Documentation**: Check README and project wiki
 
 ### Code Review
+
 - Be constructive and respectful
 - Focus on code, not the person
 - Suggest improvements with examples
@@ -304,12 +327,14 @@ npm run prepare         # Setup Husky hooks
 ## 🎯 Project-Specific Notes
 
 ### POS Domain Knowledge
+
 - Understand restaurant operations workflow
 - Consider multi-language requirements (EN/AR)
 - Think about different user roles (admin, manager, staff)
 - Consider mobile/tablet usage in restaurant environments
 
 ### Performance Considerations
+
 - Keep bundle size reasonable
 - Optimize images and assets
 - Consider loading states for slow networks

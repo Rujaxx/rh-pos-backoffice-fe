@@ -1,3 +1,5 @@
+import { MultilingualText } from "./common/common.type";
+
 export interface Address extends Record<string, unknown> {
   street?: string;
   city?: string;
@@ -8,9 +10,6 @@ export interface Address extends Record<string, unknown> {
   longitude?: number;
 }
 
-export interface MultilingualText {
-  [key: string]: string; // e.g., { en: "English Text", ar: "النص العربي" }
-}
 
 export interface Brand extends Record<string, unknown> {
   _id?: string;

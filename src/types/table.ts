@@ -1,4 +1,5 @@
-import { MultilingualText, TableAction } from "./brand"; // same as Restaurant
+import { TableAction } from "./brand.type"; // same as Restaurant
+import { MultilingualText } from "./common/common.type";
 
 export type { TableAction };
 
