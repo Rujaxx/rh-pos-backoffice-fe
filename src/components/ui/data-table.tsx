@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 import { DataTableProps } from '@/types/brand.type';
 
-interface TableColumn<T> {
+export interface TableColumn<T> {
   id: string;
   label: string;
   accessor?: keyof T | ((item: T) => React.ReactNode);

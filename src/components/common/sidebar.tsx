@@ -8,15 +8,12 @@ import {
   Settings,
   Home,
   ShoppingCart,
-  Package,
   FileText,
   TrendingUp,
   Activity,
   UserPlus,
   Clock,
   DollarSign,
-  ChefHat,
-  UtensilsCrossed,
   Store,
   Receipt,
   Calendar,
@@ -27,6 +24,7 @@ import {
   Truck,
   ChevronDown,
   HelpCircle,
+  Percent,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -217,32 +215,6 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
             label: t("navigation.categories"),
             href: "/menu/categories",
             icon: ClipboardList,
-            children: [
-              {
-                id: "appetizers",
-                label: t("navigation.appetizers"),
-                href: "/menu/categories/appetizers",
-                icon: UtensilsCrossed,
-              },
-              {
-                id: "mains",
-                label: t("navigation.mains"),
-                href: "/menu/categories/mains",
-                icon: ChefHat,
-              },
-              {
-                id: "desserts",
-                label: t("navigation.desserts"),
-                href: "/menu/categories/desserts",
-                icon: Package,
-              },
-              {
-                id: "beverages",
-                label: t("navigation.beverages"),
-                href: "/menu/categories/beverages",
-                icon: Package,
-              },
-            ],
           },
           {
             id: "pricing",
@@ -296,6 +268,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
           },
         ],
       },
+    ],
+  },
+  {
+    id: "taxes",
+    label: t("navigation.taxes"),
+    items: [
+      {
+        id: "tax-config",
+        label: t("navigation.taxGroup"),
+        href: "/taxgroup/tax-product-group",
+        icon: Percent,
+      }
     ],
   },
   {

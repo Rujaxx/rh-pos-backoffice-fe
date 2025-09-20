@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { addressSchema } from './brand.validation';
-import { multilingualTextSchema } from './common/common.validation';
+import { addressSchema, multilingualTextSchema } from './common/common.validation';
 
 export interface SendReportsSettings {
   email: boolean;
