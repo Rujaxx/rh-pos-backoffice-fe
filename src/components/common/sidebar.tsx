@@ -150,6 +150,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
             href: "/restaurants/table",
             icon: Store,
           },
+          {
+            id: "kitchen-department",
+            label: t("navigation.kitchendept"),
+            href: "/restaurants/kitchendepartment",
+            icon: Store,
+          },
         ],
       },
       {
@@ -428,8 +434,8 @@ export default function Sidebar() {
         {/* Tooltip for collapsed state when not hovered and not mobile */}
         {menuState === "collapsed" && !isHovered && !isMobile && (
           <div className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${isRTL
-              ? 'right-full mr-2'
-              : 'left-full ml-2'
+            ? 'right-full mr-2'
+            : 'left-full ml-2'
             }`}>
             {item.label}
             {item.badge && <span className={`text-blue-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>({item.badge})</span>}
