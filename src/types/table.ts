@@ -7,7 +7,7 @@ export interface Table extends Record<string, unknown> {
     _id?: string,
     tableSectionId: string;        // ObjectId of TableSection
     label: string;                 // table label
-    capacity: string;              // seating capacity
+    capacity: number;              // seating capacity
     isAvailable: boolean;          // availability status
     restaurantId: string;          // ObjectId of Restaurant
     restaurantName: MultilingualText; // multilingual restaurant name for display

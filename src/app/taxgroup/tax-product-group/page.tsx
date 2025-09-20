@@ -12,7 +12,7 @@ import {
   useConfirmationModal,
 } from '@/components/ui/crud-modal';
 import Layout from '@/components/common/layout';
-import { Edit, Plus, Trash2, Tag, Percent, ChartColumnStackedIcon } from 'lucide-react';
+import { Edit, Plus, Trash2, Tag, Percent } from 'lucide-react';
 import {
   TaxProductGroup,
   TaxProductGroupFormData,
