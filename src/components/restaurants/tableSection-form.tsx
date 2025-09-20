@@ -85,6 +85,7 @@ export function useTableSectionForm(editingTableSection?: TableSection | null) {
   React.useEffect(() => {
     if (editingTableSection) {
       form.reset({
+        _id: editingTableSection._id,
         restaurantId: editingTableSection.restaurantId,
         name: editingTableSection.name,
         isActive: editingTableSection.isActive ?? false,

@@ -4,6 +4,7 @@ import { addressSchema, multilingualTextSchema } from './common/common.validatio
 
 // Brand validation schema
 export const brandSchema = z.object({
+  _id: z.string().optional(),
   name: multilingualTextSchema,
   description: multilingualTextSchema,
   logo: z.string().min(1, 'Logo is required'),

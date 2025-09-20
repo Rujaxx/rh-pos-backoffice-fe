@@ -48,24 +48,8 @@ function TaxProductGroupsPage() {
     executeConfirmation,
   } = useConfirmationModal();
 
-  // TODO: cross check
-  const transformedTaxGroup: TaxProductGroupFormData | null | undefined = editingTaxGroup
-  ? {
-      name: {
-        en: editingTaxGroup.name?.en ?? '',
-        ar: editingTaxGroup.name?.ar ?? '',
-      },
-      productGroupName: editingTaxGroup.productGroupName,
-      taxType: editingTaxGroup.taxType,
-      taxValue: editingTaxGroup.taxValue,
-      isActive: editingTaxGroup.isActive,
-      brandId: editingTaxGroup.brandId,
-      restaurantId: editingTaxGroup.restaurantId,
-    }
-  : null;
-
   // Form hook
-  const { form, isEditing } = useTaxGroupForm(transformedTaxGroup);
+  const { form, isEditing } = useTaxGroupForm(editingTaxGroup);
 
   // Table columns configuration
   const columns = [
@@ -113,6 +97,7 @@ function TaxProductGroupsPage() {
           style: 'decimal',
           maximumFractionDigits: 2,
         }).format(group.taxValue);
+
         return group.taxType === 'Percentage'
           ? `${formattedValue}%`
           : formattedValue;
@@ -169,14 +154,14 @@ function TaxProductGroupsPage() {
       const newTaxGroup: TaxProductGroup = {
         _id: Date.now().toString(),
         name: data.name,
-        productGroupName: '',
-        taxType: 'Percentage', // Hardcoded default
-        taxValue: 0, // Hardcoded default
-        isActive: true,
-        brandId: 'your-brand-id',
-        restaurantId: 'your-restaurant-id',
-        createdBy: 'your-user-id',
-        updatedBy: 'your-user-id',
+        productGroupName: data.productGroupName,
+        taxType: data.taxType,
+        taxValue: data.taxValue,
+        isActive: data.isActive,
+        brandId: data.brandId || 'default-brand-id',
+        restaurantId: data.restaurantId || 'default-restaurant-id',
+        createdBy: 'current-user-id',
+        updatedBy: 'current-user-id',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -200,9 +185,15 @@ function TaxProductGroupsPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const updatedTaxGroup: TaxProductGroup = {
         ...editingTaxGroup,
-        name: data.name, // Only update the name from form data
+        name: data.name,
+        productGroupName: data.productGroupName,
+        taxType: data.taxType,
+        taxValue: data.taxValue,
+        isActive: data.isActive,
+        brandId: data.brandId || editingTaxGroup.brandId,
+        restaurantId: data.restaurantId || editingTaxGroup.restaurantId,
         updatedAt: new Date(),
-        updatedBy: 'your-user-id',
+        updatedBy: 'current-user-id',
       };
       setTaxGroups((prev) =>
         prev.map((group) =>
@@ -236,10 +227,15 @@ function TaxProductGroupsPage() {
   };
 
   const handleSubmit = async (data: TaxProductGroupFormData) => {
-    if (isEditing) {
-      await handleUpdateTaxGroup(data);
-    } else {
-      await handleCreateTaxGroup(data);
+    
+    try {
+      if (isEditing) {
+        await handleUpdateTaxGroup(data);
+      } else {
+        await handleCreateTaxGroup(data);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
     }
   };
 
