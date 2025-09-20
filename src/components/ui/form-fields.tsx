@@ -100,7 +100,8 @@ export function MultilingualInput({
                 <Globe className="h-3 w-3 text-muted-foreground" />
               </div>
               <Component
-                value={value[lang.code] || ""}
+              // TODO: cross check
+                value={(value as unknown as Record<string, string>)[lang.code] || ""}
                 onChange={(e) => handleChange(lang.code, e.target.value)}
                 placeholder={placeholder[lang.code] || `Enter ${label.toLowerCase()} in ${lang.name}`}
                 className="w-full"
