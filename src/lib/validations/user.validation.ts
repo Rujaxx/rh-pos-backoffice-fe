@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 // User validation schema
 export const userSchema = z.object({
+  _id: z.string().optional(),
   firstName: z
     .string()
     .min(1, 'First name is required')

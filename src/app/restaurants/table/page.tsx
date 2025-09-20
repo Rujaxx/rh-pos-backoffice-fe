@@ -26,24 +26,24 @@ import { useI18n } from '@/providers/i18n-provider';
 // Mock data - replace with actual API calls
 const mockTables: Table[] = [
   {
-    id: '1',
+    _id: '1',
     restaurantId: '64b23abc123456',
     restaurantName: { en: 'Pizza Palace', ar: 'قصر البيتزا' },
     tableSectionId: '77b23abc123456',
     label: 'T1',
-    capacity: '4',
+    capacity: 4,
     isAvailable: true,
     createdBy: '',
     createdAt: new Date(),
     updatedBy: '',
   },
   {
-    id: '2',
+    _id: '2',
     restaurantId: '64b23abc123457',
     restaurantName: { en: 'Burger House', ar: 'بيت البرجر' },
     tableSectionId: '77b23abc123457',
     label: 'T2',
-    capacity: '2',
+    capacity: 2,
     isAvailable: false,
     createdBy: '',
     createdAt: new Date(),
@@ -141,7 +141,7 @@ export default function TablePage() {
       const prefix = data.bulkLabelPrefix || 'T';
 
       const newTables: Table[] = Array.from({ length: count }, (_, i) => ({
-        id: (Date.now() + i).toString(),
+        _id: (Date.now() + i).toString(),
         restaurantId: data.restaurantId,
         tableSectionId: data.tableSectionId,
         label: data.isBulk ? `${prefix}${i + 1}` : (data.label as string),
@@ -193,7 +193,7 @@ export default function TablePage() {
 
       setTables((prev) =>
         prev.map((table) =>
-          table.id === editingTable.id ? updatedTable : table
+          table._id === editingTable._id ? updatedTable : table
         )
       );
       toast.success(t('table.editSuccess'));
@@ -210,7 +210,7 @@ export default function TablePage() {
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setTables((prev) => prev.filter((t) => t.id !== tableToDelete.id));
+      setTables((prev) => prev.filter((t) => t._id !== tableToDelete._id));
       toast.success(t('table.deleteSuccess'));
     } catch {
       toast.error(t('common.error'));
