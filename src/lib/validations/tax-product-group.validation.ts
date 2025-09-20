@@ -9,9 +9,12 @@ export const taxProductGroupSchema = z.object({
     error: 'You must select a tax type.',
   }),
 
-  taxValue: z.number().min(0),
+  taxValue: z
+    .number()
+    .min(0.01, 'Tax value must be greater than 0')
+    .max(100, 'Tax value cannot exceed 100 for percentage or be too large for fixed amount'),
   isActive: z.boolean(),
-  brandId: z.string().min(1, 'Brand ID is required'),
+  brandId: z.string(),
   restaurantId: z.string().optional(),
 });
 

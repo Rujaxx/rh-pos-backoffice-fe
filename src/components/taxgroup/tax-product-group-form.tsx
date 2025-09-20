@@ -20,7 +20,6 @@ interface TaxGroupFormContentProps {
 
 export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
   const { t } = useTranslation();
-
   const taxTypeOptions = [
     {
       label: t('taxGroups.form.taxTypePercentage'),
@@ -103,7 +102,7 @@ export function useTaxGroupForm(
     defaultValues: {
       name: { en: '', ar: '' },
       productGroupName: '',
-      taxType: 'Percentage',
+      taxType: 'Percentage' as const,
       taxValue: 0,
       isActive: true,
       brandId: '',
@@ -116,7 +115,7 @@ export function useTaxGroupForm(
       form.reset({
         name: editingTaxGroup.name,
         productGroupName: editingTaxGroup.productGroupName,
-        taxType: editingTaxGroup.taxType || 'Percentage',
+        taxType: editingTaxGroup.taxType || ('Percentage' as const),
         taxValue: editingTaxGroup.taxValue || 0,
         isActive: editingTaxGroup.isActive ?? true,
         brandId: editingTaxGroup.brandId,
@@ -126,7 +125,7 @@ export function useTaxGroupForm(
       form.reset({
         name: { en: '', ar: '' },
         productGroupName: '',
-        taxType: 'Percentage',
+        taxType: 'Percentage' as const,
         taxValue: 0,
         isActive: true,
         brandId: '',
