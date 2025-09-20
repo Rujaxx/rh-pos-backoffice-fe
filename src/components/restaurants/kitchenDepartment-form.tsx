@@ -109,6 +109,7 @@ export function useKitchenDepartmentForm(editingKitchenDepartment?: kitchenDepar
     React.useEffect(() => {
         if (editingKitchenDepartment) {
             form.reset({
+                _id: editingKitchenDepartment._id,
                 brandId: editingKitchenDepartment.brandId,
                 restaurantId: editingKitchenDepartment.restaurantId,
                 shortCode: editingKitchenDepartment.shortCode,

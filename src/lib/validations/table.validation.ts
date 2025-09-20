@@ -3,6 +3,7 @@ import { multilingualTextSchema } from './common/common.validation';
 
 export const tableSchema = z
   .object({
+    _id: z.string().optional(),
     tableSectionId: z.string().min(1, 'Table section is required'),
     label: z.string().optional(),
     capacity: z
