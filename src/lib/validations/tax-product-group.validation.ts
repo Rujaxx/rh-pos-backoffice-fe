@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { multilingualTextSchema } from './common/common.validation';
 
 export const taxProductGroupSchema = z.object({
+  _id: z.string().optional(),
   name: multilingualTextSchema,
   productGroupName: z.string().trim().min(1, 'Product group name is required'),
 

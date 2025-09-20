@@ -15,6 +15,7 @@ import {
   TableSectionFormData,
 } from '@/lib/validations/tablesection.validation';
 import { TableSection } from '@/types/tablesection.type';
+import { evalManifestWithRetries } from 'next/dist/server/load-components';
 
 interface TableSectionFormContentProps {
   form: UseFormReturn<TableSectionFormData>;
@@ -85,6 +86,7 @@ export function useTableSectionForm(editingTableSection?: TableSection | null) {
   React.useEffect(() => {
     if (editingTableSection) {
       form.reset({
+        _id: editingTableSection._id,
         restaurantId: editingTableSection.restaurantId,
         name: editingTableSection.name,
         isActive: editingTableSection.isActive ?? false,

@@ -113,6 +113,7 @@ export function useTaxGroupForm(
   React.useEffect(() => {
     if (editingTaxGroup) {
       form.reset({
+        _id: editingTaxGroup._id,
         name: editingTaxGroup.name,
         productGroupName: editingTaxGroup.productGroupName,
         taxType: editingTaxGroup.taxType || ('Percentage' as const),

@@ -453,6 +453,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
           : 'daily';
 
       form.reset({
+        _id: editingRestaurant._id,
         name: editingRestaurant.name,
         description: editingRestaurant.description,
         brandId: editingRestaurant.brandId,
