@@ -27,7 +27,7 @@ import { TableSectionFormData } from '@/lib/validations/tablesection.validation'
 // Mock data - replace with actual API calls
 const mockTableSections: TableSection[] = [
   {
-    id: '1',
+    _id: '1',
     restaurantId: '64b23abc123456',
     restaurantName: {
       en: 'Pizza Palace - Downtown',
@@ -38,7 +38,7 @@ const mockTableSections: TableSection[] = [
     deletedAt: new Date('2024-01-10'),
   },
   {
-    id: '2',
+    _id: '2',
     restaurantId: '64b23abc123457',
     restaurantName: {
       en: 'Burger House - Central',
@@ -144,7 +144,7 @@ export default function TableSectionPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const newTableSection: TableSection = {
-        id: Date.now().toString(),
+        _id: Date.now().toString(),
         ...data,
         deletedAt: new Date(),
         isActive: true,
@@ -181,7 +181,7 @@ export default function TableSectionPage() {
 
       setTableSections((prev) =>
         prev.map((section) =>
-          section.id === editingTableSection.id ? updatedTableSection : section
+          section._id === editingTableSection._id ? updatedTableSection : section
         )
       );
       toast.success(t('tableSection.editSuccess'));
@@ -202,7 +202,7 @@ export default function TableSectionPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setTableSections((prev) =>
-        prev.filter((section) => section.id !== tableSectionToDelete.id)
+        prev.filter((section) => section._id !== tableSectionToDelete._id)
       );
       toast.success(t('tableSection.deleteSuccess'));
     } catch {

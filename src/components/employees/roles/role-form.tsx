@@ -244,6 +244,7 @@ export function useRoleForm(editingRole?: UserRole | null) {
   React.useEffect(() => {
     if (editingRole) {
       form.reset({
+        _id: editingRole._id,
         name: editingRole.name,
         permissions: editingRole.permissions,
         isActive: editingRole.isActive ?? true,

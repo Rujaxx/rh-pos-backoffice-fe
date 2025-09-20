@@ -107,7 +107,7 @@
 
   "navigation.dashboard": "POS Dashboard",
   "navigation.orders": "Active Orders",
-  "navigation.tables": "Table Management",
+  "navigation.tables": "Tables",
   "navigation.tableSections": "Table Sections",
   "navigation.kitchendept": "Kitchen Department",
   "navigation.menu": "Menu Editor",
@@ -729,5 +729,7 @@
   "kitchen.form.brandLabel": "Brand",
   "kitchen.form.brandPlaceholder": "Select a brand",
   "kitchen.form.activeStatusLabel": "Active Status",
-  "kitchen.form.activeStatusDescription": "Toggle to activate or deactivate this department"
+  "kitchen.form.activeStatusDescription": "Toggle to activate or deactivate this department",
+  "taxGroups.update.success": "Tax group updated successfully",
+  "taxGroups.create.success": "Tax group created successfully"
 }

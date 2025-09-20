@@ -36,6 +36,7 @@ export const sendReportsSchema = z.object({
 });
 
 export const restaurantSchema = z.object({
+  _id: z.string().optional(),
   name: multilingualTextSchema,
   description: multilingualTextSchema,
   brandId: z.string().min(1, 'Brand is required'),
