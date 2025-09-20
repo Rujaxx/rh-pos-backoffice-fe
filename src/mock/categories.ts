@@ -1,0 +1,150 @@
+import { Category } from '@/types/category.type';
+
+export const mockCategories: Category[] = [
+  {
+    _id: '1',
+    name: {
+      en: 'Appetizers',
+      ar: 'مقبلات',
+    },
+    shortCode: 'APP',
+    isActive: true,
+    sortOrder: 1,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '2',
+    name: {
+      en: 'Main Courses',
+      ar: 'الأطباق الرئيسية',
+    },
+    shortCode: 'MAIN',
+    isActive: true,
+    sortOrder: 2,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '3',
+    name: {
+      en: 'Beverages',
+      ar: 'مشروبات',
+    },
+    shortCode: 'BEV',
+    isActive: true,
+    sortOrder: 3,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '4',
+    name: {
+      en: 'Desserts',
+      ar: 'حلويات',
+    },
+    shortCode: 'DESS',
+    isActive: true,
+    sortOrder: 4,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '5',
+    name: {
+      en: 'Coffee',
+      ar: 'قهوة',
+    },
+    shortCode: 'COF',
+    isActive: true,
+    sortOrder: 5,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: '3',
+  },
+];
+
+export const initialMockCategories: Category[] = [
+  {
+    _id: '1',
+    name: {
+      en: 'Appetizers',
+      ar: 'مقبلات',
+    },
+    shortCode: 'APP',
+    isActive: true,
+    sortOrder: 1,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '2',
+    name: {
+      en: 'Soups & Salads',
+      ar: 'شوربات وسلطات',
+    },
+    shortCode: 'SOUP_SALAD',
+    isActive: true,
+    sortOrder: 2,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '3',
+    name: {
+      en: 'Main Courses',
+      ar: 'الأطباق الرئيسية',
+    },
+    shortCode: 'MAIN',
+    isActive: true,
+    sortOrder: 3,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '4',
+    name: {
+      en: 'Beverages',
+      ar: 'مشروبات',
+    },
+    shortCode: 'BEV',
+    isActive: true,
+    sortOrder: 4,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '5',
+    name: {
+      en: 'Desserts',
+      ar: 'حلويات',
+    },
+    shortCode: 'DESS',
+    isActive: false,
+    sortOrder: 5,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: undefined,
+  },
+  {
+    _id: '6',
+    name: {
+      en: 'Soft Drinks',
+      ar: 'مشروبات غازية',
+    },
+    shortCode: 'SOFT',
+    isActive: true,
+    sortOrder: 6,
+    brandId: 'brand123',
+    restaurantId: 'rest123',
+    parentCategoryId: '4',
+  },
+];
