@@ -13,7 +13,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { Category } from '@/types/category.type';
 import { useIntl } from 'react-intl';
 import { mockCategories } from '@/mock/categories';
-import { categorySchema , CategoryFormData} from '@/lib/validations/category.validation';
+import {
+  categorySchema,
+  CategoryFormData,
+} from '@/lib/validations/category.validation';
 
 interface CategoryFormContentProps {
   form: ReturnType<typeof useForm<CategoryFormData>>;
@@ -118,6 +121,7 @@ export function useCategoryForm(editingCategory?: Category | null) {
   React.useEffect(() => {
     if (editingCategory) {
       form.reset({
+        _id: editingCategory._id,
         name: editingCategory.name,
         shortCode: editingCategory.shortCode,
         parentCategoryId: editingCategory.parentCategoryId,
@@ -131,7 +135,7 @@ export function useCategoryForm(editingCategory?: Category | null) {
         name: { en: '', ar: '' },
         shortCode: '',
         parentCategoryId: '',
-        sortOrder: 0,
+        sortOrder: 1,
         isActive: true,
         brandId: 'your-brand-id',
         restaurantId: 'your-restaurant-id',

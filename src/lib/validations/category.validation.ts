@@ -4,6 +4,7 @@ import { multilingualTextSchema } from './common/common.validation';
 
 // TODO: Need Fix (input type conversion)
 export const categorySchema = z.object({
+  _id: z.string().optional(),
   name: multilingualTextSchema,
   shortCode: z.string().min(1, 'Short code is required'),
   parentCategoryId: z.string().optional(),
