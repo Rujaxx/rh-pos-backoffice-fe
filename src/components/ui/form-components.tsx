@@ -94,6 +94,15 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
         <Input
           {...field}
           value={String(field.value || "")}
+          onChange={(e) => {
+            if (type === "number") {
+              // Convert string to number for number inputs
+              const numValue = e.target.value === '' ? 0 : parseFloat(e.target.value)
+              field.onChange(isNaN(numValue) ? 0 : numValue)
+            } else {
+              field.onChange(e.target.value)
+            }
+          }}
           type={type}
           placeholder={placeholder}
           className={cn("w-full", className)}

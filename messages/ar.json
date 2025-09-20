@@ -731,5 +731,7 @@
   "kitchen.form.brandLabel": "العلامة التجارية",
   "kitchen.form.brandPlaceholder": "اختر العلامة التجارية",
   "kitchen.form.activeStatusLabel": "حالة التفعيل",
-  "kitchen.form.activeStatusDescription": "قم بالتبديل لتفعيل أو إلغاء تفعيل هذا القسم"
+  "kitchen.form.activeStatusDescription": "قم بالتبديل لتفعيل أو إلغاء تفعيل هذا القسم",
+  "taxGroups.update.success": "تم تحديث مجموعة الضرائب بنجاح",
+  "taxGroups.create.success": "تم إنشاء مجموعة الضرائب بنجاح"
 }

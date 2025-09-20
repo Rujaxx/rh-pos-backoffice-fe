@@ -3,6 +3,7 @@ import { multilingualTextSchema } from './common/common.validation';
 
 // Role validation schema
 export const roleSchema = z.object({
+  _id: z.string().optional(),
   name: multilingualTextSchema,
   permissions: z
     .array(z.string())
