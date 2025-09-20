@@ -1,4 +1,4 @@
-import { MultilingualText } from "@/types/common/common.type";
+import { MultilingualText } from '@/types/common/common.type';
 
 export interface Category extends Record<string, unknown> {
   _id?: string;
@@ -8,7 +8,7 @@ export interface Category extends Record<string, unknown> {
   sortOrder: number;
   restaurantId?: string;
   brandId?: string;
-  parentCategoryId?: string; 
+  parentCategoryId?: string;
   createdBy?: string;
   updatedBy?: string;
   deletedBy?: string;
@@ -18,6 +18,7 @@ export interface Category extends Record<string, unknown> {
 }
 
 export interface CategoryFormData extends Record<string, unknown> {
+  _id?: string;
   name: MultilingualText;
   shortCode: string;
   parentCategoryId?: string;
