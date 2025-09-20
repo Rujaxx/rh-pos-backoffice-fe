@@ -1,17 +1,6 @@
 import { z } from 'zod';
-import { multilingualTextSchema } from './common/common.validation';
+import { addressSchema, multilingualTextSchema } from './common/common.validation';
 
-// Common validation schemas
-
-export const addressSchema = z.object({
-  street: z.string().min(0), // Change from optional to required empty string
-  city: z.string().min(0),
-  state: z.string().min(0),
-  country: z.string().min(0),
-  zipCode: z.string().min(0),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-});
 
 // Brand validation schema
 export const brandSchema = z.object({
