@@ -93,7 +93,8 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
   );
 }
 
-// Hook for tax group form logic (NO CHANGES NEEDED HERE)
+
+// Hook for tax group form logic
 export function useTaxGroupForm(
   editingTaxGroup?: TaxProductGroupFormData | null
 ) {
@@ -115,7 +116,7 @@ export function useTaxGroupForm(
       form.reset({
         name: editingTaxGroup.name,
         productGroupName: editingTaxGroup.productGroupName,
-        taxType: editingTaxGroup.taxType || "Percentage",
+        taxType: editingTaxGroup.taxType || 'Percentage',
         taxValue: editingTaxGroup.taxValue || 0,
         isActive: editingTaxGroup.isActive ?? true,
         brandId: editingTaxGroup.brandId,

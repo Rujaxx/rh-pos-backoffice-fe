@@ -48,24 +48,8 @@ function TaxProductGroupsPage() {
     executeConfirmation,
   } = useConfirmationModal();
 
-  // TODO: cross check
-  const transformedTaxGroup: TaxProductGroupFormData | null | undefined = editingTaxGroup
-  ? {
-      name: {
-        en: editingTaxGroup.name?.en ?? '',
-        ar: editingTaxGroup.name?.ar ?? '',
-      },
-      productGroupName: editingTaxGroup.productGroupName,
-      taxType: editingTaxGroup.taxType,
-      taxValue: editingTaxGroup.taxValue,
-      isActive: editingTaxGroup.isActive,
-      brandId: editingTaxGroup.brandId,
-      restaurantId: editingTaxGroup.restaurantId,
-    }
-  : null;
-
   // Form hook
-  const { form, isEditing } = useTaxGroupForm(transformedTaxGroup);
+  const { form, isEditing } = useTaxGroupForm(editingTaxGroup);
 
   // Table columns configuration
   const columns = [
