@@ -48,6 +48,7 @@ export function CategoryFormContent({ form }: CategoryFormContentProps) {
               name="name.en"
               label={t('categories.form.nameEn')}
               placeholder={t('categories.form.nameEnPlaceholder')}
+              isRequired
             />
             <RHFInput
               form={form}
@@ -62,6 +63,8 @@ export function CategoryFormContent({ form }: CategoryFormContentProps) {
             name="shortCode"
             label={t('categories.form.shortCode')}
             placeholder={t('categories.form.shortCodePlaceholder')}
+            description={t('categories.form.shortCodeDescription')}
+            isRequired
           />
         </CardContent>
       </Card>

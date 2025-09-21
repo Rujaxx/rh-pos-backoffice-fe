@@ -66,6 +66,7 @@ export function UserFormContent({
                 <FormItem className="space-y-3">
                   <FormLabel className="text-sm font-medium">
                     {t('users.form.restaurantLabel')}
+                    <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <MultiSelectDropdown
@@ -96,6 +97,7 @@ export function UserFormContent({
               name="firstName"
               label={t('users.form.firstNameLabel')}
               placeholder={t('users.form.firstNamePlaceholder')}
+              isRequired
             />
 
             <RHFInput
@@ -103,6 +105,7 @@ export function UserFormContent({
               name="lastName"
               label={t('users.form.lastNameLabel')}
               placeholder={t('users.form.lastNamePlaceholder')}
+              isRequired
             />
           </div>
 
@@ -112,6 +115,7 @@ export function UserFormContent({
             label={t('users.form.usernameLabel')}
             placeholder={t('users.form.usernamePlaceholder')}
             description={t('users.form.usernameDescription')}
+            isRequired={true}
           />
 
           <RHFInput
@@ -120,6 +124,7 @@ export function UserFormContent({
             label={t('users.form.emailLabel')}
             placeholder={t('users.form.emailPlaceholder')}
             type="email"
+            isRequired={true}
           />
 
           <RHFInput
@@ -154,6 +159,7 @@ export function UserFormContent({
               label={t('users.form.roleLabel')}
               placeholder={t('users.form.rolePlaceholder')}
               options={roleOptions}
+              isRequired={true}
             />
           </div>
         </CardContent>

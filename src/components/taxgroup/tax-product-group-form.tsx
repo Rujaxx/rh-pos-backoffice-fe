@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
-  RHFSelect, // UPDATED: Replaced RHFRadioGroup with RHFSelect
+  RHFSelect,
 } from '@/components/ui/form-components';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
@@ -50,6 +50,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
                 name="name.en"
                 label={t('taxGroups.form.nameEn')}
                 placeholder={t('taxGroups.form.nameEnPlaceholder')}
+                isRequired
               />
               <RHFInput
                 form={form}
@@ -65,6 +66,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
               name="productGroupName"
               label={t('taxGroups.form.productGroupName')}
               placeholder={t('taxGroups.form.productGroupNamePlaceholder')}
+              isRequired
             />
 
             {/* Tax Type and Tax Value */}
@@ -76,6 +78,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
                 label={t('taxGroups.form.taxType')}
                 placeholder={t('taxGroups.form.taxTypePlaceholder')}
                 options={taxTypeOptions}
+                isRequired
               />
               <RHFInput
                 form={form}
@@ -84,6 +87,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
                 placeholder={t('taxGroups.form.taxValuePlaceholder')}
                 type="number"
                 step="0.01"
+                isRequired
               />
             </div>
           </div>
@@ -103,9 +107,9 @@ export function useTaxGroupForm(
       name: { en: '', ar: '' },
       productGroupName: '',
       taxType: 'Percentage',
-      taxValue: 0,
+      taxValue: 0.01,
       isActive: true,
-      brandId: '',
+      brandId: 'default-brand-id',
       restaurantId: '',
     },
   });
@@ -115,8 +119,8 @@ export function useTaxGroupForm(
       form.reset({
         name: editingTaxGroup.name,
         productGroupName: editingTaxGroup.productGroupName,
-        taxType: editingTaxGroup.taxType || "Percentage",
-        taxValue: editingTaxGroup.taxValue || 0,
+        taxType: editingTaxGroup.taxType || 'Percentage',
+        taxValue: editingTaxGroup.taxValue,
         isActive: editingTaxGroup.isActive ?? true,
         brandId: editingTaxGroup.brandId,
         restaurantId: editingTaxGroup.restaurantId || '',
@@ -126,9 +130,9 @@ export function useTaxGroupForm(
         name: { en: '', ar: '' },
         productGroupName: '',
         taxType: 'Percentage',
-        taxValue: 0,
+        taxValue: 0.01,
         isActive: true,
-        brandId: '',
+        brandId: 'default-brand-id',
         restaurantId: '',
       });
     }

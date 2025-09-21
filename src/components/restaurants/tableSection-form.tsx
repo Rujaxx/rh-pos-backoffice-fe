@@ -47,6 +47,7 @@ export function TableSectionFormContent({
             label={t('tableSection.form.restaurantLabel')}
             placeholder={t('tableSection.form.restaurantPlaceholder')}
             options={restaurantOptions}
+            isRequired
           />
 
           <RHFMultilingualInput
@@ -57,6 +58,7 @@ export function TableSectionFormContent({
               en: t('tableSection.form.namePlaceholderEn'),
               ar: t('tableSection.form.namePlaceholderAr'),
             }}
+            isRequired
           />
           <RHFSwitch
             form={form}
