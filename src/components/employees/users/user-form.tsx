@@ -190,6 +190,7 @@ export function useUserForm(editingUser?: User | null) {
   React.useEffect(() => {
     if (editingUser) {
       form.reset({
+        _id: editingUser._id,
         firstName: editingUser.firstName,
         lastName: editingUser.lastName,
         username: editingUser.username,

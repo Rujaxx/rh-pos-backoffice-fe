@@ -5,6 +5,7 @@ import { MultilingualText } from "@/types/common/common.type";
 export type { TableAction }
 
 export interface TableSection extends Record<string, unknown> {
+    _id?: string,
     restaurantId: string;     // store the id of the restaurant
     restaurantName: MultilingualText;  // for display in the table
     name: MultilingualText;// multilingual object

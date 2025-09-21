@@ -203,6 +203,7 @@ export function useBrandForm(editingBrand?: Brand | null) {
   React.useEffect(() => {
     if (editingBrand) {
       form.reset({
+        _id: editingBrand._id,
         name: editingBrand.name,
         description: editingBrand.description,
         logo: editingBrand.logo,
