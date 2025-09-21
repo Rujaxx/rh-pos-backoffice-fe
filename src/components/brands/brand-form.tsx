@@ -41,6 +41,8 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
                 en: t('brands.form.brandNamePlaceholderEn'),
                 ar: t('brands.form.brandNamePlaceholderAr'),
               }}
+              description={t('brands.form.brandNameDescription')}
+              isRequired
             />
 
             <RHFMultilingualInput
@@ -52,6 +54,8 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
                 en: t('brands.form.descriptionPlaceholderEn'),
                 ar: t('brands.form.descriptionPlaceholderAr'),
               }}
+              description={t('brands.form.descriptionDescription')}
+              isRequired
             />
 
             <RHFSwitch
@@ -77,6 +81,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               label={t('brands.form.logoLabel')}
               accept="image/*"
               description={t('brands.form.logoDescription')}
+              isRequired
             />
 
             <RHFInput
@@ -86,6 +91,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               placeholder={t('brands.form.menuLinkPlaceholder')}
               type="url"
               description={t('brands.form.menuLinkDescription')}
+              isRequired
             />
 
             <RHFInput

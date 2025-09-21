@@ -54,6 +54,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
             label={t('table.form.restaurantLabel')}
             placeholder={t('table.form.restaurantPlaceholder')}
             options={restaurantOptions}
+            isRequired
           />
 
           <RHFSelect
@@ -62,6 +63,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
             label={t('table.form.sectionLabel')}
             placeholder={t('table.form.sectionPlaceholder')}
             options={tableSectionOptions}
+            isRequired
           />
 
           {/* Conditional fields based on bulk toggle */}
@@ -72,6 +74,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
                 name="bulkLabelPrefix"
                 label={t('table.form.bulkLabelPrefix')}
                 placeholder={t('table.form.bulkLabelPrefix')}
+                isRequired
               />
               <RHFInput
                 form={form}
@@ -79,6 +82,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
                 label={t('table.form.capacity')}
                 placeholder={t('table.form.capacityPlaceholder')}
                 type="number"
+                isRequired
               />
               <RHFInput
                 form={form}
@@ -86,6 +90,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
                 label={t('table.form.bulkCount')}
                 placeholder={t('table.form.bulkCount')}
                 type="number"
+                isRequired
               />
               <div className="md:col-span-2">
                 <RHFSwitch
@@ -103,6 +108,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
                 name="label"
                 label={t('table.form.label')}
                 placeholder={t('table.form.labelPlaceholder')}
+                isRequired
               />
               <RHFInput
                 form={form}
@@ -110,6 +116,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
                 label={t('table.form.capacity')}
                 placeholder={t('table.form.capacityPlaceholder')}
                 type="number"
+                isRequired
               />
               <RHFSwitch
                 form={form}
@@ -144,7 +151,6 @@ export function useTableForm(editingTable?: Table | null) {
   React.useEffect(() => {
     if (editingTable) {
       form.reset({
-        _id: editingTable._id,
         restaurantId: editingTable.restaurantId,
         tableSectionId: editingTable.tableSectionId,
         label: editingTable.label,

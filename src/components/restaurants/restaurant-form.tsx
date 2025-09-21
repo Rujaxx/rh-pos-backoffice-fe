@@ -77,6 +77,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
                 en: t('restaurants.form.restaurantNamePlaceholderEn'),
                 ar: t('restaurants.form.restaurantNamePlaceholderAr'),
               }}
+              isRequired
             />
 
             <RHFMultilingualInput
@@ -88,6 +89,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
                 en: t('restaurants.form.descriptionPlaceholderEn'),
                 ar: t('restaurants.form.descriptionPlaceholderAr'),
               }}
+              isRequired
             />
 
             <RHFSelect
@@ -96,6 +98,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               label={t('restaurants.form.brandLabel')}
               placeholder={t('restaurants.form.brandPlaceholder')}
               options={brandOptions}
+              isRequired
             />
 
             <RHFFileUpload
@@ -129,6 +132,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               label={t('restaurants.form.timezoneLabel')}
               placeholder={t('restaurants.form.timezonePlaceholder')}
               options={timezoneOptions}
+              isRequired
             />
 
             <div className="grid grid-cols-2 gap-4">

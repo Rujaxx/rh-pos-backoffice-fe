@@ -60,21 +60,21 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
   };
 
   const renderPermissionCategory = (
-    categoryKey: keyof typeof PERMISSION_CATEGORIES,
-    category: (typeof PERMISSION_CATEGORIES)[keyof typeof PERMISSION_CATEGORIES]
+    roleCategoryKey: keyof typeof PERMISSION_CATEGORIES,
+    roleCategory: (typeof PERMISSION_CATEGORIES)[keyof typeof PERMISSION_CATEGORIES]
   ) => {
-    const CategoryIcon = category.icon;
+    const CategoryIcon = roleCategory.icon;
 
     return (
-      <Card key={categoryKey} className="border-2">
+      <Card key={roleCategoryKey} className="border-2">
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
             <CategoryIcon className="w-5 h-5 text-primary" />
-            {t(`users.permissions.${categoryKey}`)}
+            {t(`users.permissions.${roleCategoryKey}`)}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {category.permissions.map((permission) => (
+          {roleCategory.permissions.map((permission) => (
             <FormField
               key={permission}
               control={form.control}
@@ -127,11 +127,12 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
               <RHFInput
-                form={form}
+                form={form} 
                 name="name.en"
                 label={t('roles.form.nameLabel') + ' (English)'}
                 placeholder={t('roles.form.nameEnglishPlaceholder')}
                 description={t('roles.form.nameDescription')}
+                isRequired
               />
 
               <RHFInput
@@ -200,6 +201,7 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
           <CardTitle className="text-lg flex items-center gap-2">
             <Shield className="w-5 h-5" />
             {t('roles.form.permissionsLabel')}
+            <span className="text-red-500">*</span>
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             {t('roles.form.permissionsDescription')}
@@ -208,10 +210,10 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {Object.entries(PERMISSION_CATEGORIES).map(
-              ([categoryKey, category]) =>
+              ([roleCategoryKey, roleCategory]) =>
                 renderPermissionCategory(
-                  categoryKey as keyof typeof PERMISSION_CATEGORIES,
-                  category
+                  roleCategoryKey as keyof typeof PERMISSION_CATEGORIES,
+                  roleCategory
                 )
             )}
           </div>
