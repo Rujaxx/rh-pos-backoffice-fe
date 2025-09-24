@@ -39,6 +39,8 @@
   "auth.login.subtitle": "قم بتسجيل الدخول لإدارة الطلبات والطاولات والمبيعات",
   "auth.login.emailLabel": "عنوان البريد الإلكتروني",
   "auth.login.emailPlaceholder": "أدخل بريدك الإلكتروني",
+  "auth.login.usernameLabel": "اسم المستخدم",
+  "auth.login.usernamePlaceholder": "أدخل اسم المستخدم",
   "auth.login.passwordLabel": "كلمة المرور",
   "auth.login.passwordPlaceholder": "أدخل كلمة المرور",
   "auth.login.rememberMe": "تذكرني",
