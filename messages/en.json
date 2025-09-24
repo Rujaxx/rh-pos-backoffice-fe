@@ -39,6 +39,8 @@
   "auth.login.subtitle": "Sign in to manage orders, tables, and sales",
   "auth.login.emailLabel": "Email address",
   "auth.login.emailPlaceholder": "Enter your email",
+  "auth.login.usernameLabel": "Username",
+  "auth.login.usernamePlaceholder": "Enter your username",
   "auth.login.passwordLabel": "Password",
   "auth.login.passwordPlaceholder": "Enter your password",
   "auth.login.rememberMe": "Remember me",
