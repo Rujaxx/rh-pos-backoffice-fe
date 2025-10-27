@@ -24,6 +24,7 @@ import {
 } from '@/components/brands/brand-table-columns';
 import Layout from '@/components/common/layout';
 import { Plus, Building2, Filter } from 'lucide-react';
+import { toast } from 'sonner'
 import { Brand, BrandQueryParams } from '@/types/brand.type';
 import { BrandFormData } from '@/lib/validations/brand.validation';
 import { useBrands } from '@/services/api/brands/brands.queries';
@@ -133,8 +134,13 @@ export default function BrandsPage() {
     openConfirmationModal(async () => {
       try {
         await deleteBrandMutation.mutateAsync(brand._id);
+        toast.success(t('brands.deletedSuccess') || 'Brand deleted')
       } catch (error) {
+        // Log for debugging and surface a friendly message
+         
         console.error('Failed to delete brand:', error);
+        const msg = error instanceof Error ? error.message : t('brands.deleteError') || 'Failed to delete brand'
+        toast.error(msg)
       }
     }, {
       title: t('brands.deleteBrand'),
@@ -151,7 +157,7 @@ export default function BrandsPage() {
     try {
       if (editingBrand) {
         // Remove _id from data before sending to backend (ID should only be in URL path)
-        const { _id, ...updateData } = data;
+        const { ['_id']: _, ...updateData } = data;
         await updateBrandMutation.mutateAsync({
           id: editingBrand._id,
           data: updateData,
@@ -221,16 +227,18 @@ export default function BrandsPage() {
                 ); 
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
-              className="h-8"
+              className="h-8 flex items-center gap-2"
             >
-              <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active" ? t('brands.active') :
-                statusFilter === "inactive" ? t('brands.inactive') :
-                  t('brands.allStatus')}
+              <Filter className="h-4 w-4" />
+              <span>
+                {statusFilter === "active" ? t('brands.active') :
+                  statusFilter === "inactive" ? t('brands.inactive') :
+                    t('brands.allStatus')}
+              </span>
             </Button>
-            <Button onClick={() => openModal()} className="h-8">
-              <Plus className="h-4 w-4 mr-2" />
-              {t('brands.addNewBrand')}
+            <Button onClick={() => openModal()} className="h-8 flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              <span>{t('brands.addNewBrand')}</span>
             </Button>
           </div>
         </div>
