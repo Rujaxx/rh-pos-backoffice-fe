@@ -147,7 +147,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
           {
             id: "tables",
             label: t("navigation.tables"),
-            href: "/restaurants/table",
+            href: "/restaurants/tables",
             icon: Store,
           },
           {

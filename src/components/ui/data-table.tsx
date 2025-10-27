@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
-import { DataTableProps } from '@/types/brand.type';
+import { DataTableProps } from '@/types';
 
 export interface TableColumn<T> {
   id: string;
@@ -44,50 +44,23 @@ export function DataTable<T extends Record<string, unknown>>({
   columns,
   actions = [],
   searchable = true,
+  searchValue = '',
   searchPlaceholder = 'Search...',
   pagination = true,
   loading = false,
   onSort,
   onSearch,
 }: DataTableProps<T>) {
-  const [searchQuery, setSearchQuery] = useState('');
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const { t } = useTranslation();
-
-  // Filter data based on search query
-  const filteredData = useMemo(() => {
-    if (!searchQuery) return data;
-
-    return data.filter((item) => {
-      return columns.some((column) => {
-        if (typeof column.accessor === 'function') {
-          return false; // Skip function-based accessors for search
-        }
-
-        const value = column.accessor
-          ? item[column.accessor]
-          : item[column.id as keyof T];
-        if (typeof value === 'object' && value !== null) {
-          // Handle multilingual objects like { en: "text", ar: "text" }
-          return Object.values(value as Record<string, unknown>).some((v) =>
-            String(v).toLowerCase().includes(searchQuery.toLowerCase())
-          );
-        }
-        return String(value || '')
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase());
-      });
-    });
-  }, [data, searchQuery, columns]);
-
   // Sort data
   const sortedData = useMemo(() => {
-    if (!sortColumn) return filteredData;
+    if (!sortColumn) return data;
 
-    return [...filteredData].sort((a, b) => {
+    return [...data].sort((a, b) => {
       const aValue = a[sortColumn as keyof T];
       const bValue = b[sortColumn as keyof T];
 
@@ -109,7 +82,7 @@ export function DataTable<T extends Record<string, unknown>>({
       if (aStr > bStr) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [filteredData, sortColumn, sortDirection]);
+  }, [data, sortColumn, sortDirection]);
 
   // Paginate data
   const paginatedData = useMemo(() => {
@@ -134,14 +107,6 @@ export function DataTable<T extends Record<string, unknown>>({
         columnId,
         sortColumn === columnId && sortDirection === 'asc' ? 'desc' : 'asc'
       );
-    }
-  };
-
-  const handleSearch = (value: string) => {
-    setSearchQuery(value);
-    setCurrentPage(1); // Reset to first page on search
-    if (onSearch) {
-      onSearch(value);
     }
   };
 
@@ -191,8 +156,8 @@ export function DataTable<T extends Record<string, unknown>>({
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
+              value={searchValue}
+              onChange={(e) => onSearch?.(e.target.value)}
               className="pl-10"
             />
           </div>
@@ -268,7 +233,7 @@ export function DataTable<T extends Record<string, unknown>>({
                               disabled={action.disabled?.(item)}
                               className={cn(
                                 action.variant === 'destructive' &&
-                                  'text-destructive focus:text-destructive'
+                                'text-destructive focus:text-destructive'
                               )}>
                               {action.icon && (
                                 <action.icon className="mr-2 h-4 w-4" />

@@ -17,6 +17,10 @@ export const useQueryUtils = () => {
     invalidateQueries: (queryKey: QueryKey) => 
       queryClient.invalidateQueries({ queryKey }),
     
+    // Refetch queries by key pattern
+    refetchQueries: (queryKey: QueryKey) => 
+      queryClient.refetchQueries({ queryKey }),
+    
     // Remove queries by key pattern
     removeQueries: (queryKey: QueryKey) =>
       queryClient.removeQueries({ queryKey }),

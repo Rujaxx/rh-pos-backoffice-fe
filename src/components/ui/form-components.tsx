@@ -26,6 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "@/hooks/useTranslation"
+import { timeStringToMinutes, minutesToTimeString } from "@/lib/utils/time.utils"
 import { Languages, Globe, Upload } from "lucide-react"
 
 interface FormFieldWrapperProps<TFormValues extends Record<string, unknown>> {
@@ -116,6 +117,55 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
   )
 }
 
+interface RHFTimeInputProps<TFormValues extends Record<string, unknown>> {
+  form: UseFormReturn<TFormValues>
+  name: FieldPath<TFormValues>
+  label: string
+  description?: string
+  placeholder?: string
+  className?: string
+  disabled?: boolean
+}
+
+/**
+ * Time input component that stores minutes from 00:00 in the form
+ * but displays HH:mm format to the user
+ */
+export function RHFTimeInput<TFormValues extends Record<string, unknown>>({
+  form,
+  name,
+  label,
+  description,
+  placeholder = "10:00",
+  className,
+  disabled,
+}: RHFTimeInputProps<TFormValues>) {
+  return (
+    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+      {(field) => {
+        // Convert minutes to time string for display
+        const timeValue = field.value ? minutesToTimeString(field.value as number) : "";
+        
+        return (
+          <Input
+            type="time"
+            value={timeValue}
+            onChange={(e) => {
+              // Convert time string to minutes for storage
+              const minutes = timeStringToMinutes(e.target.value);
+              field.onChange(minutes);
+            }}
+            onBlur={field.onBlur}
+            placeholder={placeholder}
+            className={cn("w-full", className)}
+            disabled={disabled}
+          />
+        );
+      }}
+    </FormFieldWrapper>
+  )
+}
+
 interface RHFTextareaProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>
   name: FieldPath<TFormValues>
@@ -158,6 +208,7 @@ interface RHFSelectProps<TFormValues extends Record<string, unknown>> {
   placeholder?: string
   options: Array<{ value: string; label: string }>
   className?: string
+  disabled?: boolean
 }
 
 export function RHFSelect<TFormValues extends Record<string, unknown>>({
@@ -168,24 +219,44 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
   placeholder = "Select an option",
   options,
   className,
+  disabled,
 }: RHFSelectProps<TFormValues>) {
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
-      {(field) => (
-        <Select onValueChange={field.onChange} defaultValue={String(field.value || "")}>
-          <SelectTrigger className={cn("w-full", className)}>
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
-    </FormFieldWrapper>
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => {
+        const fieldValue = String(field.value || "");
+        // Check if the current value exists in options
+        const valueExists = fieldValue && options.some(opt => opt.value === fieldValue);
+        
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Select 
+                onValueChange={field.onChange}
+                value={valueExists ? fieldValue : ""}
+                disabled={disabled}
+              >
+                <SelectTrigger className={cn("w-full", className)}>
+                  <SelectValue placeholder={placeholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
+            {description && <FormDescription>{description}</FormDescription>}
+            <FormMessage />
+          </FormItem>
+        );
+      }}
+    />
   )
 }
 
@@ -410,18 +481,24 @@ export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RHFInput
               form={form}
-              name={`${name}.street` as FieldPath<TFormValues>}
-              label={t('form.address.street')}
-              placeholder={t('form.address.streetPlaceholder')}
+              name={`${name}.addressLine1` as FieldPath<TFormValues>}
+              label={t('form.address.addressLine1')}
+              placeholder={t('form.address.addressLine1Placeholder')}
             />
+            <RHFInput
+              form={form}
+              name={`${name}.addressLine2` as FieldPath<TFormValues>}
+              label={t('form.address.addressLine2')}
+              placeholder={t('form.address.addressLine2Placeholder')}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <RHFInput
               form={form}
               name={`${name}.city` as FieldPath<TFormValues>}
               label={t('form.address.city')}
               placeholder={t('form.address.cityPlaceholder')}
             />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RHFInput
               form={form}
               name={`${name}.state` as FieldPath<TFormValues>}
@@ -435,26 +512,19 @@ export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
               placeholder={t('form.address.countryPlaceholder')}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RHFInput
               form={form}
-              name={`${name}.zipCode` as FieldPath<TFormValues>}
-              label={t('form.address.zipCode')}
-              placeholder={t('form.address.zipCodePlaceholder')}
+              name={`${name}.pincode` as FieldPath<TFormValues>}
+              label={t('form.address.pincode')}
+              placeholder={t('form.address.pincodePlaceholder')}
             />
             <RHFInput
               form={form}
-              name={`${name}.latitude` as FieldPath<TFormValues>}
-              label={t('form.address.latitude')}
-              placeholder={t('form.address.latitudePlaceholder')}
-              type="number"
-            />
-            <RHFInput
-              form={form}
-              name={`${name}.longitude` as FieldPath<TFormValues>}
-              label={t('form.address.longitude')}
-              placeholder={t('form.address.longitudePlaceholder')}
-              type="number"
+              name={`${name}.location` as FieldPath<TFormValues>}
+              label={t('form.address.location')}
+              placeholder={t('form.address.locationPlaceholder')}
+              description={t('form.address.locationDescription')}
             />
           </div>
         </CardContent>

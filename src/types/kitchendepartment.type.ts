@@ -1,5 +1,5 @@
 import { MultilingualText } from './common/common.type';
-import { TableAction } from './brand.type';
+import { TableAction } from './common/common.type';
 
 export type { TableAction };
 

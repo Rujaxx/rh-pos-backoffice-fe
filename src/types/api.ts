@@ -56,8 +56,9 @@ export interface QueryParams {
   limit?: number;
   sort?: string;
   order?: 'asc' | 'desc';
-  search?: string;
-  [key: string]: string | number | boolean | undefined;
+  search?: string
+  fields?: string[];
+  [key: string]: string | number | boolean | string[] | undefined;
 }
 
 // Mutation response wrapper
