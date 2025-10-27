@@ -21,7 +21,8 @@ import { Plus, Edit, Trash2, Building2 } from 'lucide-react';
 
 import { toast } from 'sonner';
 import { useI18n } from '@/providers/i18n-provider';
-import { kitchenDepartment, TableAction } from '@/types/kitchendepartment.type';
+import { kitchenDepartment } from '@/types/kitchendepartment.type';
+import { TableAction } from '@/types/common/common.type';
 import { KitchenDepartmentFormData } from '@/lib/validations/kitchendepartment.validation';
 
 // ✅ Mock data - replace with actual API calls
@@ -130,13 +131,13 @@ export default function KitchenDepartmentPage() {
         {
             label: t('common.edit'),
             icon: Edit,
-            onClick: (dept) => openModal(dept),
+            onClick: (dept: kitchenDepartment) => openModal(dept),
         },
         {
             label: t('common.delete'),
             icon: Trash2,
             variant: 'destructive',
-            onClick: (dept) => {
+            onClick: (dept: kitchenDepartment) => {
                 openConfirmationModal(() => handleDeleteKitchenDepartment(dept), {
                     title: t('kitchen.deleteConfirmationTitle'),
                     description: t('kitchen.deleteConfirmationDescription', {
@@ -146,7 +147,7 @@ export default function KitchenDepartmentPage() {
                     variant: 'destructive',
                 });
             },
-            disabled: (dept) => dept.isActive ?? false, // Prevent deleting active dept
+            disabled: (dept: kitchenDepartment) => dept.isActive ?? false, // Prevent deleting active dept
         },
     ];
 

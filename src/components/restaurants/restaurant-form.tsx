@@ -7,17 +7,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
+  RHFTimeInput,
   RHFMultilingualInput,
+  RHFSelect,
   RHFSwitch,
   RHFAddressForm,
-  RHFSelect,
-  RHFFileUpload,
 } from '@/components/ui/form-components';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { UploadFolderType } from '@/types/upload';
 import {
   restaurantSchema,
   RestaurantFormData,
 } from '@/lib/validations/restaurant.validation';
 import { Restaurant } from '@/types/restaurant';
+import { timeStringToMinutes, DEFAULT_TIMES, backendTimeToMinutes } from '@/lib/utils/time.utils';
+import { getTimezoneOptions, getDefaultTimezone } from '@/lib/utils/timezone.utils';
+import { useActiveBrands } from '@/services/api/brands/brands.queries';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface RestaurantFormContentProps {
   form: UseFormReturn<RestaurantFormData>;
@@ -25,24 +31,19 @@ interface RestaurantFormContentProps {
 
 export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
   const { t } = useTranslation();
+  const { locale } = useI18n();
+  
+  // Fetch active brands from API
+  const { data: brandsResponse, isLoading: isLoadingBrands } = useActiveBrands();
+  
+  // Transform brands into dropdown options
+  const brandOptions = (brandsResponse?.data || []).map(brand => ({
+    value: brand._id,
+    label: brand.name[locale] || brand.name.en,
+  }));
 
-  const brandOptions = [
-    { value: '1', label: t('restaurants.form.brands.pizzaPalace') },
-    { value: '2', label: t('restaurants.form.brands.burgerHouse') },
-  ];
-
-  const timezoneOptions = [
-    { value: 'UTC', label: t('restaurants.form.timezon.utc') },
-    { value: 'America/New_York', label: t('restaurants.form.timezon.eastern') },
-    { value: 'America/Chicago', label: t('restaurants.form.timezon.central') },
-    { value: 'America/Denver', label: t('restaurants.form.timezon.mountain') },
-    {
-      value: 'America/Los_Angeles',
-      label: t('restaurants.form.timezon.pacific'),
-    },
-    { value: 'Asia/Dubai', label: t('restaurants.form.timezon.dubai') },
-    { value: 'Asia/Riyadh', label: t('restaurants.form.timezon.saudiArabia') },
-  ];
+  // Get timezone options with user's current timezone prioritized
+  const timezoneOptions = getTimezoneOptions(t);
 
   const resetBillOptions = [
     { value: 'daily', label: t('restaurants.form.resetBill.daily') },
@@ -94,16 +95,23 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               form={form}
               name="brandId"
               label={t('restaurants.form.brandLabel')}
-              placeholder={t('restaurants.form.brandPlaceholder')}
+              placeholder={
+                isLoadingBrands 
+                  ? t('common.loading')
+                  : brandOptions.length === 0
+                  ? t('restaurants.form.noBrandsAvailable')
+                  : t('restaurants.form.brandPlaceholder')
+              }
               options={brandOptions}
+              disabled={isLoadingBrands}
             />
 
-            <RHFFileUpload
+            <ImageUpload
               form={form}
               name="logo"
               label={t('restaurants.form.logoLabel')}
-              accept="image/*"
               description={t('restaurants.form.logoDescription')}
+              folderType={UploadFolderType.RESTAURANT}
             />
 
             <RHFSwitch
@@ -132,25 +140,19 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <RHFInput
+              <RHFTimeInput
                 form={form}
                 name="startDayTime"
                 label={t('restaurants.form.startDayTimeLabel')}
-                placeholder="9"
-                // type="number"
-                // min="0"
-                // max="23"
+                placeholder="10:00"
                 description={t('restaurants.form.startDayTimeDescription')}
               />
 
-              <RHFInput
+              <RHFTimeInput
                 form={form}
                 name="endDayTime"
                 label={t('restaurants.form.endDayTimeLabel')}
-                placeholder="23"
-                // type="number"
-                // min="0"
-                // max="23"
+                placeholder="23:00"
                 description={t('restaurants.form.endDayTimeDescription')}
               />
             </div>
@@ -161,14 +163,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               label={t('restaurants.form.nextResetBillLabel')}
               placeholder={t('restaurants.form.nextResetBillPlaceholder')}
               options={resetBillOptions}
-            />
-
-            <RHFInput
-              form={form}
-              name="nextResetBillDate"
-              label={t('restaurants.form.resetBillDateLabel')}
-              disabled
-            />
+            />         
 
             <RHFInput
               form={form}
@@ -386,57 +381,60 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
 }
 
 // Hook for restaurant form logic
-export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
+export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
+  form: UseFormReturn<RestaurantFormData, unknown>;
+  isEditing: boolean;
+} {
   const form = useForm<RestaurantFormData>({
     resolver: zodResolver(restaurantSchema),
     defaultValues: {
       name: { en: '', ar: '' },
       description: { en: '', ar: '' },
       brandId: '',
-      isActive: true,
+      isActive: true, // Backend default: true
       logo: '',
       address: {
-        street: '',
+        addressLine1: '',
+        addressLine2: '',
         city: '',
+        location: '',
         state: '',
         country: '',
-        zipCode: '',
-        latitude: undefined,
-        longitude: undefined,
+        pincode: '',
       },
-      timezone: '',
-      startDayTime: '9',
-      endDayTime: '23',
+      timezone: getDefaultTimezone(), // Auto-detect user's timezone
+      startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME), // 10:00 -> 600 minutes
+      endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME), // 23:00 -> 1380 minutes
       nextResetBillFreq: 'daily',
-      nextResetBillDate: '',
       notificationPhone: [],
       notificationEmails: [],
       restoCode: '',
-      posLogoutOnClose: false,
-      isFeedBackActive: false,
+      posLogoutOnClose: true, // Backend default: true
+      isFeedBackActive: false, // Backend default: false
       trnOrGstNo: '',
       customQRcode: [],
-      deductFromInventory: false,
-      multiplePriceSetting: false,
-      tableReservation: false,
-      autoUpdatePos: false,
-      sendReports: {
-        email: false,
-        whatsapp: false,
-        sms: false,
-      },
-      allowMultipleTax: false,
-      generateOrderTypeWiseOrderNo: false,
-      smsAndWhatsappSelection: 'both',
+      inventoryWarehouse: '',
+      deductFromInventory: true, // Backend default: true
+      multiplePriceSetting: false, // Backend default: false
+      tableReservation: false, // Backend default: false
+      autoUpdatePos: true, // Backend default: true
+      allowMultipleTax: false, // Backend default: false
+      generateOrderTypeWiseOrderNo: false, // Backend default: false
+      smsAndWhatsappSelection: 'none', // Backend default: NONE
       whatsAppChannel: '',
+      sendReports: {
+        email: false, // Backend default: false
+        whatsapp: false, // Backend default: false
+        sms: false, // Backend default: false
+      },
       paymentLinkSettings: {
-        onWhatsapp: false,
-        onSms: false,
+        onWhatsapp: false, // Backend default: false
+        onSms: false, // Backend default: false
       },
       eBillSettings: {
-        onEmail: false,
-        onWhatsapp: false,
-        onSms: false,
+        onEmail: false, // Backend default: false
+        onWhatsapp: false, // Backend default: false
+        onSms: false, // Backend default: false
       },
     },
   });
@@ -461,29 +459,39 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         logo: editingRestaurant.logo || '',
         address: editingRestaurant.address,
         timezone: editingRestaurant.timezone,
-        startDayTime: editingRestaurant.startDayTime,
-        endDayTime: editingRestaurant.endDayTime,
+        startDayTime: backendTimeToMinutes(editingRestaurant.startDayTime),
+        endDayTime: backendTimeToMinutes(editingRestaurant.endDayTime),
         nextResetBillFreq: resetBillFreq,
-        nextResetBillDate: editingRestaurant.nextResetBillDate,
         notificationPhone: editingRestaurant.notificationPhone || [],
         notificationEmails: editingRestaurant.notificationEmails || [],
         restoCode: editingRestaurant.restoCode || '',
-        posLogoutOnClose: editingRestaurant.posLogoutOnClose,
-        isFeedBackActive: editingRestaurant.isFeedBackActive,
+        posLogoutOnClose: editingRestaurant.posLogoutOnClose ?? true,
+        isFeedBackActive: editingRestaurant.isFeedBackActive ?? false,
         trnOrGstNo: editingRestaurant.trnOrGstNo || '',
         customQRcode: editingRestaurant.customQRcode || [],
-        deductFromInventory: editingRestaurant.deductFromInventory,
-        multiplePriceSetting: editingRestaurant.multiplePriceSetting,
-        tableReservation: editingRestaurant.tableReservation,
-        autoUpdatePos: editingRestaurant.autoUpdatePos,
-        sendReports: editingRestaurant.sendReports,
-        allowMultipleTax: editingRestaurant.allowMultipleTax,
+        deductFromInventory: editingRestaurant.deductFromInventory ?? true,
+        multiplePriceSetting: editingRestaurant.multiplePriceSetting ?? false,
+        tableReservation: editingRestaurant.tableReservation ?? false,
+        autoUpdatePos: editingRestaurant.autoUpdatePos ?? true,
+        sendReports: editingRestaurant.sendReports || {
+          email: false,
+          whatsapp: false,
+          sms: false,
+        },
+        allowMultipleTax: editingRestaurant.allowMultipleTax ?? false,
         generateOrderTypeWiseOrderNo:
-          editingRestaurant.generateOrderTypeWiseOrderNo,
-        smsAndWhatsappSelection: editingRestaurant.smsAndWhatsappSelection,
+          editingRestaurant.generateOrderTypeWiseOrderNo ?? false,
+        smsAndWhatsappSelection: editingRestaurant.smsAndWhatsappSelection || 'none',
         whatsAppChannel: editingRestaurant.whatsAppChannel || '',
-        paymentLinkSettings: editingRestaurant.paymentLinkSettings,
-        eBillSettings: editingRestaurant.eBillSettings,
+        paymentLinkSettings: editingRestaurant.paymentLinkSettings || {
+          onWhatsapp: false,
+          onSms: false,
+        },
+        eBillSettings: editingRestaurant.eBillSettings || {
+          onEmail: false,
+          onWhatsapp: false,
+          onSms: false,
+        },
       });
     } else {
       form.reset({
@@ -493,30 +501,30 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         isActive: true,
         logo: '',
         address: {
-          street: '',
+          addressLine1: '',
+          addressLine2: '',
           city: '',
+          location: '',
           state: '',
           country: '',
-          zipCode: '',
-          latitude: undefined,
-          longitude: undefined,
+          pincode: '',
         },
-        timezone: '',
-        startDayTime: '9',
-        endDayTime: '23',
+        timezone: getDefaultTimezone(),
+        startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME),
+        endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME),
         nextResetBillFreq: 'daily',
-        nextResetBillDate: '',
         notificationPhone: [],
         notificationEmails: [],
         restoCode: '',
-        posLogoutOnClose: false,
+        posLogoutOnClose: true,
         isFeedBackActive: false,
         trnOrGstNo: '',
         customQRcode: [],
-        deductFromInventory: false,
+        inventoryWarehouse: '',
+        deductFromInventory: true,
         multiplePriceSetting: false,
         tableReservation: false,
-        autoUpdatePos: false,
+        autoUpdatePos: true,
         sendReports: {
           email: false,
           whatsapp: false,
@@ -524,7 +532,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null) {
         },
         allowMultipleTax: false,
         generateOrderTypeWiseOrderNo: false,
-        smsAndWhatsappSelection: 'both',
+        smsAndWhatsappSelection: 'none',
         whatsAppChannel: '',
         paymentLinkSettings: {
           onWhatsapp: false,

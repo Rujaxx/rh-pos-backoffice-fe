@@ -10,8 +10,9 @@ import {
   RHFMultilingualInput,
   RHFSwitch,
   RHFAddressForm,
-  RHFFileUpload,
 } from '@/components/ui/form-components';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { UploadFolderType } from '@/types/upload';
 import { brandSchema, BrandFormData } from '@/lib/validations/brand.validation';
 import { Brand } from '@/types/brand.type';
 
@@ -71,12 +72,12 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <RHFFileUpload
+            <ImageUpload
               form={form}
               name="logo"
               label={t('brands.form.logoLabel')}
-              accept="image/*"
               description={t('brands.form.logoDescription')}
+              folderType={UploadFolderType.BRAND}
             />
 
             <RHFInput
@@ -182,13 +183,13 @@ export function useBrandForm(editingBrand?: Brand | null) {
       trnOrGstNo: '',
       panNo: '',
       address: {
-        street: '',
+        addressLine1: '',
+        addressLine2: '',
         city: '',
+        location: '',
         state: '',
         country: '',
-        zipCode: '',
-        latitude: undefined,
-        longitude: undefined,
+        pincode: '',
       },
     },
   });
@@ -223,13 +224,13 @@ export function useBrandForm(editingBrand?: Brand | null) {
         trnOrGstNo: '',
         panNo: '',
         address: {
-          street: '',
+          addressLine1: '',
+          addressLine2: '',
           city: '',
+          location: '',
           state: '',
           country: '',
-          zipCode: '',
-          latitude: undefined,
-          longitude: undefined,
+          pincode: '',
         },
       });
     }

@@ -24,7 +24,7 @@ import { mockTaxProductGroups } from '@/mock/tax-product-group';
 import TaxGroupFormContent, {
   useTaxGroupForm,
 } from '@/components/taxgroup/tax-product-group-form';
-import { TableAction } from '@/types/brand.type';
+import { TableAction } from '@/types/common/common.type';
 
 function TaxProductGroupsPage() {
   const { t } = useTranslation();
