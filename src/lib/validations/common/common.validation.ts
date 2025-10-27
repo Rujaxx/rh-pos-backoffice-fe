@@ -12,14 +12,14 @@ export const multilingualTextSchema = z
   }) satisfies z.ZodType<MultilingualText>;
 
 export const addressSchema = z.object({
-  street: z.string().min(0),
-  city: z.string().min(0),
-  state: z.string().min(0),
-  country: z.string().min(0),
-  zipCode: z.string().min(0),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-});
+    addressLine1: z.string().optional(),
+    addressLine2: z.string().optional(),
+    city: z.string().optional(),
+    location: z.string().optional(),
+    state: z.string().optional(),
+    country: z.string().optional(),
+    pincode: z.string().optional(),
+  })
 
 // Common validation utilities
 

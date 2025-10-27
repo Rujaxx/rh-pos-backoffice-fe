@@ -5,7 +5,7 @@ export const tableSchema = z
   .object({
     _id: z.string().optional(),
     tableSectionId: z.string().min(1, 'Table section is required'),
-    label: z.string().optional(),
+    label: z.string().min(1, 'Label is required'),
     capacity: z
       .number()
       .min(1, 'Capacity is required')

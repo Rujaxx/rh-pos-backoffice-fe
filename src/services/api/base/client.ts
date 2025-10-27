@@ -60,44 +60,4 @@ export abstract class BaseApiService<T, CreatePayload = Partial<T>, UpdatePayloa
     return api.delete(`${this.baseEndpoint}/${id}`)
   }
 
-  // Bulk operations (optional)
-  async bulkCreate(data: CreatePayload[]): MutationResponse<T[]> {
-    return api.post(`${this.baseEndpoint}/bulk`, data)
-  }
-
-  async bulkUpdate(updates: Array<{ id: string; data: UpdatePayload }>): MutationResponse<T[]> {
-    return api.patch(`${this.baseEndpoint}/bulk`, updates)
-  }
-
-  async bulkDelete(ids: string[]): MutationResponse<void> {
-    return api.delete(`${this.baseEndpoint}/bulk`, { data: { ids } })
-  }
-}
-
-// Utility functions for query parameters
-export const buildQueryParams = (params: QueryParams): URLSearchParams => {
-  const searchParams = new URLSearchParams()
-  
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      if (Array.isArray(value)) {
-        value.forEach(item => searchParams.append(key, String(item)))
-      } else {
-        searchParams.append(key, String(value))
-      }
-    }
-  })
-  
-  return searchParams
-}
-
-// Generic search function
-export const searchEntities = async <T>(
-  endpoint: string, 
-  query: string, 
-  params?: QueryParams
-): Promise<PaginatedResponse<T>> => {
-  const searchParams = buildQueryParams({ ...params, search: query })
-  const url = `${endpoint}?${searchParams.toString()}`
-  return api.get(url)
 }

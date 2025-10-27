@@ -1,61 +1,90 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DataTable } from '@/components/ui/data-table';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
+  useModal,
   CrudModal,
   ConfirmationModal,
-  useModal,
   useConfirmationModal,
 } from '@/components/ui/crud-modal';
-import {
-  TableSectionFormContent,
-  useTableSectionForm,
-} from '@/components/restaurants/tableSection-form';
+import { TableSectionFormContent, useTableSectionForm } from '@/components/forms/tablesections/tablesections-form';
+import { useTableSectionColumns } from '@/components/tables/tablesections/tablesections-columns';
 import Layout from '@/components/common/layout';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, Trash2, Building2 } from 'lucide-react';
+import { Plus, Layers, Filter } from 'lucide-react';
+import { TableSection, TableSectionQueryParams } from '@/types/tablesection.type';
+import { TableSectionFormData, tableSectionSchema } from '@/lib/validations/tablesection.validation';
+import { 
+  useGetTableSections, 
+  useGetTableSection 
+} from '@/services/api/tablesections/tablesections.queries';
+import {
+  useCreateTableSection,
+  useUpdateTableSection,
+  useDeleteTableSection
+} from '@/services/api/tablesections/tablesections.mutations';
 
-import { toast } from 'sonner';
-import { useI18n } from '@/providers/i18n-provider';
-import { TableAction, TableSection } from '@/types/tablesection.type';
-import { TableSectionFormData } from '@/lib/validations/tablesection.validation';
-
-// Mock data - replace with actual API calls
-const mockTableSections: TableSection[] = [
-  {
-    _id: '1',
-    restaurantId: '64b23abc123456',
-    restaurantName: {
-      en: 'Pizza Palace - Downtown',
-      ar: 'قصر البيتزا - وسط المدينة',
-    },
-    name: { en: 'Indoor', ar: 'داخلي' },
-    isActive: true,
-    deletedAt: new Date('2024-01-10'),
-  },
-  {
-    _id: '2',
-    restaurantId: '64b23abc123457',
-    restaurantName: {
-      en: 'Burger House - Central',
-      ar: 'بيت البرجر - المركزية',
-    },
-    name: { en: 'Outdoor', ar: 'خارجي' },
-    isActive: false,
-    deletedAt: new Date('2024-01-10'),
-  },
-];
 
 export default function TableSectionPage() {
   const { t } = useTranslation();
-  const { locale } = useI18n();
-  const [tableSections, setTableSections] =
-    useState<TableSection[]>(mockTableSections);
-  const [loading, setLoading] = useState(false);
+
+  // Table state
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+
+  // Build query parameters from table state
+  const queryParams = useMemo<TableSectionQueryParams>(() => {
+    const params: TableSectionQueryParams = {
+      page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
+      limit: pagination.pageSize,
+      sortOrder: 'desc', // Default sort order
+    };
+
+    // Add search term
+    if (searchTerm.trim()) {
+      params.term = searchTerm.trim();
+    }
+
+    // Add sorting
+    if (sorting.length > 0) {
+      const sortField = sorting[0]?.id as 'name' | 'createdAt' | 'updatedAt';
+      if (sortField) {
+        params.sortBy = sortField;
+        params.sortOrder = sorting[0]?.desc ? 'desc' : 'asc';
+      }
+    }
+
+    // Add status filter
+    if (statusFilter !== undefined) {
+      params.isActive = statusFilter === "active" ? "true" : "false";
+    }
+
+    return params;
+  }, [pagination, sorting, searchTerm, statusFilter]);
+
+  // API hooks
+  const { data: tableSectionsResponse, isLoading, error } = useGetTableSections(queryParams);
+  const createTableSectionMutation = useCreateTableSection();
+  const updateTableSectionMutation = useUpdateTableSection();
+  const deleteTableSectionMutation = useDeleteTableSection();
+
+  // Extract data from response
+  const tableSections = tableSectionsResponse?.data || [];
+  const totalCount = tableSectionsResponse?.meta?.total || 0;
 
   // Modal hooks
   const {
@@ -64,6 +93,7 @@ export default function TableSectionPage() {
     openModal,
     closeModal,
   } = useModal<TableSection>();
+
   const {
     isConfirmationOpen,
     confirmationConfig,
@@ -72,220 +102,220 @@ export default function TableSectionPage() {
     executeConfirmation,
   } = useConfirmationModal();
 
-  // Form hook
-  const { form } = useTableSectionForm(editingTableSection);
+  // Fetch individual table section data when editing to get latest information
+  const tableSectionId = editingTableSection?._id;
+  const shouldFetchTableSection = isOpen && !!tableSectionId;
+  
+  const { 
+    data: individualTableSectionResponse, 
+    isLoading: isLoadingIndividualTableSection,
+    isFetching: isFetchingIndividualTableSection 
+  } = useGetTableSection(
+    tableSectionId || '', 
+    {
+      enabled: shouldFetchTableSection
+    }
+  );
 
-  const columns = [
-    {
-      id: 'restaurantName',
-      label: t('tableSection.restaurant'),
-      accessor: (tableSection: TableSection) => (
-        <div>
-          <div className="font-medium text-foreground truncate">
-            {tableSection.restaurantName[locale] ||
-              tableSection.restaurantName.en}
-          </div>
-        </div>
-      ),
-      sortable: true,
-    },
-    {
-      id: 'name',
-      label: t('tableSection.name'),
-      accessor: (tableSection: TableSection) => (
-        <div>
-          <div className="font-medium text-foreground truncate">
-            {tableSection.name[locale] || tableSection.name.en}
-          </div>
-        </div>
-      ),
-      sortable: true,
-    },
-    {
-      id: 'status',
-      label: t('tableSection.status'),
-      accessor: (tableSection: TableSection) => (
-        <Badge variant={tableSection.isActive ? 'default' : 'secondary'}>
-          {tableSection.isActive ? t('tables.active') : t('tables.inactive')}
-        </Badge>
-      ),
-      sortable: true,
-    },
-  ];
+  // Use the latest table section data from API if available, otherwise use the table data
+  const latestTableSectionData = individualTableSectionResponse?.data || editingTableSection;
 
-  const actions: TableAction<TableSection>[] = [
-    {
-      label: t('common.edit'),
-      icon: Edit,
-      onClick: (tableSection) => openModal(tableSection),
-    },
-    {
-      label: t('common.delete'),
-      icon: Trash2,
+  // Form hook with latest table section data
+  const { form } = useTableSectionForm(latestTableSectionData);
+
+  // Use refs to update the actual handler logic without changing column references
+  const editHandlerRef = useRef<((tableSection: TableSection) => void) | null>(null);
+  const deleteHandlerRef = useRef<((tableSection: TableSection) => void) | null>(null);
+
+  // Create stable handler functions that use refs
+  const editHandler = useCallback((tableSection: TableSection) => {
+    editHandlerRef.current?.(tableSection);
+  }, []);
+  
+  const deleteHandler = useCallback((tableSection: TableSection) => {
+    deleteHandlerRef.current?.(tableSection);
+  }, []);
+
+  // Create columns with stable handlers
+  const stableColumns = useTableSectionColumns({
+    onEdit: editHandler,
+    onDelete: deleteHandler,
+  });
+
+  // Update the handler refs on each render (but this won't cause columns to recreate)
+  editHandlerRef.current = (tableSection: TableSection) => {
+    openModal(tableSection);
+  };
+  
+  deleteHandlerRef.current = (tableSection: TableSection) => {
+    openConfirmationModal(async () => {
+      try {
+        await deleteTableSectionMutation.mutateAsync(tableSection._id);
+      } catch (error) {
+        console.error('Failed to delete table section:', error);
+      }
+    }, {
+      title: t('tableSection.deleteConfirmationTitle'),
+      description: t('tableSection.deleteConfirmationDescription', {
+        name: typeof tableSection.name === 'object' ? tableSection.name.en : tableSection.name,
+      }),
+      confirmButtonText: t('common.delete'),
       variant: 'destructive',
-      onClick: (tableSection) => {
-        openConfirmationModal(() => handleDeleteTableSection(tableSection), {
-          title: t('tableSection.deleteConfirmationTitle'),
-          description: t('tableSection.deleteConfirmationDescription', {
-            name: tableSection.name[locale],
-          }),
-          confirmButtonText: t('common.delete'),
-          variant: 'destructive',
+    });
+  };
+
+  // Move handlers after column definition to avoid dependency issues
+  const handleSubmit = useCallback(async (data: TableSectionFormData) => {
+    try {
+      // Parse and apply defaults using the schema to ensure all boolean fields have proper values
+      const validatedData = tableSectionSchema.parse(data);
+      
+      if (latestTableSectionData) {
+        // Use the same data structure for update as create (no field removal)
+        await updateTableSectionMutation.mutateAsync({
+          id: latestTableSectionData._id,
+          data: validatedData,
         });
-      },
-      disabled: (tableSection) => tableSection.isActive ?? false, // Don't allow deleting active brands
-    },
-  ];
-
-  const handleCreateTableSection = async (data: TableSectionFormData) => {
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      const newTableSection: TableSection = {
-        _id: Date.now().toString(),
-        ...data,
-        deletedAt: new Date(),
-        isActive: true,
-        restaurantName: mockTableSections.find(
-          (r) => r.restaurantId === data.restaurantId
-        )?.restaurantName || { en: 'Unknown Restaurant', ar: 'مطعم غير معروف' },
-      };
-
-      setTableSections((prev) => [newTableSection, ...prev]);
-      toast.success(t('tableSection.addSuccess'));
+      } else {
+        await createTableSectionMutation.mutateAsync(validatedData);
+      }
+      closeModal();
     } catch (error) {
-      toast.error(t('common.error'));
-      throw error;
-    } finally {
-      setLoading(false);
+      console.error('Failed to save table section:', error);
     }
-  };
+  }, [latestTableSectionData, updateTableSectionMutation, createTableSectionMutation, closeModal]);
 
-  const handleUpdateTableSection = async (data: TableSectionFormData) => {
-    if (!editingTableSection) return;
+  // Search handler with proper typing
+  const handleSearchChange = useCallback((search: string) => {
+    setSearchTerm(search);
+    // Reset to first page when searching
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  // Pagination handler
+  const handlePaginationChange = useCallback((newPagination: PaginationState) => {
+    setPagination(newPagination);
+  }, []);
 
-      const updatedTableSection: TableSection = {
-        ...editingTableSection,
-        ...data,
-        restaurantName: mockTableSections.find(
-          (r) => r.restaurantId === data.restaurantId
-        )?.restaurantName || { en: 'Unknown Restaurant', ar: 'مطعم غير معروف' },
-      };
+  // Sorting handler
+  const handleSortingChange = useCallback((newSorting: SortingState) => {
+    setSorting(newSorting);
+    // Reset to first page when sorting changes
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-      setTableSections((prev) =>
-        prev.map((section) =>
-          section._id === editingTableSection._id ? updatedTableSection : section
-        )
-      );
-      toast.success(t('tableSection.editSuccess'));
-    } catch (error) {
-      toast.error(t('common.error'));
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Column filters handler
+  const handleColumnFiltersChange = useCallback((filters: ColumnFiltersState) => {
+    setColumnFilters(filters);
+    // Reset to first page when filters change
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-  const handleDeleteTableSection = async (
-    tableSectionToDelete: TableSection
-  ) => {
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setTableSections((prev) =>
-        prev.filter((section) => section._id !== tableSectionToDelete._id)
-      );
-      toast.success(t('tableSection.deleteSuccess'));
-    } catch {
-      toast.error(t('common.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFormSubmit = async (data: TableSectionFormData) => {
-    if (editingTableSection) {
-      await handleUpdateTableSection(data);
-    } else {
-      await handleCreateTableSection(data);
-    }
-  };
-
-  const getModalTitle = () => {
-    return editingTableSection
-      ? t('tableSection.editTitle')
-      : t('tableSection.addTitle');
-  };
+  const isFormLoading = createTableSectionMutation.isPending || updateTableSectionMutation.isPending || isLoadingIndividualTableSection || isFetchingIndividualTableSection;
 
   return (
     <Layout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between">
+      <div className="flex flex-1 flex-col space-y-8 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between space-y-2">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              <Building2 className="h-8 w-8" />
-              {t('tableSection.title')}
-            </h1>
+            <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
+              <Layers className="h-6 w-6" />
+              <span>{t('tableSection.title')}</span>
+            </h2>
             <p className="text-muted-foreground">
               {t('tableSection.subtitle')}
             </p>
           </div>
-          <Button
-            onClick={() => openModal()}
-            className="flex items-center gap-2"
-            disabled={loading}>
-            <Plus className="h-4 w-4" />
-            {t('tableSection.addNewTableSection')}
-          </Button>
+          <div className="flex items-center space-x-2">
+            {/* Add status filter button */}
+            <Button
+              variant={statusFilter !== undefined ? "default" : "outline"}
+              onClick={() => {
+                setStatusFilter(
+                  statusFilter === "active"
+                    ? "inactive"
+                    : statusFilter === "inactive"
+                      ? undefined
+                      : "active"
+                ); 
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              className="h-8"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              {statusFilter === "active" ? t('common.active') :
+                statusFilter === "inactive" ? t('common.inactive') :
+                  t('restaurants.allStatus')}
+            </Button>
+            <Button onClick={() => openModal()} className="h-8">
+              <Plus className="h-4 w-4 mr-2" />
+              {t('tableSection.addNewTableSection')}
+            </Button>
+          </div>
         </div>
 
+        {/* TanStack Table */}
         <Card>
-          <CardHeader>
-            <CardTitle>{t('tableSection.allTableSections')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              data={tableSections}
-              columns={columns}
-              actions={actions}
-              searchable
-              searchPlaceholder={t('tableSection.searchPlaceholder')}
-              pagination
-              loading={loading}
-            />
+          <CardContent className="p-6">
+            {error ? (
+              <div className="flex items-center justify-center h-64 text-destructive">
+                <p>{t('restaurants.errorLoading')}: {error.message}</p>
+              </div>
+            ) : (
+              <TanStackTable
+                data={tableSections}
+                columns={stableColumns}
+                totalCount={totalCount}
+                isLoading={isLoading}
+                searchValue={searchTerm}
+                searchPlaceholder={t('tableSection.searchPlaceholder')}
+                onSearchChange={handleSearchChange}
+                pagination={pagination}
+                onPaginationChange={handlePaginationChange}
+                sorting={sorting}
+                onSortingChange={handleSortingChange}
+                columnFilters={columnFilters}
+                onColumnFiltersChange={handleColumnFiltersChange}
+                manualPagination={true}
+                manualSorting={true}
+                manualFiltering={true}
+                showSearch={true}
+                showPagination={true}
+                showPageSizeSelector={true}
+                emptyMessage={t('common.na')}
+                enableMultiSort={false}
+              />
+            )}
           </CardContent>
         </Card>
 
-        {/* Table Section CRUD Modal */}
-        <CrudModal<TableSectionFormData>
+        {/* Create/Edit Modal */}
+        <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
-          title={getModalTitle()}
+          title={latestTableSectionData ? (t('tableSection.editTitle') || 'Edit Table Section') : (t('tableSection.addTitle') || 'Add Table Section')}
+          size="lg"
           form={form}
-          onSubmit={handleFormSubmit}
-          loading={loading}>
+          onSubmit={handleSubmit}
+          loading={isFormLoading}
+          submitButtonText={
+            latestTableSectionData ? t('common.update') : t('common.create')
+          }
+        >
           <TableSectionFormContent form={form} />
         </CrudModal>
 
-        {/* Delete Confirmation Modal */}
+        {/* Confirmation Modal */}
         <ConfirmationModal
           isOpen={isConfirmationOpen}
           onClose={closeConfirmationModal}
           onConfirm={executeConfirmation || (() => Promise.resolve())}
-          title={confirmationConfig.title}
-          description={confirmationConfig.description}
-          loading={loading}
-          confirmButtonText={confirmationConfig.confirmButtonText}
-          variant={confirmationConfig.variant}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteTableSectionMutation.isPending}
         />
       </div>
     </Layout>

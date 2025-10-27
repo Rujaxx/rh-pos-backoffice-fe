@@ -206,7 +206,7 @@ export function ConfirmationModal({
             variant="outline"
             onClick={onClose}
             disabled={loading}>
-            {cancelButtonText}
+            {cancelButtonText || t('common.cancel')}
           </Button>
           <Button
             type="button"

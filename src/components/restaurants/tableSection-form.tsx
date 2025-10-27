@@ -11,10 +11,12 @@ import {
   RHFSwitch,
 } from '@/components/ui/form-components';
 import {
-  TableSectionSchema,
+  tableSectionSchema,
   TableSectionFormData,
 } from '@/lib/validations/tablesection.validation';
 import { TableSection } from '@/types/tablesection.type';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface TableSectionFormContentProps {
   form: UseFormReturn<TableSectionFormData>;
@@ -24,13 +26,16 @@ export function TableSectionFormContent({
   form,
 }: TableSectionFormContentProps) {
   const { t } = useTranslation();
+  const { locale } = useI18n();
 
-  // Mock restaurant options - in real app, this would come from API or context
-  const restaurantOptions = [
-    { value: '64b23abc123456', label: t('tableSection.form.restaurant1') },
-    { value: '64b23abc123457', label: t('tableSection.form.restaurant2') },
-    { value: '64b23abc123458', label: t('tableSection.form.restaurant3') },
-  ];
+  // Fetch active restaurants from API
+  const { data: restaurantsResponse, isLoading: _isLoadingRestaurants } = useActiveRestaurants();
+
+  // Transform restaurants into dropdown options
+  const restaurantOptions = (restaurantsResponse?.data || []).map(restaurant => ({
+    value: restaurant._id,
+    label: restaurant.name[locale] || restaurant.name.en,
+  }));
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -73,7 +78,7 @@ export function TableSectionFormContent({
 // Hook for table section form logic
 export function useTableSectionForm(editingTableSection?: TableSection | null) {
   const form = useForm<TableSectionFormData>({
-    resolver: zodResolver(TableSectionSchema),
+    resolver: zodResolver(tableSectionSchema),
     defaultValues: {
       restaurantId: '',
       name: { en: '', ar: '' },

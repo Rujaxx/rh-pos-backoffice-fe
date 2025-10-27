@@ -1,4 +1,8 @@
-import { MultilingualText } from './common/common.type';
+import { MultilingualText, TableAction } from './common/common.type';
+
+// Re-export TableAction for backward compatibility
+export type { TableAction };
+export type UserTableAction<T = Record<string, unknown>> = TableAction<T>;
 
 export interface User extends Record<string, unknown> {
   _id?: string;
@@ -44,11 +48,3 @@ export interface UserTableColumn {
   filterable?: boolean;
 }
 
-// Extended from existing brand types
-export interface UserTableAction<T = Record<string, unknown>> {
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  onClick: (item: T) => void;
-  variant?: 'default' | 'destructive';
-  disabled?: (item: T) => boolean;
-}
