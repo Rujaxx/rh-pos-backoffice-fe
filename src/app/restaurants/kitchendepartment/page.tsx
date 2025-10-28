@@ -1,10 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DataTable } from '@/components/ui/data-table';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import {
+    PaginationState,
+    SortingState,
+    ColumnDef,
+} from '@tanstack/react-table';
 import {
     CrudModal,
     ConfirmationModal,
@@ -64,6 +69,14 @@ export default function KitchenDepartmentPage() {
         useState<kitchenDepartment[]>(mockKitchenDepartments);
     const [loading, setLoading] = useState(false);
 
+    // Table state
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    });
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [searchTerm, setSearchTerm] = useState('');
+
     // ✅ Modal hooks
     const {
         isOpen,
@@ -82,74 +95,105 @@ export default function KitchenDepartmentPage() {
     // ✅ Form hook
     const { form } = useKitchenDepartmentForm(editingKitchenDepartment);
 
+    // ✅ Delete
+    const handleDeleteKitchenDepartment = async (deptToDelete: kitchenDepartment) => {
+        setLoading(true);
+        try {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            setKitchenDepartments((prev) =>
+                prev.filter((dept) => dept._id !== deptToDelete._id),
+            );
+            toast.success(t('kitchen.deleteSuccess'));
+        } catch {
+            toast.error(t('common.error'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // ✅ Table columns
-    const columns = [
+    const columns = useMemo<ColumnDef<kitchenDepartment>[]>(() => [
         {
-            id: 'restaurantName',
-            label: t('kitchen.restaurant'),
-            accessor: (dept: kitchenDepartment) => (
+            accessorKey: 'restaurantName',
+            header: t('kitchen.restaurant'),
+            cell: ({ row }) => (
                 <div className="font-medium text-foreground truncate">
-                    {dept.restaurantName[locale] || dept.restaurantName.en}
+                    {row.original.restaurantName[locale] || row.original.restaurantName.en}
                 </div>
             ),
-            sortable: true,
+            enableSorting: true,
         },
         {
-            id: 'brandName',
-            label: t('kitchen.brand'),
-            accessor: (dept: kitchenDepartment) => (
+            accessorKey: 'brandName',
+            header: t('kitchen.brand'),
+            cell: ({ row }) => (
                 <Badge variant="outline">
-                    {dept.brandName[locale] || dept.brandName.en}
+                    {row.original.brandName[locale] || row.original.brandName.en}
                 </Badge>
             ),
-            sortable: true,
+            enableSorting: true,
         },
         {
-            id: 'name',
-            label: t('kitchen.name'),
-            accessor: (dept: kitchenDepartment) => (
+            accessorKey: 'name',
+            header: t('kitchen.name'),
+            cell: ({ row }) => (
                 <div className="font-medium text-foreground truncate">
-                    {dept.name[locale] || dept.name.en}
+                    {row.original.name[locale] || row.original.name.en}
                 </div>
             ),
-            sortable: true,
+            enableSorting: true,
         },
         {
-            id: 'status',
-            label: t('kitchen.status'),
-            accessor: (dept: kitchenDepartment) => (
-                <Badge variant={dept.isActive ? 'default' : 'secondary'}>
-                    {dept.isActive ? t('kitchen.active') : t('kitchen.inactive')}
-                </Badge >
+            accessorKey: 'isActive',
+            header: t('kitchen.status'),
+            cell: ({ row }) => (
+                <Badge variant={row.original.isActive ? 'default' : 'secondary'}>
+                    {row.original.isActive ? t('kitchen.active') : t('kitchen.inactive')}
+                </Badge>
             ),
-            sortable: true,
+            enableSorting: true,
         },
-    ];
+    ], [t, locale]);
 
-    // ✅ Table actions
-    const actions: TableAction<kitchenDepartment>[] = [
+    // ✅ Table actions column
+    const actionsColumn = useMemo<ColumnDef<kitchenDepartment>[]>(() => [
         {
-            label: t('common.edit'),
-            icon: Edit,
-            onClick: (dept: kitchenDepartment) => openModal(dept),
-        },
-        {
-            label: t('common.delete'),
-            icon: Trash2,
-            variant: 'destructive',
-            onClick: (dept: kitchenDepartment) => {
-                openConfirmationModal(() => handleDeleteKitchenDepartment(dept), {
-                    title: t('kitchen.deleteConfirmationTitle'),
-                    description: t('kitchen.deleteConfirmationDescription', {
-                        name: dept.name[locale],
-                    }),
-                    confirmButtonText: t('common.delete'),
-                    variant: 'destructive',
-                });
+            id: 'actions',
+            cell: ({ row }) => {
+                const dept = row.original;
+                return (
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openModal(dept)}
+                        >
+                            <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                                openConfirmationModal(() => handleDeleteKitchenDepartment(dept), {
+                                    title: t('kitchen.deleteConfirmationTitle'),
+                                    description: t('kitchen.deleteConfirmationDescription', {
+                                        name: dept.name[locale],
+                                    }),
+                                    confirmButtonText: t('common.delete'),
+                                    variant: 'destructive',
+                                });
+                            }}
+                            disabled={dept.isActive}
+                            className="text-destructive"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                );
             },
-            disabled: (dept: kitchenDepartment) => dept.isActive ?? false, // Prevent deleting active dept
         },
-    ];
+    ], [t, locale, openModal, openConfirmationModal, handleDeleteKitchenDepartment]);
 
     // ✅ Create
     const handleCreateKitchenDepartment = async (data: KitchenDepartmentFormData) => {
@@ -213,23 +257,6 @@ export default function KitchenDepartmentPage() {
         }
     };
 
-    // ✅ Delete
-    const handleDeleteKitchenDepartment = async (deptToDelete: kitchenDepartment) => {
-        setLoading(true);
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            setKitchenDepartments((prev) =>
-                prev.filter((dept) => dept._id !== deptToDelete._id),
-            );
-            toast.success(t('kitchen.deleteSuccess'));
-        } catch {
-            toast.error(t('common.error'));
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // ✅ Form submit
     const handleFormSubmit = async (data: KitchenDepartmentFormData) => {
         if (editingKitchenDepartment) {
@@ -272,14 +299,17 @@ export default function KitchenDepartmentPage() {
                         <CardTitle>{t('kitchen.allDepartments')}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <DataTable
+                        <TanStackTable
                             data={kitchenDepartments}
-                            columns={columns}
-                            actions={actions}
-                            searchable
+                            columns={[...columns, ...actionsColumn]}
                             searchPlaceholder={t('kitchen.searchPlaceholder')}
-                            pagination
-                            loading={loading}
+                            searchValue={searchTerm}
+                            onSearchChange={setSearchTerm}
+                            pagination={pagination}
+                            onPaginationChange={setPagination}
+                            sorting={sorting}
+                            onSortingChange={setSorting}
+                            isLoading={loading}
                         />
                     </CardContent>
                 </Card>
