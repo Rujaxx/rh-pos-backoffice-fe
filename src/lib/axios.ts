@@ -107,7 +107,7 @@ api.interceptors.response.use(
         logout()
         
         if (typeof window !== 'undefined') {
-          window.location.href = '/login'
+          window.location.href = '/'
         }
         throw new ApiError(errorData)
       }
@@ -158,7 +158,7 @@ api.interceptors.response.use(
           logout()
           
           if (typeof window !== 'undefined') {
-            window.location.href = '/login'
+            window.location.href = '/'
           }
         }
         
