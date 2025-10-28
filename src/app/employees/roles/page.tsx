@@ -5,7 +5,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { DataTable } from '@/components/ui/data-table';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import { PaginationState, SortingState, ColumnDef } from '@tanstack/react-table';
 import {
   useModal,
   CrudModal,
@@ -28,6 +29,10 @@ function RolesPage() {
   const { t } = useTranslation();
   const [roles, setRoles] = useState<UserRole[]>(mockRoles);
   const [loading, setLoading] = useState(false);
+  // Table state
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const locale = useIntl().locale as 'en' | 'ar';
 
   // Modal hooks
@@ -48,71 +53,7 @@ function RolesPage() {
   // Form hook
   const { form, isEditing } = useRoleForm(editingRole);
 
-  // Table columns configuration
-  const columns = [
-    {
-      id: 'name',
-      label: t('roles.table.name'),
-      sortable: true,
-      width: '72',
-      accessor: (role: UserRole) => (
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Shield className="w-4 h-4 text-primary" />
-          </div>
-          <div>
-            <div className="font-medium text-sm">{role.name[locale]}</div>
-            <div className="text-xs text-muted-foreground">ID: {role._id}</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'permissions',
-      label: t('roles.table.permissions'),
-      width: '72',
-      accessor: (role: UserRole) => (
-        <div>
-          <div className="text-sm font-medium">
-            {t('roles.permissions.count', { count: role.permissions.length })}
-          </div>
-          <div className="flex flex-wrap gap-1 mt-1">
-            {role.permissions.slice(0, 3).map((permission) => (
-              <Badge key={permission} variant="outline" className="text-xs">
-                {t(`users.permissions.${permission}`)}
-              </Badge>
-            ))}
-            {role.permissions.length > 3 && (
-              <Badge variant="secondary" className="text-xs">
-                +{role.permissions.length - 3} more
-              </Badge>
-            )}
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'status',
-      label: t('roles.table.status'),
-      sortable: true,
-      width: '72',
-      accessor: (role: UserRole) => (
-        <Badge variant={role.isActive ? 'default' : 'secondary'}>
-          {role.isActive ? (
-            <>
-              <UserCheck className="w-3 h-3 mr-1" />
-              {t('common.active')}
-            </>
-          ) : (
-            <>
-              <UserX className="w-3 h-3 mr-1" />
-              {t('common.inactive')}
-            </>
-          )}
-        </Badge>
-      ),
-    },
-  ];
+  // Columns will be defined after handlers so action renderers can reference functions
 
   // Table actions configuration
   const actions: UserTableAction<UserRole>[] = [
@@ -223,6 +164,103 @@ function RolesPage() {
     }
   };
 
+  // ColumnDefs and actions column for TanStackTable
+  const columns = React.useMemo<ColumnDef<UserRole>[]>(() => [
+    {
+      id: 'name',
+      header: t('roles.table.name'),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <Shield className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <div className="font-medium text-sm">{row.original.name[locale]}</div>
+            <div className="text-xs text-muted-foreground">ID: {row.original._id}</div>
+          </div>
+        </div>
+      ),
+      enableSorting: true,
+    },
+    {
+      id: 'permissions',
+      header: t('roles.table.permissions'),
+      cell: ({ row }) => (
+        <div>
+          <div className="text-sm font-medium">
+            {t('roles.permissions.count', { count: row.original.permissions.length })}
+          </div>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {row.original.permissions.slice(0, 3).map((permission) => (
+              <Badge key={permission} variant="outline" className="text-xs">
+                {t(`users.permissions.${permission}`)}
+              </Badge>
+            ))}
+            {row.original.permissions.length > 3 && (
+              <Badge variant="secondary" className="text-xs">+{row.original.permissions.length - 3} more</Badge>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'status',
+      header: t('roles.table.status'),
+      cell: ({ row }) => (
+        <Badge variant={row.original.isActive ? 'default' : 'secondary'}>
+          {row.original.isActive ? (
+            <>
+              <UserCheck className="w-3 h-3 mr-1" />
+              {t('common.active')}
+            </>
+          ) : (
+            <>
+              <UserX className="w-3 h-3 mr-1" />
+              {t('common.inactive')}
+            </>
+          )}
+        </Badge>
+      ),
+      enableSorting: true,
+    },
+  ], [t, locale]);
+
+  const actionsColumn = React.useMemo<ColumnDef<UserRole>[]>(() => [
+    {
+      id: 'actions',
+      cell: ({ row }) => {
+        const role = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={() => openModal(role)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                openConfirmationModal(
+                  async () => {
+                    await handleDeleteRole(role._id!);
+                  },
+                  {
+                    title: t('roles.delete.title'),
+                    description: t('roles.delete.description', { name: role.name[locale] }),
+                    confirmButtonText: t('common.delete'),
+                    variant: 'destructive',
+                  }
+                );
+              }}
+              className="text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ], [openModal, openConfirmationModal, handleDeleteRole, t, locale]);
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -248,13 +286,17 @@ function RolesPage() {
         {/* Roles Table */}
         <Card>
           <CardContent>
-            <DataTable
+            <TanStackTable
               data={roles}
-              columns={columns}
-              actions={actions}
-              searchable
+              columns={[...columns, ...actionsColumn]}
               searchPlaceholder={t('employees.roles.searchPlaceholder')}
-              loading={loading}
+              searchValue={searchTerm}
+              onSearchChange={setSearchTerm}
+              pagination={pagination}
+              onPaginationChange={setPagination}
+              sorting={sorting}
+              onSortingChange={setSorting}
+              isLoading={loading}
             />
           </CardContent>
         </Card>
