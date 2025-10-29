@@ -33,6 +33,8 @@ import { ThemeToggle } from './theme-toggle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import { useSidebar } from '@/providers/sidebar-provider';
+import { useBrands } from '@/services/api/brands/brands.queries';
+import { Brand } from '@/types/brand.type';
 
 export default function TopNav() {
   const { t } = useTranslation();
@@ -42,6 +44,10 @@ export default function TopNav() {
   const [selectedBrand, setSelectedBrand] = useState('all-brands');
   const [selectedRestaurant, setSelectedRestaurant] =
     useState('all-restaurants');
+
+  // Fetch brands from API
+  const { data: brandsResponse, isLoading: isBrandsLoading } = useBrands({ limit: 100 }); // Get all brands for dropdown
+  const apiBrands = brandsResponse?.data || [];
 
   const isRTL = locale === 'ar';
 
@@ -53,46 +59,43 @@ export default function TopNav() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Mock data - in real app this would come from API
-  const brands = [
-    {
-      id: 'all-brands',
-      name: { en: 'All Brands', ar: 'جميع العلامات التجارية' },
-    },
-    { id: 'tasty-bites', name: { en: 'Tasty Bites', ar: 'لذائذ الطعم' } },
-    { id: 'pizza-palace', name: { en: 'Pizza Palace', ar: 'قصر البيتزا' } },
-    {
-      id: 'burger-kingdom',
-      name: { en: 'Burger Kingdom', ar: 'مملكة البرجر' },
-    },
-  ];
+  // Combine "All Brands" option with API brands
+  const allBrandsOption = {
+    _id: 'all-brands',
+    name: { en: 'All Brands', ar: 'جميع العلامات التجارية' },
+    description: { en: '', ar: '' },
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  } as Brand;
 
+  const brands = [allBrandsOption, ...apiBrands];
+
+  // Mock restaurants data - TODO: Replace with real API when restaurants endpoint is ready
   const restaurants = [
     {
       id: 'all-restaurants',
       name: { en: 'All Restaurants', ar: 'جميع المطاعم' },
       brandId: 'all',
     },
-    {
-      id: 'downtown-tasty',
-      name: { en: 'Downtown Tasty Bites', ar: 'لذائذ الطعم وسط البلد' },
-      brandId: 'tasty-bites',
-    },
-    {
-      id: 'mall-tasty',
-      name: { en: 'Mall Tasty Bites', ar: 'لذائذ الطعم المول' },
-      brandId: 'tasty-bites',
-    },
-    {
-      id: 'pizza-branch1',
-      name: { en: 'Pizza Palace - Branch 1', ar: 'قصر البيتزا - الفرع 1' },
-      brandId: 'pizza-palace',
-    },
-    {
-      id: 'burger-main',
-      name: { en: 'Burger Kingdom Main', ar: 'مملكة البرجر الرئيسي' },
-      brandId: 'burger-kingdom',
-    },
+    ...apiBrands.flatMap((brand) => [
+      {
+        id: `${brand._id}-main`,
+        name: {
+          en: `${brand.name.en} - Main Branch`,
+          ar: `${brand.name.ar || brand.name.en} - الفرع الرئيسي`
+        },
+        brandId: brand._id,
+      },
+      {
+        id: `${brand._id}-secondary`,
+        name: {
+          en: `${brand.name.en} - Secondary Branch`,
+          ar: `${brand.name.ar || brand.name.en} - الفرع الثانوي`
+        },
+        brandId: brand._id,
+      },
+    ]),
   ];
 
   // Filter restaurants based on selected brand
@@ -103,8 +106,13 @@ export default function TopNav() {
           (r) => r.brandId === selectedBrand || r.id === 'all-restaurants'
         );
 
-  // Helper function to get localized name
-  const getLocalizedName = (item: { name: { en: string; ar: string } }) => {
+  // Helper function to get localized name for brands
+  const getBrandLocalizedName = (brand: Brand) => {
+    return locale === 'ar' && brand.name.ar ? brand.name.ar : brand.name.en;
+  };
+
+  // Helper function to get localized name for restaurants
+  const getRestaurantLocalizedName = (item: { name: { en: string; ar: string } }) => {
     return locale === 'ar' ? item.name.ar : item.name.en;
   };
 
@@ -145,11 +153,16 @@ export default function TopNav() {
                 <SelectValue placeholder={t('dashboard.selectBrand')} />
               </SelectTrigger>
               <SelectContent>
-                {brands.map((brand) => (
-                  <SelectItem key={brand.id} value={brand.id}>
-                    {getLocalizedName(brand)}
+                {!isBrandsLoading && brands.map((brand) => (
+                  <SelectItem key={brand._id} value={brand._id}>
+                    {getBrandLocalizedName(brand)}
                   </SelectItem>
                 ))}
+                {isBrandsLoading && (
+                  <SelectItem value="loading" disabled>
+                    Loading brands...
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -167,7 +180,7 @@ export default function TopNav() {
               <SelectContent>
                 {filteredRestaurants.map((restaurant) => (
                   <SelectItem key={restaurant.id} value={restaurant.id}>
-                    {getLocalizedName(restaurant)}
+                    {getRestaurantLocalizedName(restaurant)}
                   </SelectItem>
                 ))}
               </SelectContent>

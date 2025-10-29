@@ -12,6 +12,7 @@ import { useAuthStore } from '@/stores/auth.store'
 interface RetryableAxiosRequestConfig extends AxiosRequestConfig {
   __retryCount?: number
   method?: string
+  _retry?: boolean
 }
 
 // Create axios instance
@@ -44,6 +45,25 @@ api.interceptors.request.use(
   }
 )
 
+// Track requests being retried to prevent infinite loops
+let isRefreshing = false
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void
+  reject: (error?: unknown) => void
+}> = []
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error)
+    } else {
+      resolve(token)
+    }
+  })
+  
+  failedQueue = []
+}
+
 // Response interceptor
 api.interceptors.response.use(
   ((response: AxiosResponse) => {
@@ -62,6 +82,7 @@ api.interceptors.response.use(
   }) as unknown as Parameters<typeof api.interceptors.response.use>[0],
   async (error: AxiosError<ErrorResponse>) => {
     const { response, config } = error
+    const originalRequest = config as RetryableAxiosRequestConfig
 
     // Handle network errors
     if (!response) {
@@ -77,14 +98,73 @@ api.interceptors.response.use(
 
     const errorData = response.data
 
-    // Handle authentication errors
-    if (errorData.statusCode === 401) {
-      const { logout } = useAuthStore.getState()
-      logout()
+    // Handle authentication errors with token refresh
+    if (errorData.statusCode === 401 && !originalRequest._retry) {
+      // Skip refresh for auth endpoints to prevent infinite loops
+      const isAuthEndpoint = originalRequest.url?.includes('/auth/')
+      if (isAuthEndpoint) {
+        const { logout } = useAuthStore.getState()
+        logout()
+        
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
+        throw new ApiError(errorData)
+      }
 
-      // Redirect to login if we're in the browser
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login'
+      if (isRefreshing) {
+        // If already refreshing, queue the request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        }).then(() => {
+          // Retry original request with new token
+          const { accessToken } = useAuthStore.getState()
+          if (originalRequest.headers && accessToken) {
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`
+          }
+          return api(originalRequest)
+        }).catch(err => {
+          throw err
+        })
+      }
+
+      originalRequest._retry = true
+      isRefreshing = true
+
+      try {
+        const { refreshTokens } = useAuthStore.getState()
+        const refreshSuccess = await refreshTokens()
+        
+        if (refreshSuccess) {
+          const { accessToken } = useAuthStore.getState()
+          processQueue(null, accessToken)
+          
+          // Retry original request with new token
+          if (originalRequest.headers && accessToken) {
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`
+          }
+          
+          return api(originalRequest)
+        } else {
+          throw new Error('Token refresh failed')
+        }
+      } catch (refreshError) {
+        processQueue(refreshError, null)
+        
+        // Clear auth and redirect - this will happen in the store's refreshTokens method
+        // for expired refresh tokens, otherwise redirect to login
+        if (!(refreshError instanceof Error && refreshError.message === 'REFRESH_TOKEN_EXPIRED')) {
+          const { logout } = useAuthStore.getState()
+          logout()
+          
+          if (typeof window !== 'undefined') {
+            window.location.href = '/'
+          }
+        }
+        
+        throw new ApiError(errorData)
+      } finally {
+        isRefreshing = false
       }
     }
 
