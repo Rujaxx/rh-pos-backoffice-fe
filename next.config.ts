@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'via.placehold.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'rhpos-uploads-dev.s3.me-central-1.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'rhpos-uploads-production.s3.me-central-1.amazonaws.com',
+      },
     ],
   },
 };

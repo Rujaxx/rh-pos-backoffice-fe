@@ -1,36 +1,91 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { DataTable } from '@/components/ui/data-table';
 import {
-  useModal,
   CrudModal,
   ConfirmationModal,
+  useModal,
   useConfirmationModal,
 } from '@/components/ui/crud-modal';
-import Layout from '@/components/common/layout';
-import { Edit, Plus, Trash2, Folder, FolderTree } from 'lucide-react';
 import {
-  Category,
-  CategoryFormData,
-  CategoryTableAction,
-} from '@/types/category.type';
-import { useIntl } from 'react-intl';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-import { mockCategories } from '@/mock/categories';
-import CategoryFormContent, {
+  CategoryFormContent,
   useCategoryForm,
-} from '@/components/menu/categories/category-form';
+} from '@/components/categories/category-form';
+import {
+  useCategoryColumns,
+  getSortFieldForQuery,
+  getSortOrderForQuery,
+} from '@/components/categories/category-table-columns';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import Layout from '@/components/common/layout';
+import { Plus, Tag, Filter } from 'lucide-react';
+import { Category, CategoryQueryParams } from '@/types/category.type';
+import { CategoryFormData, categorySchema } from '@/lib/validations/category.validation';
+import { useCategories, useCategory } from '@/services/api/categories/categories.queries';
+import {
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory
+} from '@/services/api/categories/categories.mutations';
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
 
-function CategoriesPage() {
+export default function CategoriesPage() {
   const { t } = useTranslation();
-  const [categories, setCategories] = useState<Category[]>(mockCategories);
-  const [loading, setLoading] = useState(false);
-  const locale = useIntl().locale as 'en' | 'ar';
+
+  // Table state
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+
+  // Build query parameters from table state
+  const queryParams = useMemo<CategoryQueryParams>(() => {
+    const params: CategoryQueryParams = {
+      page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
+      limit: pagination.pageSize,
+      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
+    };
+
+    // Add search term
+    if (searchTerm.trim()) {
+      params.term = searchTerm.trim();
+    }
+
+    // Add sorting field
+    const sortField = getSortFieldForQuery(sorting);
+    if (sortField) {
+      params.sortBy = sortField as 'name' | 'createdAt' | 'updatedAt' | 'sortOrder';
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
+    }
+
+    // Add status filter
+    if (statusFilter !== undefined) {
+      params.isActive = statusFilter === "active" ? "true" : "false";
+    }
+
+    return params;
+  }, [pagination, sorting, searchTerm, statusFilter]);
+
+  // API hooks
+  const { data: categoriesResponse, isLoading, error } = useCategories(queryParams);
+  const createCategoryMutation = useCreateCategory();
+  const updateCategoryMutation = useUpdateCategory();
+  const deleteCategoryMutation = useDeleteCategory();
+
+  // Extract data from response
+  const categories = categoriesResponse?.data || [];
+  const totalCount = categoriesResponse?.meta?.total || 0;
 
   // Modal hooks
   const {
@@ -39,6 +94,7 @@ function CategoriesPage() {
     openModal,
     closeModal,
   } = useModal<Category>();
+
   const {
     isConfirmationOpen,
     confirmationConfig,
@@ -47,221 +103,225 @@ function CategoriesPage() {
     executeConfirmation,
   } = useConfirmationModal();
 
-  // Form hook
-  const { form, isEditing } = useCategoryForm(editingCategory);
+  // Fetch individual category data when editing to get latest information
+  const categoryId = editingCategory?._id;
+  const shouldFetchCategory = isOpen && !!categoryId;
+  
+  const { 
+    data: individualCategoryResponse, 
+    isLoading: isLoadingIndividualCategory,
+    isFetching: isFetchingIndividualCategory 
+  } = useCategory(
+    categoryId || '', 
+    {
+      enabled: shouldFetchCategory // The hook already checks !!id, we just need to check if modal is open
+    }
+  );
 
-  // Table columns configuration
-  const columns = [
-    {
-      id: 'name',
-      label: t('categories.table.name'),
-      sortable: true,
-      accessor: (category: Category) => (
-        <div className="flex items-center gap-2">
-          {category.parentCategoryId ? (
-            <FolderTree className="w-4 h-4 text-primary" />
-          ) : (
-            <Folder className="w-4 h-4 text-primary" />
-          )}
-          {category.name[locale]}
-        </div>
-      ),
-    },
-    {
-      id: 'shortCode',
-      label: t('categories.table.shortCode'),
-      sortable: true,
-      accessor: 'shortCode',
-    },
-    {
-      id: 'isActive',
-      label: t('categories.table.status'),
-      sortable: true,
-      accessor: (category: Category) => (
-        <Badge variant={category.isActive ? 'default' : 'secondary'}>
-          {category.isActive ? t('common.active') : t('common.inactive')}
-        </Badge>
-      ),
-    },
-  ];
+  // Use the latest category data from API if available, otherwise use the table data
+  const latestCategoryData = individualCategoryResponse?.data || editingCategory;
 
-  // Table actions configuration
-  const actions: CategoryTableAction<Category>[] = [
-    {
-      label: t('common.edit'),
-      icon: Edit,
-      onClick: (category: Category) => openModal(category),
-      variant: 'default',
-    },
-    {
-      label: t('common.delete'),
-      icon: Trash2,
-      onClick: (category: Category) => {
-        openConfirmationModal(
-          async () => {
-            await handleDeleteCategory(category._id!);
-          },
-          {
-            title: t('categories.delete.title'),
-            description: t('categories.delete.description', {
-              name: category.name[locale],
-            }),
-            confirmButtonText: t('common.delete'),
-            variant: 'destructive',
-          }
-        );
-      },
+  // Form hook with latest category data
+  const { form } = useCategoryForm(latestCategoryData);
+
+  // Use refs to update the actual handler logic without changing column references
+  const editHandlerRef = useRef<((category: Category) => void) | null>(null);
+  const deleteHandlerRef = useRef<((category: Category) => void) | null>(null);
+
+  // Create stable handler functions that use refs
+  const editHandler = useCallback((category: Category) => {
+    editHandlerRef.current?.(category);
+  }, []);
+  
+  const deleteHandler = useCallback((category: Category) => {
+    deleteHandlerRef.current?.(category);
+  }, []);
+
+  // Create columns with stable handlers
+  const stableColumns = useCategoryColumns(editHandler, deleteHandler);
+
+  // Update the handler refs on each render (but this won't cause columns to recreate)
+  editHandlerRef.current = (category: Category) => {
+    openModal(category);
+  };
+  
+  deleteHandlerRef.current = (category: Category) => {
+    openConfirmationModal(async () => {
+      try {
+        await deleteCategoryMutation.mutateAsync(category._id);
+      } catch (error) {
+        console.error('Failed to delete category:', error);
+      }
+    }, {
+      title: t('categories.deleteCategory'),
+      description: t('categories.deleteConfirmation', {
+        categoryName: category.name.en,
+      }),
+      confirmButtonText: t('categories.deleteCategoryButton'),
       variant: 'destructive',
-    },
-  ];
+    });
+  };
 
-  // CRUD Handlers
-  const handleCreateCategory = async (data: CategoryFormData) => {
-    setLoading(true);
+  // Move handlers after column definition to avoid dependency issues
+  const handleSubmit = useCallback(async (data: CategoryFormData) => {
     try {
-      // Simulate API call and receive a new object
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const newCategory: Category = {
+      // Handle 'none' restaurant selection - convert to undefined
+      const processedData = {
         ...data,
-        _id: Date.now().toString(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        createdBy: 'your-user-id',
-        updatedBy: 'your-user-id',
-        brandId: 'your-brand-id',
+        restaurantId: data.restaurantId === 'none' ? undefined : data.restaurantId,
       };
-      setCategories((prev) => [newCategory, ...prev]);
-      toast.success(t('categories.create.success'));
+      
+      // Parse and apply defaults using the schema to ensure all fields have proper values
+      const validatedData = categorySchema.parse(processedData);
+      
+      if (latestCategoryData) {
+        await updateCategoryMutation.mutateAsync({
+          id: latestCategoryData._id,
+          data: validatedData,
+        });
+      } else {
+        await createCategoryMutation.mutateAsync(validatedData);
+      }
       closeModal();
     } catch (error) {
-      console.error('Create category error:', error);
-      toast.error(t('categories.create.error'));
-    } finally {
-      setLoading(false);
+      console.error('Failed to save category:', error);
     }
-  };
+  }, [latestCategoryData, updateCategoryMutation, createCategoryMutation, closeModal]);
 
-  const handleUpdateCategory = async (data: CategoryFormData) => {
-    if (!editingCategory?._id) return;
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const updatedCategory: Category = {
-        ...editingCategory,
-        ...data,
-        updatedAt: new Date(),
-        updatedBy: 'your-user-id',
-      };
-      setCategories((prev) =>
-        prev.map((category) =>
-          category._id === editingCategory._id ? updatedCategory : category
-        )
-      );
-      toast.success(t('categories.update.success'));
-      closeModal();
-    } catch (error) {
-      console.error('Update category error:', error);
-      toast.error(t('categories.update.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Search handler with proper typing
+  const handleSearchChange = useCallback((search: string) => {
+    setSearchTerm(search);
+    // Reset to first page when searching
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-  const handleDeleteCategory = async (id: string) => {
-    setLoading(true);
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setCategories((prev) => prev.filter((category) => category._id !== id));
-      toast.success(t('categories.delete.success'));
-      closeConfirmationModal();
-    } catch (error) {
-      console.error('Delete category error:', error);
-      toast.error(t('categories.delete.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Pagination handler
+  const handlePaginationChange = useCallback((newPagination: PaginationState) => {
+    setPagination(newPagination);
+  }, []);
 
-  const handleSubmit = async (data: CategoryFormData) => {
-    if (isEditing) {
-      await handleUpdateCategory(data);
-    } else {
-      await handleCreateCategory(data);
-    }
-  };
+  // Sorting handler
+  const handleSortingChange = useCallback((newSorting: SortingState) => {
+    setSorting(newSorting);
+    // Reset to first page when sorting changes
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
+  // Column filters handler
+  const handleColumnFiltersChange = useCallback((filters: ColumnFiltersState) => {
+    setColumnFilters(filters);
+    // Reset to first page when filters change
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
+  const isFormLoading = createCategoryMutation.isPending || updateCategoryMutation.isPending || isLoadingIndividualCategory || isFetchingIndividualCategory;
 
   return (
     <Layout>
-      <div className="space-y-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
+      <div className="flex flex-1 flex-col space-y-8 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between space-y-2">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              <Folder className="h-8 w-8" />
-              {t('categories.title')}
-            </h1>
-            <p className="text-muted-foreground">{t('categories.subtitle')}</p>
+            <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
+              <Tag className="h-6 w-6" />
+              <span>{t('categories.title')}</span>
+            </h2>
+            <p className="text-muted-foreground">
+              {t('categories.subtitle')}
+            </p>
           </div>
-          <Button
-            onClick={() => openModal()}
-            className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            {t('categories.addCategory')}
-          </Button>
+          <div className="flex items-center space-x-2">
+            {/* Status filter button */}
+            <Button
+              variant={statusFilter !== undefined ? "default" : "outline"}
+              onClick={() => {
+                setStatusFilter(
+                  statusFilter === "active"
+                    ? "inactive"
+                    : statusFilter === "inactive"
+                      ? undefined
+                      : "active"
+                ); 
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              className="h-8"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              {statusFilter === "active" ? t('categories.active') :
+                statusFilter === "inactive" ? t('categories.inactive') :
+                  t('categories.allStatus')}
+            </Button>
+            <Button onClick={() => openModal()} className="h-8">
+              <Plus className="h-4 w-4 mr-2" />
+              {t('categories.addNewCategory')}
+            </Button>
+          </div>
         </div>
 
-        {/* Categories Table */}
+        {/* TanStack Table */}
         <Card>
-          <CardContent>
-            <DataTable
-              data={categories}
-              columns={columns}
-              actions={actions}
-              searchable
-              searchPlaceholder={t('categories.searchPlaceholder')}
-              loading={loading}
-            />
+          <CardContent className="p-6">
+            {error ? (
+              <div className="flex items-center justify-center h-64 text-destructive">
+                <p>{t('categories.errorLoading')}: {error.message}</p>
+              </div>
+            ) : (
+              <TanStackTable
+                data={categories}
+                columns={stableColumns}
+                totalCount={totalCount}
+                isLoading={isLoading}
+                searchValue={searchTerm}
+                searchPlaceholder={t('categories.searchPlaceholder')}
+                onSearchChange={handleSearchChange}
+                pagination={pagination}
+                onPaginationChange={handlePaginationChange}
+                sorting={sorting}
+                onSortingChange={handleSortingChange}
+                columnFilters={columnFilters}
+                onColumnFiltersChange={handleColumnFiltersChange}
+                manualPagination={true}
+                manualSorting={true}
+                manualFiltering={true}
+                showSearch={true}
+                showPagination={true}
+                showPageSizeSelector={true}
+                emptyMessage={t('categories.noDataFound')}
+                enableMultiSort={false}
+              />
+            )}
           </CardContent>
         </Card>
 
-        {/* Category Form Modal */}
+        {/* Create/Edit Modal */}
         <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
-          title={
-            isEditing
-              ? t('categories.edit.title')
-              : t('categories.create.title')
-          }
-          description={
-            isEditing
-              ? t('categories.edit.description')
-              : t('categories.create.description')
-          }
+          title={editingCategory ? t('categories.form.editTitle') : t('categories.form.createTitle')}
+          description={editingCategory ? t('categories.form.editDescription') : t('categories.form.createDescription')}
           form={form}
           onSubmit={handleSubmit}
-          loading={loading}
-          size="xl">
+          loading={isFormLoading}
+          size="xl"
+          submitButtonText={
+            editingCategory ? t('categories.form.updateButton') : t('categories.form.createButton')
+          }
+        >
           <CategoryFormContent form={form} />
         </CrudModal>
 
-        {/* Confirmation Modal */}
+        {/* Delete Confirmation Modal */}
         <ConfirmationModal
           isOpen={isConfirmationOpen}
           onClose={closeConfirmationModal}
           onConfirm={executeConfirmation || (() => Promise.resolve())}
-          title={confirmationConfig.title}
-          description={confirmationConfig.description}
-          loading={loading}
-          confirmButtonText={confirmationConfig.confirmButtonText}
-          cancelButtonText={t('common.cancel')}
-          variant={confirmationConfig.variant}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteCategoryMutation.isPending}
         />
       </div>
     </Layout>
   );
 }
-
-export default CategoriesPage;
