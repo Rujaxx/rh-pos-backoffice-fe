@@ -4,8 +4,9 @@
  */
 
 import { create } from 'zustand'
-import { AuthTokens } from '@/types/auth'
+import { AuthTokens } from '@/types/auth/auth.type'
 import { User } from '@/types/user'
+import { AuthService } from '@/services/auth.service'
 
 // Auth state interface
 interface AuthState {
@@ -23,6 +24,8 @@ interface AuthState {
   setTokens: (tokens: AuthTokens) => void
   setLoading: (loading: boolean) => void
   clearAuth: () => void
+  refreshTokens: () => Promise<boolean>
+  redirectToHome: () => void
 }
 
 // Initial state
@@ -122,6 +125,63 @@ export const useAuthStore = create<AuthState>()(
         } catch (error) {
           console.warn('Failed to clear auth from localStorage:', error)
         }
+      }
+    },
+    
+    // Refresh tokens
+    refreshTokens: async (): Promise<boolean> => {
+      const { refreshToken } = get()
+      if (!refreshToken) {
+        return false
+      }
+      
+      try {
+        set({ isLoading: true })
+        const newTokens = await AuthService.refreshTokens(refreshToken)
+        
+        // Update tokens in store
+        set({ 
+          accessToken: newTokens.accessToken, 
+          refreshToken: newTokens.refreshToken,
+          isLoading: false 
+        })
+        
+        // Update localStorage
+        if (typeof window !== 'undefined') {
+          try {
+            const stored = localStorage.getItem('rh-pos-auth')
+            if (stored) {
+              const parsed = JSON.parse(stored)
+              localStorage.setItem('rh-pos-auth', JSON.stringify({
+                ...parsed,
+                accessToken: newTokens.accessToken,
+                refreshToken: newTokens.refreshToken,
+              }))
+            }
+          } catch (error) {
+            console.warn('Failed to update tokens in localStorage:', error)
+          }
+        }
+        
+        return true
+      } catch (error) {
+        set({ isLoading: false })
+        console.warn('Token refresh failed:', error)
+        
+        // If refresh token is expired, clear auth and redirect to home
+        if (error instanceof Error && error.message === 'REFRESH_TOKEN_EXPIRED') {
+          get().clearAuth()
+          get().redirectToHome()
+        }
+        
+        return false
+      }
+    },
+    
+    // Redirect to homepage
+    redirectToHome: () => {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/'
       }
     },
   })
