@@ -1,5 +1,5 @@
-import { MultilingualText } from '@/types/common/common.type';
-import { z } from 'zod';
+import { MultilingualText } from "@/types/common/common.type";
+import { z } from "zod";
 
 export const multilingualTextSchema = z
   .object({
@@ -7,26 +7,26 @@ export const multilingualTextSchema = z
     ar: z.string().min(0),
   })
   .refine((data) => data.en.trim() || data.ar.trim(), {
-    message: 'At least one language is required',
-    path: ['en'],
+    message: "At least one language is required",
+    path: ["en"],
   }) satisfies z.ZodType<MultilingualText>;
 
 export const addressSchema = z.object({
-    addressLine1: z.string().optional(),
-    addressLine2: z.string().optional(),
-    city: z.string().optional(),
-    location: z.string().optional(),
-    state: z.string().optional(),
-    country: z.string().optional(),
-    pincode: z.string().optional(),
-  })
+  addressLine1: z.string().optional(),
+  addressLine2: z.string().optional(),
+  city: z.string().optional(),
+  location: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  pincode: z.string().optional(),
+});
 
 // Common validation utilities
 
 // Generic validation helper with enhanced error handling
 export function validateFormData<T>(
   schema: z.ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): {
   success: boolean;
   data?: T;
@@ -42,7 +42,7 @@ export function validateFormData<T>(
       const fieldErrors: Record<string, string[]> = {};
 
       error.issues.forEach((err) => {
-        const path = err.path.join('.');
+        const path = err.path.join(".");
         const message = err.message;
 
         // Store the first error message for each field path
@@ -64,7 +64,7 @@ export function validateFormData<T>(
     return {
       success: false,
       errors: {
-        general: error instanceof Error ? error.message : 'Validation failed',
+        general: error instanceof Error ? error.message : "Validation failed",
       },
     };
   }
@@ -73,7 +73,7 @@ export function validateFormData<T>(
 // Safe validation helper that returns parsed data or null
 export function safeValidateFormData<T>(
   schema: z.ZodSchema<T>,
-  data: unknown
+  data: unknown,
 ): T | null {
   const result = validateFormData(schema, data);
   return result.success ? result.data! : null;
@@ -84,7 +84,7 @@ export function validateFormSubmission<T>(
   schema: z.ZodSchema<T>,
   data: unknown,
   onSuccess?: (data: T) => void,
-  onError?: (errors: Record<string, string>) => void
+  onError?: (errors: Record<string, string>) => void,
 ): boolean {
   const result = validateFormData(schema, data);
 
@@ -101,12 +101,12 @@ export function validateFormSubmission<T>(
 
 // Utility to format validation errors for display
 export function formatValidationErrors(
-  errors: Record<string, string>
+  errors: Record<string, string>,
 ): string[] {
   return Object.entries(errors).map(([field, message]) => {
     // Convert dot notation to readable field names
     const readableField = field
-      .split('.')
+      .split(".")
       .map((part) => {
         // Handle array indices
         if (/^\d+$/.test(part)) {
@@ -114,11 +114,11 @@ export function formatValidationErrors(
         }
         // Convert camelCase to readable format
         return part
-          .replace(/([A-Z])/g, ' $1')
+          .replace(/([A-Z])/g, " $1")
           .toLowerCase()
           .replace(/^./, (str) => str.toUpperCase());
       })
-      .join(' → ');
+      .join(" → ");
 
     return `${readableField}: ${message}`;
   });
@@ -127,7 +127,7 @@ export function formatValidationErrors(
 // Helper to get nested field errors for react-hook-form integration
 export function getNestedFieldError(
   errors: Record<string, string> | undefined,
-  fieldPath: string
+  fieldPath: string,
 ): string | undefined {
   return errors?.[fieldPath];
 }

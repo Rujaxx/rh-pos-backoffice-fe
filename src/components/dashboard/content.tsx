@@ -1,98 +1,142 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  ShoppingCart, 
-  Users, 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  ShoppingCart,
+  Users,
   Clock,
   ChefHat,
   Store,
   Activity,
-  Calendar
-} from "lucide-react"
+  Calendar,
+} from "lucide-react";
 
-import { useTranslation } from "@/hooks/useTranslation"
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function DashboardContent() {
-  const { t } = useTranslation()
-  
-    // Mock data - in real app this would come from your NestJS backend
-    const kpis = [
-      {
-        title: t("dashboard.totalRevenue"),
-        value: "$54,230",
-        change: "+12.5%",
-        changeType: "positive" as const,
-        icon: DollarSign,
-        description: t("dashboard.revenueDescription")
-      },
-      {
-        title: t("dashboard.totalOrders"),
-        value: "1,234",
-        change: "+8.2%", 
-        changeType: "positive" as const,
-        icon: ShoppingCart,
-        description: t("dashboard.ordersDescription")
-      },
-      {
-        title: t("dashboard.activeStaff"),
-        value: "24",
-        change: "-2.1%",
-        changeType: "negative" as const,
-        icon: Users,
-        description: t("dashboard.staffDescription")
-      },
-      {
-        title: t("dashboard.avgOrderTime"),
-        value: "12.5 min",
-        change: "-5.3%",
-        changeType: "positive" as const,
-        icon: Clock,
-        description: t("dashboard.orderTimeDescription")
-      }
-    ]
-  
-    const recentOrders = [
-      { id: "#1234", table: "Table 5", items: 3, total: "$45.80", status: "preparing", time: "5 min ago" },
-      { id: "#1235", table: "Table 2", items: 2, total: "$28.50", status: "ready", time: "8 min ago" },
-      { id: "#1236", table: "Delivery", items: 4, total: "$62.30", status: "completed", time: "12 min ago" },
-      { id: "#1237", table: "Table 8", items: 1, total: "$15.20", status: "pending", time: "15 min ago" },
-    ]
-  
-    const topItems = [
-      { name: "Margherita Pizza", orders: 45, revenue: "$675" },
-      { name: "Chicken Burger", orders: 38, revenue: "$532" },
-      { name: "Caesar Salad", orders: 32, revenue: "$384" },
-      { name: "Pasta Carbonara", orders: 28, revenue: "$420" },
-    ]
-  
-    const getStatusColor = (status: string) => {
-      switch (status) {
-        case "preparing": return "bg-yellow-500"
-        case "ready": return "bg-green-500"
-        case "completed": return "bg-blue-500"
-        case "pending": return "bg-gray-500"
-        default: return "bg-gray-500"
-      }
+  const { t } = useTranslation();
+
+  // Mock data - in real app this would come from your NestJS backend
+  const kpis = [
+    {
+      title: t("dashboard.totalRevenue"),
+      value: "$54,230",
+      change: "+12.5%",
+      changeType: "positive" as const,
+      icon: DollarSign,
+      description: t("dashboard.revenueDescription"),
+    },
+    {
+      title: t("dashboard.totalOrders"),
+      value: "1,234",
+      change: "+8.2%",
+      changeType: "positive" as const,
+      icon: ShoppingCart,
+      description: t("dashboard.ordersDescription"),
+    },
+    {
+      title: t("dashboard.activeStaff"),
+      value: "24",
+      change: "-2.1%",
+      changeType: "negative" as const,
+      icon: Users,
+      description: t("dashboard.staffDescription"),
+    },
+    {
+      title: t("dashboard.avgOrderTime"),
+      value: "12.5 min",
+      change: "-5.3%",
+      changeType: "positive" as const,
+      icon: Clock,
+      description: t("dashboard.orderTimeDescription"),
+    },
+  ];
+
+  const recentOrders = [
+    {
+      id: "#1234",
+      table: "Table 5",
+      items: 3,
+      total: "$45.80",
+      status: "preparing",
+      time: "5 min ago",
+    },
+    {
+      id: "#1235",
+      table: "Table 2",
+      items: 2,
+      total: "$28.50",
+      status: "ready",
+      time: "8 min ago",
+    },
+    {
+      id: "#1236",
+      table: "Delivery",
+      items: 4,
+      total: "$62.30",
+      status: "completed",
+      time: "12 min ago",
+    },
+    {
+      id: "#1237",
+      table: "Table 8",
+      items: 1,
+      total: "$15.20",
+      status: "pending",
+      time: "15 min ago",
+    },
+  ];
+
+  const topItems = [
+    { name: "Margherita Pizza", orders: 45, revenue: "$675" },
+    { name: "Chicken Burger", orders: 38, revenue: "$532" },
+    { name: "Caesar Salad", orders: 32, revenue: "$384" },
+    { name: "Pasta Carbonara", orders: 28, revenue: "$420" },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "preparing":
+        return "bg-yellow-500";
+      case "ready":
+        return "bg-green-500";
+      case "completed":
+        return "bg-blue-500";
+      case "pending":
+        return "bg-gray-500";
+      default:
+        return "bg-gray-500";
     }
-  
-    const getStatusText = (status: string) => {
-      switch (status) {
-        case "preparing": return t("dashboard.preparing")
-        case "ready": return t("dashboard.ready")
-        case "completed": return t("dashboard.completed")
-        case "pending": return t("dashboard.pending")
-        default: return status
-      }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "preparing":
+        return t("dashboard.preparing");
+      case "ready":
+        return t("dashboard.ready");
+      case "completed":
+        return t("dashboard.completed");
+      case "pending":
+        return t("dashboard.pending");
+      default:
+        return status;
     }
-  
+  };
+
   return (
-     <div className="space-y-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
         <div>
@@ -120,9 +164,7 @@ export function DashboardContent() {
         {kpis.map((kpi, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {kpi.title}
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">{kpi.title}</CardTitle>
               <kpi.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -133,7 +175,13 @@ export function DashboardContent() {
                 ) : (
                   <TrendingDown className="h-4 w-4 text-red-500" />
                 )}
-                <span className={kpi.changeType === "positive" ? "text-green-500" : "text-red-500"}>
+                <span
+                  className={
+                    kpi.changeType === "positive"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }
+                >
                   {kpi.change}
                 </span>
                 <span>{kpi.description}</span>
@@ -158,11 +206,16 @@ export function DashboardContent() {
           <CardContent>
             <div className="space-y-3">
               {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <div className="flex flex-col">
                       <span className="font-medium">{order.id}</span>
-                      <span className="text-sm text-gray-500">{order.table}</span>
+                      <span className="text-sm text-gray-500">
+                        {order.table}
+                      </span>
                     </div>
                     <Badge className={getStatusColor(order.status)}>
                       {getStatusText(order.status)}
@@ -192,7 +245,10 @@ export function DashboardContent() {
           <CardContent>
             <div className="space-y-3">
               {topItems.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                       <span className="font-bold text-sm">{index + 1}</span>
@@ -241,6 +297,6 @@ export function DashboardContent() {
           </div>
         </CardContent>
       </Card>
-      </div>
-  )
+    </div>
+  );
 }

@@ -1,49 +1,37 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-// User validation schema
 export const userSchema = z.object({
   _id: z.string().optional(),
-  firstName: z
-    .string()
-    .min(1, 'First name is required')
-    .max(50, 'First name must be less than 50 characters'),
-  lastName: z
-    .string()
-    .min(1, 'Last name is required')
-    .max(50, 'Last name must be less than 50 characters'),
+
+  name: z.string().min(3),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(30, 'Username must be less than 30 characters')
-    .regex(
-      /^[a-zA-Z0-9_-]+$/,
-      'Username can only contain letters, numbers, underscores, and hyphens'
-    ),
-  email: z.email('Please enter a valid email address'),
-  phone: z
-    .string()
-    .min(0)
-    .refine(
-      (val) => !val || /^[\+]?[1-9][\d]{0,15}$/.test(val),
-      'Please enter a valid phone number'
-    ),
-  role: z.string().min(1, 'Role is required'),
-  designation: z
-    .string()
-    .min(1, 'Designation is required')
-    .max(100, 'Designation must be less than 100 characters'),
-  restaurants: z
-    .array(z.string())
-    .min(1, 'At least one restaurant must be assigned'),
+    .min(3)
+    .max(30)
+    .regex(/^[a-zA-Z0-9_-]+$/),
+  email: z.email(),
+  password: z.string().min(8).max(30).optional(),
+
+  countryCode: z.string().optional().or(z.literal("")).nullable(),
+  phoneNumber: z.string().nullable().optional(),
+  address: z.string().optional().or(z.literal("")),
+  designation: z.string().max(100).optional().or(z.literal("")),
+
+  role: z.string().min(1),
+
+  restaurantIds: z.array(z.string()).min(1),
+  brandIds: z.array(z.string()).min(1),
+
   isActive: z.boolean(),
-  profileImage: z.string().min(0),
+  agreeToTerms: z.boolean(),
+  webAccess: z.boolean(),
+
+  shiftStart: z.number().min(0).max(1439),
+  shiftEnd: z.number().min(0).max(1439),
+
+  macAddress: z.string().optional().or(z.literal("")),
+  language: z.string(),
+  timeZone: z.string(),
 });
 
 export type UserFormData = z.infer<typeof userSchema>;
-
-// Permission form schema
-export const permissionSchema = z.object({
-  permissions: z.array(z.string()).nonempty(),
-});
-
-export type PermissionFormData = z.infer<typeof permissionSchema>;

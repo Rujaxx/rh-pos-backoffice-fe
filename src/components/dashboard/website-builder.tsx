@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Globe, Eye, Smartphone, Monitor } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Globe, Eye, Smartphone, Monitor } from "lucide-react";
 
 export function WebsiteBuilder() {
   const websites = [
@@ -29,7 +29,7 @@ export function WebsiteBuilder() {
       mobile: "85%",
       desktop: "90%",
     },
-  ]
+  ];
 
   return (
     <Card className="bg-white dark:bg-gray-800">
@@ -38,14 +38,21 @@ export function WebsiteBuilder() {
           <Globe className="mr-2 h-5 w-5" />
           Website Builder
         </CardTitle>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Manage your websites and performance</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Manage your websites and performance
+        </p>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {websites.map((website, index) => (
-            <div key={index} className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+            <div
+              key={index}
+              className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg"
+            >
               <div className="flex items-center justify-between mb-3">
-                <h4 className="font-medium text-gray-900 dark:text-white">{website.name}</h4>
+                <h4 className="font-medium text-gray-900 dark:text-white">
+                  {website.name}
+                </h4>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
                     website.status === "live"
@@ -57,27 +64,39 @@ export function WebsiteBuilder() {
                 </span>
               </div>
 
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{website.url}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                {website.url}
+              </p>
 
               <div className="flex items-center mb-3">
                 <Eye className="h-4 w-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-600 dark:text-gray-300">{website.visitors} visitors</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {website.visitors} visitors
+                </span>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center">
                     <Smartphone className="h-3 w-3 text-gray-400 mr-1" />
-                    <span className="text-gray-600 dark:text-gray-300">Mobile</span>
+                    <span className="text-gray-600 dark:text-gray-300">
+                      Mobile
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-900 dark:text-white">{website.mobile}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    {website.mobile}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center">
                     <Monitor className="h-3 w-3 text-gray-400 mr-1" />
-                    <span className="text-gray-600 dark:text-gray-300">Desktop</span>
+                    <span className="text-gray-600 dark:text-gray-300">
+                      Desktop
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-900 dark:text-white">{website.desktop}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    {website.desktop}
+                  </span>
                 </div>
               </div>
             </div>
@@ -89,5 +108,5 @@ export function WebsiteBuilder() {
         </button>
       </CardContent>
     </Card>
-  )
+  );
 }

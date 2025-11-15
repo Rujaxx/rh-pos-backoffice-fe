@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 import {
   addressSchema,
   multilingualTextSchema,
@@ -7,7 +7,7 @@ import {
   validateFormSubmission,
   formatValidationErrors,
   getNestedFieldError,
-} from './common/common.validation';
+} from "./common/common.validation";
 
 // Validation schemas for restaurant settings
 
@@ -33,24 +33,26 @@ export const restaurantSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
   description: multilingualTextSchema.optional(),
-  brandId: z.string().min(1, 'Brand is required'),
+  brandId: z.string().min(1, "Brand is required"),
   logo: z.string().optional(),
   address: addressSchema.optional(),
-  timezone: z.string().min(1, 'Timezone is required'),
-  
+  timezone: z.string().min(1, "Timezone is required"),
+
   startDayTime: z
     .number()
-    .min(0, 'Start day time must be between 0 and 1439 minutes')
-    .max(1439, 'Start day time must be between 0 and 1439 minutes'),
+    .min(0, "Start day time must be between 0 and 1439 minutes")
+    .max(1439, "Start day time must be between 0 and 1439 minutes"),
 
   endDayTime: z
     .number()
-    .min(0, 'End day time must be between 0 and 1439 minutes')
-    .max(1439, 'End day time must be between 0 and 1439 minutes'),
-    
-  nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
+    .min(0, "End day time must be between 0 and 1439 minutes")
+    .max(1439, "End day time must be between 0 and 1439 minutes"),
+
+  nextResetBillFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
   notificationPhone: z.array(z.string()).default([]),
-  notificationEmails: z.array(z.string().email('Invalid email format')).default([]),
+  notificationEmails: z
+    .array(z.string().email("Invalid email format"))
+    .default([]),
   isActive: z.boolean().default(true),
   restoCode: z.string().max(50).optional(),
   posLogoutOnClose: z.boolean().default(true),
@@ -64,11 +66,24 @@ export const restaurantSchema = z.object({
   autoUpdatePos: z.boolean().default(true),
   allowMultipleTax: z.boolean().default(false),
   generateOrderTypeWiseOrderNo: z.boolean().default(false),
-  smsAndWhatsappSelection: z.enum(['none', 'sms', 'whatsapp', 'both']).default('none'),
+  smsAndWhatsappSelection: z
+    .enum(["none", "sms", "whatsapp", "both"])
+    .default("none"),
   whatsAppChannel: z.string().optional(),
-  sendReports: sendReportsSchema.default({ email: false, whatsapp: false, sms: false }),
-  paymentLinkSettings: paymentLinkSettingsSchema.default({ onWhatsapp: false, onSms: false }),
-  eBillSettings: eBillSettingsSchema.default({ onEmail: false, onWhatsapp: false, onSms: false }),
+  sendReports: sendReportsSchema.default({
+    email: false,
+    whatsapp: false,
+    sms: false,
+  }),
+  paymentLinkSettings: paymentLinkSettingsSchema.default({
+    onWhatsapp: false,
+    onSms: false,
+  }),
+  eBillSettings: eBillSettingsSchema.default({
+    onEmail: false,
+    onWhatsapp: false,
+    onSms: false,
+  }),
 });
 
 export type RestaurantFormData = z.input<typeof restaurantSchema>;

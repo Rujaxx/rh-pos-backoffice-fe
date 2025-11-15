@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useForm, UseFormReturn } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   RHFInput,
   RHFSelect,
   RHFSwitch,
-} from '@/components/ui/form-components';
-import { TableFormData, tableSchema } from '@/lib/validations/table.validation';
-import { Table } from '@/types/table';
-import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
-import { useGetTableSectionsByRestaurant } from '@/services/api/tablesections/tablesections.queries';
-import { useI18n } from '@/providers/i18n-provider';
+} from "@/components/ui/form-components";
+import { TableFormData, tableSchema } from "@/lib/validations/table.validation";
+import { Table } from "@/types/table";
+import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
+import { useGetTableSectionsByRestaurant } from "@/services/api/tablesections/tablesections.queries";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface TableFormContentProps {
   form: UseFormReturn<TableFormData>;
@@ -25,25 +25,23 @@ export function TableFormContent({ form }: TableFormContentProps) {
   const { locale } = useI18n();
 
   // Get restaurants for dropdown
-  const { data: restaurantsData, isLoading: restaurantsLoading } = useActiveRestaurants();
+  const { data: restaurantsData, isLoading: restaurantsLoading } =
+    useActiveRestaurants();
 
   // Watch selected restaurant to filter table sections
-  const selectedRestaurantId = form.watch('restaurantId');
+  const selectedRestaurantId = form.watch("restaurantId");
 
   // Fetch table sections for the selected restaurant
-  const { data: tableSectionsData, isLoading: tableSectionsLoading } = useGetTableSectionsByRestaurant(
-    selectedRestaurantId || '',
-    undefined,
-    {
+  const { data: tableSectionsData, isLoading: tableSectionsLoading } =
+    useGetTableSectionsByRestaurant(selectedRestaurantId || "", undefined, {
       enabled: !!selectedRestaurantId, // Only fetch when restaurant is selected
-    }
-  );
+    });
 
   // Prepare table section options
   const tableSectionOptions = React.useMemo(() => {
     if (!tableSectionsData?.data) return [];
-    
-    return tableSectionsData.data.map(section => ({
+
+    return tableSectionsData.data.map((section) => ({
       value: section._id,
       label: section.name[locale] || section.name.en,
     }));
@@ -52,45 +50,45 @@ export function TableFormContent({ form }: TableFormContentProps) {
   // Prepare restaurant options
   const restaurantOptions = React.useMemo(() => {
     if (!restaurantsData?.data) return [];
-    
-    return restaurantsData.data.map(restaurant => ({
+
+    return restaurantsData.data.map((restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
     }));
   }, [restaurantsData?.data, locale]);
 
-  const isBulk = form.watch('isBulk');
+  const isBulk = form.watch("isBulk");
 
   // Clear table section when restaurant changes
   React.useEffect(() => {
-    form.setValue('tableSectionId', '');
+    form.setValue("tableSectionId", "");
   }, [selectedRestaurantId, form]);
 
   return (
     <div className="grid grid-cols-1 gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{t('table.form.basicInfo')}</CardTitle>
+          <CardTitle className="text-lg">{t("table.form.basicInfo")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <RHFSwitch
             form={form}
             name="isBulk"
-            label={t('table.form.bulkAdd')}
-            description={t('table.form.bulkAddDescription')}
+            label={t("table.form.bulkAdd")}
+            description={t("table.form.bulkAddDescription")}
           />
-          
+
           {/* Common required selections */}
           <RHFSelect
             form={form}
             name="restaurantId"
-            label={t('table.form.restaurantLabel')}
+            label={t("table.form.restaurantLabel")}
             placeholder={
               restaurantsLoading
-                ? t('common.loading')
+                ? t("common.loading")
                 : restaurantOptions.length === 0
-                ? t('table.form.noRestaurantsAvailable')
-                : t('table.form.restaurantPlaceholder')
+                  ? t("table.form.noRestaurantsAvailable")
+                  : t("table.form.restaurantPlaceholder")
             }
             options={restaurantOptions}
             disabled={restaurantsLoading}
@@ -99,15 +97,15 @@ export function TableFormContent({ form }: TableFormContentProps) {
           <RHFSelect
             form={form}
             name="tableSectionId"
-            label={t('table.form.sectionLabel')}
+            label={t("table.form.sectionLabel")}
             placeholder={
               !selectedRestaurantId
-                ? t('table.form.selectRestaurantFirst')
+                ? t("table.form.selectRestaurantFirst")
                 : tableSectionsLoading
-                ? t('common.loading')
-                : tableSectionOptions.length === 0
-                ? t('table.form.noTableSectionsAvailable')
-                : t('table.form.sectionPlaceholder')
+                  ? t("common.loading")
+                  : tableSectionOptions.length === 0
+                    ? t("table.form.noTableSectionsAvailable")
+                    : t("table.form.sectionPlaceholder")
             }
             options={tableSectionOptions}
             disabled={!selectedRestaurantId || tableSectionsLoading}
@@ -119,29 +117,29 @@ export function TableFormContent({ form }: TableFormContentProps) {
               <RHFInput
                 form={form}
                 name="bulkLabelPrefix"
-                label={t('table.form.bulkLabelPrefix')}
-                placeholder={t('table.form.bulkLabelPrefix')}
+                label={t("table.form.bulkLabelPrefix")}
+                placeholder={t("table.form.bulkLabelPrefix")}
               />
               <RHFInput
                 form={form}
                 name="capacity"
-                label={t('table.form.capacity')}
-                placeholder={t('table.form.capacityPlaceholder')}
+                label={t("table.form.capacity")}
+                placeholder={t("table.form.capacityPlaceholder")}
                 type="number"
               />
               <RHFInput
                 form={form}
                 name="bulkCount"
-                label={t('table.form.bulkCount')}
-                placeholder={t('table.form.bulkCount')}
+                label={t("table.form.bulkCount")}
+                placeholder={t("table.form.bulkCount")}
                 type="number"
               />
               <div className="md:col-span-2">
                 <RHFSwitch
                   form={form}
                   name="isAvailable"
-                  label={t('table.form.availabilityLabel')}
-                  description={t('table.form.availabilityDescription')}
+                  label={t("table.form.availabilityLabel")}
+                  description={t("table.form.availabilityDescription")}
                 />
               </div>
             </div>
@@ -150,21 +148,21 @@ export function TableFormContent({ form }: TableFormContentProps) {
               <RHFInput
                 form={form}
                 name="label"
-                label={t('table.form.label')}
-                placeholder={t('table.form.labelPlaceholder')}
+                label={t("table.form.label")}
+                placeholder={t("table.form.labelPlaceholder")}
               />
               <RHFInput
                 form={form}
                 name="capacity"
-                label={t('table.form.capacity')}
-                placeholder={t('table.form.capacityPlaceholder')}
+                label={t("table.form.capacity")}
+                placeholder={t("table.form.capacityPlaceholder")}
                 type="number"
               />
               <RHFSwitch
                 form={form}
                 name="isAvailable"
-                label={t('table.form.availabilityLabel')}
-                description={t('table.form.availabilityDescription')}
+                label={t("table.form.availabilityLabel")}
+                description={t("table.form.availabilityDescription")}
               />
             </>
           )}
@@ -174,7 +172,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
   );
 }
 
-// Hook for table form logic  
+// Hook for table form logic
 export function useTableForm(editingTable?: Table | null): {
   form: UseFormReturn<TableFormData, unknown>;
   isEditing: boolean;
@@ -182,14 +180,14 @@ export function useTableForm(editingTable?: Table | null): {
   const form = useForm<TableFormData>({
     resolver: zodResolver(tableSchema),
     defaultValues: {
-      restaurantId: '',
-      tableSectionId: '',
-      label: '',
+      restaurantId: "",
+      tableSectionId: "",
+      label: "",
       capacity: 0,
       isAvailable: true,
       isBulk: false,
-      bulkCount: '',
-      bulkLabelPrefix: 'T',
+      bulkCount: "",
+      bulkLabelPrefix: "T",
     },
   });
 
@@ -204,19 +202,19 @@ export function useTableForm(editingTable?: Table | null): {
         capacity: editingTable.capacity,
         isAvailable: editingTable.isAvailable,
         isBulk: false,
-        bulkCount: '',
-        bulkLabelPrefix: 'T',
+        bulkCount: "",
+        bulkLabelPrefix: "T",
       });
     } else {
       form.reset({
-        restaurantId: '',
-        tableSectionId: '',
-        label: '',
+        restaurantId: "",
+        tableSectionId: "",
+        label: "",
         capacity: 0,
         isAvailable: true,
         isBulk: false,
-        bulkCount: '',
-        bulkLabelPrefix: 'T',
+        bulkCount: "",
+        bulkLabelPrefix: "T",
       });
     }
   }, [editingTable, form]);

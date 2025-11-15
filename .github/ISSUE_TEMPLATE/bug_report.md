@@ -1,9 +1,9 @@
 ---
 name: 🐛 Bug Report
 about: Create a bug report to help us improve the RH POS system
-title: '[BUG] '
-labels: ['bug', 'needs triage']
-assignees: ''
+title: "[BUG] "
+labels: ["bug", "needs triage"]
+assignees: ""
 ---
 
 ## 🐛 Bug Description
@@ -13,25 +13,30 @@ assignees: ''
 ## 📱 Environment
 
 **Device/Platform:**
+
 - [ ] Desktop
 - [ ] Tablet
 - [ ] Mobile
 
-**Browser:** 
+**Browser:**
+
 - [ ] Chrome
 - [ ] Firefox
 - [ ] Safari
 - [ ] Edge
-- [ ] Other: _____
+- [ ] Other: **\_**
 
-**Screen Resolution:** 
+**Screen Resolution:**
+
 <!-- e.g., 1920x1080 -->
 
 **Language:**
+
 - [ ] English (LTR)
 - [ ] Arabic (RTL)
 
 **Operating System:**
+
 - [ ] Windows
 - [ ] macOS
 - [ ] Linux
@@ -71,22 +76,24 @@ assignees: ''
 ## 📊 POS Specific Context
 
 **Module Affected:**
+
 - [ ] Dashboard
 - [ ] Brands Management
-- [ ] Restaurant Management  
+- [ ] Restaurant Management
 - [ ] Order Management
 - [ ] Menu Management
 - [ ] Staff Management
 - [ ] Reports
 - [ ] Settings
 - [ ] Authentication
-- [ ] Other: _____
+- [ ] Other: **\_**
 
 **User Role:**
+
 - [ ] Administrator
 - [ ] Manager
 - [ ] Staff
-- [ ] Other: _____
+- [ ] Other: **\_**
 
 ## 🔍 Additional Context
 

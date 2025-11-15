@@ -1,7 +1,7 @@
 // same as you used for Restaurant
-import { TableAction } from '@/types/common/common.type';
-import { MultilingualText } from '@/types/common/common.type';
-import { QueryParams } from './api';
+import { TableAction } from "@/types/common/common.type";
+import { MultilingualText } from "@/types/common/common.type";
+import { QueryParams } from "./api";
 
 export type { TableAction };
 
@@ -11,10 +11,12 @@ export interface TableSection extends Record<string, unknown> {
   name: MultilingualText; // multilingual section name
   restaurantId: string; // ObjectId of Restaurant
   restaurantName: MultilingualText; // restaurant name from API
-  restaurant?: {
-    _id: string;
-    name: MultilingualText;
-  } | string; // populated restaurant or just ID
+  restaurant?:
+    | {
+        _id: string;
+        name: MultilingualText;
+      }
+    | string; // populated restaurant or just ID
   isActive: boolean; // active status
   createdBy: string; // ObjectId of User
   updatedBy: string; // ObjectId of User
@@ -34,20 +36,20 @@ export interface TableSectionQueryParams extends QueryParams {
   // From PaginationQueryDto
   page?: number;
   limit?: number;
-  
-  // From BaseQueryDto  
+
+  // From BaseQueryDto
   term?: string; // Search term
   fields?: string[]; // Fields to search in
-  
+
   // From TableSectionQueryDto
   restaurantId?: string; // Filter by restaurant ID
   isActive?: string; // Filter by active/inactive status
-  sortBy?: 'name' | 'createdAt' | 'updatedAt';
-  sortOrder?: 'asc' | 'desc'; // Sort order
+  sortBy?: "name" | "createdAt" | "updatedAt";
+  sortOrder?: "asc" | "desc"; // Sort order
 }
 
 export interface TableSectionColumn {
-  id: keyof TableSection | 'actions';
+  id: keyof TableSection | "actions";
   label: string;
   sortable?: boolean;
   filterable?: boolean;
