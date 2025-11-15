@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   RHFInput,
   RHFMultilingualInput,
   RHFSwitch,
   RHFAddressForm,
-} from '@/components/ui/form-components';
-import { ImageUpload } from '@/components/ui/image-upload';
-import { UploadFolderType } from '@/types/upload';
-import { brandSchema, BrandFormData } from '@/lib/validations/brand.validation';
-import { Brand } from '@/types/brand.type';
+} from "@/components/ui/form-components";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { UploadFolderType } from "@/types/upload";
+import { brandSchema, BrandFormData } from "@/lib/validations/brand.validation";
+import { Brand } from "@/types/brand.type";
 
 interface BrandFormContentProps {
   form: ReturnType<typeof useForm<BrandFormData>>;
@@ -30,36 +30,36 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t('brands.form.basicInfo')}
+              {t("brands.form.basicInfo")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <RHFMultilingualInput
               form={form}
               name="name"
-              label={t('brands.form.brandNameLabel')}
+              label={t("brands.form.brandNameLabel")}
               placeholder={{
-                en: t('brands.form.brandNamePlaceholderEn'),
-                ar: t('brands.form.brandNamePlaceholderAr'),
+                en: t("brands.form.brandNamePlaceholderEn"),
+                ar: t("brands.form.brandNamePlaceholderAr"),
               }}
             />
 
             <RHFMultilingualInput
               form={form}
               name="description"
-              label={t('brands.form.descriptionLabel')}
+              label={t("brands.form.descriptionLabel")}
               type="textarea"
               placeholder={{
-                en: t('brands.form.descriptionPlaceholderEn'),
-                ar: t('brands.form.descriptionPlaceholderAr'),
+                en: t("brands.form.descriptionPlaceholderEn"),
+                ar: t("brands.form.descriptionPlaceholderAr"),
               }}
             />
 
             <RHFSwitch
               form={form}
               name="isActive"
-              label={t('brands.form.activeStatusLabel')}
-              description={t('brands.form.activeStatusDescription')}
+              label={t("brands.form.activeStatusLabel")}
+              description={t("brands.form.activeStatusDescription")}
             />
           </CardContent>
         </Card>
@@ -68,34 +68,34 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t('brands.form.logoAndLinks')}
+              {t("brands.form.logoAndLinks")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <ImageUpload
               form={form}
               name="logo"
-              label={t('brands.form.logoLabel')}
-              description={t('brands.form.logoDescription')}
+              label={t("brands.form.logoLabel")}
+              description={t("brands.form.logoDescription")}
               folderType={UploadFolderType.BRAND}
             />
 
             <RHFInput
               form={form}
               name="menuLink"
-              label={t('brands.form.menuLinkLabel')}
-              placeholder={t('brands.form.menuLinkPlaceholder')}
+              label={t("brands.form.menuLinkLabel")}
+              placeholder={t("brands.form.menuLinkPlaceholder")}
               type="url"
-              description={t('brands.form.menuLinkDescription')}
+              description={t("brands.form.menuLinkDescription")}
             />
 
             <RHFInput
               form={form}
               name="website"
-              label={t('brands.form.websiteLabel')}
-              placeholder={t('brands.form.websitePlaceholder')}
+              label={t("brands.form.websiteLabel")}
+              placeholder={t("brands.form.websitePlaceholder")}
               type="url"
-              description={t('brands.form.websiteDescription')}
+              description={t("brands.form.websiteDescription")}
             />
           </CardContent>
         </Card>
@@ -105,7 +105,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t('brands.form.contactInfo')}
+            {t("brands.form.contactInfo")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -113,17 +113,17 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
             <RHFInput
               form={form}
               name="phone"
-              label={t('brands.form.phoneLabel')}
-              placeholder={t('brands.form.phonePlaceholder')}
+              label={t("brands.form.phoneLabel")}
+              placeholder={t("brands.form.phonePlaceholder")}
               type="tel"
-              description={t('brands.form.phoneDescription')}
+              description={t("brands.form.phoneDescription")}
             />
           </div>
 
           <RHFAddressForm
             form={form}
             name="address"
-            label={t('brands.form.addressLabel')}
+            label={t("brands.form.addressLabel")}
           />
         </CardContent>
       </Card>
@@ -132,7 +132,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t('brands.form.businessInfo')}
+            {t("brands.form.businessInfo")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -140,25 +140,25 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
             <RHFInput
               form={form}
               name="fssaiNo"
-              label={t('brands.form.fssaiLabel')}
-              placeholder={t('brands.form.fssaiPlaceholder')}
-              description={t('brands.form.fssaiDescription')}
+              label={t("brands.form.fssaiLabel")}
+              placeholder={t("brands.form.fssaiPlaceholder")}
+              description={t("brands.form.fssaiDescription")}
             />
 
             <RHFInput
               form={form}
               name="trnOrGstNo"
-              label={t('brands.form.trnGstLabel')}
-              placeholder={t('brands.form.trnGstPlaceholder')}
-              description={t('brands.form.trnGstDescription')}
+              label={t("brands.form.trnGstLabel")}
+              placeholder={t("brands.form.trnGstPlaceholder")}
+              description={t("brands.form.trnGstDescription")}
             />
 
             <RHFInput
               form={form}
               name="panNo"
-              label={t('brands.form.panLabel')}
-              placeholder={t('brands.form.panPlaceholder')}
-              description={t('brands.form.panDescription')}
+              label={t("brands.form.panLabel")}
+              placeholder={t("brands.form.panPlaceholder")}
+              description={t("brands.form.panDescription")}
             />
           </div>
         </CardContent>
@@ -172,24 +172,24 @@ export function useBrandForm(editingBrand?: Brand | null) {
   const form = useForm<BrandFormData>({
     resolver: zodResolver(brandSchema),
     defaultValues: {
-      name: { en: '', ar: '' },
-      description: { en: '', ar: '' },
-      logo: '',
-      menuLink: '',
-      website: '',
+      name: { en: "", ar: "" },
+      description: { en: "", ar: "" },
+      logo: "",
+      menuLink: "",
+      website: "",
       isActive: true,
-      phone: '',
-      fssaiNo: '',
-      trnOrGstNo: '',
-      panNo: '',
+      phone: "",
+      fssaiNo: "",
+      trnOrGstNo: "",
+      panNo: "",
       address: {
-        addressLine1: '',
-        addressLine2: '',
-        city: '',
-        location: '',
-        state: '',
-        country: '',
-        pincode: '',
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        location: "",
+        state: "",
+        country: "",
+        pincode: "",
       },
     },
   });
@@ -203,34 +203,34 @@ export function useBrandForm(editingBrand?: Brand | null) {
         description: editingBrand.description,
         logo: editingBrand.logo,
         menuLink: editingBrand.menuLink,
-        website: editingBrand.website || '',
+        website: editingBrand.website || "",
         isActive: editingBrand.isActive ?? true,
-        phone: editingBrand.phone || '',
-        fssaiNo: editingBrand.fssaiNo || '',
-        trnOrGstNo: editingBrand.trnOrGstNo || '',
-        panNo: editingBrand.panNo || '',
+        phone: editingBrand.phone || "",
+        fssaiNo: editingBrand.fssaiNo || "",
+        trnOrGstNo: editingBrand.trnOrGstNo || "",
+        panNo: editingBrand.panNo || "",
         address: editingBrand.address,
       });
     } else {
       form.reset({
-        name: { en: '', ar: '' },
-        description: { en: '', ar: '' },
-        logo: '',
-        menuLink: '',
-        website: '',
+        name: { en: "", ar: "" },
+        description: { en: "", ar: "" },
+        logo: "",
+        menuLink: "",
+        website: "",
         isActive: true,
-        phone: '',
-        fssaiNo: '',
-        trnOrGstNo: '',
-        panNo: '',
+        phone: "",
+        fssaiNo: "",
+        trnOrGstNo: "",
+        panNo: "",
         address: {
-          addressLine1: '',
-          addressLine2: '',
-          city: '',
-          location: '',
-          state: '',
-          country: '',
-          pincode: '',
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          location: "",
+          state: "",
+          country: "",
+          pincode: "",
         },
       });
     }

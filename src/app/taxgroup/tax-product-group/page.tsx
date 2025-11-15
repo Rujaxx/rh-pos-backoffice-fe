@@ -1,41 +1,49 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { TanStackTable } from '@/components/ui/tanstack-table';
-import { PaginationState, SortingState, ColumnDef } from '@tanstack/react-table';
+import React, { useState } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { TanStackTable } from "@/components/ui/tanstack-table";
+import {
+  PaginationState,
+  SortingState,
+  ColumnDef,
+} from "@tanstack/react-table";
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from '@/components/ui/crud-modal';
-import Layout from '@/components/common/layout';
-import { Edit, Plus, Trash2, Tag, Percent } from 'lucide-react';
+} from "@/components/ui/crud-modal";
+import Layout from "@/components/common/layout";
+import { Edit, Plus, Trash2, Tag, Percent } from "lucide-react";
 import {
   TaxProductGroup,
   TaxProductGroupFormData,
-} from '@/types/tax-product-group.type';
-import { useIntl } from 'react-intl';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-import { mockTaxProductGroups } from '@/mock/tax-product-group';
+} from "@/types/tax-product-group.type";
+import { useIntl } from "react-intl";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { mockTaxProductGroups } from "@/mock/tax-product-group";
 import TaxGroupFormContent, {
   useTaxGroupForm,
-} from '@/components/taxgroup/tax-product-group-form';
-import { TableAction } from '@/types/common/common.type';
+} from "@/components/taxgroup/tax-product-group-form";
+import { TableAction } from "@/types/common/common.type";
 
 function TaxProductGroupsPage() {
   const { t } = useTranslation();
-  const [taxGroups, setTaxGroups] = useState<TaxProductGroup[]>(mockTaxProductGroups);
+  const [taxGroups, setTaxGroups] =
+    useState<TaxProductGroup[]>(mockTaxProductGroups);
   const [loading, setLoading] = useState(false);
   // Table state
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const locale = useIntl().locale as 'en' | 'ar';
+  const [searchTerm, setSearchTerm] = useState("");
+  const locale = useIntl().locale as "en" | "ar";
 
   // Modal hooks
   const {
@@ -62,145 +70,129 @@ function TaxProductGroupsPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setTaxGroups((prev) => prev.filter((group) => group._id !== id));
-      toast.success(t('taxGroups.delete.success'));
+      toast.success(t("taxGroups.delete.success"));
       closeConfirmationModal();
     } catch (error) {
-      console.error('Delete tax group error:', error);
-      toast.error(t('taxGroups.delete.error'));
+      console.error("Delete tax group error:", error);
+      toast.error(t("taxGroups.delete.error"));
     } finally {
       setLoading(false);
     }
   };
 
   // Table columns configuration
-  const columns = React.useMemo<ColumnDef<TaxProductGroup>[]>(() => [
-    {
-      accessorKey: 'name',
-      header: t('taxGroups.table.name'),
-      cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <Tag className="w-4 h-4 text-primary" />
-          {row.original.name[locale]}
-        </div>
-      ),
-      enableSorting: true,
-    },
-    {
-      accessorKey: 'productGroupName',
-      header: t('taxGroups.table.productGroupName'),
-      cell: ({ row }) => (
-        <span className="font-medium text-sm">{row.original.productGroupName}</span>
-      ),
-      enableSorting: true,
-    },
-    {
-      accessorKey: 'taxType',
-      header: t('taxGroups.table.taxType'),
-      cell: ({ row }) => (
-        <Badge variant="outline">
-          {row.original.taxType === 'Percentage' ? (
-            <Percent className="w-3 h-3 mr-1" />
-          ) : (
-            <Tag className="w-3 h-3 mr-1" />
-          )}
-          {t(`taxGroups.type.${row.original.taxType.replace(/\s/g, '').toLowerCase()}`)}
-        </Badge>
-      ),
-    },
-    {
-      accessorKey: 'taxValue',
-      header: t('taxGroups.table.taxValue'),
-      cell: ({ row }) => {
-        const formattedValue = new Intl.NumberFormat(locale, {
-          style: 'decimal',
-          maximumFractionDigits: 2,
-        }).format(row.original.taxValue);
-        return row.original.taxType === 'Percentage'
-          ? `${formattedValue}%`
-          : formattedValue;
+  const columns = React.useMemo<ColumnDef<TaxProductGroup>[]>(
+    () => [
+      {
+        accessorKey: "name",
+        header: t("taxGroups.table.name"),
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            <Tag className="w-4 h-4 text-primary" />
+            {row.original.name[locale]}
+          </div>
+        ),
+        enableSorting: true,
       },
-      enableSorting: true,
-    },
-    {
-      accessorKey: 'isActive',
-      header: t('taxGroups.table.status'),
-      cell: ({ row }) => (
-        <Badge variant={row.original.isActive ? 'default' : 'secondary'}>
-          {row.original.isActive ? t('common.active') : t('common.inactive')}
-        </Badge>
-      ),
-      enableSorting: true,
-    },
-  ], [t, locale]);
+      {
+        accessorKey: "productGroupName",
+        header: t("taxGroups.table.productGroupName"),
+        cell: ({ row }) => (
+          <span className="font-medium text-sm">
+            {row.original.productGroupName}
+          </span>
+        ),
+        enableSorting: true,
+      },
+      {
+        accessorKey: "taxType",
+        header: t("taxGroups.table.taxType"),
+        cell: ({ row }) => (
+          <Badge variant="outline">
+            {row.original.taxType === "Percentage" ? (
+              <Percent className="w-3 h-3 mr-1" />
+            ) : (
+              <Tag className="w-3 h-3 mr-1" />
+            )}
+            {t(
+              `taxGroups.type.${row.original.taxType.replace(/\s/g, "").toLowerCase()}`,
+            )}
+          </Badge>
+        ),
+      },
+      {
+        accessorKey: "taxValue",
+        header: t("taxGroups.table.taxValue"),
+        cell: ({ row }) => {
+          const formattedValue = new Intl.NumberFormat(locale, {
+            style: "decimal",
+            maximumFractionDigits: 2,
+          }).format(row.original.taxValue);
+          return row.original.taxType === "Percentage"
+            ? `${formattedValue}%`
+            : formattedValue;
+        },
+        enableSorting: true,
+      },
+      {
+        accessorKey: "isActive",
+        header: t("taxGroups.table.status"),
+        cell: ({ row }) => (
+          <Badge variant={row.original.isActive ? "default" : "secondary"}>
+            {row.original.isActive ? t("common.active") : t("common.inactive")}
+          </Badge>
+        ),
+        enableSorting: true,
+      },
+    ],
+    [t, locale],
+  );
 
   // Actions column
-  const actionsColumn = React.useMemo<ColumnDef<TaxProductGroup>[]>(() => [
-    {
-      id: 'actions',
-      cell: ({ row }) => {
-        const group = row.original;
-        return (
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => openModal(group)}>
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                openConfirmationModal(
-                  async () => {
-                    await handleDeleteTaxGroup(group._id!);
-                  },
-                  {
-                    title: t('taxGroups.delete.title'),
-                    description: t('taxGroups.delete.description', {
-                      name: group.name[locale],
-                    }),
-                    confirmButtonText: t('common.delete'),
-                    variant: 'destructive',
-                  }
-                );
-              }}
-              className="text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        );
+  const actionsColumn = React.useMemo<ColumnDef<TaxProductGroup>[]>(
+    () => [
+      {
+        id: "actions",
+        cell: ({ row }) => {
+          const group = row.original;
+          return (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => openModal(group)}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  openConfirmationModal(
+                    async () => {
+                      await handleDeleteTaxGroup(group._id!);
+                    },
+                    {
+                      title: t("taxGroups.delete.title"),
+                      description: t("taxGroups.delete.description", {
+                        name: group.name[locale],
+                      }),
+                      confirmButtonText: t("common.delete"),
+                      variant: "destructive",
+                    },
+                  );
+                }}
+                className="text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          );
+        },
       },
-    },
-  ], [t, locale, openModal, openConfirmationModal, handleDeleteTaxGroup]);
-
-  // Table actions configuration
-  const actions: TableAction<TaxProductGroup>[] = [
-    {
-      label: t('common.edit'),
-      icon: Edit,
-      onClick: (group: TaxProductGroup) => openModal(group),
-      variant: 'default',
-    },
-    {
-      label: t('common.delete'),
-      icon: Trash2,
-      onClick: (group: TaxProductGroup) => {
-        openConfirmationModal(
-          async () => {
-            await handleDeleteTaxGroup(group._id!);
-          },
-          {
-            title: t('taxGroups.delete.title'),
-            description: t('taxGroups.delete.description', {
-              name: group.name[locale],
-            }),
-            confirmButtonText: t('common.delete'),
-            variant: 'destructive',
-          }
-        );
-      },
-      variant: 'destructive',
-    },
-  ];
+    ],
+    [t, locale, openModal, openConfirmationModal, handleDeleteTaxGroup],
+  );
 
   // CRUD Handlers
   const handleCreateTaxGroup = async (data: TaxProductGroupFormData) => {
@@ -215,20 +207,20 @@ function TaxProductGroupsPage() {
         taxType: data.taxType,
         taxValue: data.taxValue,
         isActive: data.isActive,
-        brandId: data.brandId || 'default-brand-id',
-        restaurantId: data.restaurantId || 'default-restaurant-id',
-        createdBy: 'current-user-id',
-        updatedBy: 'current-user-id',
+        brandId: data.brandId || "default-brand-id",
+        restaurantId: data.restaurantId || "default-restaurant-id",
+        createdBy: "current-user-id",
+        updatedBy: "current-user-id",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
       setTaxGroups((prev) => [newTaxGroup, ...prev]);
-      toast.success(t('taxGroups.create.success'));
+      toast.success(t("taxGroups.create.success"));
       closeModal();
     } catch (error) {
-      console.error('Create tax group error:', error);
-      toast.error(t('taxGroups.create.error'));
+      console.error("Create tax group error:", error);
+      toast.error(t("taxGroups.create.error"));
     } finally {
       setLoading(false);
     }
@@ -250,26 +242,24 @@ function TaxProductGroupsPage() {
         brandId: data.brandId || editingTaxGroup.brandId,
         restaurantId: data.restaurantId || editingTaxGroup.restaurantId,
         updatedAt: new Date(),
-        updatedBy: 'current-user-id',
+        updatedBy: "current-user-id",
       };
       setTaxGroups((prev) =>
         prev.map((group) =>
-          group._id === editingTaxGroup._id ? updatedTaxGroup : group
-        )
+          group._id === editingTaxGroup._id ? updatedTaxGroup : group,
+        ),
       );
-      toast.success(t('taxGroups.update.success'));
+      toast.success(t("taxGroups.update.success"));
       closeModal();
     } catch (error) {
-      console.error('Update tax group error:', error);
-      toast.error(t('taxGroups.update.error'));
+      console.error("Update tax group error:", error);
+      toast.error(t("taxGroups.update.error"));
     } finally {
       setLoading(false);
     }
   };
 
-
   const handleSubmit = async (data: TaxProductGroupFormData) => {
-    
     try {
       if (isEditing) {
         await handleUpdateTaxGroup(data);
@@ -277,7 +267,7 @@ function TaxProductGroupsPage() {
         await handleCreateTaxGroup(data);
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
     }
   };
 
@@ -289,15 +279,16 @@ function TaxProductGroupsPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
               <Tag className="h-8 w-8" />
-              {t('taxGroups.title')}
+              {t("taxGroups.title")}
             </h1>
-            <p className="text-muted-foreground">{t('taxGroups.subtitle')}</p>
+            <p className="text-muted-foreground">{t("taxGroups.subtitle")}</p>
           </div>
           <Button
             onClick={() => openModal()}
-            className="flex items-center gap-2">
+            className="flex items-center gap-2"
+          >
             <Plus className="h-4 w-4" />
-            {t('taxGroups.addTaxGroup')}
+            {t("taxGroups.addTaxGroup")}
           </Button>
         </div>
 
@@ -307,7 +298,7 @@ function TaxProductGroupsPage() {
             <TanStackTable
               data={taxGroups}
               columns={[...columns, ...actionsColumn]}
-              searchPlaceholder={t('taxGroups.searchPlaceholder')}
+              searchPlaceholder={t("taxGroups.searchPlaceholder")}
               searchValue={searchTerm}
               onSearchChange={setSearchTerm}
               pagination={pagination}
@@ -324,17 +315,18 @@ function TaxProductGroupsPage() {
           isOpen={isOpen}
           onClose={closeModal}
           title={
-            isEditing ? t('taxGroups.edit.title') : t('taxGroups.create.title')
+            isEditing ? t("taxGroups.edit.title") : t("taxGroups.create.title")
           }
           description={
             isEditing
-              ? t('taxGroups.edit.description')
-              : t('taxGroups.create.description')
+              ? t("taxGroups.edit.description")
+              : t("taxGroups.create.description")
           }
           form={form}
           onSubmit={handleSubmit}
           loading={loading}
-          size="xl">
+          size="xl"
+        >
           <TaxGroupFormContent form={form} />
         </CrudModal>
 
@@ -347,7 +339,7 @@ function TaxProductGroupsPage() {
           description={confirmationConfig.description}
           loading={loading}
           confirmButtonText={confirmationConfig.confirmButtonText}
-          cancelButtonText={t('common.cancel')}
+          cancelButtonText={t("common.cancel")}
           variant={confirmationConfig.variant}
         />
       </div>

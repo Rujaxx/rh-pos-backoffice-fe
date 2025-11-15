@@ -1,5 +1,5 @@
-import { MultilingualText } from '@/types/common/common.type';
-import { QueryParams } from './api';
+import { MultilingualText } from "@/types/common/common.type";
+import { QueryParams } from "./api";
 
 // Category interface matching backend CategoryResponseDto
 export interface Category extends Record<string, unknown> {
@@ -35,16 +35,16 @@ export interface CategoryQueryParams extends QueryParams {
   // From PaginationQueryDto
   page?: number;
   limit?: number;
-  
-  // From BaseQueryDto  
+
+  // From BaseQueryDto
   term?: string; // Search term
   fields?: string[]; // Fields to search in
-  
+
   // From CategoryQueryDto
   isActive?: string; // Filter by active/inactive status
   parentCategoryId?: string; // Filter by parent category
-  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'sortOrder';
-  sortOrder?: 'asc' | 'desc'; // Sort order
+  sortBy?: "name" | "createdAt" | "updatedAt" | "sortOrder";
+  sortOrder?: "asc" | "desc"; // Sort order
 }
 
 // Category tree structure for hierarchical display
@@ -62,7 +62,7 @@ export interface CategoryOption {
 }
 
 export interface CategoryTableColumn {
-  id: keyof Category | 'actions';
+  id: keyof Category | "actions";
   label: string;
   sortable?: boolean;
   filterable?: boolean;
