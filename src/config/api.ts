@@ -9,7 +9,7 @@ const getBaseUrl = (): string => {
 
   // Production fallback (update with your actual production API URL)
   if (process.env.NODE_ENV === "production")
-    return "https://your-production-api.com";
+    return NEXT_PUBLIC_API_URL;
 
   // Development fallback - your backend API server
   return "http://localhost:3000";
