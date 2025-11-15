@@ -457,34 +457,13 @@
   "users.table.lastLogin": "Last Login",
 
   "users.form.personalInfo": "Personal Information",
-  "users.form.firstNameLabel": "First Name",
-  "users.form.firstNamePlaceholder": "Enter first name",
-  "users.form.lastNameLabel": "Last Name",
-  "users.form.lastNamePlaceholder": "Enter last name",
   "users.form.usernameLabel": "Username",
   "users.form.usernamePlaceholder": "Enter username",
   "users.form.usernameDescription": "Unique identifier for login. Only letters, numbers, underscores, and hyphens allowed.",
-  "users.form.emailLabel": "Email Address",
-  "users.form.emailPlaceholder": "Enter email address",
-  "users.form.phoneLabel": "Phone Number",
-  "users.form.phonePlaceholder": "Enter phone number",
 
-  "users.form.profileInfo": "Profile Information",
-  "users.form.profileImageLabel": "Profile Image",
-  "users.form.profileImageDescription": "Upload a profile picture (recommended size: 400x400px)",
-  "users.form.activeStatusLabel": "Account Status",
-  "users.form.activeStatusDescription": "Toggle to activate or deactivate this user account",
-
-  "users.form.roleInfo": "Role & Permissions",
-  "users.form.roleLabel": "Role",
-  "users.form.rolePlaceholder": "Select user role",
   "users.form.designationLabel": "Designation",
   "users.form.designationPlaceholder": "Enter job designation",
   "users.form.designationDescription": "Job title or position (e.g., Senior Manager, Lead Cashier)",
-
-  "users.form.restaurantAccess": "Restaurant Access",
-  "users.form.restaurantLabel": "Assigned Restaurants",
-  "users.form.restaurantDescription": "Select which restaurants this user can access",
 
   "users.create.title": "Create New User",
   "users.create.description": "Fill in the information below to create a new user account.",
@@ -511,7 +490,6 @@
   "tableSection.status": "Status",
   "tableSection.addSuccess": "Table section added successfully",
   "tableSection.editSuccess": "Table section updated successfully",
-  "tableSection.deleteSuccess": "Table section deleted successfully",
   "tableSection.addTitle": "Add Table Section",
   "tableSection.editTitle": "Edit Table Section",
   "tableSection.deleteConfirmationTitle": "Delete Table Section",
@@ -546,8 +524,6 @@
 
   "table.name": "Table",
   "table.section": "Table Section",
-  "table.restaurant": "Restaurant Name",
-  "table.label": "Label",
   "table.capacity": "Capacity",
   "table.isAvailable": "Availability",
   "table.searchPlaceholder": "Search Tables...",
@@ -603,7 +579,6 @@
   "table.form.editDescription": "Update the details of the selected table.",
   "table.form.updateButton": "Update Table",
   "table.form.createButton": "Create Table",
-  "table.actions": "Actions",
   "table.form.selectRestaurantFirst": "Please select a restaurant first",
   "table.form.noTableSectionsAvailable": "No table sections available for this restaurant",
   "table.form.noRestaurantsAvailable": "No restaurants available",
@@ -840,5 +815,232 @@
   "kitchen.form.activeStatusLabel": "Active Status",
   "kitchen.form.activeStatusDescription": "Toggle to activate or deactivate this department",
   "taxGroups.update.success": "Tax group updated successfully",
-  "taxGroups.create.success": "Tax group created successfully"
+  "taxGroups.create.success": "Tax group created successfully",
+
+  "users.form.contactInfo": "Contact & Address",
+  "users.form.emailLabel": "Email Address",
+  "users.form.emailPlaceholder": "Enter email address",
+  "users.form.phoneLabel": "Phone Number",
+  "users.form.phonePlaceholder": "Enter phone number",
+
+  "users.form.nameLabel": "Full Name",
+  "users.form.namePlaceholder": "Enter full name",
+  "users.form.nameDescription": "User's full display name",
+  "users.form.countryCode": "Country Code",
+  "users.form.roleInfo": "Role",
+
+  "users.form.addressLabel": "Address",
+  "users.form.addressPlaceholder": "Enter address",
+  "users.form.accessControl": "Access Control",
+  "users.form.brandLabel": "Assigned Brands",
+  "users.form.brandDescription": "Select which brands this user can access",
+  "users.form.restaurantLabel": "Assigned Restaurants",
+  "users.form.restaurantDescription": "Select which restaurants this user can access",
+
+  "users.form.securityInfo": "Account & Security",
+  "users.form.passwordLabel": "Password",
+  "users.form.passwordPlaceholder": "Enter password",
+  "users.form.roleLabel": "Role",
+  "users.form.rolePlaceholder": "Select user role",
+
+  "users.form.statusInfo": "Status & Permissions",
+  "users.form.activeStatusLabel": "Account Status",
+  "users.form.activeStatusDescription": "Toggle to activate or deactivate this user account",
+  "users.form.webAccessLabel": "Web Access",
+  "users.form.termsLabel": "Agree to Terms",
+
+  "users.form.systemInfo": "System & Preferences",
+  "users.form.languageLabel": "Language",
+  "users.form.languagePlaceholder": "Select Language",
+  "users.form.timeZoneLabel": "Time Zone",
+  "users.form.timeZonePlaceholder": "Select Time Zone",
+  "users.form.macAddressLabel": "MAC Address",
+  "users.form.macAddressPlaceholder": "AA:BB:CC:DD:EE:FF",
+  "users.form.shiftStartLabel": "Shift Start (Minutes)",
+  "users.form.shiftEndLabel": "Shift End (Minutes)",
+
+  "users.permissions.user:create": "Create User",
+  "users.permissions.user:createDescription": "Allows creating new users.",
+
+  "users.permissions.user:read": "Read User",
+  "users.permissions.user:readDescription": "Allows viewing user details.",
+
+  "users.permissions.user:update": "Update User",
+  "users.permissions.user:updateDescription": "Allows editing existing users.",
+
+  "users.permissions.user:delete": "Delete User",
+  "users.permissions.user:deleteDescription": "Allows deleting users.",
+
+  "users.permissions.user:list": "List Users",
+  "users.permissions.user:listDescription": "Allows listing all users.",
+
+  "users.permissions.user:manage_roles": "Manage User Roles",
+  "users.permissions.user:manage_rolesDescription": "Allows assigning and updating user roles.",
+
+  "users.permissions.restaurant:create": "Create Restaurant",
+  "users.permissions.restaurant:createDescription": "Allows creating new restaurants.",
+
+  "users.permissions.restaurant:read": "Read Restaurant",
+  "users.permissions.restaurant:readDescription": "Allows viewing restaurant details.",
+
+  "users.permissions.restaurant:update": "Update Restaurant",
+  "users.permissions.restaurant:updateDescription": "Allows modifying restaurant information.",
+
+  "users.permissions.restaurant:delete": "Delete Restaurant",
+  "users.permissions.restaurant:deleteDescription": "Allows removing a restaurant.",
+
+  "users.permissions.restaurant:list": "List Restaurants",
+  "users.permissions.restaurant:listDescription": "Allows listing all restaurants.",
+
+  "users.permissions.restaurant:manage_tables": "Manage Tables",
+  "users.permissions.restaurant:manage_tablesDescription": "Allows configuring restaurant tables and sections.",
+
+  "users.permissions.brand:create": "Create Brand",
+  "users.permissions.brand:createDescription": "Allows creating new brands.",
+
+  "users.permissions.brand:read": "Read Brand",
+  "users.permissions.brand:readDescription": "Allows viewing brand information.",
+
+  "users.permissions.brand:delete": "Delete Brand",
+  "users.permissions.brand:deleteDescription": "Allows removing a brand.",
+
+  "users.permissions.brand:list": "List Brands",
+  "users.permissions.brand:listDescription": "Allows listing all brands.",
+
+  "users.permissions.brand:update": "Update Brand",
+  "users.permissions.brand:updateDescription": "Allows modifying brand details.",
+
+  "users.permissions.menu:create": "Create Menu",
+  "users.permissions.menu:createDescription": "Allows creating new menus or menu items.",
+
+  "users.permissions.menu:read": "Read Menu",
+  "users.permissions.menu:readDescription": "Allows viewing menu items.",
+
+  "users.permissions.menu:update": "Update Menu",
+  "users.permissions.menu:updateDescription": "Allows modifying menus or items.",
+
+  "users.permissions.menu:delete": "Delete Menu",
+  "users.permissions.menu:deleteDescription": "Allows removing menu items.",
+
+  "users.permissions.menu:list": "List Menus",
+  "users.permissions.menu:listDescription": "Allows listing menus.",
+
+  "users.permissions.menu:manage_categories": "Manage Menu Categories",
+  "users.permissions.menu:manage_categoriesDescription": "Allows creating and editing menu categories.",
+
+  "users.permissions.menu:manage_items": "Manage Menu Items",
+  "users.permissions.menu:manage_itemsDescription": "Allows managing individual menu items.",
+
+  "users.permissions.menu:manage_pricing": "Manage Menu Pricing",
+  "users.permissions.menu:manage_pricingDescription": "Allows updating pricing and variations.",
+
+  "users.permissions.menu:publish": "Publish Menu",
+  "users.permissions.menu:publishDescription": "Allows publishing menu changes.",
+
+  "users.permissions.order:create": "Create Order",
+  "users.permissions.order:createDescription": "Allows creating new customer orders.",
+
+  "users.permissions.order:read": "Read Order",
+  "users.permissions.order:readDescription": "Allows viewing order details.",
+
+  "users.permissions.order:update": "Update Order",
+  "users.permissions.order:updateDescription": "Allows modifying orders.",
+
+  "users.permissions.order:delete": "Delete Order",
+  "users.permissions.order:deleteDescription": "Allows deleting orders.",
+
+  "users.permissions.order:list": "List Orders",
+  "users.permissions.order:listDescription": "Allows listing all orders.",
+
+  "users.permissions.order:cancel": "Cancel Order",
+  "users.permissions.order:cancelDescription": "Allows cancelling orders.",
+
+  "users.permissions.order:refund": "Refund Order",
+  "users.permissions.order:refundDescription": "Allows processing refunds.",
+
+  "users.permissions.order:kitchen_view": "Kitchen Order View",
+  "users.permissions.order:kitchen_viewDescription": "Allows viewing orders in the kitchen panel.",
+
+  "users.permissions.order:kitchen_update": "Kitchen Order Update",
+  "users.permissions.order:kitchen_updateDescription": "Allows updating order status from kitchen.",
+
+  "users.permissions.kitchen:view_orders": "Kitchen View Orders",
+  "users.permissions.kitchen:view_ordersDescription": "Allows viewing all kitchen orders.",
+
+  "users.permissions.kitchen:update_status": "Kitchen Update Status",
+  "users.permissions.kitchen:update_statusDescription": "Allows updating kitchen order status.",
+
+  "users.permissions.kitchen:manage_departments": "Manage Kitchen Departments",
+  "users.permissions.kitchen:manage_departmentsDescription": "Allows managing kitchen sections and departments.",
+
+  "users.permissions.payment:process": "Process Payments",
+  "users.permissions.payment:processDescription": "Allows processing customer payments.",
+
+  "users.permissions.payment:view": "View Payments",
+  "users.permissions.payment:viewDescription": "Allows viewing payment history.",
+
+  "users.permissions.payment:refund": "Refund Payments",
+  "users.permissions.payment:refundDescription": "Allows issuing payment refunds.",
+
+  "users.permissions.payment:view_reports": "View Payment Reports",
+  "users.permissions.payment:view_reportsDescription": "Allows viewing payment-related reports.",
+
+  "users.permissions.tax:create": "Create Tax",
+  "users.permissions.tax:createDescription": "Allows defining new tax rules.",
+
+  "users.permissions.tax:read": "Read Tax",
+  "users.permissions.tax:readDescription": "Allows viewing tax rules.",
+
+  "users.permissions.tax:update": "Update Tax",
+  "users.permissions.tax:updateDescription": "Allows editing existing tax rules.",
+
+  "users.permissions.tax:delete": "Delete Tax",
+  "users.permissions.tax:deleteDescription": "Allows deleting tax rules.",
+
+  "users.permissions.tax:list": "List Taxes",
+  "users.permissions.tax:listDescription": "Allows viewing all tax entries.",
+
+  "users.permissions.tax:manage_groups": "Manage Tax Groups",
+  "users.permissions.tax:manage_groupsDescription": "Allows configuring tax groups.",
+
+  "users.permissions.report:view_sales": "View Sales Reports",
+  "users.permissions.report:view_salesDescription": "Allows accessing sales analytics.",
+
+  "users.permissions.report:view_inventory": "View Inventory Reports",
+  "users.permissions.report:view_inventoryDescription": "Allows viewing inventory-related reports.",
+
+  "users.permissions.report:view_financial": "View Financial Reports",
+  "users.permissions.report:view_financialDescription": "Allows viewing financial reporting.",
+
+  "users.permissions.report:view_user_activity": "View User Activity Reports",
+  "users.permissions.report:view_user_activityDescription": "Allows accessing user activity reports.",
+
+  "users.permissions.report:export": "Export Reports",
+  "users.permissions.report:exportDescription": "Allows exporting report data.",
+
+  "users.permissions.system:backup": "System Backup",
+  "users.permissions.system:backupDescription": "Allows performing full system backups.",
+
+  "users.permissions.system:maintenance": "System Maintenance",
+  "users.permissions.system:maintenanceDescription": "Allows executing maintenance and system upkeep tasks.",
+
+  "users.permissions.system:manage_config": "Manage System Configuration",
+  "users.permissions.system:manage_configDescription": "Allows modifying core system configuration settings.",
+
+  "users.permissions.system:view_logs": "View System Logs",
+  "users.permissions.system:view_logsDescription": "Allows viewing application and server logs.",
+
+  "users.accountStatus.PENDING_VERIFICATION": "Pending Verification",
+  "users.accountStatus.PENDING_EMAIL_VERIFICATION": "Pending Email Verification",
+  "users.accountStatus.PENDING_PHONE_VERIFICATION": "Pending Phone Verification",
+  "users.accountStatus.ONBOARDING": "Onboarding",
+  "users.accountStatus.ACTIVE": "Active",
+  "users.accountStatus.SUSPENDED": "Suspended",
+  "users.accountStatus.INACTIVE": "Inactive",
+  "users.table.actions": "Actions",
+  "users.allStatus": "All Status",
+  "users.update.success": "User updated successfully!",
+  "users.update.error": "Failed to update user",
+  "users.updateUser": "Update User",
+  "common.filter.all": "All"
 }

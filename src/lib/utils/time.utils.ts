@@ -10,14 +10,21 @@
  * @returns Minutes from 00:00 (e.g., 570 for "09:30")
  */
 export function timeStringToMinutes(timeString: string): number {
-  if (!timeString || !timeString.includes(':')) {
+  if (!timeString || !timeString.includes(":")) {
     return 0;
   }
 
-  const [hours, minutes] = timeString.split(':').map(Number);
-  
+  const [hours, minutes] = timeString.split(":").map(Number);
+
   // Validate input
-  if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+  if (
+    isNaN(hours) ||
+    isNaN(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  ) {
     return 0;
   }
 
@@ -36,11 +43,11 @@ export function minutesToTimeString(minutes: number): string {
 
   // Handle values over 1439 (24 hours) by wrapping around
   const normalizedMinutes = minutes % 1440;
-  
+
   const hours = Math.floor(normalizedMinutes / 60);
   const mins = normalizedMinutes % 60;
 
-  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
 }
 
 /**
@@ -56,7 +63,7 @@ export function backendTimeToMinutes(timeValue: number): number {
 
   const hours = Math.floor(timeValue / 100);
   const minutes = timeValue % 100;
-  
+
   // Validate extracted values
   if (hours > 23 || minutes > 59) {
     return 0;
@@ -78,7 +85,7 @@ export function minutesToBackendTime(minutes: number): number {
 
   // Handle values over 1439 (24 hours) by wrapping around
   const normalizedMinutes = minutes % 1440;
-  
+
   const hours = Math.floor(normalizedMinutes / 60);
   const mins = normalizedMinutes % 60;
 
@@ -100,5 +107,5 @@ export function isValidTimeString(timeString: string): boolean {
  */
 export const DEFAULT_TIMES = {
   START_TIME: "10:00", // 10:00 AM
-  END_TIME: "23:00",   // 11:00 PM
+  END_TIME: "23:00", // 11:00 PM
 } as const;
