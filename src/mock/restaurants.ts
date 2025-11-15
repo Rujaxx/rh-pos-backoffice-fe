@@ -1,28 +1,28 @@
-import { Restaurant } from '@/types/user.type';
+import { Restaurant } from "@/types/user.type";
 
 export const mockRestaurants: Restaurant[] = [
   {
-    _id: 'r1',
+    _id: "r1",
     name: {
-      en: 'Downtown Branch',
-      ar: 'فرع وسط المدينة',
+      en: "Downtown Branch",
+      ar: "فرع وسط المدينة",
     },
-    location: 'Downtown',
+    location: "Downtown",
   },
   {
-    _id: 'r2',
+    _id: "r2",
     name: {
-      en: 'Mall Branch',
-      ar: 'فرع المركز التجاري',
+      en: "Mall Branch",
+      ar: "فرع المركز التجاري",
     },
-    location: 'Shopping Mall',
+    location: "Shopping Mall",
   },
   {
-    _id: 'r3',
+    _id: "r3",
     name: {
-      en: 'Airport Branch',
-      ar: 'فرع المطار',
+      en: "Airport Branch",
+      ar: "فرع المطار",
     },
-    location: 'Airport Terminal',
+    location: "Airport Terminal",
   },
 ];

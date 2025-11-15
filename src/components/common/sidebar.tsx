@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 import {
   BarChart2,
   Building2,
@@ -25,41 +25,40 @@ import {
   ChevronDown,
   HelpCircle,
   Percent,
-} from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { useTranslation } from "@/hooks/useTranslation"
-import { useI18n } from "@/providers/i18n-provider"
-import { useSidebar } from "@/providers/sidebar-provider"
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useI18n } from "@/providers/i18n-provider";
+import { useSidebar } from "@/providers/sidebar-provider";
 
 interface SubMenuItem {
-  id: string
-  label: string
-  href: string
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
-  badge?: string
-  isNew?: boolean
-  children?: SubMenuItem[]
+  id: string;
+  label: string;
+  href: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  badge?: string;
+  isNew?: boolean;
+  children?: SubMenuItem[];
 }
 
 interface MenuItem {
-  id: string
-  label: string
-  href?: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
-  badge?: string
-  isNew?: boolean
-  children?: SubMenuItem[]
+  id: string;
+  label: string;
+  href?: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  badge?: string;
+  isNew?: boolean;
+  children?: SubMenuItem[];
 }
 
 interface MenuSection {
-  id: string
-  label: string
-  items: MenuItem[]
+  id: string;
+  label: string;
+  items: MenuItem[];
 }
-
 
 // Function to generate POS menu data with translations
 const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
@@ -124,7 +123,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         id: "brands",
         label: t("navigation.brands"),
         href: "/brands",
-        icon: Building2
+        icon: Building2,
       },
       {
         id: "restaurants",
@@ -279,7 +278,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t("navigation.taxGroup"),
         href: "/taxgroup/tax-product-group",
         icon: Percent,
-      }
+      },
     ],
   },
   {
@@ -328,68 +327,71 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       },
     ],
   },
-]
+];
 
 // Default menu data - will be updated in component
-let menuData: MenuSection[] = []
+let menuData: MenuSection[] = [];
 
 export default function Sidebar() {
-  const { t } = useTranslation()
-  const { locale } = useI18n()
+  const { t } = useTranslation();
+  const { locale } = useI18n();
   const {
     menuState,
     isHovered,
     setIsHovered,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
-    isMobile
-  } = useSidebar()
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+    isMobile,
+  } = useSidebar();
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
-  const isRTL = locale === 'ar'
+  const isRTL = locale === "ar";
 
   // Update menu data with translations
-  menuData = getPOSMenuData(t)
+  menuData = getPOSMenuData(t);
 
   function handleNavigation() {
     if (isMobile) {
-      setIsMobileMenuOpen(false)
+      setIsMobileMenuOpen(false);
     }
   }
 
   const toggleExpanded = (itemId: string) => {
     setExpandedItems((prev) => {
-      const newSet = new Set(prev)
+      const newSet = new Set(prev);
       if (newSet.has(itemId)) {
-        newSet.delete(itemId)
+        newSet.delete(itemId);
       } else {
-        newSet.add(itemId)
+        newSet.add(itemId);
       }
-      return newSet
-    })
-  }
+      return newSet;
+    });
+  };
 
   function NavItem({
     item,
     level = 0,
     parentId = "",
   }: {
-    item: MenuItem | SubMenuItem
-    level?: number
-    parentId?: string
+    item: MenuItem | SubMenuItem;
+    level?: number;
+    parentId?: string;
   }) {
-    const itemId = `${parentId}-${item.id}`
-    const isExpanded = expandedItems.has(itemId)
-    const hasChildren = item.children && item.children.length > 0
-    const showText = menuState === "full" || (menuState === "collapsed" && isHovered) || (isMobile && isMobileMenuOpen)
-    const showExpandIcon = hasChildren && showText
+    const itemId = `${parentId}-${item.id}`;
+    const isExpanded = expandedItems.has(itemId);
+    const hasChildren = item.children && item.children.length > 0;
+    const showText =
+      menuState === "full" ||
+      (menuState === "collapsed" && isHovered) ||
+      (isMobile && isMobileMenuOpen);
+    const showExpandIcon = hasChildren && showText;
 
     // Adjust padding based on RTL and level
     const getPaddingClasses = () => {
-      if (level === 0) return "px-3"
-      if (level === 1) return isRTL ? "pr-8 pl-3" : "pl-8 pr-3"
-      return isRTL ? "pr-12 pl-3" : "pl-12 pr-3"
-    }
+      if (level === 0) return "px-3";
+      if (level === 1) return isRTL ? "pr-8 pl-3" : "pl-8 pr-3";
+      return isRTL ? "pr-12 pl-3" : "pl-12 pr-3";
+    };
 
     const content = (
       <div
@@ -399,19 +401,31 @@ export default function Sidebar() {
         )}
         onClick={() => {
           if (hasChildren) {
-            toggleExpanded(itemId)
+            toggleExpanded(itemId);
           }
         }}
-        title={menuState === "collapsed" && !isHovered && !isMobile ? item.label : undefined}
+        title={
+          menuState === "collapsed" && !isHovered && !isMobile
+            ? item.label
+            : undefined
+        }
       >
-        {item.icon && <item.icon className="h-4 w-4 flex-shrink-0 sidebar-menu-icon" />}
+        {item.icon && (
+          <item.icon className="h-4 w-4 flex-shrink-0 sidebar-menu-icon" />
+        )}
 
         {showText && (
           <>
-            <span className={`${isRTL ? 'mr-3' : 'ml-3'} flex-1 transition-opacity duration-200 sidebar-menu-text`}>{item.label}</span>
+            <span
+              className={`${isRTL ? "mr-3" : "ml-3"} flex-1 transition-opacity duration-200 sidebar-menu-text`}
+            >
+              {item.label}
+            </span>
 
             {/* Badges and indicators */}
-            <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-1`}>
+            <div
+              className={`flex items-center ${isRTL ? "space-x-reverse" : ""} space-x-1`}
+            >
               {item.isNew && (
                 <span className="px-1.5 py-0.5 text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 rounded-full">
                   New
@@ -424,7 +438,10 @@ export default function Sidebar() {
               )}
               {showExpandIcon && (
                 <ChevronDown
-                  className={cn("h-3 w-3 transition-transform duration-200", isExpanded ? "rotate-180" : "rotate-0")}
+                  className={cn(
+                    "h-3 w-3 transition-transform duration-200",
+                    isExpanded ? "rotate-180" : "rotate-0",
+                  )}
                 />
               )}
             </div>
@@ -433,16 +450,21 @@ export default function Sidebar() {
 
         {/* Tooltip for collapsed state when not hovered and not mobile */}
         {menuState === "collapsed" && !isHovered && !isMobile && (
-          <div className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${isRTL
-            ? 'right-full mr-2'
-            : 'left-full ml-2'
-            }`}>
+          <div
+            className={`absolute px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50 ${
+              isRTL ? "right-full mr-2" : "left-full ml-2"
+            }`}
+          >
             {item.label}
-            {item.badge && <span className={`text-blue-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>({item.badge})</span>}
+            {item.badge && (
+              <span className={`text-blue-300 ${isRTL ? "mr-1" : "ml-1"}`}>
+                ({item.badge})
+              </span>
+            )}
           </div>
         )}
       </div>
-    )
+    );
 
     return (
       <div>
@@ -456,28 +478,35 @@ export default function Sidebar() {
         {hasChildren && isExpanded && showText && (
           <div className="mt-1 space-y-1">
             {item.children!.map((child) => (
-              <NavItem key={child.id} item={child} level={level + 1} parentId={itemId} />
+              <NavItem
+                key={child.id}
+                item={child}
+                level={level + 1}
+                parentId={itemId}
+              />
             ))}
           </div>
         )}
       </div>
-    )
-
+    );
   }
 
   // Calculate sidebar width - expand when collapsed and hovered, or full width on mobile
   const getSidebarWidth = () => {
     if (isMobile) {
-      return "w-64" // Always full width on mobile
+      return "w-64"; // Always full width on mobile
     }
     if (menuState === "collapsed" && isHovered) {
-      return "w-64" // Expand to full width when hovered
+      return "w-64"; // Expand to full width when hovered
     }
-    return menuState === "collapsed" ? "w-16" : "w-64"
-  }
+    return menuState === "collapsed" ? "w-16" : "w-64";
+  };
 
   // Show text if menu is full OR if collapsed and hovered OR on mobile
-  const showText = menuState === "full" || (menuState === "collapsed" && isHovered) || (isMobile && isMobileMenuOpen)
+  const showText =
+    menuState === "full" ||
+    (menuState === "collapsed" && isHovered) ||
+    (isMobile && isMobileMenuOpen);
 
   // On mobile, show sidebar as overlay when isMobileMenuOpen is true
   if (isMobile) {
@@ -488,11 +517,14 @@ export default function Sidebar() {
           className={`
             fixed inset-y-0 z-[70] w-64 bg-white dark:bg-[#0F0F12] 
             transform transition-transform duration-300 ease-in-out
-            ${isRTL
-              ? `right-0 border-l border-gray-200 dark:border-[#1F1F23] ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-              }`
-              : `left-0 border-r border-gray-200 dark:border-[#1F1F23] ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-              }`
+            ${
+              isRTL
+                ? `right-0 border-l border-gray-200 dark:border-[#1F1F23] ${
+                    isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+                  }`
+                : `left-0 border-r border-gray-200 dark:border-[#1F1F23] ${
+                    isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                  }`
             }
           `}
         >
@@ -533,7 +565,11 @@ export default function Sidebar() {
                     </div>
                     <div className="space-y-1">
                       {section.items.map((item) => (
-                        <NavItem key={item.id} item={item} parentId={section.id} />
+                        <NavItem
+                          key={item.id}
+                          item={item}
+                          parentId={section.id}
+                        />
                       ))}
                     </div>
                   </div>
@@ -543,8 +579,22 @@ export default function Sidebar() {
 
             <div className="px-2 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
               <div className="space-y-1">
-                <NavItem item={{ id: "settings", label: "Settings", href: "/settings", icon: Settings }} />
-                <NavItem item={{ id: "help", label: "Help", href: "/help", icon: HelpCircle }} />
+                <NavItem
+                  item={{
+                    id: "settings",
+                    label: "Settings",
+                    href: "/settings",
+                    icon: Settings,
+                  }}
+                />
+                <NavItem
+                  item={{
+                    id: "help",
+                    label: "Help",
+                    href: "/help",
+                    icon: HelpCircle,
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -552,10 +602,13 @@ export default function Sidebar() {
 
         {/* Mobile overlay backdrop */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-[65]" onClick={() => setIsMobileMenuOpen(false)} />
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-[65]"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
         )}
       </>
-    )
+    );
   }
 
   // Desktop sidebar
@@ -564,12 +617,14 @@ export default function Sidebar() {
       className={`
         fixed inset-y-0 z-[60] bg-white dark:bg-[#0F0F12] 
         transition-all duration-300 ease-in-out
-        ${menuState === "hidden"
-          ? "w-0 border-0"
-          : `${getSidebarWidth()} ${isRTL
-            ? 'right-0 border-l border-gray-200 dark:border-[#1F1F23]'
-            : 'left-0 border-r border-gray-200 dark:border-[#1F1F23]'
-          }`
+        ${
+          menuState === "hidden"
+            ? "w-0 border-0"
+            : `${getSidebarWidth()} ${
+                isRTL
+                  ? "right-0 border-l border-gray-200 dark:border-[#1F1F23]"
+                  : "left-0 border-r border-gray-200 dark:border-[#1F1F23]"
+              }`
         }
       `}
       onMouseEnter={() => setIsHovered(true)}
@@ -644,7 +699,11 @@ export default function Sidebar() {
                   )}
                   <div className="space-y-1">
                     {section.items.map((item) => (
-                      <NavItem key={item.id} item={item} parentId={section.id} />
+                      <NavItem
+                        key={item.id}
+                        item={item}
+                        parentId={section.id}
+                      />
                     ))}
                   </div>
                 </div>
@@ -654,12 +713,26 @@ export default function Sidebar() {
 
           <div className="px-2 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
             <div className="space-y-1">
-              <NavItem item={{ id: "settings", label: "Settings", href: "/settings", icon: Settings }} />
-              <NavItem item={{ id: "help", label: "Help", href: "/help", icon: HelpCircle }} />
+              <NavItem
+                item={{
+                  id: "settings",
+                  label: "Settings",
+                  href: "/settings",
+                  icon: Settings,
+                }}
+              />
+              <NavItem
+                item={{
+                  id: "help",
+                  label: "Help",
+                  href: "/help",
+                  icon: HelpCircle,
+                }}
+              />
             </div>
           </div>
         </div>
       )}
     </nav>
-  )
+  );
 }

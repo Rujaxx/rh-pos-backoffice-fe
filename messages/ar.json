@@ -605,7 +605,6 @@
   "tableSection.createError": "فشل في إنشاء قسم الطاولات",
   "tableSection.updateSuccess": "تم تحديث قسم الطاولات بنجاح!",
   "tableSection.updateError": "فشل في تحديث قسم الطاولات",
-  "tableSection.deleteSuccess": "تم حذف قسم الطاولات بنجاح!",
   "tableSection.deleteError": "فشل في حذف قسم الطاولات",
   "tableSection.errorLoading": "خطأ في تحميل أقسام الطاولات",
   "tableSection.allStatus": "جميع الحالات",
@@ -631,8 +630,6 @@
 
   "table.name": "الطاولة",
   "table.section": "قسم الطاولة",
-  "table.restaurant": "اسم المطعم",
-  "table.label": "التسمية",
   "table.capacity": "السعة",
   "table.isAvailable": "التوفر",
   "table.searchPlaceholder": "ابحث عن الطاولات...",
@@ -850,5 +847,188 @@
   "kitchen.form.activeStatusLabel": "حالة التفعيل",
   "kitchen.form.activeStatusDescription": "قم بالتبديل لتفعيل أو إلغاء تفعيل هذا القسم",
   "taxGroups.update.success": "تم تحديث مجموعة الضرائب بنجاح",
-  "taxGroups.create.success": "تم إنشاء مجموعة الضرائب بنجاح"
+  "taxGroups.create.success": "تم إنشاء مجموعة الضرائب بنجاح",
+
+  "users.permissions.user:create": "إنشاء مستخدم",
+  "users.permissions.user:createDescription": "يسمح بإنشاء مستخدمين جدد.",
+
+  "users.permissions.user:read": "عرض المستخدم",
+  "users.permissions.user:readDescription": "يسمح بعرض تفاصيل المستخدم.",
+
+  "users.permissions.user:update": "تحديث المستخدم",
+  "users.permissions.user:updateDescription": "يسمح بتعديل معلومات المستخدم.",
+
+  "users.permissions.user:delete": "حذف المستخدم",
+  "users.permissions.user:deleteDescription": "يسمح بحذف المستخدمين.",
+
+  "users.permissions.user:list": "عرض المستخدمين",
+  "users.permissions.user:listDescription": "يسمح بعرض جميع المستخدمين.",
+
+  "users.permissions.user:manage_roles": "إدارة أدوار المستخدمين",
+  "users.permissions.user:manage_rolesDescription": "يسمح بتعيين وتحديث أدوار المستخدمين.",
+
+  "users.permissions.restaurant:create": "إنشاء مطعم",
+  "users.permissions.restaurant:createDescription": "يسمح بإنشاء مطاعم جديدة.",
+
+  "users.permissions.restaurant:read": "عرض المطعم",
+  "users.permissions.restaurant:readDescription": "يسمح بعرض تفاصيل المطعم.",
+
+  "users.permissions.restaurant:update": "تحديث المطعم",
+  "users.permissions.restaurant:updateDescription": "يسمح بتعديل معلومات المطعم.",
+
+  "users.permissions.restaurant:delete": "حذف المطعم",
+  "users.permissions.restaurant:deleteDescription": "يسمح بحذف المطعم.",
+
+  "users.permissions.restaurant:list": "عرض المطاعم",
+  "users.permissions.restaurant:listDescription": "يسمح بعرض جميع المطاعم.",
+
+  "users.permissions.restaurant:manage_tables": "إدارة الطاولات",
+  "users.permissions.restaurant:manage_tablesDescription": "يسمح بإعداد وتعديل طاولات المطعم.",
+
+  "users.permissions.brand:create": "إنشاء علامة تجارية",
+  "users.permissions.brand:createDescription": "يسمح بإنشاء علامات تجارية جديدة.",
+
+  "users.permissions.brand:read": "عرض العلامة التجارية",
+  "users.permissions.brand:readDescription": "يسمح بعرض معلومات العلامة التجارية.",
+
+  "users.permissions.brand:delete": "حذف العلامة التجارية",
+  "users.permissions.brand:deleteDescription": "يسمح بحذف العلامة التجارية.",
+
+  "users.permissions.brand:list": "عرض العلامات التجارية",
+  "users.permissions.brand:listDescription": "يسمح بعرض جميع العلامات التجارية.",
+
+  "users.permissions.brand:update": "تحديث العلامة التجارية",
+  "users.permissions.brand:updateDescription": "يسمح بتعديل تفاصيل العلامة التجارية.",
+
+  "users.permissions.menu:create": "إنشاء قائمة",
+  "users.permissions.menu:createDescription": "يسمح بإنشاء قوائم أو عناصر جديدة.",
+
+  "users.permissions.menu:read": "عرض القائمة",
+  "users.permissions.menu:readDescription": "يسمح بعرض عناصر القائمة.",
+
+  "users.permissions.menu:update": "تحديث القائمة",
+  "users.permissions.menu:updateDescription": "يسمح بتعديل القوائم أو العناصر.",
+
+  "users.permissions.menu:delete": "حذف القائمة",
+  "users.permissions.menu:deleteDescription": "يسمح بحذف عناصر القائمة.",
+
+  "users.permissions.menu:list": "عرض القوائم",
+  "users.permissions.menu:listDescription": "يسمح بعرض جميع القوائم.",
+
+  "users.permissions.menu:manage_categories": "إدارة فئات القائمة",
+  "users.permissions.menu:manage_categoriesDescription": "يسمح بإنشاء وتعديل فئات القائمة.",
+
+  "users.permissions.menu:manage_items": "إدارة عناصر القائمة",
+  "users.permissions.menu:manage_itemsDescription": "يسمح بإدارة عناصر القائمة.",
+
+  "users.permissions.menu:manage_pricing": "إدارة تسعير القائمة",
+  "users.permissions.menu:manage_pricingDescription": "يسمح بتعديل الأسعار والخيارات.",
+
+  "users.permissions.menu:publish": "نشر القائمة",
+  "users.permissions.menu:publishDescription": "يسمح بنشر التحديثات على القائمة.",
+
+  "users.permissions.order:create": "إنشاء طلب",
+  "users.permissions.order:createDescription": "يسمح بإنشاء طلبات جديدة.",
+
+  "users.permissions.order:read": "عرض الطلب",
+  "users.permissions.order:readDescription": "يسمح بعرض تفاصيل الطلب.",
+
+  "users.permissions.order:update": "تحديث الطلب",
+  "users.permissions.order:updateDescription": "يسمح بتعديل الطلبات.",
+
+  "users.permissions.order:delete": "حذف الطلب",
+  "users.permissions.order:deleteDescription": "يسمح بحذف الطلبات.",
+
+  "users.permissions.order:list": "عرض الطلبات",
+  "users.permissions.order:listDescription": "يسمح بعرض جميع الطلبات.",
+
+  "users.permissions.order:cancel": "إلغاء الطلب",
+  "users.permissions.order:cancelDescription": "يسمح بإلغاء الطلبات.",
+
+  "users.permissions.order:refund": "استرجاع الطلب",
+  "users.permissions.order:refundDescription": "يسمح بمعالجة طلبات الاسترجاع.",
+
+  "users.permissions.order:kitchen_view": "عرض طلبات المطبخ",
+  "users.permissions.order:kitchen_viewDescription": "يسمح بعرض الطلبات في لوحة المطبخ.",
+
+  "users.permissions.order:kitchen_update": "تحديث طلبات المطبخ",
+  "users.permissions.order:kitchen_updateDescription": "يسمح بتحديث حالة الطلب من المطبخ.",
+
+  "users.permissions.kitchen:view_orders": "عرض طلبات المطبخ",
+  "users.permissions.kitchen:view_ordersDescription": "يسمح بعرض جميع طلبات المطبخ.",
+
+  "users.permissions.kitchen:update_status": "تحديث حالة المطبخ",
+  "users.permissions.kitchen:update_statusDescription": "يسمح بتحديث حالة طلبات المطبخ.",
+
+  "users.permissions.kitchen:manage_departments": "إدارة أقسام المطبخ",
+  "users.permissions.kitchen:manage_departmentsDescription": "يسمح بإدارة أقسام المطبخ.",
+
+  "users.permissions.payment:process": "معالجة المدفوعات",
+  "users.permissions.payment:processDescription": "يسمح بمعالجة المدفوعات.",
+
+  "users.permissions.payment:view": "عرض المدفوعات",
+  "users.permissions.payment:viewDescription": "يسمح بعرض تاريخ المدفوعات.",
+
+  "users.permissions.payment:refund": "استرجاع المدفوعات",
+  "users.permissions.payment:refundDescription": "يسمح بإصدار استرجاعات مالية.",
+
+  "users.permissions.payment:view_reports": "عرض تقارير المدفوعات",
+  "users.permissions.payment:view_reportsDescription": "يسمح بعرض تقارير المدفوعات.",
+
+  "users.permissions.tax:create": "إنشاء ضريبة",
+  "users.permissions.tax:createDescription": "يسمح بإنشاء قواعد ضريبية جديدة.",
+
+  "users.permissions.tax:read": "عرض الضريبة",
+  "users.permissions.tax:readDescription": "يسمح بعرض القواعد الضريبية.",
+
+  "users.permissions.tax:update": "تحديث الضريبة",
+  "users.permissions.tax:updateDescription": "يسمح بتعديل القواعد الضريبية.",
+
+  "users.permissions.tax:delete": "حذف الضريبة",
+  "users.permissions.tax:deleteDescription": "يسمح بحذف القواعد الضريبية.",
+
+  "users.permissions.tax:list": "عرض الضرائب",
+  "users.permissions.tax:listDescription": "يسمح بعرض جميع الضرائب.",
+
+  "users.permissions.tax:manage_groups": "إدارة مجموعات الضريبة",
+  "users.permissions.tax:manage_groupsDescription": "يسمح بإدارة مجموعات الضرائب.",
+
+  "users.permissions.report:view_sales": "عرض تقارير المبيعات",
+  "users.permissions.report:view_salesDescription": "يسمح بالوصول إلى تحليلات المبيعات.",
+
+  "users.permissions.report:view_inventory": "عرض تقارير المخزون",
+  "users.permissions.report:view_inventoryDescription": "يسمح بعرض تقارير المخزون.",
+
+  "users.permissions.report:view_financial": "عرض التقارير المالية",
+  "users.permissions.report:view_financialDescription": "يسمح بعرض التقارير المالية.",
+
+  "users.permissions.report:view_user_activity": "عرض تقارير نشاط المستخدمين",
+  "users.permissions.report:view_user_activityDescription": "يسمح بعرض تقارير نشاط المستخدمين.",
+
+  "users.permissions.report:export": "تصدير التقارير",
+  "users.permissions.report:exportDescription": "يسمح بتصدير بيانات التقارير.",
+
+  "users.permissions.system:backup": "نسخ احتياطي للنظام",
+  "users.permissions.system:backupDescription": "يسمح بإجراء نسخ احتياطي كامل للنظام.",
+
+  "users.permissions.system:maintenance": "صيانة النظام",
+  "users.permissions.system:maintenanceDescription": "يسمح بتنفيذ مهام الصيانة للنظام.",
+
+  "users.permissions.system:manage_config": "إدارة إعدادات النظام",
+  "users.permissions.system:manage_configDescription": "يسمح بتعديل الإعدادات الأساسية للنظام.",
+
+  "users.permissions.system:view_logs": "عرض سجلات النظام",
+  "users.permissions.system:view_logsDescription": "يسمح بعرض سجلات التطبيق والخادم.",
+
+  "users.accountStatus.PENDING_VERIFICATION": "في انتظار التحقق",
+  "users.accountStatus.PENDING_EMAIL_VERIFICATION": "في انتظار التحقق من البريد الإلكتروني",
+  "users.accountStatus.PENDING_PHONE_VERIFICATION": "في انتظار التحقق من رقم الهاتف",
+  "users.accountStatus.ONBOARDING": "قيد الإعداد",
+  "users.accountStatus.ACTIVE": "نشط",
+  "users.accountStatus.SUSPENDED": "معلق",
+  "users.accountStatus.INACTIVE": "غير نشط",
+  "users.allStatus": "جميع الحالات",
+  "users.table.actions": "الإجراءات",
+  "users.updateUser": "تحديث المستخدم",
+  "common.filter.all": "الكل"
 }

@@ -1,13 +1,13 @@
-import type React from 'react';
+import type React from "react";
 import {
   LogOut,
   MoveUpRight,
   Settings,
   CreditCard,
   FileText,
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface MenuItem {
   label: string;
@@ -25,11 +25,11 @@ interface Profile01Props {
 }
 
 const defaultProfile = {
-  name: 'Alex Watson',
-  role: 'Prompt Engineer',
+  name: "Alex Watson",
+  role: "Prompt Engineer",
   avatar:
-    'https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png',
-  subscription: 'Free Trial',
+    "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/avatar-02-albo9B0tWOSLXCVZh9rX9KFxXIVWMr.png",
+  subscription: "Free Trial",
 } satisfies Required<Profile01Props>;
 
 export default function Profile01({
@@ -40,20 +40,20 @@ export default function Profile01({
 }: Partial<Profile01Props> = defaultProfile) {
   const menuItems: MenuItem[] = [
     {
-      label: 'Subscription',
+      label: "Subscription",
       value: subscription,
-      href: '#',
+      href: "#",
       icon: <CreditCard className="w-4 h-4" />,
       external: false,
     },
     {
-      label: 'Settings',
-      href: '/settings',
+      label: "Settings",
+      href: "/settings",
       icon: <Settings className="w-4 h-4" />,
     },
     {
-      label: 'Terms & Policies',
-      href: '#',
+      label: "Terms & Policies",
+      href: "#",
       icon: <FileText className="w-4 h-4" />,
       external: true,
     },
@@ -91,7 +91,8 @@ export default function Profile01({
                 href={item.href}
                 className="flex items-center justify-between p-2 
                                     hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                                    rounded-lg transition-colors duration-200">
+                                    rounded-lg transition-colors duration-200"
+              >
                 <div className="flex items-center gap-2">
                   {item.icon}
                   <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -113,7 +114,8 @@ export default function Profile01({
               type="button"
               className="w-full flex items-center justify-between p-2 
                                 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                                rounded-lg transition-colors duration-200">
+                                rounded-lg transition-colors duration-200"
+            >
               <div className="flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
                 <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">

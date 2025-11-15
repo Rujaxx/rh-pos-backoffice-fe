@@ -1,41 +1,38 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo, useCallback, useRef } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState, useMemo, useCallback, useRef } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   CrudModal,
   ConfirmationModal,
   useModal,
   useConfirmationModal,
-} from '@/components/ui/crud-modal';
-import {
-  TableFormContent,
-  useTableForm,
-} from '@/components/tables/table-form';
+} from "@/components/ui/crud-modal";
+import { TableFormContent, useTableForm } from "@/components/tables/table-form";
 import {
   useTableColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from '@/components/tables/table-table-columns';
-import { TanStackTable } from '@/components/ui/tanstack-table';
-import Layout from '@/components/common/layout';
-import { Plus, UtensilsCrossed } from 'lucide-react';
-import { Table, TableQueryParams } from '@/types/table';
-import { TableFormData, tableSchema } from '@/lib/validations/table.validation';
-import { useTables, useTable } from '@/services/api/tables/tables.queries';
+} from "@/components/tables/table-table-columns";
+import { TanStackTable } from "@/components/ui/tanstack-table";
+import Layout from "@/components/common/layout";
+import { Plus, UtensilsCrossed } from "lucide-react";
+import { Table, TableQueryParams } from "@/types/table";
+import { TableFormData, tableSchema } from "@/lib/validations/table.validation";
+import { useTables, useTable } from "@/services/api/tables/tables.queries";
 import {
   useCreateTable,
   useUpdateTable,
-  useDeleteTable
-} from '@/services/api/tables/tables.mutations';
+  useDeleteTable,
+} from "@/services/api/tables/tables.mutations";
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from '@tanstack/react-table';
-import { toast } from 'sonner';
+} from "@tanstack/react-table";
+import { toast } from "sonner";
 
 export default function TablesPage() {
   const { t } = useTranslation();
@@ -47,14 +44,14 @@ export default function TablesPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Build query parameters from table state
   const queryParams = useMemo<TableQueryParams>(() => {
     const params: TableQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
     };
 
     // Add search term
@@ -66,7 +63,7 @@ export default function TablesPage() {
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
       params.sortBy = sortField as string;
-      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
     return params;
@@ -101,17 +98,14 @@ export default function TablesPage() {
   // Fetch individual table data when editing to get latest information
   const tableId = editingTable?._id;
   const shouldFetchTable = isOpen && !!tableId;
-  
-  const { 
-    data: individualTableResponse, 
+
+  const {
+    data: individualTableResponse,
     isLoading: isLoadingIndividualTable,
-    isFetching: isFetchingIndividualTable 
-  } = useTable(
-    tableId || '', 
-    {
-      enabled: shouldFetchTable // The hook already checks !!id, we just need to check if modal is open
-    }
-  );
+    isFetching: isFetchingIndividualTable,
+  } = useTable(tableId || "", {
+    enabled: shouldFetchTable, // The hook already checks !!id, we just need to check if modal is open
+  });
 
   // Use the latest table data from API if available, otherwise use the table data
   const latestTableData = individualTableResponse?.data || editingTable;
@@ -127,7 +121,7 @@ export default function TablesPage() {
   const editHandler = useCallback((table: Table) => {
     editHandlerRef.current?.(table);
   }, []);
-  
+
   const deleteHandler = useCallback((table: Table) => {
     deleteHandlerRef.current?.(table);
   }, []);
@@ -139,69 +133,75 @@ export default function TablesPage() {
   editHandlerRef.current = (table: Table) => {
     openModal(table);
   };
-  
+
   deleteHandlerRef.current = (table: Table) => {
-    openConfirmationModal(async () => {
-      try {
-        await deleteTableMutation.mutateAsync(table._id);
-      } catch (error) {
-        console.error('Failed to delete table:', error);
-      }
-    }, {
-      title: t('table.deleteTable'),
-      description: t('table.deleteConfirmation', {
-        tableName: table.label,
-      }),
-      confirmButtonText: t('table.deleteTableButton'),
-      variant: 'destructive',
-    });
+    openConfirmationModal(
+      async () => {
+        try {
+          await deleteTableMutation.mutateAsync(table._id);
+        } catch (error) {
+          console.error("Failed to delete table:", error);
+        }
+      },
+      {
+        title: t("table.deleteTable"),
+        description: t("table.deleteConfirmation", {
+          tableName: table.label,
+        }),
+        confirmButtonText: t("table.deleteTableButton"),
+        variant: "destructive",
+      },
+    );
   };
 
   // Move handlers after column definition to avoid dependency issues
-  const handleSubmit = useCallback(async (data: TableFormData) => {
-    try {
-      // Handle bulk creation
-      if (data.isBulk && data.bulkCount) {
-        const count = parseInt(data.bulkCount);
-        const prefix = data.bulkLabelPrefix || 'T';
-        
-        // Create multiple tables
-        for (let i = 1; i <= count; i++) {
-          const tableData = {
+  const handleSubmit = useCallback(
+    async (data: TableFormData) => {
+      try {
+        // Handle bulk creation
+        if (data.isBulk && data.bulkCount) {
+          const count = parseInt(data.bulkCount);
+          const prefix = data.bulkLabelPrefix || "T";
+
+          // Create multiple tables
+          for (let i = 1; i <= count; i++) {
+            const tableData = {
+              ...data,
+              label: `${prefix}${i}`,
+              isBulk: undefined,
+              bulkCount: undefined,
+              bulkLabelPrefix: undefined,
+            };
+
+            await createTableMutation.mutateAsync(tableData);
+          }
+
+          toast.success(t("table.bulkCreateSuccess", { count }));
+        } else {
+          // Parse and apply defaults using the schema to ensure all fields have proper values
+          const validatedData = {
             ...data,
-            label: `${prefix}${i}`,
             isBulk: undefined,
             bulkCount: undefined,
             bulkLabelPrefix: undefined,
           };
-          
-          await createTableMutation.mutateAsync(tableData);
+
+          if (latestTableData) {
+            await updateTableMutation.mutateAsync({
+              id: latestTableData._id,
+              data: validatedData,
+            });
+          } else {
+            await createTableMutation.mutateAsync(validatedData);
+          }
         }
-        
-        toast.success(t('table.bulkCreateSuccess', { count }));
-      } else {
-        // Parse and apply defaults using the schema to ensure all fields have proper values
-        const validatedData = {
-          ...data,
-          isBulk: undefined,
-          bulkCount: undefined,
-          bulkLabelPrefix: undefined,
-        };
-        
-        if (latestTableData) {
-          await updateTableMutation.mutateAsync({
-            id: latestTableData._id,
-            data: validatedData,
-          });
-        } else {
-          await createTableMutation.mutateAsync(validatedData);
-        }
+        closeModal();
+      } catch (error) {
+        console.error("Failed to save table:", error);
       }
-      closeModal();
-    } catch (error) {
-      console.error('Failed to save table:', error);
-    }
-  }, [latestTableData, updateTableMutation, createTableMutation, closeModal]);
+    },
+    [latestTableData, updateTableMutation, createTableMutation, closeModal],
+  );
 
   // Search handler with proper typing
   const handleSearchChange = useCallback((search: string) => {
@@ -211,9 +211,12 @@ export default function TablesPage() {
   }, []);
 
   // Pagination handler
-  const handlePaginationChange = useCallback((newPagination: PaginationState) => {
-    setPagination(newPagination);
-  }, []);
+  const handlePaginationChange = useCallback(
+    (newPagination: PaginationState) => {
+      setPagination(newPagination);
+    },
+    [],
+  );
 
   // Sorting handler
   const handleSortingChange = useCallback((newSorting: SortingState) => {
@@ -223,13 +226,20 @@ export default function TablesPage() {
   }, []);
 
   // Column filters handler
-  const handleColumnFiltersChange = useCallback((filters: ColumnFiltersState) => {
-    setColumnFilters(filters);
-    // Reset to first page when filters change
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, []);
+  const handleColumnFiltersChange = useCallback(
+    (filters: ColumnFiltersState) => {
+      setColumnFilters(filters);
+      // Reset to first page when filters change
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    },
+    [],
+  );
 
-  const isFormLoading = createTableMutation.isPending || updateTableMutation.isPending || isLoadingIndividualTable || isFetchingIndividualTable;
+  const isFormLoading =
+    createTableMutation.isPending ||
+    updateTableMutation.isPending ||
+    isLoadingIndividualTable ||
+    isFetchingIndividualTable;
 
   return (
     <Layout>
@@ -239,16 +249,14 @@ export default function TablesPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <UtensilsCrossed className="h-6 w-6" />
-              <span>{t('table.title')}</span>
+              <span>{t("table.title")}</span>
             </h2>
-            <p className="text-muted-foreground">
-              {t('table.subtitle')}
-            </p>
+            <p className="text-muted-foreground">{t("table.subtitle")}</p>
           </div>
           <div className="flex items-center space-x-2">
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t('table.addNewTable')}
+              {t("table.addNewTable")}
             </Button>
           </div>
         </div>
@@ -258,7 +266,9 @@ export default function TablesPage() {
           <CardContent className="p-6">
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
-                <p>{t('table.errorLoading')}: {error.message}</p>
+                <p>
+                  {t("table.errorLoading")}: {error.message}
+                </p>
               </div>
             ) : (
               <TanStackTable
@@ -267,7 +277,7 @@ export default function TablesPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t('table.searchPlaceholder')}
+                searchPlaceholder={t("table.searchPlaceholder")}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -281,7 +291,7 @@ export default function TablesPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t('table.noDataFound')}
+                emptyMessage={t("table.noDataFound")}
                 enableMultiSort={false}
               />
             )}
@@ -292,14 +302,24 @@ export default function TablesPage() {
         <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
-          title={latestTableData ? t('table.form.editTitle') : t('table.form.createTitle')}
-          description={latestTableData ? t('table.form.editDescription') : t('table.form.createDescription')}
+          title={
+            latestTableData
+              ? t("table.form.editTitle")
+              : t("table.form.createTitle")
+          }
+          description={
+            latestTableData
+              ? t("table.form.editDescription")
+              : t("table.form.createDescription")
+          }
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           size="xl"
           submitButtonText={
-            latestTableData ? t('table.form.updateButton') : t('table.form.createButton')
+            latestTableData
+              ? t("table.form.updateButton")
+              : t("table.form.createButton")
           }
         >
           <TableFormContent form={form} />

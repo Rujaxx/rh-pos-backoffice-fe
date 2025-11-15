@@ -34,16 +34,15 @@ export const useTableSectionColumns = ({
   const { locale } = useI18n();
 
   const columns: ColumnDef<TableSection>[] = [
-    
     // Name column
     {
       accessorKey: "name",
       header: t("tableSections.name"),
       enableSorting: true,
       cell: ({ row }) => {
-        const tableSection = row.original;  
+        const tableSection = row.original;
         const name = tableSection.name;
-        const displayName = (name[locale] || name.en)
+        const displayName = name[locale] || name.en;
         return <div className="font-medium">{displayName || "-"}</div>;
       },
     },
@@ -55,15 +54,14 @@ export const useTableSectionColumns = ({
       enableSorting: true,
       cell: ({ row }) => {
         const restaurantName = row.original.restaurantName;
-        const displayName = typeof restaurantName === 'object' && restaurantName !== null 
-          ? (restaurantName[locale] || restaurantName.en || Object.values(restaurantName)[0])
-          : restaurantName;
-        
-        return (
-          <div className="font-medium">
-            {displayName || "-"}
-          </div>
-        );
+        const displayName =
+          typeof restaurantName === "object" && restaurantName !== null
+            ? restaurantName[locale] ||
+              restaurantName.en ||
+              Object.values(restaurantName)[0]
+            : restaurantName;
+
+        return <div className="font-medium">{displayName || "-"}</div>;
       },
     },
 
@@ -93,7 +91,7 @@ export const useTableSectionColumns = ({
       size: 80,
       cell: ({ row }) => {
         const tableSection = row.original;
-        
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
