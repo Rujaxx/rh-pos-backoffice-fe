@@ -9,6 +9,7 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
 ### Main Branches
 
 #### `main` (Production)
+
 - **Purpose**: Production-ready code
 - **Protection**: ✅ Protected, requires PR reviews
 - **Deploy**: Automatically deploys to production
@@ -16,8 +17,9 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
 - **Naming**: `main`
 
 #### `develop` (Development)
+
 - **Purpose**: Integration branch for features
-- **Protection**: ✅ Protected, requires PR reviews  
+- **Protection**: ✅ Protected, requires PR reviews
 - **Deploy**: Automatically deploys to staging/development environment
 - **Merge**: From `feature/*`, `bugfix/*` branches
 - **Naming**: `develop`
@@ -25,6 +27,7 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
 ### Supporting Branches
 
 #### Feature Branches
+
 - **Purpose**: New features and enhancements
 - **Branch from**: `develop`
 - **Merge to**: `develop`
@@ -35,6 +38,7 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
   - `feature/POS-789-dashboard-analytics`
 
 #### Bugfix Branches
+
 - **Purpose**: Fix bugs in development
 - **Branch from**: `develop`
 - **Merge to**: `develop`
@@ -44,6 +48,7 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
   - `bugfix/POS-654-rtl-layout-issues`
 
 #### Hotfix Branches
+
 - **Purpose**: Critical fixes for production
 - **Branch from**: `main`
 - **Merge to**: `main` AND `develop`
@@ -53,6 +58,7 @@ This document outlines the branching strategy for the RH POS Backoffice Frontend
   - `hotfix/POS-888-payment-processing-fix`
 
 #### Release Branches
+
 - **Purpose**: Prepare for production release
 - **Branch from**: `develop`
 - **Merge to**: `main` AND `develop`
@@ -153,20 +159,24 @@ git push origin hotfix/POS-999-critical-bug
 ## 📝 Naming Conventions
 
 ### Branch Names
+
 - Use lowercase with hyphens
 - Include ticket/issue ID when available
 - Keep descriptions short but meaningful
 - Use prefixes: `feature/`, `bugfix/`, `hotfix/`, `release/`
 
 ### Commit Messages
+
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 **💡 Recommended: Use Interactive Commit Tool**
+
 ```bash
 npm run commit  # Interactive prompts guide you through proper format
 ```
 
 **Alternative: Manual Commit Format**
+
 ```
 <type>[optional scope]: <description>
 
@@ -176,12 +186,14 @@ npm run commit  # Interactive prompts guide you through proper format
 ```
 
 The `npm run commit` command provides:
+
 - ✅ Guided prompts for commit type, scope, and description
 - ✅ Automatic validation of conventional commit format
 - ✅ Prevention of invalid commit messages
 - ✅ Consistent formatting across the team
 
 **Types:**
+
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
@@ -193,6 +205,7 @@ The `npm run commit` command provides:
 - `i18n`: Internationalization updates
 
 **Examples:**
+
 ```bash
 feat(brands): add brand creation form with validation
 fix(auth): resolve login form validation issues
@@ -203,13 +216,15 @@ i18n(common): add Arabic translations for navigation
 ## 🛡️ Branch Protection Rules
 
 ### `main` Branch
+
 - ✅ Require pull request reviews (2 reviewers minimum)
 - ✅ Require status checks to pass
 - ✅ Require branches to be up to date
 - ✅ Include administrators
 - ✅ Restrict pushes to administrators only
 
-### `develop` Branch  
+### `develop` Branch
+
 - ✅ Require pull request reviews (1 reviewer minimum)
 - ✅ Require status checks to pass
 - ✅ Require branches to be up to date
@@ -231,15 +246,16 @@ Before merging to protected branches, the following checks must pass:
 
 ### Environments
 
-| Branch | Environment | URL | Auto Deploy |
-|--------|-------------|-----|-------------|
-| `main` | Production | `https://pos.example.com` | ✅ |
-| `develop` | Staging | `https://staging-pos.example.com` | ✅ |
-| `feature/*` | Preview | `https://preview-[branch].pos.example.com` | ✅ |
+| Branch      | Environment | URL                                        | Auto Deploy |
+| ----------- | ----------- | ------------------------------------------ | ----------- |
+| `main`      | Production  | `https://pos.example.com`                  | ✅          |
+| `develop`   | Staging     | `https://staging-pos.example.com`          | ✅          |
+| `feature/*` | Preview     | `https://preview-[branch].pos.example.com` | ✅          |
 
 ## 📋 Pull Request Guidelines
 
 ### Before Creating PR
+
 - [ ] Branch is up to date with target branch
 - [ ] All commits follow conventional commit format
 - [ ] Code has been self-reviewed
@@ -249,6 +265,7 @@ Before merging to protected branches, the following checks must pass:
 - [ ] Mobile responsive design verified
 
 ### PR Requirements
+
 - [ ] Clear title and description
 - [ ] Link to related issue/ticket
 - [ ] Screenshots for UI changes
@@ -259,6 +276,7 @@ Before merging to protected branches, the following checks must pass:
 ## 🆘 Emergency Procedures
 
 ### Critical Production Bug
+
 1. Create hotfix branch from `main`
 2. Fix the issue with minimal changes
 3. Test thoroughly in staging
@@ -268,6 +286,7 @@ Before merging to protected branches, the following checks must pass:
 7. Create follow-up PR to merge into `develop`
 
 ### Rollback Procedure
+
 1. Identify last known good commit on `main`
 2. Create hotfix branch from that commit
 3. Deploy the rollback
@@ -277,12 +296,14 @@ Before merging to protected branches, the following checks must pass:
 ## 🔧 Tools and Automation
 
 ### Required Tools
+
 - **Husky**: Git hooks for quality gates
 - **CommitLint**: Enforce commit message format
 - **lint-staged**: Run checks on staged files
 - **GitHub Actions**: CI/CD pipeline
 
 ### Recommended Extensions
+
 - **Git Graph** (VS Code): Visualize branch structure
 - **GitLens** (VS Code): Enhanced Git capabilities
 - **Conventional Commits** (VS Code): Commit message helper
@@ -290,6 +311,7 @@ Before merging to protected branches, the following checks must pass:
 ## 📚 Best Practices
 
 ### Do's ✅
+
 - Keep branches small and focused
 - Merge frequently to avoid conflicts
 - Use descriptive commit messages
@@ -298,6 +320,7 @@ Before merging to protected branches, the following checks must pass:
 - Use draft PRs for work-in-progress
 
 ### Don'ts ❌
+
 - Don't commit directly to `main` or `develop`
 - Don't merge your own PRs (unless emergency)
 - Don't force push to shared branches
@@ -310,7 +333,7 @@ Before merging to protected branches, the following checks must pass:
 ## 📞 Need Help?
 
 - 🐛 **Bug Reports**: Use bug report template
-- ✨ **Feature Requests**: Use feature request template  
+- ✨ **Feature Requests**: Use feature request template
 - 💬 **Questions**: Ask in team chat or create discussion
 - 📖 **Documentation**: Check project README and wiki
 

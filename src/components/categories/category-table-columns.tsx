@@ -1,40 +1,40 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { Category } from '@/types/category.type';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Category } from "@/types/category.type";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { 
-  Edit, 
-  Trash2, 
+} from "@/components/ui/dropdown-menu";
+import {
+  Edit,
+  Trash2,
   MoreHorizontal,
   Tag,
   Calendar,
   Hash,
-} from 'lucide-react';
-import { useTranslation } from '@/hooks/useTranslation';
+} from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // Column definitions for the categories table
 export const createCategoryColumns = (
   onEdit: (category: Category) => void,
   onDelete: (category: Category) => void,
-  t: ReturnType<typeof useTranslation>['t']
+  t: ReturnType<typeof useTranslation>["t"],
 ): ColumnDef<Category>[] => [
   {
-    accessorKey: 'name',
-    id: 'name',
-    header: t('categories.categoryName'),
+    accessorKey: "name",
+    id: "name",
+    header: t("categories.categoryName"),
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      const aValue = (rowA.original.name.en || '').toLowerCase();
-      const bValue = (rowB.original.name.en || '').toLowerCase();
+      const aValue = (rowA.original.name.en || "").toLowerCase();
+      const bValue = (rowB.original.name.en || "").toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -55,9 +55,9 @@ export const createCategoryColumns = (
     },
   },
   {
-    accessorKey: 'shortCode',
-    id: 'shortCode',
-    header: t('categories.shortCode'),
+    accessorKey: "shortCode",
+    id: "shortCode",
+    header: t("categories.shortCode"),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
@@ -71,24 +71,26 @@ export const createCategoryColumns = (
     },
   },
   {
-    accessorKey: 'isActive',
-    id: 'status',
-    header: t('categories.status'),
+    accessorKey: "isActive",
+    id: "status",
+    header: t("categories.status"),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const category = row.original;
       return (
-        <Badge variant={category.isActive ? 'default' : 'secondary'}>
-          {category.isActive ? t('categories.active') : t('categories.inactive')}
+        <Badge variant={category.isActive ? "default" : "secondary"}>
+          {category.isActive
+            ? t("categories.active")
+            : t("categories.inactive")}
         </Badge>
       );
     },
   },
   {
-    accessorKey: 'sortOrder',
-    id: 'sortOrder',
-    header: t('categories.sortOrder'),
+    accessorKey: "sortOrder",
+    id: "sortOrder",
+    header: t("categories.sortOrder"),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
@@ -101,9 +103,9 @@ export const createCategoryColumns = (
     },
   },
   {
-    accessorKey: 'createdAt',
-    id: 'createdAt',
-    header: t('categories.created'),
+    accessorKey: "createdAt",
+    id: "createdAt",
+    header: t("categories.created"),
     enableSorting: true,
     size: 120,
     cell: ({ row }) => {
@@ -112,20 +114,20 @@ export const createCategoryColumns = (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
           <span>
-            {new Date(category.createdAt)?.toLocaleDateString() || 'N/A'}
+            {new Date(category.createdAt)?.toLocaleDateString() || "N/A"}
           </span>
         </div>
       );
     },
   },
   {
-    id: 'actions',
-    header: t('table.actions'),
+    id: "actions",
+    header: t("table.actions"),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
       const category = row.original;
-      
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -143,7 +145,7 @@ export const createCategoryColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t('categories.edit')}
+              {t("categories.edit")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -154,7 +156,7 @@ export const createCategoryColumns = (
               disabled={category.isActive ?? false} // Don't allow deleting active categories
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t('categories.delete')}
+              {t("categories.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -166,31 +168,35 @@ export const createCategoryColumns = (
 // Hook for using category columns with current translation
 export const useCategoryColumns = (
   onEdit: (category: Category) => void,
-  onDelete: (category: Category) => void
+  onDelete: (category: Category) => void,
 ) => {
   const { t } = useTranslation();
   return createCategoryColumns(onEdit, onDelete, t);
 };
 
 // Helper function to get sortable field from TanStack sorting state
-export const getSortFieldForQuery = (sorting: Array<{ id: string; desc: boolean }>): string | undefined => {
+export const getSortFieldForQuery = (
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined => {
   if (!sorting.length) return undefined;
-  
+
   const sort = sorting[0];
   // Map TanStack column IDs to backend field names
   const fieldMap: Record<string, string> = {
-    name: 'name.en', // Sort by English name
-    shortCode: 'shortCode',
-    status: 'isActive',
-    sortOrder: 'sortOrder',
-    createdAt: 'createdAt',
+    name: "name.en", // Sort by English name
+    shortCode: "shortCode",
+    status: "isActive",
+    sortOrder: "sortOrder",
+    createdAt: "createdAt",
   };
-  
+
   return fieldMap[sort.id] || sort.id;
 };
 
 // Helper function to get sort order from TanStack sorting state
-export const getSortOrderForQuery = (sorting: Array<{ id: string; desc: boolean }>): 'asc' | 'desc' | undefined => {
+export const getSortOrderForQuery = (
+  sorting: Array<{ id: string; desc: boolean }>,
+): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? 'desc' : 'asc';
+  return sorting[0].desc ? "desc" : "asc";
 };

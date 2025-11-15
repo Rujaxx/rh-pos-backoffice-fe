@@ -3,17 +3,20 @@
  * Handles all authentication-related API calls including token refresh
  */
 
-import api from '@/lib/axios'
-import { API_ENDPOINTS } from '@/config/api'
-import { AuthTokens, AuthUser, LoginCredentials } from '@/types/auth/auth.type'
+import api from "@/lib/axios";
+import { API_ENDPOINTS } from "@/config/api";
+import { AuthTokens, AuthUser, LoginCredentials } from "@/types/auth/auth.type";
 
 export class AuthService {
   /**
    * Login user with credentials
    */
   static async login(credentials: LoginCredentials): Promise<AuthUser> {
-    const response = await api.post<AuthUser>(API_ENDPOINTS.AUTH.LOGIN, credentials)
-    return response
+    const response = await api.post<AuthUser>(
+      API_ENDPOINTS.AUTH.LOGIN,
+      credentials,
+    );
+    return response;
   }
 
   /**
@@ -22,12 +25,12 @@ export class AuthService {
   static async refreshTokens(refreshToken: string): Promise<AuthTokens> {
     try {
       const response = await api.post<AuthTokens>(API_ENDPOINTS.AUTH.REFRESH, {
-        refreshToken
-      })
-      return response
+        refreshToken,
+      });
+      return response;
     } catch (error) {
       // If refresh fails, the token is expired or invalid
-      throw new Error('REFRESH_TOKEN_EXPIRED')
+      throw new Error("REFRESH_TOKEN_EXPIRED");
     }
   }
 
@@ -35,8 +38,8 @@ export class AuthService {
    * Get current user profile
    */
   static async getProfile() {
-    const response = await api.get(API_ENDPOINTS.AUTH.ME)
-    return response
+    const response = await api.get(API_ENDPOINTS.AUTH.ME);
+    return response;
   }
 
   /**
@@ -44,10 +47,10 @@ export class AuthService {
    */
   static async logout(): Promise<void> {
     try {
-      await api.post(API_ENDPOINTS.AUTH.LOGOUT)
+      await api.post(API_ENDPOINTS.AUTH.LOGOUT);
     } catch (error) {
       // Ignore logout errors - we'll clear local state anyway
-      console.warn('Logout request failed:', error)
+      console.warn("Logout request failed:", error);
     }
   }
 }

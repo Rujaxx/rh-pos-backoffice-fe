@@ -1,19 +1,24 @@
-"use client"
+"use client";
 
-import React from "react"
-import Image from "next/image"
-import { UseFormReturn, Controller, FieldPath, ControllerRenderProps } from "react-hook-form"
-import { useI18n } from "@/providers/i18n-provider"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import React from "react";
+import Image from "next/image";
+import {
+  UseFormReturn,
+  Controller,
+  FieldPath,
+  ControllerRenderProps,
+} from "react-hook-form";
+import { useI18n } from "@/providers/i18n-provider";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   FormControl,
   FormDescription,
@@ -21,20 +26,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { useTranslation } from "@/hooks/useTranslation"
-import { timeStringToMinutes, minutesToTimeString } from "@/lib/utils/time.utils"
-import { Languages, Globe, Upload } from "lucide-react"
+} from "@/components/ui/form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
+import {
+  timeStringToMinutes,
+  minutesToTimeString,
+} from "@/lib/utils/time.utils";
+import { Languages, Globe, Upload } from "lucide-react";
 
 interface FormFieldWrapperProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  children: (field: ControllerRenderProps<TFormValues, FieldPath<TFormValues>>) => React.ReactNode
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  children: (
+    field: ControllerRenderProps<TFormValues, FieldPath<TFormValues>>,
+  ) => React.ReactNode;
 }
 
 export function FormFieldWrapper<TFormValues extends Record<string, unknown>>({
@@ -51,29 +61,27 @@ export function FormFieldWrapper<TFormValues extends Record<string, unknown>>({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <FormControl>
-            {children(field)}
-          </FormControl>
+          <FormControl>{children(field)}</FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 interface RHFInputProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  placeholder?: string
-  type?: string
-  className?: string
-  min?: string
-  max?: string
-  step?: string
-  disabled?: boolean
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  type?: string;
+  className?: string;
+  min?: string;
+  max?: string;
+  step?: string;
+  disabled?: boolean;
 }
 
 export function RHFInput<TFormValues extends Record<string, unknown>>({
@@ -90,7 +98,12 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
   disabled,
 }: RHFInputProps<TFormValues>) {
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+    <FormFieldWrapper
+      form={form}
+      name={name}
+      label={label}
+      description={description}
+    >
       {(field) => (
         <Input
           {...field}
@@ -98,10 +111,11 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
           onChange={(e) => {
             if (type === "number") {
               // Convert string to number for number inputs
-              const numValue = e.target.value === '' ? 0 : parseFloat(e.target.value)
-              field.onChange(isNaN(numValue) ? 0 : numValue)
+              const numValue =
+                e.target.value === "" ? 0 : parseFloat(e.target.value);
+              field.onChange(isNaN(numValue) ? 0 : numValue);
             } else {
-              field.onChange(e.target.value)
+              field.onChange(e.target.value);
             }
           }}
           type={type}
@@ -114,17 +128,17 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
         />
       )}
     </FormFieldWrapper>
-  )
+  );
 }
 
 interface RHFTimeInputProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  placeholder?: string
-  className?: string
-  disabled?: boolean
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -141,11 +155,18 @@ export function RHFTimeInput<TFormValues extends Record<string, unknown>>({
   disabled,
 }: RHFTimeInputProps<TFormValues>) {
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+    <FormFieldWrapper
+      form={form}
+      name={name}
+      label={label}
+      description={description}
+    >
       {(field) => {
         // Convert minutes to time string for display
-        const timeValue = field.value ? minutesToTimeString(field.value as number) : "";
-        
+        const timeValue = field.value
+          ? minutesToTimeString(field.value as number)
+          : "";
+
         return (
           <Input
             type="time"
@@ -163,17 +184,17 @@ export function RHFTimeInput<TFormValues extends Record<string, unknown>>({
         );
       }}
     </FormFieldWrapper>
-  )
+  );
 }
 
 interface RHFTextareaProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  placeholder?: string
-  rows?: number
-  className?: string
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  rows?: number;
+  className?: string;
 }
 
 export function RHFTextarea<TFormValues extends Record<string, unknown>>({
@@ -186,7 +207,12 @@ export function RHFTextarea<TFormValues extends Record<string, unknown>>({
   className,
 }: RHFTextareaProps<TFormValues>) {
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+    <FormFieldWrapper
+      form={form}
+      name={name}
+      label={label}
+      description={description}
+    >
       {(field) => (
         <Textarea
           {...field}
@@ -197,18 +223,18 @@ export function RHFTextarea<TFormValues extends Record<string, unknown>>({
         />
       )}
     </FormFieldWrapper>
-  )
+  );
 }
 
 interface RHFSelectProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  placeholder?: string
-  options: Array<{ value: string; label: string }>
-  className?: string
-  disabled?: boolean
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  placeholder?: string;
+  options: Array<{ value: string; label: string }>;
+  className?: string;
+  disabled?: boolean;
 }
 
 export function RHFSelect<TFormValues extends Record<string, unknown>>({
@@ -228,13 +254,14 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
       render={({ field }) => {
         const fieldValue = String(field.value || "");
         // Check if the current value exists in options
-        const valueExists = fieldValue && options.some(opt => opt.value === fieldValue);
-        
+        const valueExists =
+          fieldValue && options.some((opt) => opt.value === fieldValue);
+
         return (
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Select 
+              <Select
                 onValueChange={field.onChange}
                 value={valueExists ? fieldValue : ""}
                 disabled={disabled}
@@ -257,15 +284,15 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
         );
       }}
     />
-  )
+  );
 }
 
 interface RHFSwitchProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  className?: string
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  className?: string;
 }
 
 export function RHFSwitch<TFormValues extends Record<string, unknown>>({
@@ -275,11 +302,16 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
   description,
   className,
 }: RHFSwitchProps<TFormValues>) {
-  const { locale } = useI18n()
-  const isRTL = locale === 'ar'
-  
+  const { locale } = useI18n();
+  const isRTL = locale === "ar";
+
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+    <FormFieldWrapper
+      form={form}
+      name={name}
+      label={label}
+      description={description}
+    >
       {(field) => (
         <Switch
           checked={Boolean(field.value)}
@@ -289,21 +321,25 @@ export function RHFSwitch<TFormValues extends Record<string, unknown>>({
         />
       )}
     </FormFieldWrapper>
-  )
+  );
 }
 
-interface RHFMultilingualInputProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  placeholder?: { [key: string]: string }
-  type?: "input" | "textarea"
-  languages?: Array<{ code: string; name: string }>
-  className?: string
+interface RHFMultilingualInputProps<
+  TFormValues extends Record<string, unknown>,
+> {
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  placeholder?: { [key: string]: string };
+  type?: "input" | "textarea";
+  languages?: Array<{ code: string; name: string }>;
+  className?: string;
 }
 
-export function RHFMultilingualInput<TFormValues extends Record<string, unknown>>({
+export function RHFMultilingualInput<
+  TFormValues extends Record<string, unknown>,
+>({
   form,
   name,
   label,
@@ -312,11 +348,11 @@ export function RHFMultilingualInput<TFormValues extends Record<string, unknown>
   type = "input",
   languages = [
     { code: "en", name: "English" },
-    { code: "ar", name: "Arabic" }
+    { code: "ar", name: "Arabic" },
   ],
   className,
 }: RHFMultilingualInputProps<TFormValues>) {
-  const Component = type === "textarea" ? Textarea : Input
+  const Component = type === "textarea" ? Textarea : Input;
 
   return (
     <FormField
@@ -349,9 +385,12 @@ export function RHFMultilingualInput<TFormValues extends Record<string, unknown>
                         <Component
                           {...langField}
                           value={String(langField.value || "")}
-                          placeholder={placeholder[lang.code] || `Enter ${label.toLowerCase()} in ${lang.name}`}
+                          placeholder={
+                            placeholder[lang.code] ||
+                            `Enter ${label.toLowerCase()} in ${lang.name}`
+                          }
                           className="w-full"
-                          dir={lang.code === 'ar' ? 'rtl' : 'ltr'}
+                          dir={lang.code === "ar" ? "rtl" : "ltr"}
                         />
                       )}
                     />
@@ -365,16 +404,16 @@ export function RHFMultilingualInput<TFormValues extends Record<string, unknown>
         </FormItem>
       )}
     />
-  )
+  );
 }
 
 interface RHFFileUploadProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label: string
-  description?: string
-  accept?: string
-  className?: string
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label: string;
+  description?: string;
+  accept?: string;
+  className?: string;
 }
 
 export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
@@ -385,30 +424,38 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
   accept = "image/*",
   className,
 }: RHFFileUploadProps<TFormValues>) {
-  const [preview, setPreview] = React.useState<string>("")
+  const [preview, setPreview] = React.useState<string>("");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, onChange: (value: string) => void) => {
-    const file = event.target.files?.[0]
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+  ) => {
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string
-        setPreview(result)
-        onChange(result)
-      }
-      reader.readAsDataURL(file)
+        const result = reader.result as string;
+        setPreview(result);
+        onChange(result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   React.useEffect(() => {
-    const currentValue = form.getValues(name)
+    const currentValue = form.getValues(name);
     if (currentValue) {
-      setPreview(currentValue as string)
+      setPreview(currentValue as string);
     }
-  }, [form, name])
+  }, [form, name]);
 
   return (
-    <FormFieldWrapper form={form} name={name} label={label} description={description}>
+    <FormFieldWrapper
+      form={form}
+      name={name}
+      label={label}
+      description={description}
+    >
       {(field) => (
         <div className={cn("space-y-2", className)}>
           <div className="flex items-center space-x-4">
@@ -426,7 +473,9 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
                   className={cn(
                     "flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
                     "hover:bg-muted/50 hover:border-primary",
-                    preview ? "border-primary bg-primary/5" : "border-muted-foreground/25"
+                    preview
+                      ? "border-primary bg-primary/5"
+                      : "border-muted-foreground/25",
                   )}
                 >
                   {preview ? (
@@ -438,12 +487,16 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
                         height={64}
                         className="object-contain rounded"
                       />
-                      <span className="text-xs text-muted-foreground">Click to change</span>
+                      <span className="text-xs text-muted-foreground">
+                        Click to change
+                      </span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center space-y-2">
                       <Upload className="w-8 h-8 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Upload {label}</span>
+                      <span className="text-sm text-muted-foreground">
+                        Upload {label}
+                      </span>
                     </div>
                   )}
                 </label>
@@ -453,14 +506,14 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
         </div>
       )}
     </FormFieldWrapper>
-  )
+  );
 }
 
 interface RHFAddressFormProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>
-  name: FieldPath<TFormValues>
-  label?: string
-  className?: string
+  form: UseFormReturn<TFormValues>;
+  name: FieldPath<TFormValues>;
+  label?: string;
+  className?: string;
 }
 
 export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
@@ -469,66 +522,68 @@ export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
   label,
   className,
 }: RHFAddressFormProps<TFormValues>) {
-  const { t } = useTranslation()
-  
+  const { t } = useTranslation();
+
   return (
     <div className={className}>
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm">{label || t('form.address.title')}</CardTitle>
+          <CardTitle className="text-sm">
+            {label || t("form.address.title")}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RHFInput
               form={form}
               name={`${name}.addressLine1` as FieldPath<TFormValues>}
-              label={t('form.address.addressLine1')}
-              placeholder={t('form.address.addressLine1Placeholder')}
+              label={t("form.address.addressLine1")}
+              placeholder={t("form.address.addressLine1Placeholder")}
             />
             <RHFInput
               form={form}
               name={`${name}.addressLine2` as FieldPath<TFormValues>}
-              label={t('form.address.addressLine2')}
-              placeholder={t('form.address.addressLine2Placeholder')}
+              label={t("form.address.addressLine2")}
+              placeholder={t("form.address.addressLine2Placeholder")}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <RHFInput
               form={form}
               name={`${name}.city` as FieldPath<TFormValues>}
-              label={t('form.address.city')}
-              placeholder={t('form.address.cityPlaceholder')}
+              label={t("form.address.city")}
+              placeholder={t("form.address.cityPlaceholder")}
             />
             <RHFInput
               form={form}
               name={`${name}.state` as FieldPath<TFormValues>}
-              label={t('form.address.state')}
-              placeholder={t('form.address.statePlaceholder')}
+              label={t("form.address.state")}
+              placeholder={t("form.address.statePlaceholder")}
             />
             <RHFInput
               form={form}
               name={`${name}.country` as FieldPath<TFormValues>}
-              label={t('form.address.country')}
-              placeholder={t('form.address.countryPlaceholder')}
+              label={t("form.address.country")}
+              placeholder={t("form.address.countryPlaceholder")}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <RHFInput
               form={form}
               name={`${name}.pincode` as FieldPath<TFormValues>}
-              label={t('form.address.pincode')}
-              placeholder={t('form.address.pincodePlaceholder')}
+              label={t("form.address.pincode")}
+              placeholder={t("form.address.pincodePlaceholder")}
             />
             <RHFInput
               form={form}
               name={`${name}.location` as FieldPath<TFormValues>}
-              label={t('form.address.location')}
-              placeholder={t('form.address.locationPlaceholder')}
-              description={t('form.address.locationDescription')}
+              label={t("form.address.location")}
+              placeholder={t("form.address.locationPlaceholder")}
+              description={t("form.address.locationDescription")}
             />
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
