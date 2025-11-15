@@ -1,40 +1,46 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo, useCallback, useRef } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState, useMemo, useCallback, useRef } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   CrudModal,
   ConfirmationModal,
   useModal,
   useConfirmationModal,
-} from '@/components/ui/crud-modal';
+} from "@/components/ui/crud-modal";
 import {
   CategoryFormContent,
   useCategoryForm,
-} from '@/components/categories/category-form';
+} from "@/components/categories/category-form";
 import {
   useCategoryColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from '@/components/categories/category-table-columns';
-import { TanStackTable } from '@/components/ui/tanstack-table';
-import Layout from '@/components/common/layout';
-import { Plus, Tag, Filter } from 'lucide-react';
-import { Category, CategoryQueryParams } from '@/types/category.type';
-import { CategoryFormData, categorySchema } from '@/lib/validations/category.validation';
-import { useCategories, useCategory } from '@/services/api/categories/categories.queries';
+} from "@/components/categories/category-table-columns";
+import { TanStackTable } from "@/components/ui/tanstack-table";
+import Layout from "@/components/common/layout";
+import { Plus, Tag, Filter } from "lucide-react";
+import { Category, CategoryQueryParams } from "@/types/category.type";
+import {
+  CategoryFormData,
+  categorySchema,
+} from "@/lib/validations/category.validation";
+import {
+  useCategories,
+  useCategory,
+} from "@/services/api/categories/categories.queries";
 import {
   useCreateCategory,
   useUpdateCategory,
-  useDeleteCategory
-} from '@/services/api/categories/categories.mutations';
+  useDeleteCategory,
+} from "@/services/api/categories/categories.mutations";
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 export default function CategoriesPage() {
   const { t } = useTranslation();
@@ -46,15 +52,17 @@ export default function CategoriesPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+    undefined,
+  );
 
   // Build query parameters from table state
   const queryParams = useMemo<CategoryQueryParams>(() => {
     const params: CategoryQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
     };
 
     // Add search term
@@ -65,8 +73,12 @@ export default function CategoriesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortBy = sortField as 'name' | 'createdAt' | 'updatedAt' | 'sortOrder';
-      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
+      params.sortBy = sortField as
+        | "name"
+        | "createdAt"
+        | "updatedAt"
+        | "sortOrder";
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
     // Add status filter
@@ -78,7 +90,11 @@ export default function CategoriesPage() {
   }, [pagination, sorting, searchTerm, statusFilter]);
 
   // API hooks
-  const { data: categoriesResponse, isLoading, error } = useCategories(queryParams);
+  const {
+    data: categoriesResponse,
+    isLoading,
+    error,
+  } = useCategories(queryParams);
   const createCategoryMutation = useCreateCategory();
   const updateCategoryMutation = useUpdateCategory();
   const deleteCategoryMutation = useDeleteCategory();
@@ -106,20 +122,18 @@ export default function CategoriesPage() {
   // Fetch individual category data when editing to get latest information
   const categoryId = editingCategory?._id;
   const shouldFetchCategory = isOpen && !!categoryId;
-  
-  const { 
-    data: individualCategoryResponse, 
+
+  const {
+    data: individualCategoryResponse,
     isLoading: isLoadingIndividualCategory,
-    isFetching: isFetchingIndividualCategory 
-  } = useCategory(
-    categoryId || '', 
-    {
-      enabled: shouldFetchCategory // The hook already checks !!id, we just need to check if modal is open
-    }
-  );
+    isFetching: isFetchingIndividualCategory,
+  } = useCategory(categoryId || "", {
+    enabled: shouldFetchCategory, // The hook already checks !!id, we just need to check if modal is open
+  });
 
   // Use the latest category data from API if available, otherwise use the table data
-  const latestCategoryData = individualCategoryResponse?.data || editingCategory;
+  const latestCategoryData =
+    individualCategoryResponse?.data || editingCategory;
 
   // Form hook with latest category data
   const { form } = useCategoryForm(latestCategoryData);
@@ -132,7 +146,7 @@ export default function CategoriesPage() {
   const editHandler = useCallback((category: Category) => {
     editHandlerRef.current?.(category);
   }, []);
-  
+
   const deleteHandler = useCallback((category: Category) => {
     deleteHandlerRef.current?.(category);
   }, []);
@@ -144,49 +158,61 @@ export default function CategoriesPage() {
   editHandlerRef.current = (category: Category) => {
     openModal(category);
   };
-  
+
   deleteHandlerRef.current = (category: Category) => {
-    openConfirmationModal(async () => {
-      try {
-        await deleteCategoryMutation.mutateAsync(category._id);
-      } catch (error) {
-        console.error('Failed to delete category:', error);
-      }
-    }, {
-      title: t('categories.deleteCategory'),
-      description: t('categories.deleteConfirmation', {
-        categoryName: category.name.en,
-      }),
-      confirmButtonText: t('categories.deleteCategoryButton'),
-      variant: 'destructive',
-    });
+    openConfirmationModal(
+      async () => {
+        try {
+          await deleteCategoryMutation.mutateAsync(category._id);
+        } catch (error) {
+          console.error("Failed to delete category:", error);
+        }
+      },
+      {
+        title: t("categories.deleteCategory"),
+        description: t("categories.deleteConfirmation", {
+          categoryName: category.name.en,
+        }),
+        confirmButtonText: t("categories.deleteCategoryButton"),
+        variant: "destructive",
+      },
+    );
   };
 
   // Move handlers after column definition to avoid dependency issues
-  const handleSubmit = useCallback(async (data: CategoryFormData) => {
-    try {
-      // Handle 'none' restaurant selection - convert to undefined
-      const processedData = {
-        ...data,
-        restaurantId: data.restaurantId === 'none' ? undefined : data.restaurantId,
-      };
-      
-      // Parse and apply defaults using the schema to ensure all fields have proper values
-      const validatedData = categorySchema.parse(processedData);
-      
-      if (latestCategoryData) {
-        await updateCategoryMutation.mutateAsync({
-          id: latestCategoryData._id,
-          data: validatedData,
-        });
-      } else {
-        await createCategoryMutation.mutateAsync(validatedData);
+  const handleSubmit = useCallback(
+    async (data: CategoryFormData) => {
+      try {
+        // Handle 'none' restaurant selection - convert to undefined
+        const processedData = {
+          ...data,
+          restaurantId:
+            data.restaurantId === "none" ? undefined : data.restaurantId,
+        };
+
+        // Parse and apply defaults using the schema to ensure all fields have proper values
+        const validatedData = categorySchema.parse(processedData);
+
+        if (latestCategoryData) {
+          await updateCategoryMutation.mutateAsync({
+            id: latestCategoryData._id,
+            data: validatedData,
+          });
+        } else {
+          await createCategoryMutation.mutateAsync(validatedData);
+        }
+        closeModal();
+      } catch (error) {
+        console.error("Failed to save category:", error);
       }
-      closeModal();
-    } catch (error) {
-      console.error('Failed to save category:', error);
-    }
-  }, [latestCategoryData, updateCategoryMutation, createCategoryMutation, closeModal]);
+    },
+    [
+      latestCategoryData,
+      updateCategoryMutation,
+      createCategoryMutation,
+      closeModal,
+    ],
+  );
 
   // Search handler with proper typing
   const handleSearchChange = useCallback((search: string) => {
@@ -196,9 +222,12 @@ export default function CategoriesPage() {
   }, []);
 
   // Pagination handler
-  const handlePaginationChange = useCallback((newPagination: PaginationState) => {
-    setPagination(newPagination);
-  }, []);
+  const handlePaginationChange = useCallback(
+    (newPagination: PaginationState) => {
+      setPagination(newPagination);
+    },
+    [],
+  );
 
   // Sorting handler
   const handleSortingChange = useCallback((newSorting: SortingState) => {
@@ -208,13 +237,20 @@ export default function CategoriesPage() {
   }, []);
 
   // Column filters handler
-  const handleColumnFiltersChange = useCallback((filters: ColumnFiltersState) => {
-    setColumnFilters(filters);
-    // Reset to first page when filters change
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, []);
+  const handleColumnFiltersChange = useCallback(
+    (filters: ColumnFiltersState) => {
+      setColumnFilters(filters);
+      // Reset to first page when filters change
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    },
+    [],
+  );
 
-  const isFormLoading = createCategoryMutation.isPending || updateCategoryMutation.isPending || isLoadingIndividualCategory || isFetchingIndividualCategory;
+  const isFormLoading =
+    createCategoryMutation.isPending ||
+    updateCategoryMutation.isPending ||
+    isLoadingIndividualCategory ||
+    isFetchingIndividualCategory;
 
   return (
     <Layout>
@@ -224,11 +260,9 @@ export default function CategoriesPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Tag className="h-6 w-6" />
-              <span>{t('categories.title')}</span>
+              <span>{t("categories.title")}</span>
             </h2>
-            <p className="text-muted-foreground">
-              {t('categories.subtitle')}
-            </p>
+            <p className="text-muted-foreground">{t("categories.subtitle")}</p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Status filter button */}
@@ -240,20 +274,22 @@ export default function CategoriesPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active"
-                ); 
+                      : "active",
+                );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active" ? t('categories.active') :
-                statusFilter === "inactive" ? t('categories.inactive') :
-                  t('categories.allStatus')}
+              {statusFilter === "active"
+                ? t("categories.active")
+                : statusFilter === "inactive"
+                  ? t("categories.inactive")
+                  : t("categories.allStatus")}
             </Button>
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t('categories.addNewCategory')}
+              {t("categories.addNewCategory")}
             </Button>
           </div>
         </div>
@@ -263,7 +299,9 @@ export default function CategoriesPage() {
           <CardContent className="p-6">
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
-                <p>{t('categories.errorLoading')}: {error.message}</p>
+                <p>
+                  {t("categories.errorLoading")}: {error.message}
+                </p>
               </div>
             ) : (
               <TanStackTable
@@ -272,7 +310,7 @@ export default function CategoriesPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t('categories.searchPlaceholder')}
+                searchPlaceholder={t("categories.searchPlaceholder")}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -286,7 +324,7 @@ export default function CategoriesPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t('categories.noDataFound')}
+                emptyMessage={t("categories.noDataFound")}
                 enableMultiSort={false}
               />
             )}
@@ -297,14 +335,24 @@ export default function CategoriesPage() {
         <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
-          title={editingCategory ? t('categories.form.editTitle') : t('categories.form.createTitle')}
-          description={editingCategory ? t('categories.form.editDescription') : t('categories.form.createDescription')}
+          title={
+            editingCategory
+              ? t("categories.form.editTitle")
+              : t("categories.form.createTitle")
+          }
+          description={
+            editingCategory
+              ? t("categories.form.editDescription")
+              : t("categories.form.createDescription")
+          }
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           size="xl"
           submitButtonText={
-            editingCategory ? t('categories.form.updateButton') : t('categories.form.createButton')
+            editingCategory
+              ? t("categories.form.updateButton")
+              : t("categories.form.createButton")
           }
         >
           <CategoryFormContent form={form} />

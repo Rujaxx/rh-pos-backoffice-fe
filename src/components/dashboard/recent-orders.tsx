@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ShoppingCart } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart } from "lucide-react";
 
 export function RecentOrders() {
   const orders = [
@@ -46,22 +46,22 @@ export function RecentOrders() {
       status: "completed",
       time: "25 min ago",
     },
-  ]
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "processing":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
       case "shipped":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
-  }
+  };
 
   return (
     <Card className="bg-white dark:bg-gray-800">
@@ -70,7 +70,9 @@ export function RecentOrders() {
           <ShoppingCart className="mr-2 h-5 w-5" />
           Recent Orders
         </CardTitle>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Latest orders from all channels</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Latest orders from all channels
+        </p>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -81,12 +83,20 @@ export function RecentOrders() {
             >
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-gray-900 dark:text-white">{order.id}</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">{order.amount}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">
+                    {order.id}
+                  </span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {order.amount}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-300">{order.customer}</span>
-                  <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    {order.customer}
+                  </span>
+                  <Badge className={getStatusColor(order.status)}>
+                    {order.status}
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                   <span>{order.channel}</span>
@@ -101,5 +111,5 @@ export function RecentOrders() {
         </button>
       </CardContent>
     </Card>
-  )
+  );
 }

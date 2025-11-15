@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,7 +10,7 @@ import {
   SortingState,
   ColumnFiltersState,
   OnChangeFn,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -18,18 +18,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
 import {
   ChevronDown,
   ChevronUp,
@@ -41,10 +41,10 @@ import {
   ArrowUpDown,
   Filter,
   X,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Column } from '@tanstack/react-table';
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Column } from "@tanstack/react-table";
 
 // DataTableColumnHeader component for sortable columns
 interface DataTableColumnHeaderProps<TData, TValue> {
@@ -59,21 +59,21 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn('font-medium', className)}>{title}</div>;
+    return <div className={cn("font-medium", className)}>{title}</div>;
   }
 
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn("flex items-center space-x-2", className)}>
       <Button
         variant="ghost"
         size="sm"
         className="-ml-3 h-8 data-[state=open]:bg-accent"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         <span className="font-medium">{title}</span>
-        {column.getIsSorted() === 'desc' ? (
+        {column.getIsSorted() === "desc" ? (
           <ChevronDown className="ml-2 h-4 w-4" />
-        ) : column.getIsSorted() === 'asc' ? (
+        ) : column.getIsSorted() === "asc" ? (
           <ChevronUp className="ml-2 h-4 w-4" />
         ) : (
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -116,8 +116,8 @@ export function TanStackTable<T>({
   columns,
   totalCount = 0,
   isLoading = false,
-  searchValue = '',
-  searchPlaceholder = 'Search...',
+  searchValue = "",
+  searchPlaceholder = "Search...",
   onSearchChange,
   onPaginationChange,
   onSortingChange,
@@ -139,47 +139,52 @@ export function TanStackTable<T>({
 }: TanStackTableProps<T>) {
   const { t } = useTranslation();
   const [localSearchValue, setLocalSearchValue] = useState(searchValue);
-  
+
   // Update local search when external search changes
   useEffect(() => {
     setLocalSearchValue(searchValue);
   }, [searchValue]);
 
   // Wrap callbacks to handle updater functions
-  const handlePaginationChange: OnChangeFn<PaginationState> | undefined = onPaginationChange
-    ? (updaterOrValue) => {
-        const newValue =
-          typeof updaterOrValue === 'function'
-            ? updaterOrValue(pagination)
-            : updaterOrValue;
-        onPaginationChange(newValue);
-      }
-    : undefined;
+  const handlePaginationChange: OnChangeFn<PaginationState> | undefined =
+    onPaginationChange
+      ? (updaterOrValue) => {
+          const newValue =
+            typeof updaterOrValue === "function"
+              ? updaterOrValue(pagination)
+              : updaterOrValue;
+          onPaginationChange(newValue);
+        }
+      : undefined;
 
-  const handleSortingChange: OnChangeFn<SortingState> | undefined = onSortingChange
-    ? (updaterOrValue) => {
-        const newValue =
-          typeof updaterOrValue === 'function'
-            ? updaterOrValue(sorting)
-            : updaterOrValue;
-        onSortingChange(newValue);
-      }
-    : undefined;
+  const handleSortingChange: OnChangeFn<SortingState> | undefined =
+    onSortingChange
+      ? (updaterOrValue) => {
+          const newValue =
+            typeof updaterOrValue === "function"
+              ? updaterOrValue(sorting)
+              : updaterOrValue;
+          onSortingChange(newValue);
+        }
+      : undefined;
 
-  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> | undefined = onColumnFiltersChange
-    ? (updaterOrValue) => {
-        const newValue =
-          typeof updaterOrValue === 'function'
-            ? updaterOrValue(columnFilters)
-            : updaterOrValue;
-        onColumnFiltersChange(newValue);
-      }
-    : undefined;
+  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> | undefined =
+    onColumnFiltersChange
+      ? (updaterOrValue) => {
+          const newValue =
+            typeof updaterOrValue === "function"
+              ? updaterOrValue(columnFilters)
+              : updaterOrValue;
+          onColumnFiltersChange(newValue);
+        }
+      : undefined;
 
-  const handleRowSelectionChange: OnChangeFn<Record<string, boolean>> | undefined = onRowSelectionChange
+  const handleRowSelectionChange:
+    | OnChangeFn<Record<string, boolean>>
+    | undefined = onRowSelectionChange
     ? (updaterOrValue) => {
         const newValue =
-          typeof updaterOrValue === 'function'
+          typeof updaterOrValue === "function"
             ? updaterOrValue(rowSelection)
             : updaterOrValue;
         onRowSelectionChange(newValue);
@@ -193,7 +198,10 @@ export function TanStackTable<T>({
     manualPagination,
     manualSorting,
     manualFiltering,
-    pageCount: pageCount === -1 ? Math.ceil(totalCount / pagination.pageSize) : pageCount,
+    pageCount:
+      pageCount === -1
+        ? Math.ceil(totalCount / pagination.pageSize)
+        : pageCount,
     state: {
       pagination,
       sorting,
@@ -222,17 +230,20 @@ export function TanStackTable<T>({
   }, [onSearchChange, localSearchValue, searchValue]);
 
   // Handle Enter key press in search input
-  const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      triggerSearch();
-    }
-  }, [triggerSearch]);
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        triggerSearch();
+      }
+    },
+    [triggerSearch],
+  );
 
   // Clear search
   const clearSearch = useCallback(() => {
-    setLocalSearchValue('');
+    setLocalSearchValue("");
     if (onSearchChange) {
-      onSearchChange('');
+      onSearchChange("");
     }
   }, [onSearchChange]);
 
@@ -256,7 +267,10 @@ export function TanStackTable<T>({
         <div className="rounded-md border">
           <div className="h-12 bg-muted/50 border-b animate-pulse"></div>
           {Array.from({ length: pagination.pageSize }).map((_, index) => (
-            <div key={index} className="h-16 border-b bg-background animate-pulse"></div>
+            <div
+              key={index}
+              className="h-16 border-b bg-background animate-pulse"
+            ></div>
           ))}
         </div>
 
@@ -311,13 +325,19 @@ export function TanStackTable<T>({
               Search
             </Button>
           </div>
-          
+
           {/* Active Filters Display */}
           {columnFilters.length > 0 && (
             <div className="flex items-center space-x-2">
-              <Badge variant="secondary" className="flex items-center space-x-1">
+              <Badge
+                variant="secondary"
+                className="flex items-center space-x-1"
+              >
                 <Filter className="h-3 w-3" />
-                <span>{columnFilters.length} filter{columnFilters.length > 1 ? 's' : ''}</span>
+                <span>
+                  {columnFilters.length} filter
+                  {columnFilters.length > 1 ? "s" : ""}
+                </span>
               </Badge>
             </div>
           )}
@@ -335,23 +355,28 @@ export function TanStackTable<T>({
                     key={header.id}
                     className={cn(
                       "font-medium",
-                      header.column.getCanSort() && "cursor-pointer hover:bg-muted/50"
+                      header.column.getCanSort() &&
+                        "cursor-pointer hover:bg-muted/50",
                     )}
                     style={{
-                      width: header.getSize() !== 150 ? header.getSize() : undefined,
+                      width:
+                        header.getSize() !== 150 ? header.getSize() : undefined,
                     }}
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center space-x-2">
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                       {header.column.getCanSort() && (
                         <div className="flex flex-col">
-                          {header.column.getIsSorted() === 'asc' && (
+                          {header.column.getIsSorted() === "asc" && (
                             <ChevronUp className="h-4 w-4" />
                           )}
-                          {header.column.getIsSorted() === 'desc' && (
+                          {header.column.getIsSorted() === "desc" && (
                             <ChevronDown className="h-4 w-4" />
                           )}
                           {!header.column.getIsSorted() && (
@@ -375,7 +400,10 @@ export function TanStackTable<T>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-2">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -386,7 +414,7 @@ export function TanStackTable<T>({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  {emptyMessage || t('table.noData')}
+                  {emptyMessage || t("table.noData")}
                 </TableCell>
               </TableRow>
             )}
@@ -400,14 +428,10 @@ export function TanStackTable<T>({
           <div className="flex items-center space-x-2">
             {showPageSizeSelector && (
               <div className="flex items-center space-x-2">
-                <p className="text-sm text-muted-foreground">
-                  Rows per page:
-                </p>
+                <p className="text-sm text-muted-foreground">Rows per page:</p>
                 <Select
                   value={pagination.pageSize.toString()}
-                  onValueChange={(value) =>
-                    table.setPageSize(parseInt(value))
-                  }
+                  onValueChange={(value) => table.setPageSize(parseInt(value))}
                 >
                   <SelectTrigger className="h-8 w-[70px]">
                     <SelectValue />
@@ -443,7 +467,7 @@ export function TanStackTable<T>({
             </Button>
             <div className="flex items-center gap-1">
               <p className="text-sm font-medium">
-                {t('table.page')} {pagination.pageIndex + 1} {t('table.of')}{' '}
+                {t("table.page")} {pagination.pageIndex + 1} {t("table.of")}{" "}
                 {table.getPageCount()}
               </p>
             </div>

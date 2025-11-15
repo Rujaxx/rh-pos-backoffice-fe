@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { multilingualTextSchema } from './common/common.validation';
+import { z } from "zod";
+import { multilingualTextSchema } from "./common/common.validation";
 
 // Role validation schema
 export const roleSchema = z.object({
@@ -7,12 +7,12 @@ export const roleSchema = z.object({
   name: multilingualTextSchema,
   permissions: z
     .array(z.string())
-    .min(1, 'At least one permission must be selected')
+    .min(1, "At least one permission must be selected")
     .refine(
       (permissions) => permissions.length > 0,
-      'At least one permission is required'
+      "At least one permission is required",
     ),
-  isActive: z.boolean(),
+  brandId: z.string().min(1, "Brand is required"),
 });
 
 // Type inference for the form data
@@ -29,34 +29,34 @@ export const updateRoleSchema = roleSchema.extend({
 // Available permissions list (matches the permission categories from user-permissions-modal)
 export const AVAILABLE_PERMISSIONS = [
   // System Access
-  'read',
-  'write',
-  'delete',
+  "read",
+  "write",
+  "delete",
 
   // User Management
-  'manageUsers',
-  'manageRoles',
+  "manageUsers",
+  "manageRoles",
 
   // Order Management
-  'viewOrders',
-  'processOrders',
-  'voidOrders',
+  "viewOrders",
+  "processOrders",
+  "voidOrders",
 
   // Menu Management
-  'viewMenu',
-  'editMenu',
+  "viewMenu",
+  "editMenu",
 
   // Financial Access
-  'viewReports',
-  'managePayments',
+  "viewReports",
+  "managePayments",
 ] as const;
 
 // Permission validation
 export const validatePermissions = (permissions: string[]): boolean => {
   return permissions.every((permission) =>
     AVAILABLE_PERMISSIONS.includes(
-      permission as (typeof AVAILABLE_PERMISSIONS)[number]
-    )
+      permission as (typeof AVAILABLE_PERMISSIONS)[number],
+    ),
   );
 };
 
