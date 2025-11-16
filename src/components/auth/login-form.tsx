@@ -25,6 +25,7 @@ import { useIsAuthenticated } from "@/stores/auth.store";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { LoginFormData } from "@/lib/validations/auth.validation";
 import { User, Lock } from "lucide-react";
+import { ThemeToggle } from "../common/theme-toggle";
 
 export function LoginForm() {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ export function LoginForm() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const rememberedUsername = localStorage.getItem(
-        "rh-pos-remember-username",
+        "rh-pos-remember-username"
       );
       if (rememberedUsername) {
         form.setValue("username", rememberedUsername);
@@ -69,7 +70,7 @@ export function LoginForm() {
           if (typeof window !== "undefined") {
             localStorage.setItem(
               "rh-pos-remember-username",
-              credentials.username,
+              credentials.username
             );
           }
         } else {
@@ -98,12 +99,17 @@ export function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen flex items-center justify-center p-4 from-slate-50 to-slate-100">
       <div className="w-full max-w-md space-y-6">
         {/* Header with Logo and Language Switcher */}
         <div className="flex justify-between items-center px-2">
-          <Logo />
-          <LanguageSwitcher />
+          <div className="flex items-center justify-center">
+            <Logo />
+          </div>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Main Form */}
