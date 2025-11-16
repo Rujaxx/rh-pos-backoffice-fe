@@ -260,7 +260,7 @@ export function LoginForm() {
             {/* Forgot Password Link */}
             <div className="text-center">
               <Link
-                href="/auth/forgot"
+                href="/forgot"
                 className="text-sm text-primary hover:text-primary/80 font-medium"
               >
                 {t("auth.login.forgotPassword")}
@@ -280,19 +280,6 @@ export function LoginForm() {
             </Button>
           </form>
         </Form>
-
-        {/* Sign up link */}
-        <div className="text-center">
-          <span className="text-sm text-muted-foreground">
-            {t("auth.login.noAccount")}{" "}
-          </span>
-          <Link
-            href="/auth/register"
-            className="text-sm text-primary hover:text-primary/80 font-medium"
-          >
-            {t("auth.login.signUpLink")}
-          </Link>
-        </div>
       </div>
     </div>
   );
