@@ -20,7 +20,7 @@ import { TanStackTable } from "@/components/ui/tanstack-table";
 import Layout from "@/components/common/layout";
 import { Plus, UtensilsCrossed } from "lucide-react";
 import { Table, TableQueryParams } from "@/types/table";
-import { TableFormData, tableSchema } from "@/lib/validations/table.validation";
+import { TableFormData } from "@/lib/validations/table.validation";
 import { useTables, useTable } from "@/services/api/tables/tables.queries";
 import {
   useCreateTable,
@@ -150,7 +150,7 @@ export default function TablesPage() {
         }),
         confirmButtonText: t("table.deleteTableButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -200,7 +200,7 @@ export default function TablesPage() {
         console.error("Failed to save table:", error);
       }
     },
-    [latestTableData, updateTableMutation, createTableMutation, closeModal],
+    [latestTableData, updateTableMutation, createTableMutation, closeModal]
   );
 
   // Search handler with proper typing
@@ -215,7 +215,7 @@ export default function TablesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   // Sorting handler
@@ -232,7 +232,7 @@ export default function TablesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
