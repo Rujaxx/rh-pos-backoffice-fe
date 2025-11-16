@@ -35,16 +35,39 @@ import { useI18n } from "@/providers/i18n-provider";
 import { useSidebar } from "@/providers/sidebar-provider";
 import { useBrands } from "@/services/api/brands/brands.queries";
 import { Brand } from "@/types/brand.type";
+import { useLogout } from "@/services/api/auth/auth.mutations";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/auth.store";
+import { toast } from "sonner";
 
 export default function TopNav() {
   const { t } = useTranslation();
   const { locale } = useI18n();
+  const router = useRouter();
+  const { user } = useAuthStore();
+
   const { toggleMenuState, isMobileMenuOpen, setIsMobileMenuOpen } =
     useSidebar();
   const [selectedBrand, setSelectedBrand] = useState("all-brands");
   const [selectedRestaurant, setSelectedRestaurant] =
     useState("all-restaurants");
 
+  const { mutate: logout } = useLogout();
+
+  const onClickLogOut = () => {
+    logout(
+      { sessionId: user?.sessionId as string },
+      {
+        onSuccess: () => {
+          toast.success(t("auth.logout.success") || "Logout successful");
+          router.push("/");
+        },
+        onError: () => {
+          toast.error(t("auth.logout.error") || "Logout failed");
+        },
+      }
+    );
+  };
   // Fetch brands from API
   const { data: brandsResponse, isLoading: isBrandsLoading } = useBrands({
     limit: 100,
@@ -105,7 +128,7 @@ export default function TopNav() {
     selectedBrand === "all-brands"
       ? restaurants
       : restaurants.filter(
-          (r) => r.brandId === selectedBrand || r.id === "all-restaurants",
+          (r) => r.brandId === selectedBrand || r.id === "all-restaurants"
         );
 
   // Helper function to get localized name for brands
@@ -267,7 +290,12 @@ export default function TopNav() {
               {t("navigation.settings")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem
+              onClick={() => {
+                onClickLogOut();
+              }}
+              className="text-red-600"
+            >
               {t("dashboard.signOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
