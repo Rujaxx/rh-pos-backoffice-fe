@@ -269,10 +269,10 @@ export default function TopNav() {
                 className={`hidden lg:flex flex-col ${isRTL ? "items-end" : "items-start"}`}
               >
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
-                  John Doe
+                  {user?.name}
                 </span>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {t("dashboard.administrator")}
+                  {user?.role.name[locale]}
                 </span>
               </div>
               <ChevronDown className="hidden lg:block h-4 w-4 text-gray-500" />
