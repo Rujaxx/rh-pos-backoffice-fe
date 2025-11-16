@@ -1042,5 +1042,10 @@
   "users.update.success": "User updated successfully!",
   "users.update.error": "Failed to update user",
   "users.updateUser": "Update User",
-  "common.filter.all": "All"
+  "common.filter.all": "All",
+
+  "auth.logout.success": "Logout Successfully",
+  "auth.logout.error": "Failed to logout",
+  "auth.login.success": "Login Successfully",
+  "auth.login.error": "Failed to login"
 }

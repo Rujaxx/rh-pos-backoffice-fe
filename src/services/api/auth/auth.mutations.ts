@@ -18,7 +18,7 @@ export const useLogin = (
     SuccessResponse<AuthUser>,
     Error,
     LoginCredentials
-  >,
+  >
 ) => {
   const { login } = useAuthStore();
 
@@ -26,7 +26,7 @@ export const useLogin = (
     mutationFn: async (credentials): Promise<SuccessResponse<AuthUser>> => {
       return api.post<SuccessResponse<AuthUser>>(
         API_ENDPOINTS.AUTH.LOGIN,
-        credentials,
+        credentials
       );
     },
 
@@ -42,27 +42,31 @@ export const useLogin = (
 
 // Logout mutation
 export const useLogout = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, void>,
+  options?: UseMutationOptions<
+    SuccessResponse<void>,
+    Error,
+    { sessionId: string }
+  >
 ) => {
   const { logout, accessToken } = useAuthStore();
 
   return useMutation({
-    mutationFn: async (): MutationResponse<void> => {
+    mutationFn: async ({ sessionId }): MutationResponse<void> => {
       if (accessToken) {
-        return api.post(API_ENDPOINTS.AUTH.LOGOUT);
+        return api.post(API_ENDPOINTS.AUTH.LOGOUT, { sessionId });
       }
-      return Promise.resolve({
+
+      return {
         success: true,
         statusCode: 200,
         message: "Logged out successfully",
         timestamp: new Date().toISOString(),
         path: "",
         data: undefined,
-      });
+      };
     },
 
     onSettled: () => {
-      // Always logout from store, regardless of API call success
       logout();
     },
 
@@ -72,7 +76,7 @@ export const useLogout = (
 
 // Refresh token mutation
 export const useRefreshToken = (
-  options?: UseMutationOptions<SuccessResponse<AuthUser>, Error, void>,
+  options?: UseMutationOptions<SuccessResponse<AuthUser>, Error, void>
 ) => {
   const { refreshToken, setTokens, logout } = useAuthStore();
 
@@ -101,7 +105,7 @@ export const useRefreshToken = (
 
 // Update profile mutation
 export const useUpdateProfile = (
-  options?: UseMutationOptions<SuccessResponse<User>, Error, Partial<User>>,
+  options?: UseMutationOptions<SuccessResponse<User>, Error, Partial<User>>
 ) => {
   const { updateUser, user } = useAuthStore();
   const queryUtils = useQueryUtils();
@@ -132,7 +136,7 @@ export const useChangePassword = (
     SuccessResponse<void>,
     Error,
     { currentPassword: string; newPassword: string }
-  >,
+  >
 ) => {
   return useMutation({
     mutationFn: async (data: {

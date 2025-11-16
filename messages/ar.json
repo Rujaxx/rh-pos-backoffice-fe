@@ -1030,5 +1030,10 @@
   "users.allStatus": "جميع الحالات",
   "users.table.actions": "الإجراءات",
   "users.updateUser": "تحديث المستخدم",
-  "common.filter.all": "الكل"
+  "common.filter.all": "الكل",
+
+  "auth.logout.success": "تم تسجيل الخروج بنجاح",
+  "auth.logout.error": "فشل في تسجيل الخروج",
+  "auth.login.success": "تم تسجيل الدخول بنجاح",
+  "auth.login.error": "فشل في تسجيل الدخول"
 }
