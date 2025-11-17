@@ -3,7 +3,7 @@
  * Defines authentication-related types and interfaces
  */
 
-import { User } from '../user/user.type';
+import { User } from "../user/user.type";
 
 // Authentication tokens
 export interface AuthTokens {

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { UseFormReturn, SubmitHandler } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { UseFormReturn, SubmitHandler } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,11 +10,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
-import { Save, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useTranslation } from '@/hooks/useTranslation';
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { Save, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export interface CrudModalProps<
   TFormData extends Record<string, unknown> = Record<string, unknown>,
@@ -36,7 +36,7 @@ export interface CrudModalProps<
   children: React.ReactNode;
 
   // Customization
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: "sm" | "md" | "lg" | "ml" | "xl" | "full";
   className?: string;
 
   // Action buttons
@@ -50,11 +50,12 @@ export interface CrudModalProps<
 }
 
 const sizeClasses = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
-  full: 'max-w-[95vw] w-full',
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  ml: "max-w-4xl",
+  xl: "max-w-6xl",
+  full: "max-w-[95vw] w-full",
 };
 
 export function CrudModal<
@@ -68,7 +69,7 @@ export function CrudModal<
   onSubmit,
   loading = false,
   children,
-  size = 'lg',
+  size = "lg",
   className,
   submitButtonText,
   cancelButtonText,
@@ -83,7 +84,7 @@ export function CrudModal<
       onClose();
     } catch (error) {
       // Error handling is done in the parent component
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
     }
   };
 
@@ -99,7 +100,7 @@ export function CrudModal<
     if (submitButtonText) return submitButtonText;
     const formValues = form.getValues() as Record<string, unknown>;
     const hasId = formValues?._id || formValues?.id;
-    return hasId ? t('common.update') : t('common.create');
+    return hasId ? t("common.update") : t("common.create");
   };
 
   return (
@@ -107,9 +108,10 @@ export function CrudModal<
       <DialogContent
         className={cn(
           sizeClasses[size],
-          'max-h-[90vh] overflow-y-auto',
-          className
-        )}>
+          "max-h-[90vh] overflow-y-auto",
+          className,
+        )}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
@@ -118,7 +120,8 @@ export function CrudModal<
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6">
+            className="space-y-6"
+          >
             <div className="space-y-4">{children}</div>
 
             {footer || (
@@ -128,9 +131,10 @@ export function CrudModal<
                     type="button"
                     variant="outline"
                     onClick={handleClose}
-                    disabled={loading}>
+                    disabled={loading}
+                  >
                     <X className="w-4 h-4 mr-2" />
-                    {cancelButtonText || t('common.cancel')}
+                    {cancelButtonText || t("common.cancel")}
                   </Button>
                 )}
                 {showSubmitButton && (
@@ -138,7 +142,7 @@ export function CrudModal<
                     {loading ? (
                       <div className="flex items-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                        {t('common.saving')}
+                        {t("common.saving")}
                       </div>
                     ) : (
                       <>
@@ -168,7 +172,7 @@ interface ConfirmationModalProps {
   loading?: boolean;
   confirmButtonText?: string;
   cancelButtonText?: string;
-  variant?: 'default' | 'destructive';
+  variant?: "default" | "destructive";
 }
 
 export function ConfirmationModal({
@@ -180,7 +184,7 @@ export function ConfirmationModal({
   loading = false,
   confirmButtonText,
   cancelButtonText,
-  variant = 'default',
+  variant = "default",
 }: ConfirmationModalProps) {
   const { t } = useTranslation();
   const handleConfirm = async () => {
@@ -188,7 +192,7 @@ export function ConfirmationModal({
       await onConfirm();
       onClose();
     } catch (error) {
-      console.error('Confirmation action error:', error);
+      console.error("Confirmation action error:", error);
     }
   };
 
@@ -205,21 +209,23 @@ export function ConfirmationModal({
             type="button"
             variant="outline"
             onClick={onClose}
-            disabled={loading}>
-            {cancelButtonText}
+            disabled={loading}
+          >
+            {cancelButtonText || t("common.cancel")}
           </Button>
           <Button
             type="button"
-            variant={variant === 'destructive' ? 'destructive' : 'default'}
+            variant={variant === "destructive" ? "destructive" : "default"}
             onClick={handleConfirm}
-            disabled={loading}>
+            disabled={loading}
+          >
             {loading ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                {t('common.processing')}
+                {t("common.processing")}
               </div>
             ) : (
-              confirmButtonText || t('common.confirm')
+              confirmButtonText || t("common.confirm")
             )}
           </Button>
         </DialogFooter>
@@ -261,10 +267,10 @@ export function useConfirmationModal() {
     title: string;
     description: string;
     confirmButtonText?: string;
-    variant?: 'default' | 'destructive';
+    variant?: "default" | "destructive";
   }>({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
   });
 
   const openConfirmationModal = (
@@ -273,8 +279,8 @@ export function useConfirmationModal() {
       title: string;
       description: string;
       confirmButtonText?: string;
-      variant?: 'default' | 'destructive';
-    }
+      variant?: "default" | "destructive";
+    },
   ) => {
     setOnConfirm(() => confirmAction);
     setConfig(modalConfig);
@@ -284,7 +290,7 @@ export function useConfirmationModal() {
   const closeConfirmationModal = () => {
     setIsOpen(false);
     setOnConfirm(null);
-    setConfig({ title: '', description: '' });
+    setConfig({ title: "", description: "" });
   };
 
   return {

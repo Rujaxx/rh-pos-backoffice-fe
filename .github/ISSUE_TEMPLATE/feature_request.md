@@ -1,9 +1,9 @@
 ---
 name: ✨ Feature Request
 about: Suggest a new feature for the RH POS system
-title: '[FEATURE] '
-labels: ['enhancement', 'needs triage']
-assignees: ''
+title: "[FEATURE] "
+labels: ["enhancement", "needs triage"]
+assignees: ""
 ---
 
 ## ✨ Feature Description
@@ -21,9 +21,10 @@ assignees: ''
 ## 📊 POS Context
 
 **Module/Area:**
+
 - [ ] Dashboard
 - [ ] Brands Management
-- [ ] Restaurant Management  
+- [ ] Restaurant Management
 - [ ] Order Management
 - [ ] Menu Management
 - [ ] Staff Management
@@ -33,9 +34,10 @@ assignees: ''
 - [ ] Authentication & Security
 - [ ] Mobile Experience
 - [ ] API/Integration
-- [ ] Other: _____
+- [ ] Other: **\_**
 
 **User Type:**
+
 - [ ] Administrator
 - [ ] Restaurant Manager
 - [ ] Staff/Cashier
@@ -54,23 +56,27 @@ assignees: ''
 ## 📱 User Experience
 
 **Expected User Flow:**
+
 1. User navigates to...
 2. User clicks/selects...
 3. System displays...
 4. User completes action...
 
 **Mockups/Wireframes:**
+
 <!-- Attach any mockups, wireframes, or design concepts -->
 
 ## 🔧 Technical Considerations
 
 **Complexity Estimate:**
+
 - [ ] Small (few hours)
-- [ ] Medium (1-2 days)  
+- [ ] Medium (1-2 days)
 - [ ] Large (1+ weeks)
 - [ ] Epic (multiple sprints)
 
 **Dependencies:**
+
 - [ ] Requires API changes
 - [ ] Requires database changes
 - [ ] Requires third-party integration
@@ -78,6 +84,7 @@ assignees: ''
 - [ ] No major dependencies
 
 **Performance Impact:**
+
 - [ ] May affect page load times
 - [ ] May require data optimization
 - [ ] May need caching strategy
@@ -95,7 +102,7 @@ assignees: ''
 - [ ] Task completion time improvement
 - [ ] Error rate reduction
 - [ ] User satisfaction scores
-- [ ] Other: _____
+- [ ] Other: **\_**
 
 ## 📋 Acceptance Criteria
 
@@ -119,12 +126,14 @@ assignees: ''
 ## 🚀 Priority
 
 **Business Impact:**
+
 - [ ] Critical - Blocking business operations
 - [ ] High - Significantly improves efficiency
 - [ ] Medium - Nice to have improvement
 - [ ] Low - Minor enhancement
 
 **Urgency:**
+
 - [ ] Immediate (this week)
 - [ ] Soon (next sprint)
 - [ ] Eventually (future release)

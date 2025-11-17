@@ -1,88 +1,97 @@
-import { z } from 'zod';
-import { addressSchema, multilingualTextSchema } from './common/common.validation';
+import { z } from "zod";
+import {
+  addressSchema,
+  multilingualTextSchema,
+  validateFormData,
+  safeValidateFormData,
+  validateFormSubmission,
+  formatValidationErrors,
+  getNestedFieldError,
+} from "./common/common.validation";
 
-export interface SendReportsSettings {
-  email: boolean;
-  whatsapp: boolean;
-  sms: boolean;
-}
-
-export interface PaymentLinkSettings {
-  onWhatsapp: boolean;
-  onSms: boolean;
-}
-
-export interface EBillSettings {
-  onEmail: boolean;
-  onWhatsapp: boolean;
-  onSms: boolean;
-}
+// Validation schemas for restaurant settings
 
 export const eBillSettingsSchema = z.object({
-  onEmail: z.boolean(),
-  onWhatsapp: z.boolean(),
-  onSms: z.boolean(),
+  onEmail: z.boolean().default(false),
+  onWhatsapp: z.boolean().default(false),
+  onSms: z.boolean().default(false),
 });
 
 export const paymentLinkSettingsSchema = z.object({
-  onWhatsapp: z.boolean(),
-  onSms: z.boolean(),
+  onWhatsapp: z.boolean().default(false),
+  onSms: z.boolean().default(false),
 });
 
 export const sendReportsSchema = z.object({
-  email: z.boolean(),
-  whatsapp: z.boolean(),
-  sms: z.boolean(),
+  email: z.boolean().default(false),
+  whatsapp: z.boolean().default(false),
+  sms: z.boolean().default(false),
 });
 
+// Restaurant validation schema matching backend CreateRestaurantDto
 export const restaurantSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
-  description: multilingualTextSchema,
-  brandId: z.string().min(1, 'Brand is required'),
-  isActive: z.boolean(),
-  address: addressSchema,
-  logo: z.string().min(0),
-  timezone: z.string().min(1, 'Timezone is required'),
+  description: multilingualTextSchema.optional(),
+  brandId: z.string().min(1, "Brand is required"),
+  logo: z.string().optional(),
+  address: addressSchema.optional(),
+  timezone: z.string().min(1, "Timezone is required"),
+
   startDayTime: z
-    .string()
-    .min(1, 'Start day time is required')
-    .refine((val) => /^\d+$/.test(val), {
-      message: 'Start day time must be a valid number',
-    })
-    .refine((val) => Number(val) >= 0 && Number(val) <= 23, {
-      message: 'Start day time must be between 0-23',
-    }),
+    .number()
+    .min(0, "Start day time must be between 0 and 1439 minutes")
+    .max(1439, "Start day time must be between 0 and 1439 minutes"),
 
   endDayTime: z
-    .string()
-    .min(1, 'End day time is required')
-    .refine((val) => /^\d+$/.test(val), {
-      message: 'End day time must be a valid number',
-    })
-    .refine((val) => Number(val) >= 0 && Number(val) <= 23, {
-      message: 'End day time must be between 0-23',
-    }),
-  nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
-  nextResetBillDate: z.string().min(0),
-  notificationPhone: z.array(z.string()),
-  notificationEmails: z.array(z.string().email('Invalid email format')),
-  restoCode: z.string().min(0),
-  posLogoutOnClose: z.boolean(),
-  isFeedBackActive: z.boolean(),
-  trnOrGstNo: z.string().min(0),
-  customQRcode: z.array(z.string()),
-  deductFromInventory: z.boolean(),
-  multiplePriceSetting: z.boolean(),
-  tableReservation: z.boolean(),
-  autoUpdatePos: z.boolean(),
-  sendReports: sendReportsSchema,
-  allowMultipleTax: z.boolean(),
-  generateOrderTypeWiseOrderNo: z.boolean(),
-  smsAndWhatsappSelection: z.enum(['sms', 'whatsapp', 'both', 'none']),
-  whatsAppChannel: z.string().min(0),
-  paymentLinkSettings: paymentLinkSettingsSchema,
-  eBillSettings: eBillSettingsSchema,
+    .number()
+    .min(0, "End day time must be between 0 and 1439 minutes")
+    .max(1439, "End day time must be between 0 and 1439 minutes"),
+
+  nextResetBillFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  notificationPhone: z.array(z.string()).default([]),
+  notificationEmails: z
+    .array(z.string().email("Invalid email format"))
+    .default([]),
+  isActive: z.boolean().default(true),
+  restoCode: z.string().max(50).optional(),
+  posLogoutOnClose: z.boolean().default(true),
+  isFeedBackActive: z.boolean().default(false),
+  trnOrGstNo: z.string().max(50).optional(),
+  customQRcode: z.array(z.string()).default([]),
+  inventoryWarehouse: z.string().optional(),
+  deductFromInventory: z.boolean().default(true),
+  multiplePriceSetting: z.boolean().default(false),
+  tableReservation: z.boolean().default(false),
+  autoUpdatePos: z.boolean().default(true),
+  allowMultipleTax: z.boolean().default(false),
+  generateOrderTypeWiseOrderNo: z.boolean().default(false),
+  smsAndWhatsappSelection: z
+    .enum(["none", "sms", "whatsapp", "both"])
+    .default("none"),
+  whatsAppChannel: z.string().optional(),
+  sendReports: sendReportsSchema.default({
+    email: false,
+    whatsapp: false,
+    sms: false,
+  }),
+  paymentLinkSettings: paymentLinkSettingsSchema.default({
+    onWhatsapp: false,
+    onSms: false,
+  }),
+  eBillSettings: eBillSettingsSchema.default({
+    onEmail: false,
+    onWhatsapp: false,
+    onSms: false,
+  }),
 });
 
-export type RestaurantFormData = z.infer<typeof restaurantSchema>;
+export type RestaurantFormData = z.input<typeof restaurantSchema>;
+
+export {
+  validateFormData,
+  safeValidateFormData,
+  validateFormSubmission,
+  formatValidationErrors,
+  getNestedFieldError,
+};
