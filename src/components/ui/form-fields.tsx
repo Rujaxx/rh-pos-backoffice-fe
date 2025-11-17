@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import React from "react"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import React from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { MultilingualText } from "@/types/common/common.type"
-import { Languages, Globe } from "lucide-react"
-import { useI18n } from "@/providers/i18n-provider"
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { MultilingualText } from "@/types/common/common.type";
+import { Languages, Globe } from "lucide-react";
+import { useI18n } from "@/providers/i18n-provider";
 
 interface FormFieldProps {
-  label: string
-  required?: boolean
-  error?: string
-  children: React.ReactNode
-  className?: string
+  label: string;
+  required?: boolean;
+  error?: string;
+  children: React.ReactNode;
+  className?: string;
 }
 
-export function FormField({ 
-  label, 
-  required = false, 
-  error, 
-  children, 
-  className 
+export function FormField({
+  label,
+  required = false,
+  error,
+  children,
+  className,
 }: FormFieldProps) {
   return (
     <div className={cn("space-y-2", className)}>
@@ -41,22 +41,20 @@ export function FormField({
         {required && <span className="text-destructive ml-1">*</span>}
       </Label>
       {children}
-      {error && (
-        <p className="text-sm text-destructive">{error}</p>
-      )}
+      {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
-  )
+  );
 }
 
 interface MultilingualInputProps {
-  label: string
-  value: MultilingualText
-  onChange: (value: MultilingualText) => void
-  required?: boolean
-  error?: string
-  placeholder?: { [key: string]: string }
-  type?: "input" | "textarea"
-  languages?: Array<{ code: string; name: string }>
+  label: string;
+  value: MultilingualText;
+  onChange: (value: MultilingualText) => void;
+  required?: boolean;
+  error?: string;
+  placeholder?: { [key: string]: string };
+  type?: "input" | "textarea";
+  languages?: Array<{ code: string; name: string }>;
 }
 
 export function MultilingualInput({
@@ -69,17 +67,17 @@ export function MultilingualInput({
   type = "input",
   languages = [
     { code: "en", name: "English" },
-    { code: "ar", name: "Arabic" }
-  ]
+    { code: "ar", name: "Arabic" },
+  ],
 }: MultilingualInputProps) {
   const handleChange = (langCode: string, newValue: string) => {
     onChange({
       ...value,
-      [langCode]: newValue
-    })
-  }
+      [langCode]: newValue,
+    });
+  };
 
-  const Component = type === "textarea" ? Textarea : Input
+  const Component = type === "textarea" ? Textarea : Input;
 
   return (
     <FormField label={label} required={required} error={error}>
@@ -100,30 +98,35 @@ export function MultilingualInput({
                 <Globe className="h-3 w-3 text-muted-foreground" />
               </div>
               <Component
-              // TODO: cross check
-                value={(value as unknown as Record<string, string>)[lang.code] || ""}
+                // TODO: cross check
+                value={
+                  (value as unknown as Record<string, string>)[lang.code] || ""
+                }
                 onChange={(e) => handleChange(lang.code, e.target.value)}
-                placeholder={placeholder[lang.code] || `Enter ${label.toLowerCase()} in ${lang.name}`}
+                placeholder={
+                  placeholder[lang.code] ||
+                  `Enter ${label.toLowerCase()} in ${lang.name}`
+                }
                 className="w-full"
-                dir={lang.code === 'ar' ? 'rtl' : 'ltr'}
+                dir={lang.code === "ar" ? "rtl" : "ltr"}
               />
             </div>
           ))}
         </CardContent>
       </Card>
     </FormField>
-  )
+  );
 }
 
 interface FormInputProps {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  required?: boolean
-  error?: string
-  placeholder?: string
-  type?: string
-  className?: string
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  error?: string;
+  placeholder?: string;
+  type?: string;
+  className?: string;
 }
 
 export function FormInput({
@@ -134,10 +137,15 @@ export function FormInput({
   error,
   placeholder,
   type = "text",
-  className
+  className,
 }: FormInputProps) {
   return (
-    <FormField label={label} required={required} error={error} className={className}>
+    <FormField
+      label={label}
+      required={required}
+      error={error}
+      className={className}
+    >
       <Input
         type={type}
         value={value}
@@ -146,18 +154,18 @@ export function FormInput({
         className="w-full"
       />
     </FormField>
-  )
+  );
 }
 
 interface FormTextareaProps {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  required?: boolean
-  error?: string
-  placeholder?: string
-  rows?: number
-  className?: string
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+  error?: string;
+  placeholder?: string;
+  rows?: number;
+  className?: string;
 }
 
 export function FormTextarea({
@@ -168,10 +176,15 @@ export function FormTextarea({
   error,
   placeholder,
   rows = 3,
-  className
+  className,
 }: FormTextareaProps) {
   return (
-    <FormField label={label} required={required} error={error} className={className}>
+    <FormField
+      label={label}
+      required={required}
+      error={error}
+      className={className}
+    >
       <Textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -180,18 +193,18 @@ export function FormTextarea({
         className="w-full resize-none"
       />
     </FormField>
-  )
+  );
 }
 
 interface FormSelectProps {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  options: Array<{ value: string; label: string }>
-  required?: boolean
-  error?: string
-  placeholder?: string
-  className?: string
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: Array<{ value: string; label: string }>;
+  required?: boolean;
+  error?: string;
+  placeholder?: string;
+  className?: string;
 }
 
 export function FormSelect({
@@ -202,10 +215,15 @@ export function FormSelect({
   required = false,
   error,
   placeholder = "Select an option",
-  className
+  className,
 }: FormSelectProps) {
   return (
-    <FormField label={label} required={required} error={error} className={className}>
+    <FormField
+      label={label}
+      required={required}
+      error={error}
+      className={className}
+    >
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder={placeholder} />
@@ -219,17 +237,17 @@ export function FormSelect({
         </SelectContent>
       </Select>
     </FormField>
-  )
+  );
 }
 
 interface FormSwitchProps {
-  label: string
-  value: boolean
-  onChange: (value: boolean) => void
-  description?: string
-  required?: boolean
-  error?: string
-  className?: string
+  label: string;
+  value: boolean;
+  onChange: (value: boolean) => void;
+  description?: string;
+  required?: boolean;
+  error?: string;
+  className?: string;
 }
 
 export function FormSwitch({
@@ -239,18 +257,25 @@ export function FormSwitch({
   description,
   required = false,
   error,
-  className
+  className,
 }: FormSwitchProps) {
-  const { locale } = useI18n()
-  const isRTL = locale === 'ar'
-  
+  const { locale } = useI18n();
+  const isRTL = locale === "ar";
+
   return (
-    <FormField label={label} required={required} error={error} className={className}>
-      <div className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}>
+    <FormField
+      label={label}
+      required={required}
+      error={error}
+      className={className}
+    >
+      <div
+        className={`flex items-center ${isRTL ? "space-x-reverse" : ""} space-x-2`}
+      >
         <Switch
           checked={value}
           onCheckedChange={onChange}
-          id={`switch-${label.toLowerCase().replace(/\s+/g, '-')}`}
+          id={`switch-${label.toLowerCase().replace(/\s+/g, "-")}`}
           rtl={isRTL}
         />
         {description && (
@@ -258,38 +283,45 @@ export function FormSwitch({
         )}
       </div>
     </FormField>
-  )
+  );
 }
 
 interface AddressFormProps {
   value: {
-    street?: string
-    city?: string
-    state?: string
-    country?: string
-    zipCode?: string
-    latitude?: number
-    longitude?: number
-  }
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+    latitude?: number;
+    longitude?: number;
+  };
   onChange: (value: {
-    street?: string
-    city?: string
-    state?: string
-    country?: string
-    zipCode?: string
-    latitude?: number
-    longitude?: number
-  }) => void
-  errors?: { [key: string]: string }
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+    latitude?: number;
+    longitude?: number;
+  }) => void;
+  errors?: { [key: string]: string };
 }
 
-export function AddressForm({ value, onChange, errors = {} }: AddressFormProps) {
-  const handleChange = (field: string, newValue: string | number | undefined) => {
+export function AddressForm({
+  value,
+  onChange,
+  errors = {},
+}: AddressFormProps) {
+  const handleChange = (
+    field: string,
+    newValue: string | number | undefined,
+  ) => {
     onChange({
       ...value,
-      [field]: newValue
-    })
-  }
+      [field]: newValue,
+    });
+  };
 
   return (
     <Card>
@@ -340,7 +372,9 @@ export function AddressForm({ value, onChange, errors = {} }: AddressFormProps) 
           <FormInput
             label="Latitude"
             value={value.latitude?.toString() || ""}
-            onChange={(val) => handleChange("latitude", val ? parseFloat(val) : undefined)}
+            onChange={(val) =>
+              handleChange("latitude", val ? parseFloat(val) : undefined)
+            }
             error={errors.latitude}
             placeholder="Enter latitude"
             type="number"
@@ -348,7 +382,9 @@ export function AddressForm({ value, onChange, errors = {} }: AddressFormProps) 
           <FormInput
             label="Longitude"
             value={value.longitude?.toString() || ""}
-            onChange={(val) => handleChange("longitude", val ? parseFloat(val) : undefined)}
+            onChange={(val) =>
+              handleChange("longitude", val ? parseFloat(val) : undefined)
+            }
             error={errors.longitude}
             placeholder="Enter longitude"
             type="number"
@@ -356,5 +392,5 @@ export function AddressForm({ value, onChange, errors = {} }: AddressFormProps) 
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

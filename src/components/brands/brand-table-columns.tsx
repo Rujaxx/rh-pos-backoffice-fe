@@ -1,0 +1,279 @@
+"use client";
+
+import React from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Brand } from "@/types/brand.type";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
+import {
+  Edit,
+  Trash2,
+  ExternalLink,
+  MoreHorizontal,
+  Phone,
+  Globe,
+  Calendar,
+} from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { getS3UrlFromKey, getFallbackAvatarUrl } from "@/lib/upload-utils";
+
+// Column definitions for the brands table
+export const createBrandColumns = (
+  onEdit: (brand: Brand) => void,
+  onDelete: (brand: Brand) => void,
+  t: ReturnType<typeof useTranslation>["t"],
+): ColumnDef<Brand>[] => [
+  {
+    id: "logo",
+    header: t("brands.logo"),
+    size: 80,
+    enableSorting: false,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="flex items-center">
+          <div className="relative w-10 h-10">
+            <Image
+              src={
+                getS3UrlFromKey(brand.logo) ||
+                getFallbackAvatarUrl(brand.name.en)
+              }
+              alt={brand.name.en}
+              width={40}
+              height={40}
+              className="rounded-md object-cover border"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = getFallbackAvatarUrl(brand.name.en);
+              }}
+            />
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "name",
+    id: "name",
+    header: t("brands.brandName"),
+    enableSorting: true,
+    sortingFn: (rowA, rowB, columnId) => {
+      const aValue = (rowA.original.name.en || "").toLowerCase();
+      const bValue = (rowB.original.name.en || "").toLowerCase();
+      return aValue.localeCompare(bValue);
+    },
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="space-y-1">
+          <div className="font-medium text-sm">{brand.name.en}</div>
+          {brand.name.ar && (
+            <div className="text-xs text-muted-foreground" dir="rtl">
+              {brand.name.ar}
+            </div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "description",
+    id: "description",
+    header: t("brands.description"),
+    enableSorting: false,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="max-w-xs space-y-1">
+          <div className="text-sm truncate">{brand.description.en}</div>
+          {brand.description.ar && (
+            <div className="text-xs text-muted-foreground truncate" dir="rtl">
+              {brand.description.ar}
+            </div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "isActive",
+    id: "status",
+    header: t("brands.status"),
+    enableSorting: true,
+    size: 100,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <Badge variant={brand.isActive ? "default" : "secondary"}>
+          {brand.isActive ? t("brands.active") : t("brands.inactive")}
+        </Badge>
+      );
+    },
+  },
+  {
+    id: "contact",
+    header: t("brands.contact"),
+    enableSorting: false,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="text-sm space-y-1">
+          {brand.phone && (
+            <div className="flex items-center space-x-1">
+              <Phone className="h-3 w-3 text-muted-foreground" />
+              <span>{brand.phone}</span>
+            </div>
+          )}
+          {brand.address?.city && brand.address?.country && (
+            <div className="text-muted-foreground text-xs">
+              {brand.address.city}, {brand.address.country}
+            </div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    id: "links",
+    header: t("brands.links"),
+    enableSorting: false,
+    size: 120,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="flex space-x-1">
+          {brand.menuLink && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(brand.menuLink, "_blank");
+              }}
+              className="h-7 px-2 text-xs"
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              {t("brands.menu")}
+            </Button>
+          )}
+          {brand.website && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(brand.website, "_blank");
+              }}
+              className="h-7 px-2 text-xs"
+            >
+              <Globe className="h-3 w-3 mr-1" />
+              {t("brands.site")}
+            </Button>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    id: "createdAt",
+    header: t("brands.created"),
+    enableSorting: true,
+    size: 120,
+    cell: ({ row }) => {
+      const brand = row.original;
+      return (
+        <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+          <Calendar className="h-3 w-3" />
+          <span>
+            {new Date(brand.createdAt)?.toLocaleDateString() || "N/A"}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: t("table.actions"),
+    enableSorting: false,
+    size: 80,
+    cell: ({ row }) => {
+      const brand = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(brand);
+              }}
+              className="cursor-pointer"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              {t("brands.edit")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(brand);
+              }}
+              className="cursor-pointer text-destructive focus:text-destructive"
+              disabled={brand.isActive ?? false} // Don't allow deleting active brands
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t("brands.delete")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+// Hook for using brand columns with current translation
+export const useBrandColumns = (
+  onEdit: (brand: Brand) => void,
+  onDelete: (brand: Brand) => void,
+) => {
+  const { t } = useTranslation();
+  return createBrandColumns(onEdit, onDelete, t);
+};
+
+// Helper function to get sortable field from TanStack sorting state
+export const getSortFieldForQuery = (
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined => {
+  if (!sorting.length) return undefined;
+
+  const sort = sorting[0];
+  // Map TanStack column IDs to backend field names
+  const fieldMap: Record<string, string> = {
+    name: "name.en", // or you might want to sort by name.en specifically
+    status: "isActive",
+    createdAt: "createdAt",
+  };
+
+  return fieldMap[sort.id] || sort.id;
+};
+
+// Helper function to get sort order from TanStack sorting state
+export const getSortOrderForQuery = (
+  sorting: Array<{ id: string; desc: boolean }>,
+): "asc" | "desc" | undefined => {
+  if (!sorting.length) return undefined;
+  return sorting[0].desc ? "desc" : "asc";
+};

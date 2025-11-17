@@ -43,10 +43,10 @@ export interface PaginatedResponse<T = unknown> extends SuccessResponse<T[]> {
 export class ApiError extends Error {
   constructor(
     public response: ErrorResponse,
-    message?: string
+    message?: string,
   ) {
     super(message || response.message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
   }
 }
 
@@ -55,13 +55,14 @@ export interface QueryParams {
   page?: number;
   limit?: number;
   sort?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
   search?: string;
-  [key: string]: string | number | boolean | undefined;
+  fields?: string[];
+  [key: string]: string | number | boolean | string[] | undefined;
 }
 
 // Mutation response wrapper
 export type MutationResponse<T = unknown> = Promise<SuccessResponse<T>>;
 
-// Query response wrapper  
+// Query response wrapper
 export type QueryResponse<T = unknown> = Promise<SuccessResponse<T>>;
