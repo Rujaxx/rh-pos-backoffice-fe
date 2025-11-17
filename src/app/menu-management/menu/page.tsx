@@ -1,47 +1,111 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useTranslation } from '@/hooks/useTranslation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { DataTable } from '@/components/ui/data-table';
+import React, { useState, useMemo, useCallback, useRef } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import Layout from "@/components/common/layout";
+
 import {
-  useModal,
   CrudModal,
   ConfirmationModal,
+  useModal,
   useConfirmationModal,
-} from '@/components/ui/crud-modal';
-import Layout from '@/components/common/layout';
+} from "@/components/ui/crud-modal";
+
 import {
-  Edit,
-  Plus,
-  Trash2,
-  UtensilsCrossed,
-  ClipboardList,
-} from 'lucide-react';
-import { useIntl } from 'react-intl';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-
-import { mockMenus } from '@/mock/menus';
-import { Menu, MenuFormData, MenuTableAction } from '@/types/menu.type';
-import MenuFormContent, {
+  MenuFormContent,
   useMenuForm,
-} from '@/components/menu-management/menu/menu-form';
+} from "@/components/menu-management/menu/menu-form";
 
-function MenusPage() {
+import { TanStackTable } from "@/components/ui/tanstack-table";
+
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from "@tanstack/react-table";
+
+import { Plus, UtensilsCrossed, Filter } from "lucide-react";
+
+import { Menu, MenuFormData, MenuQueryParams } from "@/types/menu.type";
+
+import { useMenus, useMenu } from "@/services/api/menus/menus.queries";
+
+import { toast } from "sonner";
+import {
+  useCreateMenu,
+  useDeleteMenu,
+  useUpdateMenu,
+} from "@/services/api/menus/menus.mutation";
+import {
+  getSortOrderForQuery,
+  getSortFieldForQuery,
+  useMenuColumns,
+} from "@/components/menu-management/menu/menu-table-columns";
+
+export default function MenusPage() {
   const { t } = useTranslation();
-  const [menus, setMenus] = useState<Menu[]>(mockMenus);
-  const [loading, setLoading] = useState(false);
-  const locale = useIntl().locale as 'en' | 'ar';
 
-  // Modal hooks
+  // ---------------------------------------------------------------------------
+  // Table state
+  // ---------------------------------------------------------------------------
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+    undefined,
+  );
+
+  const queryParams = useMemo<MenuQueryParams>(() => {
+    const params: MenuQueryParams = {
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      sortOrder: getSortOrderForQuery(sorting) || "desc",
+    };
+
+    if (searchTerm.trim()) {
+      params.term = searchTerm.trim();
+    }
+
+    const sortField = getSortFieldForQuery(sorting);
+    if (sortField) {
+      params.sortBy = sortField as
+        | "name"
+        | "createdAt"
+        | "updatedAt"
+        | "shortCode";
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+    }
+
+    if (statusFilter !== undefined) {
+      params.isActive = statusFilter === "active" ? "true" : "false";
+    }
+
+    return params;
+  }, [pagination, sorting, searchTerm, statusFilter]);
+
+  const { data: menusResponse, isLoading, error } = useMenus(queryParams);
+
+  const createMenuMutation = useCreateMenu();
+  const updateMenuMutation = useUpdateMenu();
+  const deleteMenuMutation = useDeleteMenu();
+
+  const menus = menusResponse?.data || [];
+  const totalCount = menusResponse?.meta?.total || 0;
+
   const {
     isOpen,
     editingItem: editingMenu,
     openModal,
     closeModal,
   } = useModal<Menu>();
+
   const {
     isConfirmationOpen,
     confirmationConfig,
@@ -50,229 +114,204 @@ function MenusPage() {
     executeConfirmation,
   } = useConfirmationModal();
 
-  // Form hook
-  const { form, isEditing } = useMenuForm(editingMenu);
+  const menuId = editingMenu?._id;
+  const shouldFetchMenu = isOpen && !!menuId;
 
-  // Table columns configuration
-  const columns = [
-    {
-      id: 'name',
-      label: t('menus.table.name'),
-      sortable: true,
-      accessor: (menu: Menu) => (
-        <div className="flex items-center gap-2">
-          <ClipboardList className="w-4 h-4 text-primary" />
-          {menu.name[locale]}
-        </div>
-      ),
-    },
-    {
-      id: 'shortCode',
-      label: t('menus.table.shortCode'),
-      sortable: true,
-      accessor: 'shortCode',
-    },
-    {
-      id: 'isActive',
-      label: t('menus.table.status'),
-      sortable: true,
-      accessor: (menu: Menu) => (
-        <Badge variant={menu.isActive ? 'default' : 'secondary'}>
-          {menu.isActive ? t('common.active') : t('common.inactive')}
-        </Badge>
-      ),
-    },
-    {
-      id: 'isPosDefault',
-      label: t('menus.table.posDefault'),
-      sortable: true,
-      accessor: (menu: Menu) =>
-        menu.isPosDefault ? (
-          <Badge variant="default">{t('menus.table.pos')}</Badge>
-        ) : (
-          <Badge variant="secondary">{t('common.no')}</Badge>
-        ),
-    },
-    {
-      id: 'isDigitalDefault',
-      label: t('menus.table.digitalDefault'),
-      sortable: true,
-      accessor: (menu: Menu) =>
-        menu.isDigitalDefault ? (
-          <Badge variant="default">{t('menus.table.digital')}</Badge>
-        ) : (
-          <Badge variant="secondary">{t('common.no')}</Badge>
-        ),
-    },
-  ];
+  const {
+    data: individualMenuResponse,
+    isLoading: isLoadingIndividualMenu,
+    isFetching: isFetchingIndividualMenu,
+  } = useMenu(menuId || "", {
+    enabled: shouldFetchMenu,
+  });
 
-  // Table actions configuration
-  const actions: MenuTableAction<Menu>[] = [
-    {
-      label: t('common.edit'),
-      icon: Edit,
-      onClick: (menu: Menu) => openModal(menu),
-      variant: 'default',
-    },
-    {
-      label: t('common.delete'),
-      icon: Trash2,
-      onClick: (menu: Menu) => {
-        openConfirmationModal(
-          async () => {
-            await handleDeleteMenu(menu._id!);
-          },
-          {
-            title: t('menus.delete.title'),
-            description: t('menus.delete.description', {
-              name: menu.name[locale],
-            }),
-            confirmButtonText: t('common.delete'),
-            variant: 'destructive',
-          }
-        );
+  const latestMenuData = individualMenuResponse?.data || editingMenu;
+
+  // Form hook (hydrated)
+  const { form } = useMenuForm(latestMenuData);
+
+  const editHandlerRef = useRef<((menu: Menu) => void) | null>(null);
+  const deleteHandlerRef = useRef<((menu: Menu) => void) | null>(null);
+
+  const editHandler = useCallback((menu: Menu) => {
+    editHandlerRef.current?.(menu);
+  }, []);
+
+  const deleteHandler = useCallback((menu: Menu) => {
+    deleteHandlerRef.current?.(menu);
+  }, []);
+
+  const stableColumns = useMenuColumns(editHandler, deleteHandler);
+
+  editHandlerRef.current = (menu: Menu) => {
+    openModal(menu);
+  };
+
+  deleteHandlerRef.current = (menu: Menu) => {
+    openConfirmationModal(
+      async () => {
+        try {
+          await deleteMenuMutation.mutateAsync(menu._id!);
+        } catch (err) {
+          console.error("Failed to delete menu:", err);
+        }
       },
-      variant: 'destructive',
+      {
+        title: t("menus.delete.title"),
+        description: t("menus.delete.description", {
+          name: menu.name.en,
+        }),
+        confirmButtonText: t("common.delete"),
+        variant: "destructive",
+      },
+    );
+  };
+
+  const handleSubmit = useCallback(
+    async (data: MenuFormData) => {
+      try {
+        if (latestMenuData?._id) {
+          await updateMenuMutation.mutateAsync({
+            id: latestMenuData._id,
+            data,
+          });
+        } else {
+          await createMenuMutation.mutateAsync(data);
+        }
+
+        closeModal();
+      } catch (err) {
+        console.error("Failed to save menu:", err);
+      }
     },
-  ];
+    [latestMenuData, updateMenuMutation, createMenuMutation, closeModal],
+  );
 
-  // CRUD Handlers
-  const handleCreateMenu = async (data: MenuFormData) => {
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API
-      const newMenu: Menu = {
-        ...data,
-        _id: Date.now().toString(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        createdBy: 'your-user-id',
-        updatedBy: 'your-user-id',
-      };
-      setMenus((prev) => [newMenu, ...prev]);
-      toast.success(t('menus.create.success'));
-      closeModal();
-    } catch (error) {
-      console.error('Create menu error:', error);
-      toast.error(t('menus.create.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleSearchChange = useCallback((search: string) => {
+    setSearchTerm(search);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-  const handleUpdateMenu = async (data: MenuFormData) => {
-    if (!editingMenu?._id) return;
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API
-      const updatedMenu: Menu = {
-        ...editingMenu,
-        ...data,
-        updatedAt: new Date(),
-        updatedBy: 'your-user-id',
-      };
-      setMenus((prev) =>
-        prev.map((menu) => (menu._id === editingMenu._id ? updatedMenu : menu))
-      );
-      toast.success(t('menus.update.success'));
-      closeModal();
-    } catch (error) {
-      console.error('Update menu error:', error);
-      toast.error(t('menus.update.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handlePaginationChange = useCallback(
+    (newPagination: PaginationState) => {
+      setPagination(newPagination);
+    },
+    [],
+  );
 
-  const handleDeleteMenu = async (id: string) => {
-    setLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API
-      setMenus((prev) => prev.filter((menu) => menu._id !== id));
-      toast.success(t('menus.delete.success'));
-      closeConfirmationModal();
-    } catch (error) {
-      console.error('Delete menu error:', error);
-      toast.error(t('menus.delete.error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleSortingChange = useCallback((newSorting: SortingState) => {
+    setSorting(newSorting);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
-  const handleSubmit = async (data: MenuFormData) => {
-    if (isEditing) {
-      await handleUpdateMenu(data);
-    } else {
-      await handleCreateMenu(data);
-    }
-  };
+  const handleColumnFiltersChange = useCallback(
+    (filters: ColumnFiltersState) => {
+      setColumnFilters(filters);
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    },
+    [],
+  );
 
+  const isFormLoading =
+    createMenuMutation.isPending ||
+    updateMenuMutation.isPending ||
+    isLoadingIndividualMenu ||
+    isFetchingIndividualMenu;
+
+  // ---------------------------------------------------------------------------
+  // UI
+  // ---------------------------------------------------------------------------
   return (
     <Layout>
-      <div className="space-y-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
+      <div className="flex flex-1 flex-col space-y-8 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between space-y-2">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              <UtensilsCrossed className="h-8 w-8" />
-              {t('menus.title')}
-            </h1>
-            <p className="text-muted-foreground">{t('menus.subtitle')}</p>
+            <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+              <UtensilsCrossed className="h-6 w-6" />
+              {t("menus.title")}
+            </h2>
+            <p className="text-muted-foreground">{t("menus.subtitle")}</p>
           </div>
-          <Button
-            onClick={() => openModal()}
-            className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            {t('menus.addMenu')}
+
+          <Button onClick={() => openModal()} className="h-8">
+            <Plus className="h-4 w-4 mr-2" />
+            {t("menus.addMenu")}
           </Button>
         </div>
 
-        {/* Menus Table */}
+        {/* Table */}
         <Card>
-          <CardContent>
-            <DataTable
-              data={menus}
-              columns={columns}
-              actions={actions}
-              searchable
-              searchPlaceholder={t('menus.searchPlaceholder')}
-              loading={loading}
-            />
+          <CardContent className="p-6">
+            {error ? (
+              <div className="flex items-center justify-center h-64 text-destructive">
+                <p>
+                  {t("menus.errorLoading")}: {error.message}
+                </p>
+              </div>
+            ) : (
+              <TanStackTable
+                data={menus}
+                columns={stableColumns}
+                totalCount={totalCount}
+                isLoading={isLoading}
+                searchValue={searchTerm}
+                searchPlaceholder={t("menus.searchPlaceholder")}
+                onSearchChange={handleSearchChange}
+                pagination={pagination}
+                onPaginationChange={handlePaginationChange}
+                sorting={sorting}
+                onSortingChange={handleSortingChange}
+                columnFilters={columnFilters}
+                onColumnFiltersChange={handleColumnFiltersChange}
+                manualPagination
+                manualSorting
+                manualFiltering
+                showSearch
+                showPagination
+                showPageSizeSelector
+                emptyMessage={t("menus.noDataFound")}
+                enableMultiSort={false}
+              />
+            )}
           </CardContent>
         </Card>
 
-        {/* Menu Form Modal */}
+        {/* Form Modal */}
         <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
-          title={isEditing ? t('menus.edit.title') : t('menus.create.title')}
+          title={
+            latestMenuData ? t("menus.edit.title") : t("menus.create.title")
+          }
           description={
-            isEditing
-              ? t('menus.edit.description')
-              : t('menus.create.description')
+            latestMenuData
+              ? t("menus.edit.description")
+              : t("menus.create.description")
           }
           form={form}
           onSubmit={handleSubmit}
-          loading={loading}
-          size="xl">
+          loading={isFormLoading}
+          size="xl"
+          submitButtonText={
+            latestMenuData ? t("menus.edit.save") : t("menus.create.submit")
+          }
+        >
           <MenuFormContent form={form} />
         </CrudModal>
 
-        {/* Confirmation Modal */}
+        {/* Delete Modal */}
         <ConfirmationModal
           isOpen={isConfirmationOpen}
           onClose={closeConfirmationModal}
           onConfirm={executeConfirmation || (() => Promise.resolve())}
-          title={confirmationConfig.title}
-          description={confirmationConfig.description}
-          loading={loading}
-          confirmButtonText={confirmationConfig.confirmButtonText}
-          cancelButtonText={t('common.cancel')}
-          variant={confirmationConfig.variant}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteMenuMutation.isPending}
         />
       </div>
     </Layout>
   );
 }
-
-export default MenusPage;

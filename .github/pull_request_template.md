@@ -5,6 +5,7 @@
 ## 🔗 Related Issue
 
 <!-- Link to the issue this PR addresses, if applicable -->
+
 Closes #<!-- issue number -->
 
 ## 🔄 Type of Change
@@ -38,9 +39,11 @@ Closes #<!-- issue number -->
 <!-- Add screenshots or GIFs to demonstrate the changes, especially for UI updates -->
 
 ### Before
+
 <!-- Screenshot of the current state -->
 
 ### After
+
 <!-- Screenshot of the new state -->
 
 ## 🌍 Internationalization (i18n)
@@ -90,6 +93,7 @@ Closes #<!-- issue number -->
 ---
 
 **Reviewer Guidelines:**
+
 - Please test the PR in both English and Arabic languages
 - Verify responsiveness on mobile devices
 - Check for any console errors or warnings
