@@ -18,7 +18,7 @@ import { RoleFormData } from "@/lib/validations/role.validation";
  */
 function transformToBackendFormat(
   data: RoleFormData,
-  excludeId: boolean = false,
+  excludeId: boolean = false
 ): Omit<RoleFormData, "_id"> | RoleFormData {
   // Create a copy to avoid mutating the original form data
   const transformed: RoleFormData & { _id?: string } = { ...data };
@@ -31,14 +31,13 @@ function transformToBackendFormat(
     const { _id, ...rest } = transformed;
     return rest;
   }
-  console.log("transformed data: ", transformed);
 
   return transformed;
 }
 
 // CREATE
 export const useCreateRole = (
-  options?: UseMutationOptions<SuccessResponse<Role>, Error, RoleFormData>,
+  options?: UseMutationOptions<SuccessResponse<Role>, Error, RoleFormData>
 ) => {
   const queryUtils = useQueryUtils();
   return useMutation({
@@ -66,7 +65,7 @@ export const useUpdateRole = (
     SuccessResponse<Role>,
     Error,
     { id: string; data: RoleFormData }
-  >,
+  >
 ) => {
   const queryUtils = useQueryUtils();
   return useMutation({
@@ -90,7 +89,7 @@ export const useUpdateRole = (
 
 // DELETE
 export const useDeleteRole = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
 ) => {
   const queryUtils = useQueryUtils();
   return useMutation({

@@ -94,6 +94,13 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/categories/${id}`,
     GET: (id: string) => `/categories/${id}`,
   },
+  KITCHEN_DEPARTMENTS: {
+    LIST: "/kitchen-departments",
+    CREATE: "/kitchen-departments",
+    UPDATE: (id: string) => `/kitchen-departments/${id}`,
+    DELETE: (id: string) => `/kitchen-departments/${id}`,
+    GET: (id: string) => `/kitchen-departments/${id}`,
+  },
   TABLES: {
     LIST: "/tables",
     CREATE: "/tables",
@@ -113,6 +120,13 @@ export const API_ENDPOINTS = {
     IMAGES_MULTIPLE: "/upload/images/multiple",
     CONFIRM: "/upload/confirm",
     DELETE_TEMPORARY: "/upload/temporary",
+  },
+  TAX_PRODUCT_GROUPS: {
+    LIST: "/tax-product-groups",
+    CREATE: "/tax-product-groups",
+    UPDATE: (id: string) => `/tax-product-groups/${id}`,
+    DELETE: (id: string) => `/tax-product-groups/${id}`,
+    GET: (id: string) => `/tax-product-groups/${id}`,
   },
 } as const;
 
@@ -156,6 +170,11 @@ export const QUERY_KEYS = {
       ["categories", "list", params] as const,
     DETAIL: (id: string) => ["categories", "detail", id] as const,
   },
+  KITCHEN_DEPARTMENTS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ["kitchen-departments", "list", params] as const,
+    DETAIL: (id: string) => ["kitchen-departments", "detail", id] as const,
+  },
   TABLES: {
     LIST: (params?: Record<string, unknown>) =>
       ["tables", "list", params] as const,
@@ -168,5 +187,10 @@ export const QUERY_KEYS = {
   },
   UPLOAD: {
     IMAGE: (key: string) => ["upload", "image", key] as const,
+  },
+  TAX_PRODUCT_GROUPS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ["tax-product-groups", "list", params] as const,
+    DETAIL: (id: string) => ["tax-product-groups", "detail", id] as const,
   },
 } as const;

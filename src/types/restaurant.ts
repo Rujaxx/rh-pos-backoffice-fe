@@ -25,6 +25,11 @@ export type ResetBillFrequency = "daily" | "weekly" | "monthly" | "yearly";
 export type SmsWhatsappSelection = "none" | "sms" | "whatsapp" | "both";
 export type TimezoneType = string; // Could be expanded with specific timezone values
 
+export interface CustomQRCode {
+  qrCodeTitle: string;
+  qrCodeLink: string;
+}
+
 // Main Restaurant interface following brand pattern
 export interface Restaurant extends Record<string, unknown> {
   _id: string;
@@ -39,6 +44,9 @@ export interface Restaurant extends Record<string, unknown> {
   endDayTime: number; // Time format: 0-2359
   nextResetBillFreq: ResetBillFrequency;
   nextResetBillDate?: Date;
+  phoneNumber?: string;
+  contactEmail?: string;
+  countryCode?: string;
   notificationPhone: string[];
   notificationEmails: string[];
   isActive: boolean;
@@ -46,7 +54,7 @@ export interface Restaurant extends Record<string, unknown> {
   posLogoutOnClose: boolean;
   isFeedBackActive: boolean;
   trnOrGstNo?: string;
-  customQRcode: string[];
+  customQRcode: CustomQRCode[];
   inventoryWarehouse?: string;
   createdBy: string;
   updatedBy: string;
@@ -65,6 +73,8 @@ export interface Restaurant extends Record<string, unknown> {
   whatsAppChannel?: string;
   paymentLinkSettings: PaymentLinkSettings;
   eBillSettings: EBillSettings;
+  billPrefix?: string;
+  kotPrefix?: string;
 }
 
 // Form data interface for creating/updating restaurants (matches CreateRestaurantDto)
@@ -85,7 +95,7 @@ export interface RestaurantFormData extends Record<string, unknown> {
   posLogoutOnClose: boolean;
   isFeedBackActive: boolean;
   trnOrGstNo?: string;
-  customQRcode: string[];
+  customQRcode: CustomQRCode[];
   deductFromInventory: boolean;
   multiplePriceSetting: boolean;
   tableReservation: boolean;

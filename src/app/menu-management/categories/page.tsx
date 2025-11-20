@@ -54,7 +54,7 @@ export default function CategoriesPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   // Build query parameters from table state
@@ -73,11 +73,6 @@ export default function CategoriesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortBy = sortField as
-        | "name"
-        | "createdAt"
-        | "updatedAt"
-        | "sortOrder";
       params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
@@ -175,7 +170,7 @@ export default function CategoriesPage() {
         }),
         confirmButtonText: t("categories.deleteCategoryButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -211,7 +206,7 @@ export default function CategoriesPage() {
       updateCategoryMutation,
       createCategoryMutation,
       closeModal,
-    ],
+    ]
   );
 
   // Search handler with proper typing
@@ -226,7 +221,7 @@ export default function CategoriesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   // Sorting handler
@@ -243,7 +238,7 @@ export default function CategoriesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
@@ -274,7 +269,7 @@ export default function CategoriesPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active",
+                      : "active"
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

@@ -25,14 +25,9 @@ import {
   SortingState,
   ColumnFiltersState,
 } from "@tanstack/react-table";
-
 import { Plus, UtensilsCrossed, Filter } from "lucide-react";
-
 import { Menu, MenuFormData, MenuQueryParams } from "@/types/menu.type";
-
 import { useMenus, useMenu } from "@/services/api/menus/menus.queries";
-
-import { toast } from "sonner";
 import {
   useCreateMenu,
   useDeleteMenu,
@@ -47,9 +42,6 @@ import {
 export default function MenusPage() {
   const { t } = useTranslation();
 
-  // ---------------------------------------------------------------------------
-  // Table state
-  // ---------------------------------------------------------------------------
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -59,7 +51,7 @@ export default function MenusPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   const queryParams = useMemo<MenuQueryParams>(() => {
@@ -75,11 +67,6 @@ export default function MenusPage() {
 
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortBy = sortField as
-        | "name"
-        | "createdAt"
-        | "updatedAt"
-        | "shortCode";
       params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
@@ -163,7 +150,7 @@ export default function MenusPage() {
         }),
         confirmButtonText: t("common.delete"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -184,7 +171,7 @@ export default function MenusPage() {
         console.error("Failed to save menu:", err);
       }
     },
-    [latestMenuData, updateMenuMutation, createMenuMutation, closeModal],
+    [latestMenuData, updateMenuMutation, createMenuMutation, closeModal]
   );
 
   const handleSearchChange = useCallback((search: string) => {
@@ -196,7 +183,7 @@ export default function MenusPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   const handleSortingChange = useCallback((newSorting: SortingState) => {
@@ -209,7 +196,7 @@ export default function MenusPage() {
       setColumnFilters(filters);
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
@@ -218,9 +205,6 @@ export default function MenusPage() {
     isLoadingIndividualMenu ||
     isFetchingIndividualMenu;
 
-  // ---------------------------------------------------------------------------
-  // UI
-  // ---------------------------------------------------------------------------
   return (
     <Layout>
       <div className="flex flex-1 flex-col space-y-8 p-8">
@@ -234,10 +218,39 @@ export default function MenusPage() {
             <p className="text-muted-foreground">{t("menus.subtitle")}</p>
           </div>
 
-          <Button onClick={() => openModal()} className="h-8">
-            <Plus className="h-4 w-4 mr-2" />
-            {t("menus.addMenu")}
-          </Button>
+          <div className="flex items-center space-x-2">
+            {/* Add status filter button */}
+            <Button
+              variant={statusFilter !== undefined ? "default" : "outline"}
+              onClick={() => {
+                setStatusFilter(
+                  statusFilter === "active"
+                    ? "inactive"
+                    : statusFilter === "inactive"
+                      ? undefined
+                      : "active"
+                );
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              className="h-8 flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              <span>
+                {statusFilter === "active"
+                  ? t("brands.active")
+                  : statusFilter === "inactive"
+                    ? t("brands.inactive")
+                    : t("brands.allStatus")}
+              </span>
+            </Button>
+            <Button
+              onClick={() => openModal()}
+              className="h-8 flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              <span>{t("brands.addNewBrand")}</span>
+            </Button>
+          </div>
         </div>
 
         {/* Table */}
@@ -294,7 +307,7 @@ export default function MenusPage() {
           loading={isFormLoading}
           size="xl"
           submitButtonText={
-            latestMenuData ? t("menus.edit.save") : t("menus.create.submit")
+            latestMenuData ? t("menus.edit.submit") : t("menus.create.submit")
           }
         >
           <MenuFormContent form={form} />

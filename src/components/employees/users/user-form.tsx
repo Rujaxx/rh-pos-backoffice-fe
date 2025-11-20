@@ -125,15 +125,15 @@ export function UserFormContent({ form }: UserFormContentProps) {
               <RHFSelect
                 form={form}
                 name="countryCode"
-                label={t("users.form.countryCode") || "Code"}
+                label={t("common.form.countryCode") || "Code"}
                 placeholder="+91"
                 options={COUNTRY_CODES}
               />
               <RHFInput
                 form={form}
                 name="phoneNumber"
-                label={t("users.form.phoneLabel")}
-                placeholder={t("users.form.phonePlaceholder")}
+                label={t("common.form.phoneLabel")}
+                placeholder={t("common.form.phonePlaceholder")}
                 type="tel"
                 className="col-span-2"
               />
@@ -398,7 +398,6 @@ export function useUserForm(editingUser?: User | null) {
 
   React.useEffect(() => {
     if (editingUser) {
-      console.log(editingUser);
       form.reset({
         _id: editingUser._id,
         name: editingUser.name || "",

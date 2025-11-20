@@ -50,7 +50,7 @@ export default function RolesPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   // Build query parameters
@@ -62,8 +62,12 @@ export default function RolesPage() {
     };
 
     if (searchTerm.trim()) params.term = searchTerm.trim();
+
     const sortField = getSortFieldForQuery(sorting);
-    if (sortField) params.sortBy = sortField;
+    if (sortField) {
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+    }
+
     if (statusFilter !== undefined)
       params.isActive = statusFilter === "active" ? "true" : "false";
 
@@ -99,7 +103,7 @@ export default function RolesPage() {
   const shouldFetchRole = isOpen && !!roleId;
   const { data: individualRoleResponse, isLoading: isLoadingRole } = useRole(
     roleId || "",
-    { enabled: shouldFetchRole },
+    { enabled: shouldFetchRole }
   );
   const latestRoleData = individualRoleResponse?.data || editingRole;
 
@@ -112,11 +116,11 @@ export default function RolesPage() {
 
   const editHandler = useCallback(
     (role: Role) => editHandlerRef.current?.(role),
-    [],
+    []
   );
   const deleteHandler = useCallback(
     (role: Role) => deleteHandlerRef.current?.(role),
-    [],
+    []
   );
 
   const stableColumns = useRoleColumns(editHandler, deleteHandler);
@@ -136,13 +140,12 @@ export default function RolesPage() {
         description: t("roles.deleteConfirmation", { name: role.name.en }),
         confirmButtonText: t("roles.deleteRoleButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
   const handleSubmit = useCallback(
     async (data: RoleFormData) => {
-      console.log("this is role data: ", data);
       try {
         const validatedData = roleSchema.parse(data);
         if (latestRoleData) {
@@ -153,13 +156,12 @@ export default function RolesPage() {
         } else {
           await createRole.mutateAsync(validatedData);
         }
-        console.log("validated Data: ", validatedData);
         closeModal();
       } catch (err) {
         console.error("Failed to save role:", err);
       }
     },
-    [latestRoleData, updateRole, createRole, closeModal],
+    [latestRoleData, updateRole, createRole, closeModal]
   );
 
   const handleSearchChange = useCallback((search: string) => {
@@ -169,7 +171,7 @@ export default function RolesPage() {
 
   const handlePaginationChange = useCallback(
     (p: PaginationState) => setPagination(p),
-    [],
+    []
   );
   const handleSortingChange = useCallback((s: SortingState) => {
     setSorting(s);
@@ -210,7 +212,7 @@ export default function RolesPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active",
+                      : "active"
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

@@ -1,8 +1,3 @@
-/**
- * Table Section Form Component
- * Form for creating and editing table sections with validation and internationalization
- */
-
 "use client";
 
 import React from "react";
@@ -18,8 +13,8 @@ import {
 import {
   tableSectionSchema,
   TableSectionFormData,
-} from "@/lib/validations/tablesection.validation";
-import { TableSection } from "@/types/tablesection.type";
+} from "@/lib/validations/table-section.validation";
+import { TableSection } from "@/types/table-section.type";
 import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
 import { useI18n } from "@/providers/i18n-provider";
 
@@ -42,7 +37,7 @@ export function TableSectionFormContent({
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }),
+    })
   );
 
   return (
@@ -94,7 +89,7 @@ export function TableSectionFormContent({
 
 // Hook for table section form logic
 export function useTableSectionForm(
-  editingTableSection?: TableSection | null,
+  editingTableSection?: TableSection | null
 ): {
   form: UseFormReturn<TableSectionFormData, unknown>;
   isEditing: boolean;
