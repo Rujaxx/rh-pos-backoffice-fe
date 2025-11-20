@@ -9,7 +9,7 @@ import {
   TableSection,
   TableSectionFormData,
   TableSectionQueryParams,
-} from "@/types/tablesection.type";
+} from "@/types/table-section.type";
 import { PaginatedResponse, SuccessResponse } from "@/types/api";
 import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
 
@@ -25,21 +25,21 @@ class TableSectionService extends BaseApiService<
 
   // Get all table sections with optional filters
   async getAllTableSections(
-    params?: TableSectionQueryParams,
+    params?: TableSectionQueryParams
   ): Promise<PaginatedResponse<TableSection>> {
     return this.getAll(params);
   }
 
   // Get table section by ID
   async getTableSectionById(
-    id: string,
+    id: string
   ): Promise<SuccessResponse<TableSection>> {
     return this.getById(id);
   }
 
   // Get active table sections only (for dropdowns)
   async getActiveTableSections(
-    params?: Omit<TableSectionQueryParams, "isActive">,
+    params?: Omit<TableSectionQueryParams, "isActive">
   ): Promise<PaginatedResponse<TableSection>> {
     return this.getAll({ ...params, isActive: "true" });
   }
@@ -47,7 +47,7 @@ class TableSectionService extends BaseApiService<
   // Get table sections by restaurant ID
   async getTableSectionsByRestaurant(
     restaurantId: string,
-    params?: Omit<TableSectionQueryParams, "restaurantId">,
+    params?: Omit<TableSectionQueryParams, "restaurantId">
   ): Promise<PaginatedResponse<TableSection>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -64,7 +64,7 @@ export const useGetTableSections = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TableSection>>,
     "queryKey" | "queryFn"
-  >,
+  >
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.TABLE_SECTIONS.LIST(params),
@@ -79,7 +79,7 @@ export const useGetTableSection = (
   options?: Omit<
     UseQueryOptions<SuccessResponse<TableSection>>,
     "queryKey" | "queryFn"
-  >,
+  >
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.TABLE_SECTIONS.DETAIL(id),
@@ -95,7 +95,7 @@ export const useGetActiveTableSections = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TableSection>>,
     "queryKey" | "queryFn"
-  >,
+  >
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.TABLE_SECTIONS.LIST({ ...params, isActive: "true" }),
@@ -111,7 +111,7 @@ export const useGetTableSectionsByRestaurant = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TableSection>>,
     "queryKey" | "queryFn"
-  >,
+  >
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.TABLE_SECTIONS.LIST({ ...params, restaurantId }),

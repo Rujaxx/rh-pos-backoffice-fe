@@ -20,15 +20,19 @@ import {
   MapPin,
   Calendar,
   Clock,
+  Mail,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getS3UrlFromKey, getFallbackAvatarUrl } from "@/lib/upload-utils";
+import { useI18n } from "@/providers/i18n-provider";
+import { MultilingualText } from "@/types";
 
 // Column definitions for the restaurants table
 export const createRestaurantColumns = (
   onEdit: (restaurant: Restaurant) => void,
   onDelete: (restaurant: Restaurant) => void,
   t: ReturnType<typeof useTranslation>["t"],
+  locale: string
 ): ColumnDef<Restaurant>[] => [
   {
     id: "logo",
@@ -91,9 +95,10 @@ export const createRestaurantColumns = (
     header: t("restaurants.brand"),
     enableSorting: true,
     cell: ({ row }) => {
-      const restaurant = row.original;
       return (
-        <Badge variant="outline">{restaurant.brandName?.en ?? "N/A"}</Badge>
+        <Badge variant="outline">
+          {row.original.brandName?.[locale as keyof MultilingualText]}
+        </Badge>
       );
     },
   },
@@ -159,17 +164,18 @@ export const createRestaurantColumns = (
       const restaurant = row.original;
       return (
         <div className="text-sm space-y-1">
-          {restaurant.notificationPhone.length > 0 && (
-            <div className="flex items-center space-x-1">
-              <Phone className="h-3 w-3 text-muted-foreground" />
-              <span>{restaurant.notificationPhone[0]}</span>
-            </div>
-          )}
-          {restaurant.notificationEmails.length > 0 && (
-            <div className="text-muted-foreground text-xs truncate max-w-[150px]">
-              {restaurant.notificationEmails[0]}
-            </div>
-          )}
+          <div className="flex items-center space-x-1">
+            <Mail className="h-3 w-3 text-muted-foreground" />
+            <span className="truncate max-w-[150px]">
+              {restaurant.contactEmail || "N/A"}
+            </span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Phone className="h-3 w-3 text-muted-foreground" />
+            <span className="truncate max-w-[150px]">
+              {restaurant.phoneNumber || "N/A"}
+            </span>
+          </div>
         </div>
       );
     },
@@ -256,15 +262,16 @@ export const createRestaurantColumns = (
 // Hook for using restaurant columns with current translation
 export const useRestaurantColumns = (
   onEdit: (restaurant: Restaurant) => void,
-  onDelete: (restaurant: Restaurant) => void,
+  onDelete: (restaurant: Restaurant) => void
 ) => {
   const { t } = useTranslation();
-  return createRestaurantColumns(onEdit, onDelete, t);
+  const { locale } = useI18n();
+  return createRestaurantColumns(onEdit, onDelete, t, locale);
 };
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -283,7 +290,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";
