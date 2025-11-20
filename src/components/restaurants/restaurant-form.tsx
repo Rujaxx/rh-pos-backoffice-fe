@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,12 +31,25 @@ import {
 } from "@/lib/utils/timezone.utils";
 import { useActiveBrands } from "@/services/api/brands/brands.queries";
 import { useI18n } from "@/providers/i18n-provider";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Button } from "../ui/button";
+import { COUNTRY_CODES } from "@/mock/dropdown-constants";
 
 interface RestaurantFormContentProps {
   form: UseFormReturn<RestaurantFormData>;
+  editingRestaurant?: Restaurant | null;
 }
 
-export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
+export function RestaurantFormContent({
+  form,
+  editingRestaurant,
+}: RestaurantFormContentProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
 
@@ -53,7 +66,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
   // Get timezone options with user's current timezone prioritized
   const timezoneOptions = getTimezoneOptions(t);
 
-  const resetBillOptions = [
+  const resetOptions = [
     { value: "daily", label: t("restaurants.form.resetBill.daily") },
     { value: "weekly", label: t("restaurants.form.resetBill.weekly") },
     { value: "monthly", label: t("restaurants.form.resetBill.monthly") },
@@ -66,6 +79,18 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
     { value: "whatsapp", label: t("restaurants.form.smsWhatsapp.whatsapp") },
     { value: "both", label: t("restaurants.form.smsWhatsapp.both") },
   ];
+
+  const [rawPhones, setRawPhones] = useState("");
+  const [rawEmails, setRawEmails] = useState("");
+
+  useEffect(() => {
+    if (editingRestaurant?.notificationPhone) {
+      setRawPhones(editingRestaurant.notificationPhone.join(", "));
+    }
+    if (editingRestaurant?.notificationEmails) {
+      setRawEmails(editingRestaurant.notificationEmails.join(", "));
+    }
+  }, [editingRestaurant]);
 
   return (
     <>
@@ -107,8 +132,8 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
                 isLoadingBrands
                   ? t("common.loading")
                   : brandOptions.length === 0
-                    ? t("restaurants.form.noBrandsAvailable")
-                    : t("restaurants.form.brandPlaceholder")
+                    ? t("common.noBrandsAvailable")
+                    : t("common.brandPlaceholder")
               }
               options={brandOptions}
               disabled={isLoadingBrands}
@@ -132,7 +157,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
         </Card>
 
         {/* System Configuration */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="text-lg">
               {t("restaurants.form.systemConfig")}
@@ -170,7 +195,29 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               name="nextResetBillFreq"
               label={t("restaurants.form.nextResetBillLabel")}
               placeholder={t("restaurants.form.nextResetBillPlaceholder")}
-              options={resetBillOptions}
+              options={resetOptions}
+            />
+
+            <RHFInput
+              form={form}
+              name="billPrefix"
+              label={t("restaurants.form.billPrefixLabel")}
+              placeholder={t("restaurants.form.billPrefixPlaceholder")}
+            />
+
+            <RHFSelect
+              form={form}
+              name="nextResetKotFreq"
+              label={t("restaurants.form.nextResetKotLabel")}
+              placeholder={t("restaurants.form.nextResetKotPlaceholder")}
+              options={resetOptions}
+            />
+
+            <RHFInput
+              form={form}
+              name="kotPrefix"
+              label={t("restaurants.form.kotPrefixLabel")}
+              placeholder={t("restaurants.form.kotPrefixPlaceholder")}
             />
 
             <RHFInput
@@ -189,7 +236,113 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               description={t("restaurants.form.trnOrGstNoDescription")}
             />
           </CardContent>
-        </Card>
+        </Card> */}
+        {/* Right Column (System Config + Bill/KOT Config) */}
+        <div className="flex flex-col gap-6">
+          {/* System Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {t("restaurants.form.systemConfig")}
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <RHFSelect
+                form={form}
+                name="timezone"
+                label={t("restaurants.form.timezoneLabel")}
+                placeholder={t("restaurants.form.timezonePlaceholder")}
+                options={timezoneOptions}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <RHFTimeInput
+                  form={form}
+                  name="startDayTime"
+                  label={t("restaurants.form.startDayTimeLabel")}
+                  placeholder="10:00"
+                  description={t("restaurants.form.startDayTimeDescription")}
+                />
+
+                <RHFTimeInput
+                  form={form}
+                  name="endDayTime"
+                  label={t("restaurants.form.endDayTimeLabel")}
+                  placeholder="23:00"
+                  description={t("restaurants.form.endDayTimeDescription")}
+                />
+              </div>
+              <RHFInput
+                form={form}
+                name="restoCode"
+                label={t("restaurants.form.restoCodeLabel")}
+                placeholder={t("restaurants.form.restoCodePlaceholder")}
+                description={t("restaurants.form.restoCodeDescription")}
+              />
+
+              <RHFInput
+                form={form}
+                name="trnOrGstNo"
+                label={t("restaurants.form.trnOrGstNoLabel")}
+                placeholder={t("restaurants.form.trnOrGstNoPlaceholder")}
+                description={t("restaurants.form.trnOrGstNoDescription")}
+              />
+            </CardContent>
+          </Card>
+
+          {/* New Card — Bill & KOT Reset + Prefix */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">
+                {t("restaurants.form.autoResetSettings")}
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <RHFSelect
+                  form={form}
+                  name="nextResetBillFreq"
+                  label={t("restaurants.form.nextResetBillLabel")}
+                  placeholder={t("restaurants.form.nextResetBillPlaceholder")}
+                  options={resetOptions}
+                />
+
+                <RHFInput
+                  form={form}
+                  name="billPrefix"
+                  label={t("restaurants.form.billPrefixLabel")}
+                  placeholder={t("restaurants.form.billPrefixPlaceholder")}
+                />
+              </div>
+
+              <RHFInput
+                form={form}
+                type="date"
+                name="nextResetBillDate"
+                label={t("restaurants.form.nextResetBillDateLabel")}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <RHFSelect
+                  form={form}
+                  name="nextResetKotFreq"
+                  label={t("restaurants.form.nextResetKotLabel")}
+                  placeholder={t("restaurants.form.nextResetKotPlaceholder")}
+                  options={resetOptions}
+                />
+
+                <RHFInput
+                  form={form}
+                  name="kotPrefix"
+                  label={t("restaurants.form.kotPrefixLabel")}
+                  placeholder={t("restaurants.form.kotPrefixPlaceholder")}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Address Information */}
@@ -236,7 +389,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               name="generateOrderTypeWiseOrderNo"
               label={t("restaurants.form.generateOrderTypeWiseOrderNoLabel")}
               description={t(
-                "restaurants.form.generateOrderTypeWiseOrderNoDescription",
+                "restaurants.form.generateOrderTypeWiseOrderNoDescription"
               )}
             />
 
@@ -269,7 +422,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
               name="multiplePriceSetting"
               label={t("restaurants.form.multiplePriceSettingLabel")}
               description={t(
-                "restaurants.form.multiplePriceSettingDescription",
+                "restaurants.form.multiplePriceSettingDescription"
               )}
             />
 
@@ -290,6 +443,185 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
         </Card>
       </div>
 
+      {/* Contact Information */}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {t("restaurants.form.contactInfo")}
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {/* Notification Phone Numbers */}
+
+          <CardContent className="flex gap-10 items-center">
+            <RHFSelect
+              form={form}
+              name="countryCode"
+              label={t("common.form.countryCode") || "Code"}
+              placeholder="+91"
+              options={COUNTRY_CODES}
+              defaultValue={COUNTRY_CODES[0].value}
+            />
+            <RHFInput
+              form={form}
+              name="phoneNumber"
+              label={t("common.form.phoneLabel")}
+              placeholder={t("common.form.phonePlaceholder")}
+              type="tel"
+              className="col-span-2"
+            />
+          </CardContent>
+          <RHFInput
+            form={form}
+            name="contactEmail"
+            label={t("common.form.contactEmailLabel")}
+            placeholder={t("common.form.contactEmailPlaceholder")}
+            type="tel"
+            className="w-80"
+          />
+
+          <FormField
+            control={form.control}
+            name="notificationPhone"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel>{t("restaurants.form.notificationPhone")}</FormLabel>
+                <FormControl>
+                  <input
+                    type="text"
+                    className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2
+           text-sm placeholder:text-muted-foreground focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-ring"
+                    value={rawPhones}
+                    placeholder={t(
+                      "restaurants.form.notificationPhonePlaceholder"
+                    )}
+                    onChange={(e) => setRawPhones(e.target.value)}
+                    onBlur={() => {
+                      const values = rawPhones
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v.length > 0);
+
+                      field.onChange(values); // push array into form
+                      setRawPhones(values.join(", ")); // reformat nicely
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="notificationEmails"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel>
+                  {t("restaurants.form.notificationEmails")}
+                </FormLabel>
+                <FormControl>
+                  <input
+                    type="text"
+                    className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2
+           text-sm placeholder:text-muted-foreground focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-ring"
+                    value={rawEmails}
+                    placeholder={t(
+                      "restaurants.form.notificationEmailsPlaceholder"
+                    )}
+                    onChange={(e) => setRawEmails(e.target.value)}
+                    onBlur={() => {
+                      const values = rawEmails
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter((v) => v.length > 0);
+
+                      field.onChange(values);
+                      setRawEmails(values.join(", "));
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Qr Code Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {t("restaurants.form.qrCodeSettings")}
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {/* Custom QR Codes */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <FormLabel>{t("restaurants.form.customQRcodeLabel")}</FormLabel>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  const items = form.getValues("customQRcode") || [];
+                  form.setValue("customQRcode", [
+                    ...items,
+                    { qrCodeTitle: "", qrCodeLink: "" },
+                  ]);
+                }}
+              >
+                {t("restaurants.form.addQRCode")}
+              </Button>
+            </div>
+
+            {(form.watch("customQRcode") || []).map((item, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-secondary"
+              >
+                <RHFInput
+                  form={form}
+                  name={`customQRcode.${index}.qrCodeTitle`}
+                  label={t("restaurants.form.qrCodeTitle")}
+                  placeholder={t("restaurants.form.qrCodeTitlePlaceholder")}
+                />
+
+                <div className="flex items-start gap-2">
+                  <div className="flex-1">
+                    <RHFInput
+                      form={form}
+                      name={`customQRcode.${index}.qrCodeLink`}
+                      label={t("restaurants.form.qrCodeLink")}
+                      placeholder={t("restaurants.form.qrCodeLinkPlaceholder")}
+                    />
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="mt-6"
+                    onClick={() => {
+                      const items = form.getValues("customQRcode") || [];
+                      items.splice(index, 1);
+                      form.setValue("customQRcode", [...items]);
+                    }}
+                  >
+                    ✕
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Communication Settings */}
       <Card>
         <CardHeader>
@@ -303,7 +635,7 @@ export function RestaurantFormContent({ form }: RestaurantFormContentProps) {
             name="smsAndWhatsappSelection"
             label={t("restaurants.form.smsAndWhatsappSelectionLabel")}
             placeholder={t(
-              "restaurants.form.smsAndWhatsappSelectionPlaceholder",
+              "restaurants.form.smsAndWhatsappSelectionPlaceholder"
             )}
             options={smsWhatsappOptions}
           />
@@ -414,7 +746,12 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
       startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME), // 10:00 -> 600 minutes
       endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME), // 23:00 -> 1380 minutes
       nextResetBillFreq: "daily",
+      nextResetBillDate: undefined,
+      nextResetKotFreq: "daily",
       notificationPhone: [],
+      phoneNumber: null,
+      contactEmail: null,
+      countryCode: "",
       notificationEmails: [],
       restoCode: "",
       posLogoutOnClose: true, // Backend default: true
@@ -444,13 +781,15 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         onWhatsapp: false, // Backend default: false
         onSms: false, // Backend default: false
       },
+      billPrefix: "",
+      kotPrefix: "",
     },
   });
 
   // Reset form when editing restaurant changes
   React.useEffect(() => {
     if (editingRestaurant) {
-      const resetBillFreq =
+      const resetFreq =
         editingRestaurant.nextResetBillFreq === "daily" ||
         editingRestaurant.nextResetBillFreq === "weekly" ||
         editingRestaurant.nextResetBillFreq === "monthly" ||
@@ -469,7 +808,16 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         timezone: editingRestaurant.timezone,
         startDayTime: backendTimeToMinutes(editingRestaurant.startDayTime),
         endDayTime: backendTimeToMinutes(editingRestaurant.endDayTime),
-        nextResetBillFreq: resetBillFreq,
+        nextResetBillFreq: resetFreq,
+        nextResetBillDate: editingRestaurant.nextResetBillDate
+          ? new Date(editingRestaurant.nextResetBillDate)
+              .toISOString()
+              .slice(0, 10)
+          : undefined,
+        nextResetKotFreq: resetFreq,
+        phoneNumber: editingRestaurant.phoneNumber || null,
+        contactEmail: editingRestaurant.contactEmail || null,
+        countryCode: editingRestaurant.countryCode || "",
         notificationPhone: editingRestaurant.notificationPhone || [],
         notificationEmails: editingRestaurant.notificationEmails || [],
         restoCode: editingRestaurant.restoCode || "",
@@ -501,6 +849,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
           onWhatsapp: false,
           onSms: false,
         },
+        billPrefix: editingRestaurant.billPrefix,
+        kotPrefix: editingRestaurant.kotPrefix,
       });
     } else {
       form.reset({
@@ -522,6 +872,11 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME),
         endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME),
         nextResetBillFreq: "daily",
+        nextResetBillDate: undefined,
+        nextResetKotFreq: "daily",
+        phoneNumber: null,
+        contactEmail: null,
+        countryCode: "",
         notificationPhone: [],
         notificationEmails: [],
         restoCode: "",
@@ -552,6 +907,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
           onWhatsapp: false,
           onSms: false,
         },
+        billPrefix: "",
+        kotPrefix: "",
       });
     }
   }, [editingRestaurant, form]);

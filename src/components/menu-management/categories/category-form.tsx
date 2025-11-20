@@ -47,7 +47,7 @@ export function CategoryFormContent({ form }: CategoryFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }),
+    })
   );
 
   return (
@@ -87,8 +87,8 @@ export function CategoryFormContent({ form }: CategoryFormContentProps) {
                 isLoadingBrands
                   ? t("common.loading")
                   : brandOptions.length === 0
-                    ? t("categories.form.noBrandsAvailable")
-                    : t("categories.form.brandPlaceholder")
+                    ? t("common.noBrandsAvailable")
+                    : t("common.brandPlaceholder")
               }
               options={brandOptions}
             />

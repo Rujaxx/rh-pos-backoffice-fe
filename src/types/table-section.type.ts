@@ -11,12 +11,6 @@ export interface TableSection extends Record<string, unknown> {
   name: MultilingualText; // multilingual section name
   restaurantId: string; // ObjectId of Restaurant
   restaurantName: MultilingualText; // restaurant name from API
-  restaurant?:
-    | {
-        _id: string;
-        name: MultilingualText;
-      }
-    | string; // populated restaurant or just ID
   isActive: boolean; // active status
   createdBy: string; // ObjectId of User
   updatedBy: string; // ObjectId of User
@@ -24,7 +18,7 @@ export interface TableSection extends Record<string, unknown> {
   updatedAt: string; // ISO date string from API
 }
 
-// Form data interface for creating/updating table sections (matches CreateTablesectionDto)
+// Form data interface for creating/updating table sections (matches CreateTableSectionDto)
 export interface TableSectionFormData extends Record<string, unknown> {
   name: MultilingualText;
   restaurantId: string;
@@ -46,11 +40,4 @@ export interface TableSectionQueryParams extends QueryParams {
   isActive?: string; // Filter by active/inactive status
   sortBy?: "name" | "createdAt" | "updatedAt";
   sortOrder?: "asc" | "desc"; // Sort order
-}
-
-export interface TableSectionColumn {
-  id: keyof TableSection | "actions";
-  label: string;
-  sortable?: boolean;
-  filterable?: boolean;
 }

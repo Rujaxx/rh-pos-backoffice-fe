@@ -18,9 +18,6 @@ import {
   Hash,
   Calendar,
   UtensilsCrossed,
-  Smartphone,
-  Monitor,
-  Radio,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -28,7 +25,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 export const createMenuColumns = (
   onEdit: (menu: Menu) => void,
   onDelete: (menu: Menu) => void,
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>["t"]
 ): ColumnDef<Menu>[] => [
   {
     accessorKey: "name",
@@ -59,10 +56,8 @@ export const createMenuColumns = (
   },
 
   {
-    accessorKey: "shortCode",
     id: "shortCode",
     header: t("menus.table.shortCode"),
-    enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const menu = row.original;
@@ -76,10 +71,8 @@ export const createMenuColumns = (
   },
 
   {
-    accessorKey: "isActive",
     id: "isActive",
     header: t("menus.table.status"),
-    enableSorting: true,
     size: 120,
     cell: ({ row }) => {
       const menu = row.original;
@@ -92,10 +85,8 @@ export const createMenuColumns = (
   },
 
   {
-    accessorKey: "isPosDefault",
     id: "isPosDefault",
     header: t("menus.table.posDefault"),
-    enableSorting: true,
     size: 120,
     cell: ({ row }) => {
       const menu = row.original;
@@ -108,10 +99,8 @@ export const createMenuColumns = (
   },
 
   {
-    accessorKey: "isDigitalDefault",
     id: "isDigitalDefault",
     header: t("menus.table.digitalDefault"),
-    enableSorting: true,
     size: 140,
     cell: ({ row }) => {
       const menu = row.original;
@@ -123,10 +112,8 @@ export const createMenuColumns = (
     },
   },
   {
-    accessorKey: "menuItemCount",
     id: "menuItemCount",
     header: t("menus.table.itemCount"),
-    enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const menu = row.original;
@@ -207,14 +194,14 @@ export const createMenuColumns = (
 
 export const useMenuColumns = (
   onEdit: (menu: Menu) => void,
-  onDelete: (menu: Menu) => void,
+  onDelete: (menu: Menu) => void
 ) => {
   const { t } = useTranslation();
   return createMenuColumns(onEdit, onDelete, t);
 };
 
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -232,7 +219,7 @@ export const getSortFieldForQuery = (
 };
 
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

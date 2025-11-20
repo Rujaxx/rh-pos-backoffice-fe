@@ -28,6 +28,11 @@ export const sendReportsSchema = z.object({
   sms: z.boolean().default(false),
 });
 
+const customQRCodeSchema = z.object({
+  qrCodeTitle: z.string().min(1, "Title is required"),
+  qrCodeLink: z.url("Invalid URL"),
+});
+
 // Restaurant validation schema matching backend CreateRestaurantDto
 export const restaurantSchema = z.object({
   _id: z.string().optional(),
@@ -49,16 +54,19 @@ export const restaurantSchema = z.object({
     .max(1439, "End day time must be between 0 and 1439 minutes"),
 
   nextResetBillFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  nextResetBillDate: z.string().optional(),
+  nextResetKotFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
   notificationPhone: z.array(z.string()).default([]),
-  notificationEmails: z
-    .array(z.string().email("Invalid email format"))
-    .default([]),
+  notificationEmails: z.array(z.email("Invalid email format")).default([]),
+  phoneNumber: z.string().nullable().optional(),
+  contactEmail: z.email("Invalid email format").nullable().optional(),
+  countryCode: z.string().optional(),
   isActive: z.boolean().default(true),
   restoCode: z.string().max(50).optional(),
   posLogoutOnClose: z.boolean().default(true),
   isFeedBackActive: z.boolean().default(false),
   trnOrGstNo: z.string().max(50).optional(),
-  customQRcode: z.array(z.string()).default([]),
+  customQRcode: z.array(customQRCodeSchema).default([]),
   inventoryWarehouse: z.string().optional(),
   deductFromInventory: z.boolean().default(true),
   multiplePriceSetting: z.boolean().default(false),
@@ -84,6 +92,9 @@ export const restaurantSchema = z.object({
     onWhatsapp: false,
     onSms: false,
   }),
+
+  billPrefix: z.string().max(50).optional(),
+  kotPrefix: z.string().max(50).optional(),
 });
 
 export type RestaurantFormData = z.input<typeof restaurantSchema>;

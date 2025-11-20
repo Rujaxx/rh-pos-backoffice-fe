@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Table } from "@/types/table";
+import { KitchenDepartment } from "@/types/kitchen-department.type";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,86 +11,80 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  UtensilsCrossed,
-  Users,
-} from "lucide-react";
+import { Edit, Trash2, MoreHorizontal } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useI18n } from "@/providers/i18n-provider";
 import { MultilingualText } from "@/types";
 
-// Column definitions for the tables
-export const createTableColumns = (
-  onEdit: (table: Table) => void,
-  onDelete: (table: Table) => void,
+// Column definitions
+export const createKitchenDepartmentColumns = (
+  onEdit: (department: KitchenDepartment) => void,
+  onDelete: (department: KitchenDepartment) => void,
   t: ReturnType<typeof useTranslation>["t"],
   locale: string
-): ColumnDef<Table>[] => {
+): ColumnDef<KitchenDepartment>[] => {
   return [
+    // Name column
     {
-      accessorKey: "label",
-      id: "label",
-      header: t("table.label"),
+      accessorKey: "name",
+      id: "name",
+      header: t("kitchenDepartment.name"),
       enableSorting: true,
-      size: 100,
+      sortingFn: (rowA, rowB) => {
+        const a = (rowA.original.name?.en || "").toLowerCase();
+        const b = (rowB.original.name?.en || "").toLowerCase();
+        return a.localeCompare(b);
+      },
       cell: ({ row }) => {
-        const table = row.original;
+        const dept = row.original;
         return (
-          <div className="flex items-center space-x-2">
-            <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{table.label}</span>
+          <div className="space-y-1">
+            <div className="font-medium text-sm">{dept.name.en}</div>
+            {dept.name.ar && (
+              <div className="text-xs text-muted-foreground" dir="rtl">
+                {dept.name.ar}
+              </div>
+            )}
           </div>
         );
       },
     },
     {
-      id: "restaurantName",
-      header: t("table.restaurant"),
+      id: "brandName",
+      header: t("brands.brandName"),
       cell: ({ row }) => {
-        const table = row.original;
+        const brandName = row.original.brandName;
         return (
           <div className="font-medium text-foreground truncate">
-            {table.restaurantName?.[locale as keyof MultilingualText] ||
-              table.restaurantName?.en ||
+            {brandName?.[locale as keyof MultilingualText] ||
+              brandName?.en ||
               "N/A"}
           </div>
         );
       },
     },
     {
-      id: "capacity",
-      header: t("table.capacity"),
-      size: 120,
+      id: "restaurantName",
+      header: t("restaurants.name"),
       cell: ({ row }) => {
-        const table = row.original;
+        const restaurantName = row.original.restaurantName;
         return (
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{table.capacity}</span>
-            <span className="text-sm text-muted-foreground">
-              {table.capacity === 1 ? "seat" : "seats"}
-            </span>
+          <div className="font-medium text-foreground truncate">
+            {restaurantName?.[locale as keyof MultilingualText] ||
+              restaurantName?.en ||
+              "N/A"}
           </div>
         );
       },
     },
     {
       id: "status",
-      header: t("table.status"),
-      size: 100,
+      header: t("common.status"),
       cell: ({ row }) => {
-        const table = row.original;
+        const isActive = row.original.isActive;
         return (
-          <Badge
-            variant={table.isAvailable ? "default" : "secondary"}
-            className={
-              table.isAvailable ? "bg-green-500 hover:bg-green-600" : ""
-            }
-          >
-            {table.isAvailable ? t("table.available") : t("table.unavailable")}
+          <Badge variant={isActive ? "default" : "secondary"}>
+            {isActive ? t("common.active") : t("common.inactive")}
           </Badge>
         );
       },
@@ -101,7 +95,7 @@ export const createTableColumns = (
       enableSorting: false,
       size: 80,
       cell: ({ row }) => {
-        const table = row.original;
+        const dept = row.original;
 
         return (
           <DropdownMenu>
@@ -111,27 +105,28 @@ export const createTableColumns = (
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  onEdit(table);
+                  onEdit(dept);
                 }}
                 className="cursor-pointer"
               >
                 <Edit className="mr-2 h-4 w-4" />
-                {t("table.edit")}
+                {t("common.edit")}
               </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(table);
+                  onDelete(dept);
                 }}
                 className="cursor-pointer text-destructive focus:text-destructive"
-                disabled={!table.isAvailable} // Don't allow deleting tables that are in use
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                {t("table.delete")}
+                {t("common.delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -141,35 +136,33 @@ export const createTableColumns = (
   ];
 };
 
-// Hook for using table columns with current translation
-export const useTableColumns = (
-  onEdit: (table: Table) => void,
-  onDelete: (table: Table) => void
+export const useKitchenDepartmentColumns = (
+  onEdit: (department: KitchenDepartment) => void,
+  onDelete: (department: KitchenDepartment) => void
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
-  return createTableColumns(onEdit, onDelete, t, locale);
+
+  return createKitchenDepartmentColumns(onEdit, onDelete, t, locale);
 };
 
-// Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
   sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const sort = sorting[0];
-  // Map TanStack column IDs to backend field names
+
   const fieldMap: Record<string, string> = {
+    name: "name.en",
+    brandName: "brandName",
     restaurantName: "restaurantName",
-    label: "label",
-    capacity: "capacity",
-    status: "isAvailable",
+    status: "isActive",
   };
 
   return fieldMap[sort.id] || sort.id;
 };
 
-// Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
   sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {

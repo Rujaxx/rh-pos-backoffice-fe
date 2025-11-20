@@ -18,7 +18,7 @@ import {
 } from "@/components/tables/table-table-columns";
 import { TanStackTable } from "@/components/ui/tanstack-table";
 import Layout from "@/components/common/layout";
-import { Plus, UtensilsCrossed } from "lucide-react";
+import { Filter, Plus, UtensilsCrossed } from "lucide-react";
 import { Table, TableQueryParams } from "@/types/table";
 import { TableFormData } from "@/lib/validations/table.validation";
 import { useTables, useTable } from "@/services/api/tables/tables.queries";
@@ -45,6 +45,9 @@ export default function TablesPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+    undefined
+  );
 
   // Build query parameters from table state
   const queryParams = useMemo<TableQueryParams>(() => {
@@ -62,12 +65,16 @@ export default function TablesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortBy = sortField as string;
       params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
+    if (statusFilter !== undefined) {
+      // Send string values to backend as expected by BrandQueryParams
+      params.isAvailable = statusFilter === "available" ? "true" : "false";
+    }
+
     return params;
-  }, [pagination, sorting, searchTerm]);
+  }, [pagination, sorting, searchTerm, statusFilter]);
 
   // API hooks
   const { data: tablesResponse, isLoading, error } = useTables(queryParams);
@@ -150,7 +157,7 @@ export default function TablesPage() {
         }),
         confirmButtonText: t("table.deleteTableButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -200,7 +207,7 @@ export default function TablesPage() {
         console.error("Failed to save table:", error);
       }
     },
-    [latestTableData, updateTableMutation, createTableMutation, closeModal],
+    [latestTableData, updateTableMutation, createTableMutation, closeModal]
   );
 
   // Search handler with proper typing
@@ -215,7 +222,7 @@ export default function TablesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   // Sorting handler
@@ -232,7 +239,7 @@ export default function TablesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
@@ -254,9 +261,36 @@ export default function TablesPage() {
             <p className="text-muted-foreground">{t("table.subtitle")}</p>
           </div>
           <div className="flex items-center space-x-2">
-            <Button onClick={() => openModal()} className="h-8">
-              <Plus className="h-4 w-4 mr-2" />
-              {t("table.addNewTable")}
+            {/* Add status filter button */}
+            <Button
+              variant={statusFilter !== undefined ? "default" : "outline"}
+              onClick={() => {
+                setStatusFilter(
+                  statusFilter === "available"
+                    ? "unavailable"
+                    : statusFilter === "unavailable"
+                      ? undefined
+                      : "available"
+                );
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              className="h-8 flex items-center gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              <span>
+                {statusFilter === "available"
+                  ? t("table.available")
+                  : statusFilter === "unavailable"
+                    ? t("table.unavailable")
+                    : t("common.allStatus")}
+              </span>
+            </Button>
+            <Button
+              onClick={() => openModal()}
+              className="h-8 flex items-center gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              <span>{t("brands.addNewBrand")}</span>
             </Button>
           </div>
         </div>

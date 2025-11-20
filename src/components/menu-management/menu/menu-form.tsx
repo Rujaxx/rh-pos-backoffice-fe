@@ -43,7 +43,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }),
+    })
   );
 
   return (
@@ -94,8 +94,8 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
                 isLoadingBrands
                   ? t("common.loading")
                   : brandOptions.length === 0
-                    ? t("categories.form.noBrandsAvailable")
-                    : t("categories.form.brandPlaceholder")
+                    ? t("common.noBrandsAvailable")
+                    : t("common.brandPlaceholder")
               }
               options={brandOptions}
             />

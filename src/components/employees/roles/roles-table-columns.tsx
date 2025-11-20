@@ -26,7 +26,7 @@ import { Permission } from "@/types/permission.type";
 export const createRoleColumns = (
   onEdit: (role: Role) => void,
   onDelete: (role: Role) => void,
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>["t"]
 ): ColumnDef<Role>[] => [
   {
     id: "icon",
@@ -87,31 +87,6 @@ export const createRoleColumns = (
     },
   },
   {
-    accessorKey: "isActive",
-    id: "status",
-    header: t("roles.table.status"),
-    enableSorting: true,
-    size: 120,
-    cell: ({ row }) => {
-      const { isActive } = row.original;
-      return (
-        <Badge variant={isActive ? "default" : "secondary"}>
-          {isActive ? (
-            <>
-              <UserCheck className="h-3 w-3 mr-1" />
-              {t("common.active")}
-            </>
-          ) : (
-            <>
-              <UserX className="h-3 w-3 mr-1" />
-              {t("common.inactive")}
-            </>
-          )}
-        </Badge>
-      );
-    },
-  },
-  {
     id: "actions",
     header: t("table.actions"),
     enableSorting: false,
@@ -155,7 +130,7 @@ export const createRoleColumns = (
 // Hook for current translation
 export const useRoleColumns = (
   onEdit: (role: Role) => void,
-  onDelete: (role: Role) => void,
+  onDelete: (role: Role) => void
 ) => {
   const { t } = useTranslation();
   return createRoleColumns(onEdit, onDelete, t);
@@ -163,20 +138,19 @@ export const useRoleColumns = (
 
 // Sorting helpers
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
   const sort = sorting[0];
   const fieldMap: Record<string, string> = {
     name: "name.en",
-    status: "isActive",
     createdAt: "createdAt",
   };
   return fieldMap[sort.id] || sort.id;
 };
 
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";
