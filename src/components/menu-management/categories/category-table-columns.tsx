@@ -25,7 +25,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 export const createCategoryColumns = (
   onEdit: (category: Category) => void,
   onDelete: (category: Category) => void,
-  t: ReturnType<typeof useTranslation>["t"]
+  t: ReturnType<typeof useTranslation>["t"],
 ): ColumnDef<Category>[] => [
   {
     accessorKey: "name",
@@ -162,7 +162,7 @@ export const createCategoryColumns = (
 // Hook for using category columns with current translation
 export const useCategoryColumns = (
   onEdit: (category: Category) => void,
-  onDelete: (category: Category) => void
+  onDelete: (category: Category) => void,
 ) => {
   const { t } = useTranslation();
   return createCategoryColumns(onEdit, onDelete, t);
@@ -170,7 +170,7 @@ export const useCategoryColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -189,7 +189,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

@@ -49,7 +49,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (
@@ -136,7 +136,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
 
 // Hook for tax group form logic
 export function useTaxProductGroupForm(
-  editingTaxGroup?: TaxProductGroupFormData | null
+  editingTaxGroup?: TaxProductGroupFormData | null,
 ) {
   const form = useForm<TaxProductGroupFormData>({
     resolver: zodResolver(taxProductGroupSchema),

@@ -27,7 +27,7 @@ export const createTableColumns = (
   onEdit: (table: Table) => void,
   onDelete: (table: Table) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: string,
 ): ColumnDef<Table>[] => {
   return [
     {
@@ -144,7 +144,7 @@ export const createTableColumns = (
 // Hook for using table columns with current translation
 export const useTableColumns = (
   onEdit: (table: Table) => void,
-  onDelete: (table: Table) => void
+  onDelete: (table: Table) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -153,7 +153,7 @@ export const useTableColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -171,7 +171,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

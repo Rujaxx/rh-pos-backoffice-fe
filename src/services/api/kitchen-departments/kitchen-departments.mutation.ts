@@ -15,7 +15,7 @@ export const useCreateKitchenDepartment = (
     SuccessResponse<KitchenDepartment>,
     Error,
     KitchenDepartmentFormData
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -31,7 +31,7 @@ export const useCreateKitchenDepartment = (
       if (data.data) {
         queryUtils.setQueryData(
           QUERY_KEYS.KITCHEN_DEPARTMENTS.DETAIL(data.data._id),
-          data
+          data,
         );
       }
     },
@@ -50,7 +50,7 @@ export const useUpdateKitchenDepartment = (
     SuccessResponse<KitchenDepartment>,
     Error,
     { id: string; data: KitchenDepartmentFormData }
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -75,7 +75,7 @@ export const useUpdateKitchenDepartment = (
       if (data.data) {
         queryUtils.setQueryData(
           QUERY_KEYS.KITCHEN_DEPARTMENTS.DETAIL(id),
-          data
+          data,
         );
       }
 
@@ -93,7 +93,7 @@ export const useUpdateKitchenDepartment = (
 
 // Delete kitchen department mutation
 export const useDeleteKitchenDepartment = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
 ) => {
   const queryUtils = useQueryUtils();
 

@@ -20,7 +20,7 @@ export const createTableSectionColumns = (
   onEdit: (tableSection: TableSection) => void,
   onDelete: (tableSection: TableSection) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: string,
 ): ColumnDef<TableSection>[] => {
   return [
     // Section Name
@@ -130,7 +130,7 @@ export const createTableSectionColumns = (
 // Hook wrapper (matches table columns pattern)
 export const useTableSectionColumns = (
   onEdit: (tableSection: TableSection) => void,
-  onDelete: (tableSection: TableSection) => void
+  onDelete: (tableSection: TableSection) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -140,7 +140,7 @@ export const useTableSectionColumns = (
 
 // Map TanStack → backend sorting fields
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -157,7 +157,7 @@ export const getSortFieldForQuery = (
 
 // Sort order translator
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

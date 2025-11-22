@@ -47,7 +47,7 @@ export function CategoryFormContent({ form }: CategoryFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (
