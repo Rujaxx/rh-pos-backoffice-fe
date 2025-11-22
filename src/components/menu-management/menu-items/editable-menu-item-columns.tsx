@@ -10,7 +10,7 @@ import {
   EditableSelectCell,
   EditableTextCell,
   EditableNumberCell,
-} from "./editable-cells";
+} from "./editable-cells-components";
 import { MultilingualText } from "@/types";
 
 interface EditableColumnsConfig {
