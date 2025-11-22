@@ -57,7 +57,7 @@ export default function TableSectionsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -138,7 +138,7 @@ export default function TableSectionsPage() {
 
   // Use refs to update the actual handler logic without changing column references
   const editHandlerRef = useRef<((tableSection: TableSection) => void) | null>(
-    null
+    null,
   );
   const deleteHandlerRef = useRef<
     ((tableSection: TableSection) => void) | null
@@ -179,7 +179,7 @@ export default function TableSectionsPage() {
         }),
         confirmButtonText: t("common.delete"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -209,7 +209,7 @@ export default function TableSectionsPage() {
       updateTableSectionMutation,
       createTableSectionMutation,
       closeModal,
-    ]
+    ],
   );
 
   // Search handler with proper typing
@@ -224,7 +224,7 @@ export default function TableSectionsPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -241,7 +241,7 @@ export default function TableSectionsPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -274,7 +274,7 @@ export default function TableSectionsPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active"
+                      : "active",
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

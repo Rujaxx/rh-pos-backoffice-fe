@@ -43,7 +43,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (

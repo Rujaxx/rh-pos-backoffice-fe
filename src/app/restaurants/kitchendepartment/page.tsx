@@ -59,7 +59,7 @@ export default function KitchenDepartmentPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -138,10 +138,10 @@ export default function KitchenDepartmentPage() {
 
   // Stable handler refs for column callbacks
   const editHandlerRef = useRef<((dept: KitchenDepartment) => void) | null>(
-    null
+    null,
   );
   const deleteHandlerRef = useRef<((dept: KitchenDepartment) => void) | null>(
-    null
+    null,
   );
 
   const editHandler = useCallback((dept: KitchenDepartment) => {
@@ -179,7 +179,7 @@ export default function KitchenDepartmentPage() {
         }),
         confirmButtonText: t("common.delete"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -209,7 +209,7 @@ export default function KitchenDepartmentPage() {
       updateKitchenDepartmentMutation,
       createKitchenDepartmentMutation,
       closeModal,
-    ]
+    ],
   );
 
   // Search
@@ -223,7 +223,7 @@ export default function KitchenDepartmentPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting
@@ -238,7 +238,7 @@ export default function KitchenDepartmentPage() {
       setColumnFilters(filters);
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -270,7 +270,7 @@ export default function KitchenDepartmentPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active"
+                      : "active",
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

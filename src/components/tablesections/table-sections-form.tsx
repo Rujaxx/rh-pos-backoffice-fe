@@ -37,7 +37,7 @@ export function TableSectionFormContent({
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (
@@ -89,7 +89,7 @@ export function TableSectionFormContent({
 
 // Hook for table section form logic
 export function useTableSectionForm(
-  editingTableSection?: TableSection | null
+  editingTableSection?: TableSection | null,
 ): {
   form: UseFormReturn<TableSectionFormData, unknown>;
   isEditing: boolean;

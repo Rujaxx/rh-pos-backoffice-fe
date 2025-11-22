@@ -94,6 +94,13 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/categories/${id}`,
     GET: (id: string) => `/categories/${id}`,
   },
+  MENU_ITEMS: {
+    LIST: "/menu-items",
+    CREATE: "/menu-items",
+    UPDATE: (id: string) => `/menu-items/${id}`,
+    DELETE: (id: string) => `/menu-items/${id}`,
+    GET: (id: string) => `/menu-items/${id}`,
+  },
   KITCHEN_DEPARTMENTS: {
     LIST: "/kitchen-departments",
     CREATE: "/kitchen-departments",
@@ -169,6 +176,11 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ["categories", "list", params] as const,
     DETAIL: (id: string) => ["categories", "detail", id] as const,
+  },
+  MENU_ITEMS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ["menu-items", "list", params] as const,
+    DETAIL: (id: string) => ["menu-items", "detail", id] as const,
   },
   KITCHEN_DEPARTMENTS: {
     LIST: (params?: Record<string, unknown>) =>

@@ -14,7 +14,7 @@ export const taxProductGroupSchema = z.object({
     .min(0.01, "Tax value must be greater than 0")
     .max(
       100,
-      "Tax value cannot exceed 100 for percentage or be too large for fixed amount"
+      "Tax value cannot exceed 100 for percentage or be too large for fixed amount",
     ),
   isActive: z.boolean(),
   brandId: z.string(),

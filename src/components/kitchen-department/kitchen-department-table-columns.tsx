@@ -21,7 +21,7 @@ export const createKitchenDepartmentColumns = (
   onEdit: (department: KitchenDepartment) => void,
   onDelete: (department: KitchenDepartment) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: string,
 ): ColumnDef<KitchenDepartment>[] => {
   return [
     // Name column
@@ -138,7 +138,7 @@ export const createKitchenDepartmentColumns = (
 
 export const useKitchenDepartmentColumns = (
   onEdit: (department: KitchenDepartment) => void,
-  onDelete: (department: KitchenDepartment) => void
+  onDelete: (department: KitchenDepartment) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -147,7 +147,7 @@ export const useKitchenDepartmentColumns = (
 };
 
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -164,7 +164,7 @@ export const getSortFieldForQuery = (
 };
 
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

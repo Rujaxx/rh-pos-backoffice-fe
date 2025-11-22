@@ -46,7 +46,7 @@ export default function TablesPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -157,7 +157,7 @@ export default function TablesPage() {
         }),
         confirmButtonText: t("table.deleteTableButton"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -207,7 +207,7 @@ export default function TablesPage() {
         console.error("Failed to save table:", error);
       }
     },
-    [latestTableData, updateTableMutation, createTableMutation, closeModal]
+    [latestTableData, updateTableMutation, createTableMutation, closeModal],
   );
 
   // Search handler with proper typing
@@ -222,7 +222,7 @@ export default function TablesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -239,7 +239,7 @@ export default function TablesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -270,7 +270,7 @@ export default function TablesPage() {
                     ? "unavailable"
                     : statusFilter === "unavailable"
                       ? undefined
-                      : "available"
+                      : "available",
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

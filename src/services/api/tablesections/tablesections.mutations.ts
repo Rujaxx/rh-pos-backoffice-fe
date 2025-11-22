@@ -17,7 +17,7 @@ export const useCreateTableSection = (
     SuccessResponse<TableSection>,
     Error,
     TableSectionFormData
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -37,7 +37,7 @@ export const useCreateTableSection = (
       if (data.data) {
         queryUtils.setQueryData(
           QUERY_KEYS.TABLE_SECTIONS.DETAIL(data.data._id),
-          data
+          data,
         );
       }
     },
@@ -56,7 +56,7 @@ export const useUpdateTableSection = (
     SuccessResponse<TableSection>,
     Error,
     { id: string; data: TableSectionFormData }
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -98,7 +98,7 @@ export const useUpdateTableSection = (
 
 // Delete table section mutation
 export const useDeleteTableSection = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
 ) => {
   const queryUtils = useQueryUtils();
 

@@ -32,7 +32,7 @@ export const createRestaurantColumns = (
   onEdit: (restaurant: Restaurant) => void,
   onDelete: (restaurant: Restaurant) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: string,
 ): ColumnDef<Restaurant>[] => [
   {
     id: "logo",
@@ -262,7 +262,7 @@ export const createRestaurantColumns = (
 // Hook for using restaurant columns with current translation
 export const useRestaurantColumns = (
   onEdit: (restaurant: Restaurant) => void,
-  onDelete: (restaurant: Restaurant) => void
+  onDelete: (restaurant: Restaurant) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -271,7 +271,7 @@ export const useRestaurantColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -290,7 +290,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";
