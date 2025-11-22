@@ -31,7 +31,6 @@ function transformToBackendFormat(
     const { _id, ...rest } = transformed;
     return rest;
   }
-  console.log("transformed data: ", transformed);
 
   return transformed;
 }

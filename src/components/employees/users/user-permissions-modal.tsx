@@ -104,7 +104,7 @@ export function UserPermissionsModal({
   const renderPermissionModule = (
     moduleName: string,
     permissions: Permission[],
-    existingPermissions: string[]
+    existingPermissions: string[],
   ) => {
     const ModuleIcon = getModuleIcon(moduleName);
     return (
@@ -209,8 +209,8 @@ export function UserPermissionsModal({
                     renderPermissionModule(
                       group.module,
                       group.permissions,
-                      user.permissions as string[]
-                    )
+                      user.permissions as string[],
+                    ),
                   )}
                 </div>
               )}

@@ -198,36 +198,36 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     label: t("navigation.menuManagement"),
     items: [
       {
-        id: "menu-items",
-        label: t("navigation.menuItems"),
-        href: "/menu",
+        id: "menu",
+        label: t("navigation.menu"),
+        href: "/menu-management/menu",
         icon: Utensils,
-        children: [
-          {
-            id: "all-items",
-            label: t("navigation.allMenuItems"),
-            href: "/menu/all",
-            icon: Utensils,
-          },
-          {
-            id: "categories",
-            label: t("navigation.categories"),
-            href: "/menu/categories",
-            icon: ClipboardList,
-          },
-          {
-            id: "pricing",
-            label: t("navigation.pricing"),
-            href: "/menu/pricing",
-            icon: DollarSign,
-          },
-          {
-            id: "availability",
-            label: t("navigation.availability"),
-            href: "/menu/availability",
-            icon: Clock,
-          },
-        ],
+        // children: [
+        //   {
+        //     id: 'all-items',
+        //     label: t('navigation.allMenuItems'),
+        //     href: '/menu/all',
+        //     icon: Utensils,
+        //   },
+        //   {
+        //     id: 'pricing',
+        //     label: t('navigation.pricing'),
+        //     href: '/menu/pricing',
+        //     icon: DollarSign,
+        //   },
+        //   {
+        //     id: 'availability',
+        //     label: t('navigation.availability'),
+        //     href: '/menu/availability',
+        //     icon: Clock,
+        //   },
+        // ],
+      },
+      {
+        id: "categories",
+        label: t("navigation.categories"),
+        href: "/menu-management/categories",
+        icon: ClipboardList,
       },
     ],
   },
@@ -515,7 +515,7 @@ export default function Sidebar() {
         {/* Mobile sidebar overlay */}
         <nav
           className={`
-            fixed inset-y-0 z-[70] w-64 bg-white dark:bg-[#0F0F12] 
+            fixed inset-y-0 z-[70] w-64 bg-white dark:bg-[#0F0F12]
             transform transition-transform duration-300 ease-in-out
             ${
               isRTL
@@ -615,7 +615,7 @@ export default function Sidebar() {
   return (
     <nav
       className={`
-        fixed inset-y-0 z-[60] bg-white dark:bg-[#0F0F12] 
+        fixed inset-y-0 z-[60] bg-white dark:bg-[#0F0F12]
         transition-all duration-300 ease-in-out
         ${
           menuState === "hidden"

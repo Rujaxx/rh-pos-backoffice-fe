@@ -36,7 +36,7 @@ export interface CrudModalProps<
   children: React.ReactNode;
 
   // Customization
-  size?: "sm" | "md" | "lg" | "xl" | "full";
+  size?: "sm" | "md" | "lg" | "ml" | "xl" | "full";
   className?: string;
 
   // Action buttons
@@ -53,6 +53,7 @@ const sizeClasses = {
   sm: "max-w-md",
   md: "max-w-lg",
   lg: "max-w-2xl",
+  ml: "max-w-4xl",
   xl: "max-w-6xl",
   full: "max-w-[95vw] w-full",
 };

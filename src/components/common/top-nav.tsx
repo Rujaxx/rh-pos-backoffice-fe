@@ -65,7 +65,7 @@ export default function TopNav() {
         onError: () => {
           toast.error(t("auth.logout.error") || "Logout failed");
         },
-      }
+      },
     );
   };
   // Fetch brands from API
@@ -128,7 +128,7 @@ export default function TopNav() {
     selectedBrand === "all-brands"
       ? restaurants
       : restaurants.filter(
-          (r) => r.brandId === selectedBrand || r.id === "all-restaurants"
+          (r) => r.brandId === selectedBrand || r.id === "all-restaurants",
         );
 
   // Helper function to get localized name for brands

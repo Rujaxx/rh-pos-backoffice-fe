@@ -47,10 +47,8 @@ export const createTableColumns = (
       },
     },
     {
-      accessorKey: "restaurantName",
       id: "restaurantName",
       header: t("table.restaurant"),
-      enableSorting: true,
       cell: ({ row }) => {
         const table = row.original;
         return (
@@ -63,10 +61,8 @@ export const createTableColumns = (
       },
     },
     {
-      accessorKey: "capacity",
       id: "capacity",
       header: t("table.capacity"),
-      enableSorting: true,
       size: 120,
       cell: ({ row }) => {
         const table = row.original;
@@ -82,10 +78,8 @@ export const createTableColumns = (
       },
     },
     {
-      accessorKey: "isAvailable",
       id: "status",
       header: t("table.status"),
-      enableSorting: true,
       size: 100,
       cell: ({ row }) => {
         const table = row.original;

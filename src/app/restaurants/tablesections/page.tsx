@@ -19,18 +19,22 @@ import {
 import {
   TableSectionFormContent,
   useTableSectionForm,
-} from "@/components/forms/tablesections/tablesections-form";
-import { useTableSectionColumns } from "@/components/tables/tablesections/tablesections-columns";
+} from "@/components/tablesections/table-sections-form";
+import {
+  getSortOrderForQuery,
+  getSortFieldForQuery,
+  useTableSectionColumns,
+} from "@/components/tablesections/table-sections-columns";
 import Layout from "@/components/common/layout";
 import { Plus, Layers, Filter } from "lucide-react";
 import {
   TableSection,
   TableSectionQueryParams,
-} from "@/types/tablesection.type";
+} from "@/types/table-section.type";
 import {
   TableSectionFormData,
   tableSectionSchema,
-} from "@/lib/validations/tablesection.validation";
+} from "@/lib/validations/table-section.validation";
 import {
   useGetTableSections,
   useGetTableSection,
@@ -61,7 +65,7 @@ export default function TableSectionsPage() {
     const params: TableSectionQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: "desc", // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
     };
 
     // Add search term
@@ -70,12 +74,9 @@ export default function TableSectionsPage() {
     }
 
     // Add sorting
-    if (sorting.length > 0) {
-      const sortField = sorting[0]?.id as "name" | "createdAt" | "updatedAt";
-      if (sortField) {
-        params.sortBy = sortField;
-        params.sortOrder = sorting[0]?.desc ? "desc" : "asc";
-      }
+    const sortField = getSortFieldForQuery(sorting);
+    if (sortField) {
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
     // Add status filter
@@ -153,11 +154,7 @@ export default function TableSectionsPage() {
   }, []);
 
   // Create columns with stable handlers
-  const stableColumns = useTableSectionColumns({
-    onEdit: editHandler,
-    onDelete: deleteHandler,
-  });
-
+  const stableColumns = useTableSectionColumns(editHandler, deleteHandler);
   // Update the handler refs on each render (but this won't cause columns to recreate)
   editHandlerRef.current = (tableSection: TableSection) => {
     openModal(tableSection);

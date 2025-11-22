@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Category } from "@/types/category.type";
+import { Menu } from "@/types/menu.type";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,89 +15,114 @@ import {
   Edit,
   Trash2,
   MoreHorizontal,
-  Tag,
-  Calendar,
   Hash,
+  Calendar,
+  UtensilsCrossed,
+  List,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useRouter } from "next/navigation";
 
-// Column definitions for the categories table
-export const createCategoryColumns = (
-  onEdit: (category: Category) => void,
-  onDelete: (category: Category) => void,
+// Column definitions for the menus table
+export const createMenuColumns = (
+  onEdit: (menu: Menu) => void,
+  onDelete: (menu: Menu) => void,
   t: ReturnType<typeof useTranslation>["t"],
-): ColumnDef<Category>[] => [
+  router: ReturnType<typeof useRouter>
+): ColumnDef<Menu>[] => [
   {
     accessorKey: "name",
     id: "name",
-    header: t("categories.categoryName"),
+    header: t("menus.table.name"),
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      const aValue = (rowA.original.name.en || "").toLowerCase();
-      const bValue = (rowB.original.name.en || "").toLowerCase();
+      const aValue = (rowA.original.name?.en || "").toLowerCase();
+      const bValue = (rowB.original.name?.en || "").toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
-      const category = row.original;
+      const menu = row.original;
       return (
         <div className="space-y-1">
           <div className="font-medium text-sm flex items-center space-x-2">
-            <Tag className="h-4 w-4 text-muted-foreground" />
-            <span>{category.name.en}</span>
+            <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
+            <span>{menu.name.en}</span>
           </div>
-          {category.name.ar && (
+          {menu.name.ar && (
             <div className="text-xs text-muted-foreground" dir="rtl">
-              {category.name.ar}
+              {menu.name.ar}
             </div>
           )}
         </div>
       );
     },
   },
+
   {
-    accessorKey: "shortCode",
     id: "shortCode",
-    header: t("categories.shortCode"),
-    enableSorting: true,
+    header: t("menus.table.shortCode"),
     size: 100,
     cell: ({ row }) => {
-      const category = row.original;
+      const menu = row.original;
       return (
         <div className="flex items-center space-x-1">
           <Hash className="h-3 w-3 text-muted-foreground" />
-          <span className="font-mono text-sm">{category.shortCode}</span>
+          <span className="font-mono text-sm">{menu.shortCode}</span>
         </div>
       );
     },
   },
+
   {
-    accessorKey: "isActive",
-    id: "status",
-    header: t("categories.status"),
-    enableSorting: true,
-    size: 100,
+    id: "isActive",
+    header: t("menus.table.status"),
+    size: 120,
     cell: ({ row }) => {
-      const category = row.original;
+      const menu = row.original;
       return (
-        <Badge variant={category.isActive ? "default" : "secondary"}>
-          {category.isActive
-            ? t("categories.active")
-            : t("categories.inactive")}
+        <Badge variant={menu.isActive ? "default" : "secondary"}>
+          {menu.isActive ? t("common.active") : t("common.inactive")}
         </Badge>
       );
     },
   },
+
   {
-    accessorKey: "sortOrder",
-    id: "sortOrder",
-    header: t("categories.sortOrder"),
-    enableSorting: true,
+    id: "isPosDefault",
+    header: t("menus.table.posDefault"),
+    size: 120,
+    cell: ({ row }) => {
+      const menu = row.original;
+      return menu.isPosDefault ? (
+        <Badge variant="default">{t("menus.table.pos")}</Badge>
+      ) : (
+        <Badge variant="secondary">{t("common.no")}</Badge>
+      );
+    },
+  },
+
+  {
+    id: "isDigitalDefault",
+    header: t("menus.table.digitalDefault"),
+    size: 140,
+    cell: ({ row }) => {
+      const menu = row.original;
+      return menu.isDigitalDefault ? (
+        <Badge variant="default">{t("menus.table.digital")}</Badge>
+      ) : (
+        <Badge variant="secondary">{t("common.no")}</Badge>
+      );
+    },
+  },
+  {
+    id: "menuItemCount",
+    header: t("menus.table.itemCount"),
     size: 100,
     cell: ({ row }) => {
-      const category = row.original;
+      const menu = row.original;
       return (
         <span className="text-sm text-muted-foreground">
-          {category.sortOrder ?? 0}
+          {menu.menuItemCount ?? 0}
         </span>
       );
     },
@@ -105,29 +130,31 @@ export const createCategoryColumns = (
   {
     accessorKey: "createdAt",
     id: "createdAt",
-    header: t("categories.created"),
+    header: t("menus.table.created"),
     enableSorting: true,
-    size: 120,
+    size: 140,
     cell: ({ row }) => {
-      const category = row.original;
+      const menu = row.original;
       return (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
           <span>
-            {new Date(category.createdAt)?.toLocaleDateString() || "N/A"}
+            {menu.createdAt
+              ? new Date(menu.createdAt).toLocaleDateString()
+              : "N/A"}
           </span>
         </div>
       );
     },
   },
+
   {
     id: "actions",
     header: t("table.actions"),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
-      const category = row.original;
-
+      const menu = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -136,27 +163,40 @@ export const createCategoryColumns = (
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                onEdit(category);
+                onEdit(menu);
               }}
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("categories.edit")}
+              {t("menus.table.edit")}
             </DropdownMenuItem>
+
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete(category);
+                router.push(`/menu-management/menu-items?menuId=${menu._id}`);
+              }}
+              className="cursor-pointer"
+            >
+              <List className="mr-2 h-4 w-4" />
+              {t("menus.table.menuItems")} ({menu.menuItemCount || 0})
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(menu);
               }}
               className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={category.isActive ?? false} // Don't allow deleting active categories
+              disabled={menu.isActive} // prevent deleting active menu
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("categories.delete")}
+              {t("menus.table.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -165,37 +205,35 @@ export const createCategoryColumns = (
   },
 ];
 
-// Hook for using category columns with current translation
-export const useCategoryColumns = (
-  onEdit: (category: Category) => void,
-  onDelete: (category: Category) => void,
+export const useMenuColumns = (
+  onEdit: (menu: Menu) => void,
+  onDelete: (menu: Menu) => void
 ) => {
   const { t } = useTranslation();
-  return createCategoryColumns(onEdit, onDelete, t);
+  const router = useRouter();
+  return createMenuColumns(onEdit, onDelete, t, router);
 };
 
-// Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
-  const sort = sorting[0];
-  // Map TanStack column IDs to backend field names
   const fieldMap: Record<string, string> = {
-    name: "name.en", // Sort by English name
+    name: "name.en",
     shortCode: "shortCode",
-    status: "isActive",
-    sortOrder: "sortOrder",
+    isActive: "isActive",
+    isPosDefault: "isPosDefault",
+    isDigitalDefault: "isDigitalDefault",
+    menuItemCount: "menuItemCount",
     createdAt: "createdAt",
   };
 
-  return fieldMap[sort.id] || sort.id;
+  return fieldMap[sorting[0].id] || sorting[0].id;
 };
 
-// Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

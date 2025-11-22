@@ -87,31 +87,6 @@ export const createRoleColumns = (
     },
   },
   {
-    accessorKey: "isActive",
-    id: "status",
-    header: t("roles.table.status"),
-    enableSorting: true,
-    size: 120,
-    cell: ({ row }) => {
-      const { isActive } = row.original;
-      return (
-        <Badge variant={isActive ? "default" : "secondary"}>
-          {isActive ? (
-            <>
-              <UserCheck className="h-3 w-3 mr-1" />
-              {t("common.active")}
-            </>
-          ) : (
-            <>
-              <UserX className="h-3 w-3 mr-1" />
-              {t("common.inactive")}
-            </>
-          )}
-        </Badge>
-      );
-    },
-  },
-  {
     id: "actions",
     header: t("table.actions"),
     enableSorting: false,
@@ -169,7 +144,6 @@ export const getSortFieldForQuery = (
   const sort = sorting[0];
   const fieldMap: Record<string, string> = {
     name: "name.en",
-    status: "isActive",
     createdAt: "createdAt",
   };
   return fieldMap[sort.id] || sort.id;

@@ -81,12 +81,12 @@ if (allGood) {
   console.log("🎉 All checks passed! Your development environment is ready.");
   console.log("\n📚 Next steps:");
   console.log(
-    "   1. Read the branching strategy: .github/BRANCHING_STRATEGY.md"
+    "   1. Read the branching strategy: .github/BRANCHING_STRATEGY.md",
   );
   console.log("   2. Check contributing guidelines: CONTRIBUTING.md");
   console.log("   3. Start developing with: npm run dev");
   console.log(
-    '\n💡 Test commit linting with: echo "test commit" | npx commitlint'
+    '\n💡 Test commit linting with: echo "test commit" | npx commitlint',
   );
 } else {
   console.log("❌ Some checks failed. Please fix the issues above.");

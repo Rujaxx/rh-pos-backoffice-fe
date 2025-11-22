@@ -62,8 +62,12 @@ export default function RolesPage() {
     };
 
     if (searchTerm.trim()) params.term = searchTerm.trim();
+
     const sortField = getSortFieldForQuery(sorting);
-    if (sortField) params.sortBy = sortField;
+    if (sortField) {
+      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+    }
+
     if (statusFilter !== undefined)
       params.isActive = statusFilter === "active" ? "true" : "false";
 
@@ -142,7 +146,6 @@ export default function RolesPage() {
 
   const handleSubmit = useCallback(
     async (data: RoleFormData) => {
-      console.log("this is role data: ", data);
       try {
         const validatedData = roleSchema.parse(data);
         if (latestRoleData) {
@@ -153,7 +156,6 @@ export default function RolesPage() {
         } else {
           await createRole.mutateAsync(validatedData);
         }
-        console.log("validated Data: ", validatedData);
         closeModal();
       } catch (err) {
         console.error("Failed to save role:", err);
