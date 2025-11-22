@@ -47,7 +47,7 @@ export function LoginForm() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const rememberedUsername = localStorage.getItem(
-        "rh-pos-remember-username"
+        "rh-pos-remember-username",
       );
       if (rememberedUsername) {
         form.setValue("username", rememberedUsername);
@@ -70,7 +70,7 @@ export function LoginForm() {
           if (typeof window !== "undefined") {
             localStorage.setItem(
               "rh-pos-remember-username",
-              credentials.username
+              credentials.username,
             );
           }
         } else {

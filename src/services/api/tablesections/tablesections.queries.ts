@@ -9,7 +9,7 @@ import {
   TableSection,
   TableSectionFormData,
   TableSectionQueryParams,
-} from "@/types/tablesection.type";
+} from "@/types/table-section.type";
 import { PaginatedResponse, SuccessResponse } from "@/types/api";
 import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
 
