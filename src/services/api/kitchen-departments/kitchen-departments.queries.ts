@@ -20,21 +20,21 @@ class KitchenDepartmentService extends BaseApiService<
 
   // Get all departments with optional filters
   async getAllKitchenDepartments(
-    params?: KitchenDepartmentQueryParams
+    params?: KitchenDepartmentQueryParams,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll(params);
   }
 
   // Get department by ID
   async getKitchenDepartmentById(
-    id: string
+    id: string,
   ): Promise<SuccessResponse<KitchenDepartment>> {
     return this.getById(id);
   }
 
   // Get active-only departments
   async getActiveKitchenDepartments(
-    params?: Omit<KitchenDepartmentQueryParams, "isActive">
+    params?: Omit<KitchenDepartmentQueryParams, "isActive">,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll({ ...params, isActive: "true" });
   }
@@ -42,7 +42,7 @@ class KitchenDepartmentService extends BaseApiService<
   // Filter departments by brand
   async getKitchenDepartmentsByBrand(
     brandId: string,
-    params?: Omit<KitchenDepartmentQueryParams, "brandId">
+    params?: Omit<KitchenDepartmentQueryParams, "brandId">,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll({ ...params, brandId });
   }
@@ -50,7 +50,7 @@ class KitchenDepartmentService extends BaseApiService<
   // Filter departments by restaurant
   async getKitchenDepartmentsByRestaurant(
     restaurantId: string,
-    params?: Omit<KitchenDepartmentQueryParams, "restaurantId">
+    params?: Omit<KitchenDepartmentQueryParams, "restaurantId">,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -67,7 +67,7 @@ export const useKitchenDepartments = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.LIST(params),
@@ -82,7 +82,7 @@ export const useKitchenDepartment = (
   options?: Omit<
     UseQueryOptions<SuccessResponse<KitchenDepartment>>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.DETAIL(id),
@@ -98,7 +98,7 @@ export const useActiveKitchenDepartments = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.LIST({
@@ -117,7 +117,7 @@ export const useKitchenDepartmentsByBrand = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.LIST({ ...params, brandId }),
@@ -135,7 +135,7 @@ export const useKitchenDepartmentsByRestaurant = (
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.LIST({
@@ -145,7 +145,7 @@ export const useKitchenDepartmentsByRestaurant = (
     queryFn: () =>
       kitchenDepartmentService.getKitchenDepartmentsByRestaurant(
         restaurantId,
-        params
+        params,
       ),
     enabled: !!restaurantId,
     ...options,

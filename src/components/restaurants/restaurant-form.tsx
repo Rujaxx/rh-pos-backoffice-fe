@@ -389,7 +389,7 @@ export function RestaurantFormContent({
               name="generateOrderTypeWiseOrderNo"
               label={t("restaurants.form.generateOrderTypeWiseOrderNoLabel")}
               description={t(
-                "restaurants.form.generateOrderTypeWiseOrderNoDescription"
+                "restaurants.form.generateOrderTypeWiseOrderNoDescription",
               )}
             />
 
@@ -422,7 +422,7 @@ export function RestaurantFormContent({
               name="multiplePriceSetting"
               label={t("restaurants.form.multiplePriceSettingLabel")}
               description={t(
-                "restaurants.form.multiplePriceSettingDescription"
+                "restaurants.form.multiplePriceSettingDescription",
               )}
             />
 
@@ -496,7 +496,7 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawPhones}
                     placeholder={t(
-                      "restaurants.form.notificationPhonePlaceholder"
+                      "restaurants.form.notificationPhonePlaceholder",
                     )}
                     onChange={(e) => setRawPhones(e.target.value)}
                     onBlur={() => {
@@ -531,7 +531,7 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawEmails}
                     placeholder={t(
-                      "restaurants.form.notificationEmailsPlaceholder"
+                      "restaurants.form.notificationEmailsPlaceholder",
                     )}
                     onChange={(e) => setRawEmails(e.target.value)}
                     onBlur={() => {
@@ -635,7 +635,7 @@ export function RestaurantFormContent({
             name="smsAndWhatsappSelection"
             label={t("restaurants.form.smsAndWhatsappSelectionLabel")}
             placeholder={t(
-              "restaurants.form.smsAndWhatsappSelectionPlaceholder"
+              "restaurants.form.smsAndWhatsappSelectionPlaceholder",
             )}
             options={smsWhatsappOptions}
           />

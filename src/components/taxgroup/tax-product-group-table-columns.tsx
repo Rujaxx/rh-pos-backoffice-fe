@@ -20,7 +20,7 @@ export const createTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
   onDelete: (item: TaxProductGroup) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: string,
 ): ColumnDef<TaxProductGroup>[] => {
   return [
     {
@@ -140,7 +140,7 @@ export const createTaxProductGroupColumns = (
 
 export const useTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
-  onDelete: (item: TaxProductGroup) => void
+  onDelete: (item: TaxProductGroup) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -148,7 +148,7 @@ export const useTaxProductGroupColumns = (
 };
 
 export const getSortFieldForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -164,6 +164,6 @@ export const getSortFieldForTaxProductGroupQuery = (
 };
 
 export const getSortOrderForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined =>
   sorting.length ? (sorting[0].desc ? "desc" : "asc") : undefined;

@@ -54,7 +54,7 @@ export default function RestaurantsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -135,10 +135,10 @@ export default function RestaurantsPage() {
 
   // Use refs to update the actual handler logic without changing column references
   const editHandlerRef = useRef<((restaurant: Restaurant) => void) | null>(
-    null
+    null,
   );
   const deleteHandlerRef = useRef<((restaurant: Restaurant) => void) | null>(
-    null
+    null,
   );
 
   // Create stable handler functions that use refs
@@ -174,7 +174,7 @@ export default function RestaurantsPage() {
         }),
         confirmButtonText: t("restaurants.deleteRestaurantButton"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -205,7 +205,7 @@ export default function RestaurantsPage() {
       updateRestaurantMutation,
       createRestaurantMutation,
       closeModal,
-    ]
+    ],
   );
 
   // Search handler with proper typing
@@ -220,7 +220,7 @@ export default function RestaurantsPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -237,7 +237,7 @@ export default function RestaurantsPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -268,7 +268,7 @@ export default function RestaurantsPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active"
+                      : "active",
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}

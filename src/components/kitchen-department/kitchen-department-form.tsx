@@ -44,7 +44,7 @@ export function KitchenDepartmentFormContent({
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (
@@ -119,7 +119,7 @@ export function KitchenDepartmentFormContent({
 
 // Hook for kitchen department form logic
 export function useKitchenDepartmentForm(
-  editingKitchenDepartment?: KitchenDepartment | null
+  editingKitchenDepartment?: KitchenDepartment | null,
 ): {
   form: UseFormReturn<KitchenDepartmentFormData, unknown>;
   isEditing: boolean;

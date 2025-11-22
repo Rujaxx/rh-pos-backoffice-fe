@@ -15,7 +15,7 @@ export const useCreateTaxProductGroup = (
     SuccessResponse<TaxProductGroup>,
     Error,
     TaxProductGroupFormData
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -34,7 +34,7 @@ export const useCreateTaxProductGroup = (
       if (data.data) {
         queryUtils.setQueryData(
           QUERY_KEYS.TAX_PRODUCT_GROUPS.DETAIL(data.data._id!),
-          data
+          data,
         );
       }
     },
@@ -54,7 +54,7 @@ export const useUpdateTaxProductGroup = (
     SuccessResponse<TaxProductGroup>,
     Error,
     { id: string; data: TaxProductGroupFormData }
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -89,7 +89,7 @@ export const useUpdateTaxProductGroup = (
 
 // Delete tax product group mutation
 export const useDeleteTaxProductGroup = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
 ) => {
   const queryUtils = useQueryUtils();
 

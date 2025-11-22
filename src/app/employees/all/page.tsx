@@ -49,7 +49,7 @@ export default function UsersPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const queryParams = useMemo<UserQueryParams>(() => {
@@ -150,7 +150,7 @@ export default function UsersPage() {
         }),
         confirmButtonText: t("common.delete"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -173,7 +173,7 @@ export default function UsersPage() {
         console.error("Failed to save user:", error);
       }
     },
-    [latestUserData, updateUserMutation, createUserMutation, closeModal]
+    [latestUserData, updateUserMutation, createUserMutation, closeModal],
   );
 
   const handleSearchChange = useCallback((search: string) => {
@@ -185,7 +185,7 @@ export default function UsersPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   const handleSortingChange = useCallback((newSorting: SortingState) => {
@@ -198,7 +198,7 @@ export default function UsersPage() {
       setColumnFilters(filters);
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =

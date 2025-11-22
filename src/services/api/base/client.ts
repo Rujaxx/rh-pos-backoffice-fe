@@ -10,6 +10,7 @@ import {
   QueryParams,
   MutationResponse,
 } from "@/types/api";
+import { MenuItemFormData } from "@/types/menu-item.type";
 
 // Base CRUD operations interface
 export interface CrudOperations<T, CreatePayload, UpdatePayload> {
@@ -61,6 +62,13 @@ export abstract class BaseApiService<
   // Update existing item
   async update(id: string, data: UpdatePayload): MutationResponse<T> {
     return api.patch(`${this.baseEndpoint}/${id}`, data);
+  }
+
+  async updateBulk(
+    menuId: string,
+    items: MenuItemFormData[]
+  ): MutationResponse<T[]> {
+    return api.patch(`${this.baseEndpoint}/bulk/${menuId}`, items);
   }
 
   // Delete item

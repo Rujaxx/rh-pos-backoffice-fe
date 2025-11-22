@@ -26,7 +26,7 @@ import { Permission } from "@/types/permission.type";
 export const createRoleColumns = (
   onEdit: (role: Role) => void,
   onDelete: (role: Role) => void,
-  t: ReturnType<typeof useTranslation>["t"]
+  t: ReturnType<typeof useTranslation>["t"],
 ): ColumnDef<Role>[] => [
   {
     id: "icon",
@@ -130,7 +130,7 @@ export const createRoleColumns = (
 // Hook for current translation
 export const useRoleColumns = (
   onEdit: (role: Role) => void,
-  onDelete: (role: Role) => void
+  onDelete: (role: Role) => void,
 ) => {
   const { t } = useTranslation();
   return createRoleColumns(onEdit, onDelete, t);
@@ -138,7 +138,7 @@ export const useRoleColumns = (
 
 // Sorting helpers
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
   const sort = sorting[0];
@@ -150,7 +150,7 @@ export const getSortFieldForQuery = (
 };
 
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

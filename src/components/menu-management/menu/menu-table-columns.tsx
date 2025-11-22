@@ -18,14 +18,17 @@ import {
   Hash,
   Calendar,
   UtensilsCrossed,
+  List,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useRouter } from "next/navigation";
 
 // Column definitions for the menus table
 export const createMenuColumns = (
   onEdit: (menu: Menu) => void,
   onDelete: (menu: Menu) => void,
-  t: ReturnType<typeof useTranslation>["t"]
+  t: ReturnType<typeof useTranslation>["t"],
+  router: ReturnType<typeof useRouter>
 ): ColumnDef<Menu>[] => [
   {
     accessorKey: "name",
@@ -152,7 +155,6 @@ export const createMenuColumns = (
     size: 80,
     cell: ({ row }) => {
       const menu = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -172,6 +174,17 @@ export const createMenuColumns = (
             >
               <Edit className="mr-2 h-4 w-4" />
               {t("menus.table.edit")}
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/menu-management/menu-items?menuId=${menu._id}`);
+              }}
+              className="cursor-pointer"
+            >
+              <List className="mr-2 h-4 w-4" />
+              {t("menus.table.menuItems")} ({menu.menuItemCount || 0})
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -197,7 +210,8 @@ export const useMenuColumns = (
   onDelete: (menu: Menu) => void
 ) => {
   const { t } = useTranslation();
-  return createMenuColumns(onEdit, onDelete, t);
+  const router = useRouter();
+  return createMenuColumns(onEdit, onDelete, t, router);
 };
 
 export const getSortFieldForQuery = (

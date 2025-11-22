@@ -61,7 +61,7 @@ export default function TaxProductGroupsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query params for API
@@ -142,7 +142,7 @@ export default function TaxProductGroupsPage() {
   // Stable handlers for columns
   const editHandlerRef = useRef<((item: TaxProductGroup) => void) | null>(null);
   const deleteHandlerRef = useRef<((item: TaxProductGroup) => void) | null>(
-    null
+    null,
   );
 
   const editHandler = useCallback((item: TaxProductGroup) => {
@@ -180,7 +180,7 @@ export default function TaxProductGroupsPage() {
         }),
         confirmButtonText: t("common.delete"),
         variant: "destructive",
-      }
+      },
     );
   };
 
@@ -209,7 +209,7 @@ export default function TaxProductGroupsPage() {
       updateTaxProductGroupMutation,
       createTaxProductGroupMutation,
       closeModal,
-    ]
+    ],
   );
 
   // Search handler
@@ -223,7 +223,7 @@ export default function TaxProductGroupsPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -238,7 +238,7 @@ export default function TaxProductGroupsPage() {
       setColumnFilters(filters);
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -270,7 +270,7 @@ export default function TaxProductGroupsPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active"
+                      : "active",
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
