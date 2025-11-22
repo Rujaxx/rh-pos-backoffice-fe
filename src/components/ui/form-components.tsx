@@ -7,6 +7,8 @@ import {
   Controller,
   FieldPath,
   ControllerRenderProps,
+  PathValue,
+  Path,
 } from "react-hook-form";
 import { useI18n } from "@/providers/i18n-provider";
 import { Input } from "@/components/ui/input";
@@ -236,7 +238,6 @@ interface RHFSelectProps<TFormValues extends Record<string, unknown>> {
   className?: string;
   disabled?: boolean;
 }
-
 export function RHFSelect<TFormValues extends Record<string, unknown>>({
   form,
   name,
@@ -246,14 +247,27 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
   options,
   className,
   disabled,
-}: RHFSelectProps<TFormValues>) {
+  defaultValue = null,
+}: RHFSelectProps<TFormValues> & { defaultValue?: string | null }) {
+  const currentValue = form.watch(name);
+
+  // Set defaultValue only once when field is empty
+  React.useEffect(() => {
+    if (!currentValue && defaultValue) {
+      form.setValue(
+        name,
+        defaultValue as unknown as PathValue<TFormValues, Path<TFormValues>>,
+      );
+    }
+  }, [currentValue, defaultValue, form, name]);
+
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => {
         const fieldValue = String(field.value || "");
-        // Check if the current value exists in options
+
         const valueExists =
           fieldValue && options.some((opt) => opt.value === fieldValue);
 
@@ -269,6 +283,7 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
                 <SelectTrigger className={cn("w-full", className)}>
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
+
                 <SelectContent>
                   {options.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
@@ -354,31 +369,47 @@ export function RHFMultilingualInput<
 }: RHFMultilingualInputProps<TFormValues>) {
   const Component = type === "textarea" ? Textarea : Input;
 
+  const [activeLang, setActiveLang] = React.useState("en");
   return (
     <FormField
       control={form.control}
       name={name}
-      render={() => (
-        <FormItem className={className}>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Languages className="h-4 w-4" />
-                  Multilingual Content
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+      render={() => {
+        return (
+          <FormItem className={className}>
+            {/* Top Bar */}
+            <div className="flex items-center justify-between mb-2">
+              <FormLabel>{label}</FormLabel>
+
+              {/* Language Switch - moved to top */}
+              <div className="flex items-center gap-1">
                 {languages.map((lang) => (
-                  <div key={lang.code} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        {lang.name}
-                      </Badge>
-                      <Globe className="h-3 w-3 text-muted-foreground" />
-                    </div>
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => setActiveLang(lang.code)}
+                    className={`px-2 py-1 rounded-md text-xs border transition
+                    ${
+                      activeLang === lang.code
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-accent text-accent-foreground"
+                    }
+                  `}
+                  >
+                    {lang.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Field */}
+            <FormControl>
+              <div className="space-y-1">
+                {languages
+                  .filter((l) => l.code === activeLang)
+                  .map((lang) => (
                     <Controller
+                      key={lang.code}
                       control={form.control}
                       name={`${name}.${lang.code}` as FieldPath<TFormValues>}
                       render={({ field: langField }) => (
@@ -386,7 +417,7 @@ export function RHFMultilingualInput<
                           {...langField}
                           value={String(langField.value || "")}
                           placeholder={
-                            placeholder[lang.code] ||
+                            placeholder?.[lang.code] ||
                             `Enter ${label.toLowerCase()} in ${lang.name}`
                           }
                           className="w-full"
@@ -394,15 +425,18 @@ export function RHFMultilingualInput<
                         />
                       )}
                     />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </FormControl>
-          {description && <FormDescription>{description}</FormDescription>}
-          <FormMessage />
-        </FormItem>
-      )}
+                  ))}
+              </div>
+            </FormControl>
+
+            {description && (
+              <FormDescription className="mt-1">{description}</FormDescription>
+            )}
+
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 }

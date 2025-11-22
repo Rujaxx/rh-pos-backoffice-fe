@@ -13,6 +13,9 @@ import {
   TaxProductGroupFormData,
   taxProductGroupSchema,
 } from "@/lib/validations/tax-product-group.validation";
+import { useActiveBrands } from "@/services/api/brands/brands.queries";
+import { useI18n } from "@/providers/i18n-provider";
+import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
 
 interface TaxGroupFormContentProps {
   form: ReturnType<typeof useForm<TaxProductGroupFormData>>;
@@ -20,6 +23,7 @@ interface TaxGroupFormContentProps {
 
 export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
   const { t } = useTranslation();
+  const { locale } = useI18n();
   const taxTypeOptions = [
     {
       label: t("taxGroups.form.taxTypePercentage"),
@@ -30,6 +34,23 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
       value: "Fixed Amount",
     },
   ];
+
+  const { data: brandsResponse, isLoading: isLoadingBrands } =
+    useActiveBrands();
+  const { data: restaurantsResponse, isLoading: isLoadingRestaurants } =
+    useActiveRestaurants();
+
+  const brandOptions = (brandsResponse?.data || []).map((brand) => ({
+    value: brand._id,
+    label: brand.name[locale] || brand.name.en,
+  }));
+
+  const restaurantOptions = (restaurantsResponse?.data || []).map(
+    (restaurant) => ({
+      value: restaurant._id,
+      label: restaurant.name[locale] || restaurant.name.en,
+    }),
+  );
 
   return (
     <div className="space-y-6">
@@ -58,28 +79,49 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
               />
             </div>
 
-            {/* Product Group Name Input */}
-            <RHFInput
+            <RHFSelect
               form={form}
-              name="productGroupName"
-              label={t("taxGroups.form.productGroupName")}
-              placeholder={t("taxGroups.form.productGroupNamePlaceholder")}
+              name="brandId"
+              label={t("restaurants.form.brandLabel")}
+              placeholder={
+                isLoadingBrands
+                  ? t("common.loading")
+                  : brandOptions.length === 0
+                    ? t("common.noBrandsAvailable")
+                    : t("common.brandPlaceholder")
+              }
+              options={brandOptions}
+              disabled={isLoadingBrands}
+            />
+
+            <RHFSelect
+              form={form}
+              name="restaurantId"
+              label={t("kitchen.form.restaurantLabel")}
+              placeholder={
+                isLoadingRestaurants
+                  ? t("common.loading")
+                  : restaurantOptions.length === 0
+                    ? t("restaurants.form.noRestaurantsAvailable")
+                    : t("kitchen.form.restaurantPlaceholder")
+              }
+              options={restaurantOptions}
+              disabled={isLoadingRestaurants}
             />
 
             {/* Tax Type and Tax Value */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* UPDATED: Using RHFSelect instead of RHFRadioGroup */}
               <RHFSelect
                 form={form}
                 name="taxType"
-                label={t("taxGroups.form.taxType")}
+                label={t("taxGroups.table.taxType")}
                 placeholder={t("taxGroups.form.taxTypePlaceholder")}
                 options={taxTypeOptions}
               />
               <RHFInput
                 form={form}
                 name="taxValue"
-                label={t("taxGroups.form.taxValue")}
+                label={t("taxGroups.table.taxValue")}
                 placeholder={t("taxGroups.form.taxValuePlaceholder")}
                 type="number"
                 step="0.01"
@@ -93,14 +135,13 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
 }
 
 // Hook for tax group form logic
-export function useTaxGroupForm(
+export function useTaxProductGroupForm(
   editingTaxGroup?: TaxProductGroupFormData | null,
 ) {
   const form = useForm<TaxProductGroupFormData>({
     resolver: zodResolver(taxProductGroupSchema),
     defaultValues: {
       name: { en: "", ar: "" },
-      productGroupName: "",
       taxType: "Percentage" as const,
       taxValue: 0,
       isActive: true,
@@ -114,7 +155,6 @@ export function useTaxGroupForm(
       form.reset({
         _id: editingTaxGroup._id,
         name: editingTaxGroup.name,
-        productGroupName: editingTaxGroup.productGroupName,
         taxType: editingTaxGroup.taxType || ("Percentage" as const),
         taxValue: editingTaxGroup.taxValue || 0,
         isActive: editingTaxGroup.isActive ?? true,
@@ -124,7 +164,6 @@ export function useTaxGroupForm(
     } else {
       form.reset({
         name: { en: "", ar: "" },
-        productGroupName: "",
         taxType: "Percentage" as const,
         taxValue: 0,
         isActive: true,

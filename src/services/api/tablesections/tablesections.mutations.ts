@@ -4,7 +4,7 @@
  */
 
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { TableSection, TableSectionFormData } from "@/types/tablesection.type";
+import { TableSection, TableSectionFormData } from "@/types/table-section.type";
 import { SuccessResponse } from "@/types/api";
 import { QUERY_KEYS } from "@/config/api";
 import { useQueryUtils } from "@/lib/query-client";

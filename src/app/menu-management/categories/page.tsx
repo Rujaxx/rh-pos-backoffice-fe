@@ -13,12 +13,12 @@ import {
 import {
   CategoryFormContent,
   useCategoryForm,
-} from "@/components/categories/category-form";
+} from "@/components/menu-management/categories/category-form";
 import {
   useCategoryColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from "@/components/categories/category-table-columns";
+} from "@/components/menu-management/categories/category-table-columns";
 import { TanStackTable } from "@/components/ui/tanstack-table";
 import Layout from "@/components/common/layout";
 import { Plus, Tag, Filter } from "lucide-react";
@@ -73,11 +73,6 @@ export default function CategoriesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortBy = sortField as
-        | "name"
-        | "createdAt"
-        | "updatedAt"
-        | "sortOrder";
       params.sortOrder = getSortOrderForQuery(sorting) || "desc";
     }
 
