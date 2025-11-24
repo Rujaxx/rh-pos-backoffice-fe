@@ -10,11 +10,13 @@ import {
   RHFMultilingualInput,
   RHFSwitch,
   RHFAddressForm,
+  RHFSelect,
 } from "@/components/ui/form-components";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { UploadFolderType } from "@/types/upload";
 import { brandSchema, BrandFormData } from "@/lib/validations/brand.validation";
 import { Brand } from "@/types/brand.type";
+import { COUNTRY_CODES } from "@/mock/dropdown-constants";
 
 interface BrandFormContentProps {
   form: ReturnType<typeof useForm<BrandFormData>>;
@@ -22,7 +24,6 @@ interface BrandFormContentProps {
 
 export function BrandFormContent({ form }: BrandFormContentProps) {
   const { t } = useTranslation();
-
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -82,15 +83,6 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
 
             <RHFInput
               form={form}
-              name="menuLink"
-              label={t("brands.form.menuLinkLabel")}
-              placeholder={t("brands.form.menuLinkPlaceholder")}
-              type="url"
-              description={t("brands.form.menuLinkDescription")}
-            />
-
-            <RHFInput
-              form={form}
               name="website"
               label={t("brands.form.websiteLabel")}
               placeholder={t("brands.form.websitePlaceholder")}
@@ -108,18 +100,28 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
             {t("brands.form.contactInfo")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <CardContent className="flex gap-10 items-center">
+          <div className="flex gap-10 items-center">
+            <RHFSelect
+              form={form}
+              name="countryCode"
+              label={t("common.form.countryCode") || "Code"}
+              placeholder="+91"
+              options={COUNTRY_CODES}
+              defaultValue={COUNTRY_CODES[0].value}
+            />
             <RHFInput
               form={form}
               name="phone"
-              label={t("brands.form.phoneLabel")}
-              placeholder={t("brands.form.phonePlaceholder")}
+              label={t("common.form.phoneLabel")}
+              placeholder={t("common.form.phonePlaceholder")}
               type="tel"
-              description={t("brands.form.phoneDescription")}
+              className="col-span-2"
+              required
             />
           </div>
-
+        </CardContent>
+        <CardContent>
           <RHFAddressForm
             form={form}
             name="address"
@@ -175,7 +177,6 @@ export function useBrandForm(editingBrand?: Brand | null) {
       name: { en: "", ar: "" },
       description: { en: "", ar: "" },
       logo: "",
-      menuLink: "",
       website: "",
       isActive: true,
       phone: "",
@@ -202,7 +203,6 @@ export function useBrandForm(editingBrand?: Brand | null) {
         name: editingBrand.name,
         description: editingBrand.description,
         logo: editingBrand.logo,
-        menuLink: editingBrand.menuLink,
         website: editingBrand.website || "",
         isActive: editingBrand.isActive ?? true,
         phone: editingBrand.phone || "",
@@ -216,7 +216,6 @@ export function useBrandForm(editingBrand?: Brand | null) {
         name: { en: "", ar: "" },
         description: { en: "", ar: "" },
         logo: "",
-        menuLink: "",
         website: "",
         isActive: true,
         phone: "",
