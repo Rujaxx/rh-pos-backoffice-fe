@@ -15,7 +15,6 @@ import Image from "next/image";
 import {
   Edit,
   Trash2,
-  ExternalLink,
   MoreHorizontal,
   Phone,
   Globe,
@@ -23,12 +22,15 @@ import {
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getS3UrlFromKey, getFallbackAvatarUrl } from "@/lib/upload-utils";
+import { useI18n } from "@/providers/i18n-provider";
+import { MultilingualText } from "@/types";
 
 // Column definitions for the brands table
 export const createBrandColumns = (
   onEdit: (brand: Brand) => void,
   onDelete: (brand: Brand) => void,
   t: ReturnType<typeof useTranslation>["t"],
+  locale: "en" | "ar"
 ): ColumnDef<Brand>[] => [
   {
     id: "logo",
@@ -73,12 +75,9 @@ export const createBrandColumns = (
       const brand = row.original;
       return (
         <div className="space-y-1">
-          <div className="font-medium text-sm">{brand.name.en}</div>
-          {brand.name.ar && (
-            <div className="text-xs text-muted-foreground" dir="rtl">
-              {brand.name.ar}
-            </div>
-          )}
+          <div className="font-medium text-sm">
+            {brand.name?.[locale] || brand.name?.en}
+          </div>
         </div>
       );
     },
@@ -92,12 +91,9 @@ export const createBrandColumns = (
       const brand = row.original;
       return (
         <div className="max-w-xs space-y-1">
-          <div className="text-sm truncate">{brand.description.en}</div>
-          {brand.description.ar && (
-            <div className="text-xs text-muted-foreground truncate" dir="rtl">
-              {brand.description.ar}
-            </div>
-          )}
+          <div className="text-sm truncate">
+            {brand.description?.[locale] || brand.description?.en}
+          </div>
         </div>
       );
     },
@@ -149,20 +145,6 @@ export const createBrandColumns = (
       const brand = row.original;
       return (
         <div className="flex space-x-1">
-          {brand.menuLink && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(brand.menuLink, "_blank");
-              }}
-              className="h-7 px-2 text-xs"
-            >
-              <ExternalLink className="h-3 w-3 mr-1" />
-              {t("brands.menu")}
-            </Button>
-          )}
           {brand.website && (
             <Button
               size="sm"
@@ -247,15 +229,16 @@ export const createBrandColumns = (
 // Hook for using brand columns with current translation
 export const useBrandColumns = (
   onEdit: (brand: Brand) => void,
-  onDelete: (brand: Brand) => void,
+  onDelete: (brand: Brand) => void
 ) => {
   const { t } = useTranslation();
-  return createBrandColumns(onEdit, onDelete, t);
+  const { locale } = useI18n();
+  return createBrandColumns(onEdit, onDelete, t, locale);
 };
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -272,7 +255,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

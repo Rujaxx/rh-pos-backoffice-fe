@@ -11,7 +11,6 @@ export interface Menu extends Record<string, unknown> {
   shortName?: string;
   isActive: boolean;
   isPosDefault: boolean;
-  isDigitalDefault: boolean;
   isDigitalMenu: boolean;
   isMobileApp: boolean;
   isONDC: boolean;
