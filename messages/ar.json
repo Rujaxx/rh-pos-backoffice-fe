@@ -1244,5 +1244,6 @@
   "menuItems.table.openItem": "عنصر مفتوح",
   "menuItems.table.openPrice": "سعر مفتوح",
   "menuItems.table.syncToAggregator": "مزامنة مع المجمع",
-  "menuItems.table.isCombo": "عنصر كومبو"
+  "menuItems.table.isCombo": "عنصر كومبو",
+  "menuItems.table.discountedPrice": "السعر بعد الخصم"
 }
