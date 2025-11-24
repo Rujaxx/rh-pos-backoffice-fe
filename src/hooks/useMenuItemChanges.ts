@@ -81,7 +81,6 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
         throw new Error(`Original item with id ${_id} not found`);
       }
 
-       
       const {
         menuName,
         brandName,
@@ -102,7 +101,6 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
         ...changes,
       } as MenuItemUpdateArray;
     });
-    console.log(res);
     return res;
   }, [modifiedItems, originalItems]);
 

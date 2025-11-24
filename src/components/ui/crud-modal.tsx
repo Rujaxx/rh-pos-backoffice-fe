@@ -109,7 +109,7 @@ export function CrudModal<
         className={cn(
           sizeClasses[size],
           "max-h-[90vh] overflow-y-auto",
-          className,
+          className
         )}
       >
         <DialogHeader>
@@ -280,7 +280,7 @@ export function useConfirmationModal() {
       description: string;
       confirmButtonText?: string;
       variant?: "default" | "destructive";
-    },
+    }
   ) => {
     setOnConfirm(() => confirmAction);
     setConfig(modalConfig);

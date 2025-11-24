@@ -46,7 +46,7 @@ export default function TablesPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   // Build query parameters from table state
@@ -157,7 +157,7 @@ export default function TablesPage() {
         }),
         confirmButtonText: t("table.deleteTableButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -167,7 +167,7 @@ export default function TablesPage() {
       try {
         // Handle bulk creation
         if (data.isBulk && data.bulkCount) {
-          const count = parseInt(data.bulkCount);
+          const count = data.bulkCount;
           const prefix = data.bulkLabelPrefix || "T";
 
           // Create multiple tables
@@ -186,12 +186,7 @@ export default function TablesPage() {
           toast.success(t("table.bulkCreateSuccess", { count }));
         } else {
           // Parse and apply defaults using the schema to ensure all fields have proper values
-          const validatedData = {
-            ...data,
-            isBulk: undefined,
-            bulkCount: undefined,
-            bulkLabelPrefix: undefined,
-          };
+          const { isBulk, bulkCount, bulkLabelPrefix, ...validatedData } = data;
 
           if (latestTableData) {
             await updateTableMutation.mutateAsync({
@@ -207,7 +202,7 @@ export default function TablesPage() {
         console.error("Failed to save table:", error);
       }
     },
-    [latestTableData, updateTableMutation, createTableMutation, closeModal],
+    [latestTableData, updateTableMutation, createTableMutation, closeModal]
   );
 
   // Search handler with proper typing
@@ -222,7 +217,7 @@ export default function TablesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   // Sorting handler
@@ -239,7 +234,7 @@ export default function TablesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
@@ -270,7 +265,7 @@ export default function TablesPage() {
                     ? "unavailable"
                     : statusFilter === "unavailable"
                       ? undefined
-                      : "available",
+                      : "available"
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
@@ -290,7 +285,7 @@ export default function TablesPage() {
               className="h-8 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              <span>{t("brands.addNewBrand")}</span>
+              <span>{t("table.addNewTable")}</span>
             </Button>
           </div>
         </div>
@@ -356,7 +351,7 @@ export default function TablesPage() {
               : t("table.form.createButton")
           }
         >
-          <TableFormContent form={form} />
+          <TableFormContent form={form} isEditing={!!latestTableData} />
         </CrudModal>
 
         {/* Delete Confirmation Modal */}
