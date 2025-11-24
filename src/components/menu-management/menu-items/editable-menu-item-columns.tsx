@@ -27,7 +27,7 @@ interface EditableColumnsConfig {
 export const createEditableMenuItemColumns = (
   config: EditableColumnsConfig,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  locale: "en" | "ar"
 ): ColumnDef<MenuItem>[] => {
   const {
     updateField,
@@ -55,30 +55,17 @@ export const createEditableMenuItemColumns = (
         ) as MultilingualText;
 
         return (
-          <div className="space-y-2">
-            <EditableTextCell
-              value={currentValue?.en || ""}
-              onChange={(value) =>
-                updateField(menuItem._id!, "itemName", {
-                  ...currentValue,
-                  en: value,
-                })
-              }
-              isModified={isFieldModified(menuItem._id!, "itemName")}
-              placeholder="Item name (English)"
-            />
-            <EditableTextCell
-              value={currentValue?.ar || ""}
-              onChange={(value) =>
-                updateField(menuItem._id!, "itemName", {
-                  ...currentValue,
-                  ar: value,
-                })
-              }
-              isModified={isFieldModified(menuItem._id!, "itemName")}
-              placeholder="اسم العنصر (عربي)"
-            />
-          </div>
+          <EditableTextCell
+            value={currentValue?.[locale] || ""}
+            onChange={(value) =>
+              updateField(menuItem._id!, "itemName", {
+                ...currentValue,
+                [locale]: value,
+              })
+            }
+            isModified={isFieldModified(menuItem._id!, "itemName")}
+            placeholder={t("menuItems.table.itemName")}
+          />
         );
       },
     },
@@ -308,11 +295,6 @@ export const createEditableMenuItemColumns = (
           menuItem._id!,
           "discountType"
         ) as string;
-        const digitalDiscount = getFieldValue(
-          menuItem._id!,
-          "digitalDiscount"
-        ) as boolean;
-
         const discountTypeOptions = [
           { value: "Fixed Amount", label: "Fixed Amount" },
           { value: "Percentage", label: "Percentage" },
@@ -326,13 +308,37 @@ export const createEditableMenuItemColumns = (
               updateField(menuItem._id!, "discountType", value)
             }
             isModified={isFieldModified(menuItem._id!, "discountType")}
-            disabled={!digitalDiscount}
             placeholder="Select type"
           />
         );
       },
     },
 
+    {
+      accessorKey: "discountedPrice",
+      id: "discountedPrice",
+      header: t("menuItems.table.discountedPrice"),
+      size: 120,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+        const currentValue = getFieldValue(
+          menuItem._id!,
+          "discountedPrice"
+        ) as number;
+
+        return (
+          <EditableNumberCell
+            value={currentValue || 0}
+            onChange={(value) =>
+              updateField(menuItem._id!, "discountedPrice", value)
+            }
+            isModified={isFieldModified(menuItem._id!, "discountedPrice")}
+            format="integer"
+            min={0}
+          />
+        );
+      },
+    },
     // Platform Status (Toggle)
     {
       id: "platformStatus",

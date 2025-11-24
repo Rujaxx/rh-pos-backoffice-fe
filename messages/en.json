@@ -1261,5 +1261,6 @@
   "menuItems.table.openItem": "Open Item",
   "menuItems.table.openPrice": "Open Price",
   "menuItems.table.syncToAggregator": "Sync to Aggregator",
-  "menuItems.table.isCombo": "Combo Item"
+  "menuItems.table.isCombo": "Combo Item",
+  "menuItems.table.discountedPrice": "Discounted Price"
 }
