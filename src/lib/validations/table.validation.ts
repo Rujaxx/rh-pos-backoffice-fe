@@ -5,7 +5,7 @@ export const tableSchema = z
   .object({
     _id: z.string().optional(),
     tableSectionId: z.string().min(1, "Table section is required"),
-    label: z.string().min(1, "Label is required"),
+    label: z.string().optional(),
     capacity: z
       .number()
       .min(1, "Capacity is required")
@@ -16,15 +16,7 @@ export const tableSchema = z
     restaurantId: z.string().min(1, "Restaurant is required"),
     restaurantName: multilingualTextSchema.optional(),
     isBulk: z.boolean().optional(),
-    bulkCount: z
-      .string()
-      .refine((val) => !val || /^\d+$/.test(val), {
-        message: "Must be a valid number",
-      })
-      .refine((val) => !val || parseInt(val) >= 1, {
-        message: "Must be at least 1",
-      })
-      .optional(),
+    bulkCount: z.number().optional(),
     bulkLabelPrefix: z.string().optional(),
   })
   .superRefine((data, ctx) => {

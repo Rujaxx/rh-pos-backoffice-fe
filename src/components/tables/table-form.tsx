@@ -18,9 +18,13 @@ import { useI18n } from "@/providers/i18n-provider";
 
 interface TableFormContentProps {
   form: UseFormReturn<TableFormData>;
+  isEditing?: boolean;
 }
 
-export function TableFormContent({ form }: TableFormContentProps) {
+export function TableFormContent({
+  form,
+  isEditing = false,
+}: TableFormContentProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
 
@@ -71,12 +75,14 @@ export function TableFormContent({ form }: TableFormContentProps) {
           <CardTitle className="text-lg">{t("table.form.basicInfo")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <RHFSwitch
-            form={form}
-            name="isBulk"
-            label={t("table.form.bulkAdd")}
-            description={t("table.form.bulkAddDescription")}
-          />
+          {!isEditing && (
+            <RHFSwitch
+              form={form}
+              name="isBulk"
+              label={t("table.form.bulkAdd")}
+              description={t("table.form.bulkAddDescription")}
+            />
+          )}
 
           {/* Common required selections */}
           <RHFSelect
@@ -112,7 +118,7 @@ export function TableFormContent({ form }: TableFormContentProps) {
           />
 
           {/* Conditional fields based on bulk toggle */}
-          {isBulk ? (
+          {!isEditing && isBulk ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <RHFInput
                 form={form}
@@ -186,7 +192,7 @@ export function useTableForm(editingTable?: Table | null): {
       capacity: 0,
       isAvailable: true,
       isBulk: false,
-      bulkCount: "",
+      bulkCount: 0,
       bulkLabelPrefix: "T",
     },
   });
@@ -201,9 +207,6 @@ export function useTableForm(editingTable?: Table | null): {
         label: editingTable.label,
         capacity: editingTable.capacity,
         isAvailable: editingTable.isAvailable,
-        isBulk: false,
-        bulkCount: "",
-        bulkLabelPrefix: "T",
       });
     } else {
       form.reset({
@@ -213,7 +216,7 @@ export function useTableForm(editingTable?: Table | null): {
         capacity: 0,
         isAvailable: true,
         isBulk: false,
-        bulkCount: "",
+        bulkCount: 0,
         bulkLabelPrefix: "T",
       });
     }
