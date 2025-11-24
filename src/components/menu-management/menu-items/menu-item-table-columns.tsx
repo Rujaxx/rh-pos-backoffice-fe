@@ -47,7 +47,7 @@ export const createMenuItemColumns = (
   onEdit: (menuItem: MenuItem) => void,
   onDelete: (menuItem: MenuItem) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string,
+  locale: string
 ): ColumnDef<MenuItem>[] => [
   {
     accessorKey: "itemName",
@@ -160,24 +160,11 @@ export const createMenuItemColumns = (
     size: 140,
     cell: ({ row }) => {
       const menuItem = row.original;
-      const hasDiscount = menuItem.digitalDiscount && menuItem.discountedPrice;
-
       return (
         <div className="space-y-1">
           <div className="font-medium text-sm flex items-center space-x-1">
             <span>SAR {menuItem.baseItemPrice.toFixed(2)}</span>
           </div>
-          {hasDiscount && (
-            <div className="flex items-center space-x-1 text-xs text-green-600">
-              <Percent className="h-3 w-3" />
-              <span className="line-through text-muted-foreground">
-                SAR {menuItem.baseItemPrice.toFixed(2)}
-              </span>
-              <span className="font-medium">
-                SAR {menuItem.discountedPrice!.toFixed(2)}
-              </span>
-            </div>
-          )}
         </div>
       );
     },
@@ -434,7 +421,7 @@ export const createMenuItemColumns = (
 // Hook for using menu item columns with current translation
 export const useMenuItemColumns = (
   onEdit: (menuItem: MenuItem) => void,
-  onDelete: (menuItem: MenuItem) => void,
+  onDelete: (menuItem: MenuItem) => void
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -443,7 +430,7 @@ export const useMenuItemColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -462,7 +449,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

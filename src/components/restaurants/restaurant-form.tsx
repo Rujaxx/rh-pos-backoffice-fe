@@ -156,7 +156,6 @@ export function RestaurantFormContent({
           </CardContent>
         </Card>
 
-        {/* System Configuration */}
         {/* Right Column (System Config + Bill/KOT Config) */}
         <div className="flex flex-col gap-6">
           {/* System Configuration */}
