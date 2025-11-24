@@ -30,7 +30,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
@@ -45,7 +44,7 @@ interface FormFieldWrapperProps<TFormValues extends Record<string, unknown>> {
   label: string;
   description?: string;
   children: (
-    field: ControllerRenderProps<TFormValues, FieldPath<TFormValues>>,
+    field: ControllerRenderProps<TFormValues, FieldPath<TFormValues>>
   ) => React.ReactNode;
 }
 
@@ -84,6 +83,7 @@ interface RHFInputProps<TFormValues extends Record<string, unknown>> {
   max?: string;
   step?: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 export function RHFInput<TFormValues extends Record<string, unknown>>({
@@ -98,6 +98,7 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
   max,
   step,
   disabled,
+  required,
 }: RHFInputProps<TFormValues>) {
   return (
     <FormFieldWrapper
@@ -127,6 +128,7 @@ export function RHFInput<TFormValues extends Record<string, unknown>>({
           max={max}
           step={step}
           disabled={disabled}
+          required={required}
         />
       )}
     </FormFieldWrapper>
@@ -256,7 +258,7 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
     if (!currentValue && defaultValue) {
       form.setValue(
         name,
-        defaultValue as unknown as PathValue<TFormValues, Path<TFormValues>>,
+        defaultValue as unknown as PathValue<TFormValues, Path<TFormValues>>
       );
     }
   }, [currentValue, defaultValue, form, name]);
@@ -462,7 +464,7 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => void
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -509,7 +511,7 @@ export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
                     "hover:bg-muted/50 hover:border-primary",
                     preview
                       ? "border-primary bg-primary/5"
-                      : "border-muted-foreground/25",
+                      : "border-muted-foreground/25"
                   )}
                 >
                   {preview ? (

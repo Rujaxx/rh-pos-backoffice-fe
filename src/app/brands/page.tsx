@@ -46,7 +46,7 @@ export default function BrandsPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined,
+    undefined
   );
 
   // Build query parameters from table state
@@ -156,7 +156,7 @@ export default function BrandsPage() {
         }),
         confirmButtonText: t("brands.deleteBrandButton"),
         variant: "destructive",
-      },
+      }
     );
   };
 
@@ -166,10 +166,10 @@ export default function BrandsPage() {
       try {
         if (editingBrand) {
           // Remove _id from data before sending to backend (ID should only be in URL path)
-          const { ["_id"]: _, ...updateData } = data;
+
           await updateBrandMutation.mutateAsync({
             id: editingBrand._id,
-            data: updateData,
+            data: data,
           });
         } else {
           await createBrandMutation.mutateAsync(data);
@@ -179,7 +179,7 @@ export default function BrandsPage() {
         console.error("Failed to save brand:", error);
       }
     },
-    [editingBrand, updateBrandMutation, createBrandMutation, closeModal],
+    [editingBrand, updateBrandMutation, createBrandMutation, closeModal]
   );
 
   // Search handler with proper typing
@@ -194,7 +194,7 @@ export default function BrandsPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    [],
+    []
   );
 
   // Sorting handler
@@ -211,7 +211,7 @@ export default function BrandsPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    [],
+    []
   );
 
   const isFormLoading =
@@ -239,7 +239,7 @@ export default function BrandsPage() {
                     ? "inactive"
                     : statusFilter === "inactive"
                       ? undefined
-                      : "active",
+                      : "active"
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
