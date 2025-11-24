@@ -4,12 +4,12 @@ import { QueryParams } from "./api";
 export interface Brand extends Record<string, unknown> {
   _id: string;
   name: MultilingualText;
-  description: MultilingualText;
+  description?: MultilingualText;
   logo?: string;
-  menuLink?: string;
   website?: string;
   isActive?: boolean;
-  phone?: string;
+  phone: string;
+  countryCode: string;
   fssaiNo?: string;
   trnOrGstNo?: string;
   panNo?: string;
@@ -25,12 +25,12 @@ export interface Brand extends Record<string, unknown> {
 // Form data for creating/updating brands
 export interface BrandFormData extends Record<string, unknown> {
   name: MultilingualText;
-  description: MultilingualText;
+  description?: MultilingualText;
   logo?: string;
-  menuLink?: string;
   website?: string;
   isActive?: boolean;
-  phone?: string;
+  phone: string;
+  countryCode: string;
   fssaiNo?: string;
   trnOrGstNo?: string;
   panNo?: string;
