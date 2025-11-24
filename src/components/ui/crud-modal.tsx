@@ -54,7 +54,7 @@ const sizeClasses = {
   md: "max-w-lg",
   lg: "max-w-2xl",
   ml: "max-w-4xl",
-  xl: "max-w-6xl",
+  xl: "max-w-4xl",
   full: "max-w-[95vw] w-full",
 };
 
