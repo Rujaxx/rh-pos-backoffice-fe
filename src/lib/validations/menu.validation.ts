@@ -10,7 +10,6 @@ export const menuSchema = z.object({
   shortName: z.string().trim().optional(),
   isActive: z.boolean().default(true),
   isPosDefault: z.boolean().default(false),
-  isDigitalDefault: z.boolean().default(false),
   isDigitalMenu: z.boolean().default(false),
   isMobileApp: z.boolean().default(false),
   isONDC: z.boolean().default(false),
