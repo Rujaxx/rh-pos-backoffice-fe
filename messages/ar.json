@@ -265,9 +265,6 @@
   "brands.form.logoAndLinks": "الشعار والروابط",
   "brands.form.logoLabel": "الشعار",
   "brands.form.logoDescription": "ارفع شعار علامتك التجارية (الحجم الموصى به: 512x512 بكسل)",
-  "brands.form.menuLinkLabel": "رابط القائمة",
-  "brands.form.menuLinkPlaceholder": "https://menu.example.com",
-  "brands.form.menuLinkDescription": "رابط قائمتك الإلكترونية",
   "brands.form.websiteLabel": "الموقع الإلكتروني",
   "brands.form.websitePlaceholder": "https://example.com",
   "brands.form.websiteDescription": "رابط موقع علامتك التجارية (اختياري)",
@@ -1247,5 +1244,6 @@
   "menuItems.table.openItem": "عنصر مفتوح",
   "menuItems.table.openPrice": "سعر مفتوح",
   "menuItems.table.syncToAggregator": "مزامنة مع المجمع",
-  "menuItems.table.isCombo": "عنصر كومبو"
+  "menuItems.table.isCombo": "عنصر كومبو",
+  "menuItems.table.discountedPrice": "السعر بعد الخصم"
 }

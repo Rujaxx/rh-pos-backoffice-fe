@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 // Create table mutation
 export const useCreateTable = (
-  options?: UseMutationOptions<SuccessResponse<Table>, Error, TableFormData>,
+  options?: UseMutationOptions<SuccessResponse<Table>, Error, TableFormData>
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -49,7 +49,7 @@ export const useUpdateTable = (
     SuccessResponse<Table>,
     Error,
     { id: string; data: TableFormData }
-  >,
+  >
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -85,7 +85,7 @@ export const useUpdateTable = (
 
 // Delete table mutation
 export const useDeleteTable = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
 ) => {
   const queryUtils = useQueryUtils();
 

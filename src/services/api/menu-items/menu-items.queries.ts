@@ -75,7 +75,6 @@ class MenuItemService extends BaseApiService<
   ): Promise<
     SuccessResponse<{ updated: number; failed: number; items: MenuItem[] }>
   > {
-    console.log("calling this api");
     return api.patch<
       SuccessResponse<{ updated: number; failed: number; items: MenuItem[] }>
     >(`${this.baseEndpoint}/bulk/${menuId}`, { items });

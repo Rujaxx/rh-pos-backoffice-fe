@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 // Create brand mutation
 export const useCreateBrand = (
-  options?: UseMutationOptions<SuccessResponse<Brand>, Error, BrandFormData>,
+  options?: UseMutationOptions<SuccessResponse<Brand>, Error, BrandFormData>
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -36,7 +36,7 @@ export const useCreateBrand = (
         } catch (error) {
           console.error(
             "Failed to confirm uploads, but brand was created:",
-            error,
+            error
           );
           // Don't fail the entire operation if upload confirmation fails
         }
@@ -71,7 +71,7 @@ export const useUpdateBrand = (
     SuccessResponse<Brand>,
     Error,
     { id: string; data: BrandFormData }
-  >,
+  >
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -94,7 +94,7 @@ export const useUpdateBrand = (
         } catch (error) {
           console.error(
             "Failed to confirm uploads, but brand was updated:",
-            error,
+            error
           );
           // Don't fail the entire operation if upload confirmation fails
         }
@@ -127,7 +127,7 @@ export const useUpdateBrand = (
 
 // Delete brand mutation
 export const useDeleteBrand = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
 ) => {
   const queryUtils = useQueryUtils();
 

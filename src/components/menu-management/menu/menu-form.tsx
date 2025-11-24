@@ -43,7 +43,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }),
+    })
   );
 
   return (
@@ -142,14 +142,6 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
               description={t("menus.form.posDefaultDescription")}
             />
 
-            {/* Digital Default */}
-            <RHFSwitch
-              form={form}
-              name="isDigitalDefault"
-              label={t("menus.form.digitalDefaultLabel")}
-              description={t("menus.form.digitalDefaultDescription")}
-            />
-
             {/* Digital Menu */}
             <RHFSwitch
               form={form}
@@ -158,21 +150,13 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
               description={t("menus.form.digitalMenuDescription")}
             />
 
-            {/* Mobile App */}
-            <RHFSwitch
-              form={form}
-              name="isMobileApp"
-              label={t("menus.form.mobileAppLabel")}
-              description={t("menus.form.mobileAppDescription")}
-            />
-
-            {/* ONDC */}
-            <RHFSwitch
+            {/* ONDC Hidden for now*/}
+            {/* <RHFSwitch
               form={form}
               name="isONDC"
               label={t("menus.form.ondcLabel")}
               description={t("menus.form.ondcDescription")}
-            />
+            /> */}
           </CardContent>
         </Card>
       </div>
@@ -190,9 +174,7 @@ export function useMenuForm(editingMenu?: Menu | null) {
       shortName: "",
       isActive: true,
       isPosDefault: false,
-      isDigitalDefault: false,
       isDigitalMenu: false,
-      isMobileApp: false,
       isONDC: false,
       brandId: "",
       restaurantId: "",
@@ -208,9 +190,7 @@ export function useMenuForm(editingMenu?: Menu | null) {
         shortName: editingMenu.shortName,
         isActive: editingMenu.isActive,
         isPosDefault: editingMenu.isPosDefault,
-        isDigitalDefault: editingMenu.isDigitalDefault,
         isDigitalMenu: editingMenu.isDigitalMenu,
-        isMobileApp: editingMenu.isMobileApp,
         isONDC: editingMenu.isONDC,
         brandId: editingMenu.brandId,
         restaurantId: editingMenu.restaurantId,
@@ -222,9 +202,7 @@ export function useMenuForm(editingMenu?: Menu | null) {
         shortName: "",
         isActive: true,
         isPosDefault: false,
-        isDigitalDefault: false,
         isDigitalMenu: false,
-        isMobileApp: false,
         isONDC: false,
         brandId: "",
         restaurantId: "",

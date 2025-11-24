@@ -4,9 +4,9 @@ import { z } from "zod";
 export const multilingualTextSchema = z
   .object({
     en: z.string().min(0),
-    ar: z.string().min(0),
+    ar: z.string().min(0).optional(),
   })
-  .refine((data) => data.en.trim() || data.ar.trim(), {
+  .refine((data) => data.en.trim() || data.ar?.trim(), {
     message: "At least one language is required",
     path: ["en"],
   }) satisfies z.ZodType<MultilingualText>;
@@ -26,7 +26,7 @@ export const addressSchema = z.object({
 // Generic validation helper with enhanced error handling
 export function validateFormData<T>(
   schema: z.ZodSchema<T>,
-  data: unknown,
+  data: unknown
 ): {
   success: boolean;
   data?: T;
@@ -73,7 +73,7 @@ export function validateFormData<T>(
 // Safe validation helper that returns parsed data or null
 export function safeValidateFormData<T>(
   schema: z.ZodSchema<T>,
-  data: unknown,
+  data: unknown
 ): T | null {
   const result = validateFormData(schema, data);
   return result.success ? result.data! : null;
@@ -84,7 +84,7 @@ export function validateFormSubmission<T>(
   schema: z.ZodSchema<T>,
   data: unknown,
   onSuccess?: (data: T) => void,
-  onError?: (errors: Record<string, string>) => void,
+  onError?: (errors: Record<string, string>) => void
 ): boolean {
   const result = validateFormData(schema, data);
 
@@ -101,7 +101,7 @@ export function validateFormSubmission<T>(
 
 // Utility to format validation errors for display
 export function formatValidationErrors(
-  errors: Record<string, string>,
+  errors: Record<string, string>
 ): string[] {
   return Object.entries(errors).map(([field, message]) => {
     // Convert dot notation to readable field names
@@ -127,7 +127,7 @@ export function formatValidationErrors(
 // Helper to get nested field errors for react-hook-form integration
 export function getNestedFieldError(
   errors: Record<string, string> | undefined,
-  fieldPath: string,
+  fieldPath: string
 ): string | undefined {
   return errors?.[fieldPath];
 }

@@ -156,87 +156,6 @@ export function RestaurantFormContent({
           </CardContent>
         </Card>
 
-        {/* System Configuration */}
-        {/* <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {t("restaurants.form.systemConfig")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <RHFSelect
-              form={form}
-              name="timezone"
-              label={t("restaurants.form.timezoneLabel")}
-              placeholder={t("restaurants.form.timezonePlaceholder")}
-              options={timezoneOptions}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <RHFTimeInput
-                form={form}
-                name="startDayTime"
-                label={t("restaurants.form.startDayTimeLabel")}
-                placeholder="10:00"
-                description={t("restaurants.form.startDayTimeDescription")}
-              />
-
-              <RHFTimeInput
-                form={form}
-                name="endDayTime"
-                label={t("restaurants.form.endDayTimeLabel")}
-                placeholder="23:00"
-                description={t("restaurants.form.endDayTimeDescription")}
-              />
-            </div>
-
-            <RHFSelect
-              form={form}
-              name="nextResetBillFreq"
-              label={t("restaurants.form.nextResetBillLabel")}
-              placeholder={t("restaurants.form.nextResetBillPlaceholder")}
-              options={resetOptions}
-            />
-
-            <RHFInput
-              form={form}
-              name="billPrefix"
-              label={t("restaurants.form.billPrefixLabel")}
-              placeholder={t("restaurants.form.billPrefixPlaceholder")}
-            />
-
-            <RHFSelect
-              form={form}
-              name="nextResetKotFreq"
-              label={t("restaurants.form.nextResetKotLabel")}
-              placeholder={t("restaurants.form.nextResetKotPlaceholder")}
-              options={resetOptions}
-            />
-
-            <RHFInput
-              form={form}
-              name="kotPrefix"
-              label={t("restaurants.form.kotPrefixLabel")}
-              placeholder={t("restaurants.form.kotPrefixPlaceholder")}
-            />
-
-            <RHFInput
-              form={form}
-              name="restoCode"
-              label={t("restaurants.form.restoCodeLabel")}
-              placeholder={t("restaurants.form.restoCodePlaceholder")}
-              description={t("restaurants.form.restoCodeDescription")}
-            />
-
-            <RHFInput
-              form={form}
-              name="trnOrGstNo"
-              label={t("restaurants.form.trnOrGstNoLabel")}
-              placeholder={t("restaurants.form.trnOrGstNoPlaceholder")}
-              description={t("restaurants.form.trnOrGstNoDescription")}
-            />
-          </CardContent>
-        </Card> */}
         {/* Right Column (System Config + Bill/KOT Config) */}
         <div className="flex flex-col gap-6">
           {/* System Configuration */}
@@ -389,7 +308,7 @@ export function RestaurantFormContent({
               name="generateOrderTypeWiseOrderNo"
               label={t("restaurants.form.generateOrderTypeWiseOrderNoLabel")}
               description={t(
-                "restaurants.form.generateOrderTypeWiseOrderNoDescription",
+                "restaurants.form.generateOrderTypeWiseOrderNoDescription"
               )}
             />
 
@@ -422,7 +341,7 @@ export function RestaurantFormContent({
               name="multiplePriceSetting"
               label={t("restaurants.form.multiplePriceSettingLabel")}
               description={t(
-                "restaurants.form.multiplePriceSettingDescription",
+                "restaurants.form.multiplePriceSettingDescription"
               )}
             />
 
@@ -496,7 +415,7 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawPhones}
                     placeholder={t(
-                      "restaurants.form.notificationPhonePlaceholder",
+                      "restaurants.form.notificationPhonePlaceholder"
                     )}
                     onChange={(e) => setRawPhones(e.target.value)}
                     onBlur={() => {
@@ -531,7 +450,7 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawEmails}
                     placeholder={t(
-                      "restaurants.form.notificationEmailsPlaceholder",
+                      "restaurants.form.notificationEmailsPlaceholder"
                     )}
                     onChange={(e) => setRawEmails(e.target.value)}
                     onBlur={() => {
@@ -635,7 +554,7 @@ export function RestaurantFormContent({
             name="smsAndWhatsappSelection"
             label={t("restaurants.form.smsAndWhatsappSelectionLabel")}
             placeholder={t(
-              "restaurants.form.smsAndWhatsappSelectionPlaceholder",
+              "restaurants.form.smsAndWhatsappSelectionPlaceholder"
             )}
             options={smsWhatsappOptions}
           />
