@@ -31,7 +31,7 @@ export const renderPermissionModule = (
   t: ReturnType<typeof useTranslation>["t"],
   form: ReturnType<typeof useForm<RoleFormData>>,
   moduleName: string,
-  permissions: Permission[],
+  permissions: Permission[]
 ) => {
   const watched = form.watch("permissions") || [];
 
@@ -115,7 +115,7 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
   const brands = brandsResponse?.data || [];
   const brandOptions = brands.map((brand) => ({
     value: brand._id,
-    label: brand.name[locale],
+    label: brand.name[locale] || brand.name.en,
   }));
 
   return (
@@ -179,12 +179,7 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {permissionModules.map((group) =>
-                renderPermissionModule(
-                  t,
-                  form,
-                  group.module,
-                  group.permissions,
-                ),
+                renderPermissionModule(t, form, group.module, group.permissions)
               )}
             </div>
           )}

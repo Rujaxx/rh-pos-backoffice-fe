@@ -181,11 +181,9 @@ export default function RestaurantsPage() {
   // Move handlers after column definition to avoid dependency issues
   const handleSubmit = useCallback(
     async (data: RestaurantFormData) => {
-      console.log("submitting: ", data);
       try {
         // Parse and apply defaults using the schema to ensure all boolean fields have proper values
         const validatedData = restaurantSchema.parse(data);
-        console.log(validatedData);
         if (latestRestaurantData) {
           // Use the same data structure for update as create (no field removal)
           await updateRestaurantMutation.mutateAsync({

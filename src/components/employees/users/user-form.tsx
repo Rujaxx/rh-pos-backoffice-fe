@@ -54,17 +54,17 @@ export function UserFormContent({ form }: UserFormContentProps) {
 
   const roleOptions = roles.map((role) => ({
     value: role._id,
-    label: role.name[locale],
+    label: role.name[locale] || role.name.en,
   }));
 
   const brandOptions = brands.map((brand) => ({
     value: brand._id,
-    label: brand.name[locale],
+    label: brand.name[locale] || brand.name.en,
   }));
 
   const restaurantOptions = restaurants.map((restaurant) => ({
     value: restaurant._id,
-    label: restaurant.name[locale],
+    label: restaurant.name[locale] || restaurant.name.en,
   }));
 
   const isPending = form.formState.isSubmitting;
