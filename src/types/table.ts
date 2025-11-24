@@ -23,7 +23,7 @@ export interface Table extends Record<string, unknown> {
 
 // Form data interface for creating/updating tables (matches CreateTableDto)
 export interface TableFormData extends Record<string, unknown> {
-  label: string;
+  label?: string;
   capacity: number;
   tableSectionId: string;
   restaurantId: string;
