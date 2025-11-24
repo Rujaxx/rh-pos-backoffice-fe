@@ -344,20 +344,6 @@ export function RestaurantFormContent({
                 "restaurants.form.multiplePriceSettingDescription"
               )}
             />
-
-            <RHFSwitch
-              form={form}
-              name="tableReservation"
-              label={t("restaurants.form.tableReservationLabel")}
-              description={t("restaurants.form.tableReservationDescription")}
-            />
-
-            <RHFSwitch
-              form={form}
-              name="allowMultipleTax"
-              label={t("restaurants.form.allowMultipleTaxLabel")}
-              description={t("restaurants.form.allowMultipleTaxDescription")}
-            />
           </CardContent>
         </Card>
       </div>
