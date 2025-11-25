@@ -11,6 +11,7 @@ import { ImageLibraryItem } from '@/types/imageLibrary.type';
 import { Button } from '@/components/ui/button';
 import { CrudModal } from '@/components/ui/crud-modal';
 import { RHFMultilingualInput } from '@/components/ui/form-components';
+import { getKeyFromS3Url } from '@/lib/upload-utils';
 import { TagEditor } from '@/components/image-library/TagEditor';
 import { useUploadImage } from '@/services/api/upload/upload.mutations';
 import {
@@ -21,17 +22,20 @@ import {
   Search as SearchIcon,
   ArrowLeft,
   Loader2,
+  FileDown,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UploadFolderType } from '@/types/upload';
-import { useImageLibraryItems } from '@/services/api/image-library/image-library.queries';
+import {
+  useImageLibraryItems,
+  imageLibraryService,
+} from '@/services/api/image-library/image-library.queries';
 import {
   useCreateImageLibraryItem,
   useUpdateImageLibraryItem,
   useDeleteImageLibraryItem,
 } from '@/services/api/image-library/image-library.mutations';
-import { getS3UploadBaseUrl } from '@/config/api';
 
 export default function ImageLibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +44,7 @@ export default function ImageLibraryPage() {
   const [items, setItems] = useState<ImageLibraryItem[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const queryParams = useMemo(
@@ -56,7 +61,6 @@ export default function ImageLibraryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<ImageLibraryItem | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
-  const [uploadedImageKey, setUploadedImageKey] = useState<string>('');
 
   const uploadMutation = useUploadImage();
   const createMutation = useCreateImageLibraryItem();
@@ -88,6 +92,84 @@ export default function ImageLibraryPage() {
     setTotalItems(0);
   }, []);
 
+  const fetchAllItemsForExport = useCallback(async () => {
+    const limit = 200;
+    let pageNumber = 1;
+    let hasNext = true;
+    const aggregated: ImageLibraryItem[] = [];
+
+    while (hasNext) {
+      const response = await imageLibraryService.getAllImageLibraryItems({
+        page: pageNumber,
+        limit,
+        ...(debouncedSearch ? { term: debouncedSearch } : {}),
+      });
+
+      aggregated.push(...response.data);
+
+      const meta = response.meta;
+      if (meta?.hasNextPage === true) {
+        pageNumber += 1;
+      } else if (meta?.hasNextPage === false) {
+        hasNext = false;
+      } else {
+        if (response.data.length < limit) {
+          hasNext = false;
+        } else {
+          pageNumber += 1;
+        }
+      }
+
+      if (response.data.length === 0) {
+        hasNext = false;
+      }
+    }
+
+    return aggregated;
+  }, [debouncedSearch]);
+
+  const handleDownloadCsv = useCallback(async () => {
+    if (isExporting) return;
+
+    setIsExporting(true);
+    try {
+      const exportItems = await fetchAllItemsForExport();
+
+      const escapeValue = (value?: string) => {
+        const safeValue = value ?? '';
+        const escaped = safeValue.replace(/"/g, '""');
+        return `"${escaped}"`;
+      };
+
+      const header = ['code', 'dishNameEn', 'dishNameAr'];
+      const rows = exportItems.map((item) => [
+        escapeValue(item.code),
+        escapeValue(item.dishName?.en),
+        escapeValue(item.dishName?.ar),
+      ]);
+
+      const csvContent = [
+        header.join(','),
+        ...rows.map((row) => row.join(',')),
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `image-library-${new Date()
+        .toISOString()
+        .slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsExporting(false);
+    }
+  }, [fetchAllItemsForExport, isExporting]);
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -101,7 +183,6 @@ export default function ImageLibraryPage() {
       });
 
       setUploadedImageUrl(result.data.url);
-      setUploadedImageKey(result.data.key);
       setValue('url', result.data.key, { shouldValidate: true });
     } catch (error) {
       console.error('Upload failed:', error);
@@ -110,14 +191,12 @@ export default function ImageLibraryPage() {
 
   const clearUploadedImage = () => {
     setUploadedImageUrl('');
-    setUploadedImageKey('');
     setValue('url', '', { shouldValidate: true });
   };
 
   const openCreateModal = () => {
     setEditingItem(null);
     setUploadedImageUrl('');
-    setUploadedImageKey('');
     reset({
       dishName: { en: '', ar: '' },
       url: '',
@@ -128,11 +207,11 @@ export default function ImageLibraryPage() {
 
   const openEditModal = (item: ImageLibraryItem) => {
     setEditingItem(item);
-    setUploadedImageUrl(getS3UploadBaseUrl() + '/' + item.url);
-    setUploadedImageKey('');
+    setUploadedImageUrl(item.url);
+    const key = item.key ?? getKeyFromS3Url(item.url);
     reset({
       dishName: item.dishName,
-      url: getS3UploadBaseUrl() + '/' + item.url,
+      url: key || '',
       tags: item.tags || [],
     });
     setIsModalOpen(true);
@@ -142,7 +221,6 @@ export default function ImageLibraryPage() {
     setIsModalOpen(false);
     setEditingItem(null);
     setUploadedImageUrl('');
-    setUploadedImageKey('');
     reset();
   };
 
@@ -174,8 +252,8 @@ export default function ImageLibraryPage() {
     }
   };
 
-  const currentUrl = watch('url');
   const watchedTags = watch('tags') || [];
+  const previewImageUrl = uploadedImageUrl;
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -281,9 +359,21 @@ export default function ImageLibraryPage() {
               dishes.
             </p>
           </div>
-          <Button size="lg" onClick={openCreateModal}>
-            Add Image
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleDownloadCsv}
+              disabled={isExporting}
+              className="flex items-center gap-2"
+            >
+              <FileDown className="w-4 h-4" />
+              {isExporting ? 'Preparing...' : 'Download CSV'}
+            </Button>
+            <Button size="lg" onClick={openCreateModal}>
+              Add Image
+            </Button>
+          </div>
         </header>
 
         <div className="flex flex-wrap items-center gap-4 mb-8">
@@ -317,7 +407,7 @@ export default function ImageLibraryPage() {
                 className="group relative overflow-hidden rounded-xl aspect-[3/4] bg-gray-200 dark:bg-white/5 flex items-end"
               >
                 <Image
-                  src={getS3UploadBaseUrl() + '/' + item.url}
+                  src={item.url}
                   alt={item.dishName.en}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -420,11 +510,11 @@ export default function ImageLibraryPage() {
           <div>
             <label className="block text-sm font-medium mb-2">Image</label>
 
-            {uploadedImageUrl || currentUrl ? (
+            {previewImageUrl ? (
               <div className="space-y-2">
                 <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800">
                   <Image
-                    src={uploadedImageUrl || currentUrl || ''}
+                    src={previewImageUrl}
                     alt="Preview"
                     fill
                     className="object-contain"

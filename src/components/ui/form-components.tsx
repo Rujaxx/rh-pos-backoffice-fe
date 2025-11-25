@@ -443,107 +443,107 @@ export function RHFMultilingualInput<
   );
 }
 
-interface RHFFileUploadProps<TFormValues extends Record<string, unknown>> {
-  form: UseFormReturn<TFormValues>;
-  name: FieldPath<TFormValues>;
-  label: string;
-  description?: string;
-  accept?: string;
-  className?: string;
-}
+// interface RHFFileUploadProps<TFormValues extends Record<string, unknown>> {
+//   form: UseFormReturn<TFormValues>;
+//   name: FieldPath<TFormValues>;
+//   label: string;
+//   description?: string;
+//   accept?: string;
+//   className?: string;
+// }
 
-export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
-  form,
-  name,
-  label,
-  description,
-  accept = 'image/*',
-  className,
-}: RHFFileUploadProps<TFormValues>) {
-  const [preview, setPreview] = React.useState<string>('');
+// export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
+//   form,
+//   name,
+//   label,
+//   description,
+//   accept = 'image/*',
+//   className,
+// }: RHFFileUploadProps<TFormValues>) {
+//   const [preview, setPreview] = React.useState<string>('');
 
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPreview(result);
-        onChange(result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+//   const handleFileChange = (
+//     event: React.ChangeEvent<HTMLInputElement>,
+//     onChange: (value: string) => void,
+//   ) => {
+//     const file = event.target.files?.[0];
+//     if (file) {
+//       const reader = new FileReader();
+//       reader.onloadend = () => {
+//         const result = reader.result as string;
+//         setPreview(result);
+//         onChange(result);
+//       };
+//       reader.readAsDataURL(file);
+//     }
+//   };
 
-  React.useEffect(() => {
-    const currentValue = form.getValues(name);
-    if (currentValue) {
-      setPreview(currentValue as string);
-    }
-  }, [form, name]);
+//   React.useEffect(() => {
+//     const currentValue = form.getValues(name);
+//     if (currentValue) {
+//       setPreview(currentValue as string);
+//     }
+//   }, [form, name]);
 
-  return (
-    <FormFieldWrapper
-      form={form}
-      name={name}
-      label={label}
-      description={description}
-    >
-      {(field) => (
-        <div className={cn('space-y-2', className)}>
-          <div className="flex items-center space-x-4">
-            <div className="flex-1">
-              <div className="relative">
-                <input
-                  type="file"
-                  accept={accept}
-                  onChange={(e) => handleFileChange(e, field.onChange)}
-                  className="hidden"
-                  id={`file-upload-${name}`}
-                />
-                <label
-                  htmlFor={`file-upload-${name}`}
-                  className={cn(
-                    'flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
-                    'hover:bg-muted/50 hover:border-primary',
-                    preview
-                      ? 'border-primary bg-primary/5'
-                      : 'border-muted-foreground/25',
-                  )}
-                >
-                  {preview ? (
-                    <div className="flex flex-col items-center space-y-2">
-                      <Image
-                        src={preview}
-                        alt="Preview"
-                        width={64}
-                        height={64}
-                        className="object-contain rounded"
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        Click to change
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center space-y-2">
-                      <Upload className="w-8 h-8 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        Upload {label}
-                      </span>
-                    </div>
-                  )}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </FormFieldWrapper>
-  );
-}
+//   return (
+//     <FormFieldWrapper
+//       form={form}
+//       name={name}
+//       label={label}
+//       description={description}
+//     >
+//       {(field) => (
+//         <div className={cn('space-y-2', className)}>
+//           <div className="flex items-center space-x-4">
+//             <div className="flex-1">
+//               <div className="relative">
+//                 <input
+//                   type="file"
+//                   accept={accept}
+//                   onChange={(e) => handleFileChange(e, field.onChange)}
+//                   className="hidden"
+//                   id={`file-upload-${name}`}
+//                 />
+//                 <label
+//                   htmlFor={`file-upload-${name}`}
+//                   className={cn(
+//                     'flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
+//                     'hover:bg-muted/50 hover:border-primary',
+//                     preview
+//                       ? 'border-primary bg-primary/5'
+//                       : 'border-muted-foreground/25',
+//                   )}
+//                 >
+//                   {preview ? (
+//                     <div className="flex flex-col items-center space-y-2">
+//                       <Image
+//                         src={preview}
+//                         alt="Preview"
+//                         width={64}
+//                         height={64}
+//                         className="object-contain rounded"
+//                       />
+//                       <span className="text-xs text-muted-foreground">
+//                         Click to change
+//                       </span>
+//                     </div>
+//                   ) : (
+//                     <div className="flex flex-col items-center space-y-2">
+//                       <Upload className="w-8 h-8 text-muted-foreground" />
+//                       <span className="text-sm text-muted-foreground">
+//                         Upload {label}
+//                       </span>
+//                     </div>
+//                   )}
+//                 </label>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </FormFieldWrapper>
+//   );
+// }
 
 interface RHFAddressFormProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
