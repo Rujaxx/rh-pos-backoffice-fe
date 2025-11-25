@@ -16,25 +16,11 @@ const getBaseUrl = (): string => {
   return 'http://localhost:3000';
 };
 
-/**
- * Get S3 upload base URL based on environment
- */
-export const getS3UploadBaseUrl = (): string => {
-  // Production environment
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://rhpos-uploads-production.s3.me-central-1.amazonaws.com';
-  }
-
-  // Development environment
-  return 'https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com';
-};
-
 const baseUrl = getBaseUrl();
 const fullApiUrl = `${baseUrl}/api/v1`;
 
 export const API_CONFIG = {
   BASE_URL: fullApiUrl,
-  S3_UPLOAD_BASE_URL: getS3UploadBaseUrl(),
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000, // 1 second

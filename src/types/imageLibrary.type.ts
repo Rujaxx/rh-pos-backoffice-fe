@@ -5,6 +5,7 @@ export interface ImageLibraryItem {
   code: string;
   dishName: Record<string, string>; // { en: string, ar?: string }
   url: string;
+  key?: string;
   tags?: string[];
 }
 
