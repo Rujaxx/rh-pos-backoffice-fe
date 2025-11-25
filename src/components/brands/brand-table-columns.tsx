@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Brand } from "@/types/brand.type";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Brand } from '@/types/brand.type';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
+} from '@/components/ui/dropdown-menu';
+import Image from 'next/image';
 import {
   Edit,
   Trash2,
@@ -19,22 +19,22 @@ import {
   Phone,
   Globe,
   Calendar,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { getS3UrlFromKey, getFallbackAvatarUrl } from "@/lib/upload-utils";
-import { useI18n } from "@/providers/i18n-provider";
-import { MultilingualText } from "@/types";
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { useI18n } from '@/providers/i18n-provider';
+import { MultilingualText } from '@/types';
 
 // Column definitions for the brands table
 export const createBrandColumns = (
   onEdit: (brand: Brand) => void,
   onDelete: (brand: Brand) => void,
-  t: ReturnType<typeof useTranslation>["t"],
-  locale: "en" | "ar"
+  t: ReturnType<typeof useTranslation>['t'],
+  locale: 'en' | 'ar',
 ): ColumnDef<Brand>[] => [
   {
-    id: "logo",
-    header: t("brands.logo"),
+    id: 'logo',
+    header: t('brands.logo'),
     size: 80,
     enableSorting: false,
     cell: ({ row }) => {
@@ -62,13 +62,13 @@ export const createBrandColumns = (
     },
   },
   {
-    accessorKey: "name",
-    id: "name",
-    header: t("brands.brandName"),
+    accessorKey: 'name',
+    id: 'name',
+    header: t('brands.brandName'),
     enableSorting: true,
     sortingFn: (rowA, rowB, columnId) => {
-      const aValue = (rowA.original.name.en || "").toLowerCase();
-      const bValue = (rowB.original.name.en || "").toLowerCase();
+      const aValue = (rowA.original.name.en || '').toLowerCase();
+      const bValue = (rowB.original.name.en || '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -83,9 +83,9 @@ export const createBrandColumns = (
     },
   },
   {
-    accessorKey: "description",
-    id: "description",
-    header: t("brands.description"),
+    accessorKey: 'description',
+    id: 'description',
+    header: t('brands.description'),
     enableSorting: false,
     cell: ({ row }) => {
       const brand = row.original;
@@ -99,23 +99,23 @@ export const createBrandColumns = (
     },
   },
   {
-    accessorKey: "isActive",
-    id: "status",
-    header: t("brands.status"),
+    accessorKey: 'isActive',
+    id: 'status',
+    header: t('brands.status'),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const brand = row.original;
       return (
-        <Badge variant={brand.isActive ? "default" : "secondary"}>
-          {brand.isActive ? t("brands.active") : t("brands.inactive")}
+        <Badge variant={brand.isActive ? 'default' : 'secondary'}>
+          {brand.isActive ? t('brands.active') : t('brands.inactive')}
         </Badge>
       );
     },
   },
   {
-    id: "contact",
-    header: t("brands.contact"),
+    id: 'contact',
+    header: t('brands.contact'),
     enableSorting: false,
     cell: ({ row }) => {
       const brand = row.original;
@@ -137,8 +137,8 @@ export const createBrandColumns = (
     },
   },
   {
-    id: "links",
-    header: t("brands.links"),
+    id: 'links',
+    header: t('brands.links'),
     enableSorting: false,
     size: 120,
     cell: ({ row }) => {
@@ -151,12 +151,12 @@ export const createBrandColumns = (
               variant="outline"
               onClick={(e) => {
                 e.stopPropagation();
-                window.open(brand.website, "_blank");
+                window.open(brand.website, '_blank');
               }}
               className="h-7 px-2 text-xs"
             >
               <Globe className="h-3 w-3 mr-1" />
-              {t("brands.site")}
+              {t('brands.site')}
             </Button>
           )}
         </div>
@@ -164,9 +164,9 @@ export const createBrandColumns = (
     },
   },
   {
-    accessorKey: "createdAt",
-    id: "createdAt",
-    header: t("brands.created"),
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: t('brands.created'),
     enableSorting: true,
     size: 120,
     cell: ({ row }) => {
@@ -175,15 +175,15 @@ export const createBrandColumns = (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
           <span>
-            {new Date(brand.createdAt)?.toLocaleDateString() || "N/A"}
+            {new Date(brand.createdAt)?.toLocaleDateString() || 'N/A'}
           </span>
         </div>
       );
     },
   },
   {
-    id: "actions",
-    header: t("table.actions"),
+    id: 'actions',
+    header: t('table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -206,7 +206,7 @@ export const createBrandColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("brands.edit")}
+              {t('brands.edit')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -217,7 +217,7 @@ export const createBrandColumns = (
               disabled={brand.isActive ?? false} // Don't allow deleting active brands
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("brands.delete")}
+              {t('brands.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -229,7 +229,7 @@ export const createBrandColumns = (
 // Hook for using brand columns with current translation
 export const useBrandColumns = (
   onEdit: (brand: Brand) => void,
-  onDelete: (brand: Brand) => void
+  onDelete: (brand: Brand) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -238,16 +238,16 @@ export const useBrandColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const sort = sorting[0];
   // Map TanStack column IDs to backend field names
   const fieldMap: Record<string, string> = {
-    name: "name.en", // or you might want to sort by name.en specifically
-    status: "isActive",
-    createdAt: "createdAt",
+    name: 'name.en', // or you might want to sort by name.en specifically
+    status: 'isActive',
+    createdAt: 'createdAt',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -255,8 +255,8 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
-): "asc" | "desc" | undefined => {
+  sorting: Array<{ id: string; desc: boolean }>,
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

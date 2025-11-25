@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useMemo, useCallback, useRef } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   CrudModal,
   ConfirmationModal,
   useModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
-import { TableFormContent, useTableForm } from "@/components/tables/table-form";
+} from '@/components/ui/crud-modal';
+import { TableFormContent, useTableForm } from '@/components/tables/table-form';
 import {
   useTableColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from "@/components/tables/table-table-columns";
-import { TanStackTable } from "@/components/ui/tanstack-table";
-import Layout from "@/components/common/layout";
-import { Filter, Plus, UtensilsCrossed } from "lucide-react";
-import { Table, TableQueryParams } from "@/types/table";
-import { TableFormData } from "@/lib/validations/table.validation";
-import { useTables, useTable } from "@/services/api/tables/tables.queries";
+} from '@/components/tables/table-table-columns';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import Layout from '@/components/common/layout';
+import { Filter, Plus, UtensilsCrossed } from 'lucide-react';
+import { Table, TableQueryParams } from '@/types/table';
+import { TableFormData } from '@/lib/validations/table.validation';
+import { useTables, useTable } from '@/services/api/tables/tables.queries';
 import {
   useCreateTable,
   useUpdateTable,
   useDeleteTable,
-} from "@/services/api/tables/tables.mutations";
+} from '@/services/api/tables/tables.mutations';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { toast } from "sonner";
+} from '@tanstack/react-table';
+import { toast } from 'sonner';
 
 export default function TablesPage() {
   const { t } = useTranslation();
@@ -44,9 +44,9 @@ export default function TablesPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -54,7 +54,7 @@ export default function TablesPage() {
     const params: TableQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
     };
 
     // Add search term
@@ -65,12 +65,12 @@ export default function TablesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     if (statusFilter !== undefined) {
       // Send string values to backend as expected by BrandQueryParams
-      params.isAvailable = statusFilter === "available" ? "true" : "false";
+      params.isAvailable = statusFilter === 'available' ? 'true' : 'false';
     }
 
     return params;
@@ -110,7 +110,7 @@ export default function TablesPage() {
     data: individualTableResponse,
     isLoading: isLoadingIndividualTable,
     isFetching: isFetchingIndividualTable,
-  } = useTable(tableId || "", {
+  } = useTable(tableId || '', {
     enabled: shouldFetchTable, // The hook already checks !!id, we just need to check if modal is open
   });
 
@@ -147,17 +147,17 @@ export default function TablesPage() {
         try {
           await deleteTableMutation.mutateAsync(table._id);
         } catch (error) {
-          console.error("Failed to delete table:", error);
+          console.error('Failed to delete table:', error);
         }
       },
       {
-        title: t("table.deleteTable"),
-        description: t("table.deleteConfirmation", {
+        title: t('table.deleteTable'),
+        description: t('table.deleteConfirmation', {
           tableName: table.label,
         }),
-        confirmButtonText: t("table.deleteTableButton"),
-        variant: "destructive",
-      }
+        confirmButtonText: t('table.deleteTableButton'),
+        variant: 'destructive',
+      },
     );
   };
 
@@ -168,7 +168,7 @@ export default function TablesPage() {
         // Handle bulk creation
         if (data.isBulk && data.bulkCount) {
           const count = data.bulkCount;
-          const prefix = data.bulkLabelPrefix || "T";
+          const prefix = data.bulkLabelPrefix || 'T';
 
           // Create multiple tables
           for (let i = 1; i <= count; i++) {
@@ -183,7 +183,7 @@ export default function TablesPage() {
             await createTableMutation.mutateAsync(tableData);
           }
 
-          toast.success(t("table.bulkCreateSuccess", { count }));
+          toast.success(t('table.bulkCreateSuccess', { count }));
         } else {
           // Parse and apply defaults using the schema to ensure all fields have proper values
           const { isBulk, bulkCount, bulkLabelPrefix, ...validatedData } = data;
@@ -199,10 +199,10 @@ export default function TablesPage() {
         }
         closeModal();
       } catch (error) {
-        console.error("Failed to save table:", error);
+        console.error('Failed to save table:', error);
       }
     },
-    [latestTableData, updateTableMutation, createTableMutation, closeModal]
+    [latestTableData, updateTableMutation, createTableMutation, closeModal],
   );
 
   // Search handler with proper typing
@@ -217,7 +217,7 @@ export default function TablesPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -234,7 +234,7 @@ export default function TablesPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -251,21 +251,21 @@ export default function TablesPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <UtensilsCrossed className="h-6 w-6" />
-              <span>{t("table.title")}</span>
+              <span>{t('table.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("table.subtitle")}</p>
+            <p className="text-muted-foreground">{t('table.subtitle')}</p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Add status filter button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "available"
-                    ? "unavailable"
-                    : statusFilter === "unavailable"
+                  statusFilter === 'available'
+                    ? 'unavailable'
+                    : statusFilter === 'unavailable'
                       ? undefined
-                      : "available"
+                      : 'available',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
@@ -273,11 +273,11 @@ export default function TablesPage() {
             >
               <Filter className="h-4 w-4" />
               <span>
-                {statusFilter === "available"
-                  ? t("table.available")
-                  : statusFilter === "unavailable"
-                    ? t("table.unavailable")
-                    : t("common.allStatus")}
+                {statusFilter === 'available'
+                  ? t('table.available')
+                  : statusFilter === 'unavailable'
+                    ? t('table.unavailable')
+                    : t('common.allStatus')}
               </span>
             </Button>
             <Button
@@ -285,7 +285,7 @@ export default function TablesPage() {
               className="h-8 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              <span>{t("table.addNewTable")}</span>
+              <span>{t('table.addNewTable')}</span>
             </Button>
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function TablesPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("table.errorLoading")}: {error.message}
+                  {t('table.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -306,7 +306,7 @@ export default function TablesPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("table.searchPlaceholder")}
+                searchPlaceholder={t('table.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -320,7 +320,7 @@ export default function TablesPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("table.noDataFound")}
+                emptyMessage={t('table.noDataFound')}
                 enableMultiSort={false}
               />
             )}
@@ -333,13 +333,13 @@ export default function TablesPage() {
           onClose={closeModal}
           title={
             latestTableData
-              ? t("table.form.editTitle")
-              : t("table.form.createTitle")
+              ? t('table.form.editTitle')
+              : t('table.form.createTitle')
           }
           description={
             latestTableData
-              ? t("table.form.editDescription")
-              : t("table.form.createDescription")
+              ? t('table.form.editDescription')
+              : t('table.form.createDescription')
           }
           form={form}
           onSubmit={handleSubmit}
@@ -347,8 +347,8 @@ export default function TablesPage() {
           size="xl"
           submitButtonText={
             latestTableData
-              ? t("table.form.updateButton")
-              : t("table.form.createButton")
+              ? t('table.form.updateButton')
+              : t('table.form.createButton')
           }
         >
           <TableFormContent form={form} isEditing={!!latestTableData} />

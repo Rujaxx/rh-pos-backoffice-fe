@@ -3,13 +3,13 @@
  * TanStack Query mutations for menu item operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { MenuItem, MenuItemFormData } from "@/types/menu-item.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { menuItemService } from "./menu-items.queries";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { MenuItem, MenuItemFormData } from '@/types/menu-item.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { menuItemService } from './menu-items.queries';
+import { toast } from 'sonner';
 
 // Create menu item mutation
 export const useCreateMenuItem = (
@@ -17,7 +17,7 @@ export const useCreateMenuItem = (
     SuccessResponse<MenuItem>,
     Error,
     MenuItemFormData
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -28,25 +28,25 @@ export const useCreateMenuItem = (
     },
     onSuccess: (data) => {
       // Show success message
-      toast.success("Menu item created successfully");
+      toast.success('Menu item created successfully');
 
       // Invalidate and refetch menu items list - use partial matching to catch all menu item list queries
-      queryUtils.invalidateQueries(["menu-items", "list"]);
+      queryUtils.invalidateQueries(['menu-items', 'list']);
 
       // Also invalidate menus list to update menu item count
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
 
       // Set the new menu item in cache
       if (data.data) {
         queryUtils.setQueryData(
           QUERY_KEYS.MENU_ITEMS.DETAIL(data.data._id!),
-          data
+          data,
         );
       }
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to create menu item";
+      const errorMessage = error.message || 'Failed to create menu item';
       toast.error(errorMessage);
     },
     ...options,
@@ -59,7 +59,7 @@ export const useUpdateMenuItem = (
     SuccessResponse<MenuItem>,
     Error,
     { id: string; data: MenuItemFormData }
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -80,7 +80,7 @@ export const useUpdateMenuItem = (
       const { id } = variables;
 
       // Show success message
-      toast.success("Menu item updated successfully");
+      toast.success('Menu item updated successfully');
 
       // Update specific menu item cache
       if (data.data) {
@@ -88,14 +88,14 @@ export const useUpdateMenuItem = (
       }
 
       // Invalidate menu items list to refresh the table - use partial matching
-      queryUtils.invalidateQueries(["menu-items", "list"]);
+      queryUtils.invalidateQueries(['menu-items', 'list']);
 
       // Also invalidate menus list to update menu item count
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update menu item";
+      const errorMessage = error.message || 'Failed to update menu item';
       toast.error(errorMessage);
     },
     ...options,
@@ -104,7 +104,7 @@ export const useUpdateMenuItem = (
 
 // Delete menu item mutation
 export const useDeleteMenuItem = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -112,20 +112,20 @@ export const useDeleteMenuItem = (
     mutationFn: (id: string) => menuItemService.delete(id),
     onSuccess: (_, id) => {
       // Show success message
-      toast.success("Menu item deleted successfully");
+      toast.success('Menu item deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.MENU_ITEMS.DETAIL(id));
 
       // Invalidate menu items list - use partial matching
-      queryUtils.invalidateQueries(["menu-items", "list"]);
+      queryUtils.invalidateQueries(['menu-items', 'list']);
 
       // Also invalidate menus list to update menu item count
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to delete menu item";
+      const errorMessage = error.message || 'Failed to delete menu item';
       toast.error(errorMessage);
     },
     ...options,
@@ -139,7 +139,7 @@ export const useBulkUpdateMenuItems = (
     SuccessResponse<{ updated: number; failed: number; items: MenuItem[] }>,
     Error,
     MenuItemFormData[]
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -153,14 +153,14 @@ export const useBulkUpdateMenuItems = (
       toast.success(`Successfully updated ${data.data.updated} menu item(s)`);
 
       // Invalidate menu items list to refresh the table
-      queryUtils.invalidateQueries(["menu-items", "list"]);
+      queryUtils.invalidateQueries(['menu-items', 'list']);
 
       // Also invalidate menus list
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update menu items";
+      const errorMessage = error.message || 'Failed to update menu items';
       toast.error(errorMessage);
     },
     ...options,

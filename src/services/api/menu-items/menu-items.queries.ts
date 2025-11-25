@@ -1,13 +1,13 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
 import {
   MenuItem,
   MenuItemFormData,
   MenuItemQueryParams,
-} from "@/types/menu-item.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
-import api from "@/lib/axios";
+} from '@/types/menu-item.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import api from '@/lib/axios';
 
 // Menu Items service extending base service
 class MenuItemService extends BaseApiService<
@@ -21,7 +21,7 @@ class MenuItemService extends BaseApiService<
 
   // Get all menu items with optional filters
   async getAllMenuItems(
-    params?: MenuItemQueryParams
+    params?: MenuItemQueryParams,
   ): Promise<PaginatedResponse<MenuItem>> {
     return this.getAll(params);
   }
@@ -33,15 +33,15 @@ class MenuItemService extends BaseApiService<
 
   // Get active menu items only (for dropdowns)
   async getActiveMenuItems(
-    params?: Omit<MenuItemQueryParams, "isActive">
+    params?: Omit<MenuItemQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<MenuItem>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Get menu items by menu ID
   async getMenuItemsByMenu(
     menuId: string,
-    params?: Omit<MenuItemQueryParams, "menuId">
+    params?: Omit<MenuItemQueryParams, 'menuId'>,
   ): Promise<PaginatedResponse<MenuItem>> {
     return this.getAll({ ...params, menuId });
   }
@@ -49,29 +49,29 @@ class MenuItemService extends BaseApiService<
   // Get menu items by category ID
   async getMenuItemsByCategory(
     categoryId: string,
-    params?: Omit<MenuItemQueryParams, "categoryId">
+    params?: Omit<MenuItemQueryParams, 'categoryId'>,
   ): Promise<PaginatedResponse<MenuItem>> {
     return this.getAll({ ...params, categoryId });
   }
 
   // Get recommended menu items
   async getRecommendedMenuItems(
-    params?: Omit<MenuItemQueryParams, "isRecommended">
+    params?: Omit<MenuItemQueryParams, 'isRecommended'>,
   ): Promise<PaginatedResponse<MenuItem>> {
-    return this.getAll({ ...params, isRecommended: "true" });
+    return this.getAll({ ...params, isRecommended: 'true' });
   }
 
   // Get combo items
   async getComboItems(
-    params?: Omit<MenuItemQueryParams, "isCombo">
+    params?: Omit<MenuItemQueryParams, 'isCombo'>,
   ): Promise<PaginatedResponse<MenuItem>> {
-    return this.getAll({ ...params, isCombo: "true" });
+    return this.getAll({ ...params, isCombo: 'true' });
   }
 
   // Bulk update menu items
   async bulkUpdate(
     menuId: string,
-    items: MenuItemFormData[]
+    items: MenuItemFormData[],
   ): Promise<
     SuccessResponse<{ updated: number; failed: number; items: MenuItem[] }>
   > {
@@ -91,8 +91,8 @@ export const useMenuItems = (
   params?: MenuItemQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU_ITEMS.LIST(params),
@@ -106,8 +106,8 @@ export const useMenuItem = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU_ITEMS.DETAIL(id),
@@ -119,14 +119,14 @@ export const useMenuItem = (
 
 // Get active menu items only (for dropdowns and filters)
 export const useActiveMenuItems = (
-  params?: Omit<MenuItemQueryParams, "isActive">,
+  params?: Omit<MenuItemQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isActive: 'true' }),
     queryFn: () => menuItemService.getActiveMenuItems(params),
     ...options,
   });
@@ -135,11 +135,11 @@ export const useActiveMenuItems = (
 // Get menu items by menu ID
 export const useMenuItemsByMenu = (
   menuId: string,
-  params?: Omit<MenuItemQueryParams, "menuId">,
+  params?: Omit<MenuItemQueryParams, 'menuId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, menuId }),
@@ -152,11 +152,11 @@ export const useMenuItemsByMenu = (
 // Get menu items by category ID
 export const useMenuItemsByCategory = (
   categoryId: string,
-  params?: Omit<MenuItemQueryParams, "categoryId">,
+  params?: Omit<MenuItemQueryParams, 'categoryId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, categoryId }),
@@ -168,14 +168,14 @@ export const useMenuItemsByCategory = (
 
 // Get recommended menu items
 export const useRecommendedMenuItems = (
-  params?: Omit<MenuItemQueryParams, "isRecommended">,
+  params?: Omit<MenuItemQueryParams, 'isRecommended'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isRecommended: "true" }),
+    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isRecommended: 'true' }),
     queryFn: () => menuItemService.getRecommendedMenuItems(params),
     ...options,
   });
@@ -183,14 +183,14 @@ export const useRecommendedMenuItems = (
 
 // Get combo items
 export const useComboItems = (
-  params?: Omit<MenuItemQueryParams, "isCombo">,
+  params?: Omit<MenuItemQueryParams, 'isCombo'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<MenuItem>>,
-    "queryKey" | "queryFn"
-  >
+    'queryKey' | 'queryFn'
+  >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isCombo: "true" }),
+    queryKey: QUERY_KEYS.MENU_ITEMS.LIST({ ...params, isCombo: 'true' }),
     queryFn: () => menuItemService.getComboItems(params),
     ...options,
   });
