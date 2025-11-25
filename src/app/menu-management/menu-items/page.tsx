@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Layout from "@/components/common/layout";
-import { useSearchParams } from "next/navigation";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+import React, { useState, useMemo } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Layout from '@/components/common/layout';
+import { useSearchParams } from 'next/navigation';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { Save, X, UtensilsCrossed, Filter } from "lucide-react";
-import { MenuItemQueryParams } from "@/types/menu-item.type";
-import { useMenuItems } from "@/services/api/menu-items/menu-items.queries";
-import { useBulkUpdateMenuItems } from "@/services/api/menu-items/menu-items.mutation";
-import { useActiveCategories } from "@/services/api/categories/categories.queries";
-import { useActiveTaxProductGroups } from "@/services/api/tax-product-groups.ts/tax-product-groups.queries";
-import { useActiveKitchenDepartments } from "@/services/api/kitchen-departments/kitchen-departments.queries";
-import { useActiveMenuItems } from "@/services/api/menu-items/menu-items.queries";
+} from '@tanstack/react-table';
+import { Save, X, UtensilsCrossed, Filter } from 'lucide-react';
+import { MenuItemQueryParams } from '@/types/menu-item.type';
+import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
+import { useBulkUpdateMenuItems } from '@/services/api/menu-items/menu-items.mutation';
+import { useActiveCategories } from '@/services/api/categories/categories.queries';
+import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
+import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
+import { useActiveMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
-} from "@/components/menu-management/menu-items/menu-item-table-columns";
-import { useEditableMenuItemColumns } from "@/components/menu-management/menu-items/editable-menu-item-columns";
-import { useMenuItemChanges } from "@/hooks/useMenuItemChanges";
-import { Suspense } from "react";
+} from '@/components/menu-management/menu-items/menu-item-table-columns';
+import { useEditableMenuItemColumns } from '@/components/menu-management/menu-items/editable-menu-item-columns';
+import { useMenuItemChanges } from '@/hooks/useMenuItemChanges';
+import { Suspense } from 'react';
 
 export default function MenuItemsPage() {
   return (
@@ -40,7 +40,7 @@ export default function MenuItemsPage() {
 function Page() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
-  const menuId = searchParams.get("menuId");
+  const menuId = searchParams.get('menuId');
 
   // Table state
   const [pagination, setPagination] = useState<PaginationState>({
@@ -49,9 +49,9 @@ function Page() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters
@@ -59,17 +59,17 @@ function Page() {
     const params: MenuItemQueryParams = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (menuId) params.menuId = menuId;
     if (searchTerm.trim()) params.term = searchTerm.trim();
 
     const sortField = getSortFieldForQuery(sorting);
-    if (sortField) params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+    if (sortField) params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
 
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -94,7 +94,7 @@ function Page() {
       limit: 100,
     });
   const { data: addonsData, isLoading: isLoadingAddons } = useActiveMenuItems({
-    isAddon: "true",
+    isAddon: 'true',
     limit: 100,
   });
 
@@ -105,7 +105,7 @@ function Page() {
         value: cat._id!,
         label: cat.name.en,
       })) || [],
-    [categoriesData]
+    [categoriesData],
   );
 
   const taxGroupsOptions = useMemo(
@@ -114,7 +114,7 @@ function Page() {
         value: tax._id!,
         label: tax.name.en,
       })) || [],
-    [taxGroupsData]
+    [taxGroupsData],
   );
 
   const kitchenDeptOptions = useMemo(
@@ -123,7 +123,7 @@ function Page() {
         value: dept._id!,
         label: dept.name.en,
       })) || [],
-    [kitchenDeptsData]
+    [kitchenDeptsData],
   );
 
   const addonsOptions = useMemo(
@@ -132,7 +132,7 @@ function Page() {
         value: item._id!,
         label: item.itemName.en,
       })) || [],
-    [addonsData]
+    [addonsData],
   );
 
   const isLoadingOptions =
@@ -156,7 +156,7 @@ function Page() {
   } = useMenuItemChanges(menuItems);
 
   // Bulk update mutation
-  const bulkUpdateMutation = useBulkUpdateMenuItems(menuId || "");
+  const bulkUpdateMutation = useBulkUpdateMenuItems(menuId || '');
 
   // Handle save changes
   const handleSaveChanges = async () => {
@@ -165,7 +165,7 @@ function Page() {
       await bulkUpdateMutation.mutateAsync(itemsToUpdate);
       clearChanges();
     } catch (error) {
-      console.error("Failed to save changes:", error);
+      console.error('Failed to save changes:', error);
     }
   };
 
@@ -189,33 +189,33 @@ function Page() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <UtensilsCrossed className="h-6 w-6" />
-              <span>{t("menuItems.title")}</span>
+              <span>{t('menuItems.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("menuItems.subtitle")}</p>
+            <p className="text-muted-foreground">{t('menuItems.subtitle')}</p>
           </div>
 
           <div className="flex items-center space-x-2">
             {/* Status filter */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active"
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("menuItems.status.active")
-                : statusFilter === "inactive"
-                  ? t("menuItems.status.inactive")
-                  : t("categories.allStatus")}
+              {statusFilter === 'active'
+                ? t('menuItems.status.active')
+                : statusFilter === 'inactive'
+                  ? t('menuItems.status.inactive')
+                  : t('categories.allStatus')}
             </Button>
 
             {/* Save/Discard buttons */}
@@ -257,7 +257,7 @@ function Page() {
               totalCount={totalCount}
               isLoading={isLoading || bulkUpdateMutation.isPending}
               searchValue={searchTerm}
-              searchPlaceholder={t("menuItems.searchPlaceholder")}
+              searchPlaceholder={t('menuItems.searchPlaceholder')}
               onSearchChange={setSearchTerm}
               pagination={pagination}
               onPaginationChange={setPagination}
@@ -271,7 +271,7 @@ function Page() {
               showSearch={true}
               showPagination={true}
               showPageSizeSelector={true}
-              emptyMessage={t("menuItems.noDataFound")}
+              emptyMessage={t('menuItems.noDataFound')}
               enableMultiSort={false}
             />
           </CardContent>

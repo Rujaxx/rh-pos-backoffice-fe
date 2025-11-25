@@ -3,14 +3,14 @@
  * Generic service class following single responsibility principle
  */
 
-import api from "@/lib/axios";
+import api from '@/lib/axios';
 import {
   SuccessResponse,
   PaginatedResponse,
   QueryParams,
   MutationResponse,
-} from "@/types/api";
-import { MenuItemFormData } from "@/types/menu-item.type";
+} from '@/types/api';
+import { MenuItemFormData } from '@/types/menu-item.type';
 
 // Base CRUD operations interface
 export interface CrudOperations<T, CreatePayload, UpdatePayload> {
@@ -66,7 +66,7 @@ export abstract class BaseApiService<
 
   async updateBulk(
     menuId: string,
-    items: MenuItemFormData[]
+    items: MenuItemFormData[],
   ): MutationResponse<T[]> {
     return api.patch(`${this.baseEndpoint}/bulk/${menuId}`, items);
   }

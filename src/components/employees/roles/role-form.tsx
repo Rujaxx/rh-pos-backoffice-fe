@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RHFInput, RHFSelect } from "@/components/ui/form-components";
-import { Checkbox } from "@/components/ui/checkbox";
+import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RHFInput, RHFSelect } from '@/components/ui/form-components';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   FormItem,
   FormLabel,
   FormField,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { roleSchema, RoleFormData } from "@/lib/validations/role.validation";
-import { Shield } from "lucide-react";
-import { Role } from "@/types/role.type";
+} from '@/components/ui/form';
+import { roleSchema, RoleFormData } from '@/lib/validations/role.validation';
+import { Shield } from 'lucide-react';
+import { Role } from '@/types/role.type';
 
-import { Permission, PermissionModuleGroup } from "@/types/permission.type";
-import { usePermissions } from "@/services/api/roles/permission.queries";
-import { useBrands } from "@/services/api/brands/brands.queries";
-import { useIntl } from "react-intl";
+import { Permission, PermissionModuleGroup } from '@/types/permission.type';
+import { usePermissions } from '@/services/api/roles/permission.queries';
+import { useBrands } from '@/services/api/brands/brands.queries';
+import { useIntl } from 'react-intl';
 
 interface RoleFormContentProps {
   form: ReturnType<typeof useForm<RoleFormData>>;
 }
 
 export const renderPermissionModule = (
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>['t'],
   form: ReturnType<typeof useForm<RoleFormData>>,
   moduleName: string,
-  permissions: Permission[]
+  permissions: Permission[],
 ) => {
-  const watched = form.watch("permissions") || [];
+  const watched = form.watch('permissions') || [];
 
   const permissionNames = permissions.map((p) => p.name);
 
@@ -42,13 +42,13 @@ export const renderPermissionModule = (
     !allSelected && permissionNames.some((name) => watched.includes(name));
 
   const toggleModule = (checked: boolean) => {
-    const current = form.getValues("permissions") || [];
+    const current = form.getValues('permissions') || [];
 
     const updated = checked
       ? Array.from(new Set([...current, ...permissionNames]))
       : current.filter((p) => !permissionNames.includes(p));
 
-    form.setValue("permissions", updated, { shouldValidate: true });
+    form.setValue('permissions', updated, { shouldValidate: true });
   };
 
   return (
@@ -58,7 +58,7 @@ export const renderPermissionModule = (
           <Checkbox
             checked={allSelected}
             onCheckedChange={(checked) => toggleModule(Boolean(checked))}
-            data-indeterminate={partiallySelected ? "true" : undefined}
+            data-indeterminate={partiallySelected ? 'true' : undefined}
           />
           <Shield className="w-5 h-5 text-primary" />
           {moduleName}
@@ -107,7 +107,7 @@ export const renderPermissionModule = (
 
 export function RoleFormContent({ form }: RoleFormContentProps) {
   const { t } = useTranslation();
-  const locale = useIntl().locale as "en" | "ar";
+  const locale = useIntl().locale as 'en' | 'ar';
 
   const { data, isLoading } = usePermissions();
   const permissionModules: PermissionModuleGroup[] = data?.data || [];
@@ -124,7 +124,7 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("roles.form.basicInfo")}
+              {t('roles.form.basicInfo')}
             </CardTitle>
           </CardHeader>
 
@@ -132,25 +132,25 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
             <RHFInput
               form={form}
               name="name.en"
-              label={t("roles.form.nameLabel") + " (English)"}
-              placeholder={t("roles.form.nameEnglishPlaceholder")}
-              description={t("roles.form.nameDescription")}
+              label={t('roles.form.nameLabel') + ' (English)'}
+              placeholder={t('roles.form.nameEnglishPlaceholder')}
+              description={t('roles.form.nameDescription')}
             />
 
             <RHFInput
               form={form}
               name="name.ar"
-              label={t("roles.form.nameLabel") + " (العربية)"}
-              placeholder={t("roles.form.nameArabicPlaceholder")}
-              description={t("roles.form.nameDescription")}
+              label={t('roles.form.nameLabel') + ' (العربية)'}
+              placeholder={t('roles.form.nameArabicPlaceholder')}
+              description={t('roles.form.nameDescription')}
             />
           </CardContent>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <RHFSelect
               form={form}
               name="brandId"
-              label={t("users.form.brandLabel")}
-              placeholder={t("users.form.brandDescription")}
+              label={t('users.form.brandLabel')}
+              placeholder={t('users.form.brandDescription')}
               options={brandOptions}
             />
             <CardContent />
@@ -163,23 +163,28 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Shield className="w-5 h-5" />
-            {t("roles.form.permissionsLabel")}
+            {t('roles.form.permissionsLabel')}
           </CardTitle>
 
           <p className="text-sm text-muted-foreground">
-            {t("roles.form.permissionsDescription")}
+            {t('roles.form.permissionsDescription')}
           </p>
         </CardHeader>
 
         <CardContent>
           {isLoading ? (
             <p className="text-sm text-muted-foreground">
-              {t("common.loading")}
+              {t('common.loading')}
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {permissionModules.map((group) =>
-                renderPermissionModule(t, form, group.module, group.permissions)
+                renderPermissionModule(
+                  t,
+                  form,
+                  group.module,
+                  group.permissions,
+                ),
               )}
             </div>
           )}
@@ -199,9 +204,9 @@ export function useRoleForm(editingRole?: Role | null) {
   const form = useForm<RoleFormData>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
+      name: { en: '', ar: '' },
       permissions: [],
-      brandId: "",
+      brandId: '',
     },
   });
 
@@ -215,9 +220,9 @@ export function useRoleForm(editingRole?: Role | null) {
       });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
+        name: { en: '', ar: '' },
         permissions: [],
-        brandId: "",
+        brandId: '',
       });
     }
   }, [editingRole, form]);
