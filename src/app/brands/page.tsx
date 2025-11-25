@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+} from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
-import { BrandFormContent, useBrandForm } from "@/components/brands/brand-form";
+} from '@/components/ui/crud-modal';
+import { BrandFormContent, useBrandForm } from '@/components/brands/brand-form';
 import {
   useBrandColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from "@/components/brands/brand-table-columns";
-import Layout from "@/components/common/layout";
-import { Plus, Building2, Filter } from "lucide-react";
-import { toast } from "sonner";
-import { Brand, BrandQueryParams } from "@/types/brand.type";
-import { BrandFormData } from "@/lib/validations/brand.validation";
-import { useBrands } from "@/services/api/brands/brands.queries";
+} from '@/components/brands/brand-table-columns';
+import Layout from '@/components/common/layout';
+import { Plus, Building2, Filter } from 'lucide-react';
+import { toast } from 'sonner';
+import { Brand, BrandQueryParams } from '@/types/brand.type';
+import { BrandFormData } from '@/lib/validations/brand.validation';
+import { useBrands } from '@/services/api/brands/brands.queries';
 import {
   useCreateBrand,
   useUpdateBrand,
   useDeleteBrand,
-} from "@/services/api/brands/brands.mutations";
+} from '@/services/api/brands/brands.mutations';
 
 export default function BrandsPage() {
   const { t } = useTranslation();
@@ -44,9 +44,9 @@ export default function BrandsPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters from table state
@@ -54,7 +54,7 @@ export default function BrandsPage() {
     const params: BrandQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
     };
 
     // Add search term
@@ -67,13 +67,13 @@ export default function BrandsPage() {
     if (sortField) {
       // You might need to add a sortBy field to your BrandQueryParams type
       // For now, we'll use the existing sortOrder field
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     // Add status filter
     if (statusFilter !== undefined) {
       // Send string values to backend as expected by BrandQueryParams
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -137,26 +137,26 @@ export default function BrandsPage() {
       async () => {
         try {
           await deleteBrandMutation.mutateAsync(brand._id);
-          toast.success(t("brands.deletedSuccess") || "Brand deleted");
+          toast.success(t('brands.deletedSuccess') || 'Brand deleted');
         } catch (error) {
           // Log for debugging and surface a friendly message
 
-          console.error("Failed to delete brand:", error);
+          console.error('Failed to delete brand:', error);
           const msg =
             error instanceof Error
               ? error.message
-              : t("brands.deleteError") || "Failed to delete brand";
+              : t('brands.deleteError') || 'Failed to delete brand';
           toast.error(msg);
         }
       },
       {
-        title: t("brands.deleteBrand"),
-        description: t("brands.deleteConfirmation", {
+        title: t('brands.deleteBrand'),
+        description: t('brands.deleteConfirmation', {
           brandName: brand.name.en,
         }),
-        confirmButtonText: t("brands.deleteBrandButton"),
-        variant: "destructive",
-      }
+        confirmButtonText: t('brands.deleteBrandButton'),
+        variant: 'destructive',
+      },
     );
   };
 
@@ -176,10 +176,10 @@ export default function BrandsPage() {
         }
         closeModal();
       } catch (error) {
-        console.error("Failed to save brand:", error);
+        console.error('Failed to save brand:', error);
       }
     },
-    [editingBrand, updateBrandMutation, createBrandMutation, closeModal]
+    [editingBrand, updateBrandMutation, createBrandMutation, closeModal],
   );
 
   // Search handler with proper typing
@@ -194,7 +194,7 @@ export default function BrandsPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   // Sorting handler
@@ -211,7 +211,7 @@ export default function BrandsPage() {
       // Reset to first page when filters change
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -225,21 +225,21 @@ export default function BrandsPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Building2 className="h-6 w-6" />
-              <span>{t("brands.title")}</span>
+              <span>{t('brands.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("brands.subtitle")}</p>
+            <p className="text-muted-foreground">{t('brands.subtitle')}</p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Add status filter button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active"
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
@@ -247,11 +247,11 @@ export default function BrandsPage() {
             >
               <Filter className="h-4 w-4" />
               <span>
-                {statusFilter === "active"
-                  ? t("brands.active")
-                  : statusFilter === "inactive"
-                    ? t("brands.inactive")
-                    : t("brands.allStatus")}
+                {statusFilter === 'active'
+                  ? t('brands.active')
+                  : statusFilter === 'inactive'
+                    ? t('brands.inactive')
+                    : t('brands.allStatus')}
               </span>
             </Button>
             <Button
@@ -259,7 +259,7 @@ export default function BrandsPage() {
               className="h-8 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              <span>{t("brands.addNewBrand")}</span>
+              <span>{t('brands.addNewBrand')}</span>
             </Button>
           </div>
         </div>
@@ -270,7 +270,7 @@ export default function BrandsPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("brands.errorLoading")}: {error.message}
+                  {t('brands.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -280,7 +280,7 @@ export default function BrandsPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("brands.searchPlaceholder")}
+                searchPlaceholder={t('brands.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -294,7 +294,7 @@ export default function BrandsPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -307,8 +307,8 @@ export default function BrandsPage() {
           onClose={closeModal}
           title={
             editingBrand
-              ? t("brands.editBrand") || "Edit Brand"
-              : t("brands.addBrand") || "Add Brand"
+              ? t('brands.editBrand') || 'Edit Brand'
+              : t('brands.addBrand') || 'Add Brand'
           }
           size="xl"
           form={form}
@@ -316,8 +316,8 @@ export default function BrandsPage() {
           loading={isFormLoading}
           submitButtonText={
             editingBrand
-              ? t("brands.updateBrand") || "Update Brand"
-              : t("brands.createBrand") || "Create Brand"
+              ? t('brands.updateBrand') || 'Update Brand'
+              : t('brands.createBrand') || 'Create Brand'
           }
         >
           <BrandFormContent form={form} />

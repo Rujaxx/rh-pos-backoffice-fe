@@ -3,11 +3,11 @@
  * TanStack Query hooks for brand management
  */
 
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
-import { Brand, BrandFormData, BrandQueryParams } from "@/types/brand.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
+import { Brand, BrandFormData, BrandQueryParams } from '@/types/brand.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Brand service extending base service
 class BrandService extends BaseApiService<Brand, BrandFormData, BrandFormData> {
@@ -17,7 +17,7 @@ class BrandService extends BaseApiService<Brand, BrandFormData, BrandFormData> {
 
   // Get all brands with optional filters
   async getAllBrands(
-    params?: BrandQueryParams
+    params?: BrandQueryParams,
   ): Promise<PaginatedResponse<Brand>> {
     return this.getAll(params);
   }
@@ -29,9 +29,9 @@ class BrandService extends BaseApiService<Brand, BrandFormData, BrandFormData> {
 
   // Get active brands only (for dropdowns)
   async getActiveBrands(
-    params?: Omit<BrandQueryParams, "isActive">
+    params?: Omit<BrandQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<Brand>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 }
 
@@ -43,7 +43,7 @@ const brandService = new BrandService();
 // Get all brands with pagination and filters
 export const useBrands = (
   params?: BrandQueryParams,
-  options?: UseQueryOptions<PaginatedResponse<Brand>>
+  options?: UseQueryOptions<PaginatedResponse<Brand>>,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.BRANDS.LIST(params),
@@ -55,7 +55,7 @@ export const useBrands = (
 // Get single brand by ID
 export const useBrand = (
   id: string,
-  options?: UseQueryOptions<SuccessResponse<Brand>>
+  options?: UseQueryOptions<SuccessResponse<Brand>>,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.BRANDS.DETAIL(id),
@@ -67,11 +67,11 @@ export const useBrand = (
 
 // Get active brands only (for dropdowns and filters)
 export const useActiveBrands = (
-  params?: Omit<BrandQueryParams, "isActive">,
-  options?: UseQueryOptions<PaginatedResponse<Brand>>
+  params?: Omit<BrandQueryParams, 'isActive'>,
+  options?: UseQueryOptions<PaginatedResponse<Brand>>,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.BRANDS.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.BRANDS.LIST({ ...params, isActive: 'true' }),
     queryFn: () => brandService.getActiveBrands(params),
     ...options,
   });

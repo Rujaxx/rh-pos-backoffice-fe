@@ -1,9 +1,9 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from 'react';
 import {
   MenuItem,
   MenuItemFormData,
   MenuItemUpdateArray,
-} from "@/types/menu-item.type";
+} from '@/types/menu-item.type';
 
 export const useMenuItemChanges = (originalItems: MenuItem[]) => {
   const [modifiedItems, setModifiedItems] = useState<
@@ -38,7 +38,7 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
         return newMap;
       });
     },
-    [originalItems]
+    [originalItems],
   );
 
   // Get modified value or original value
@@ -51,7 +51,7 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
       const originalItem = originalItems.find((item) => item._id === itemId);
       return originalItem?.[field];
     },
-    [modifiedItems, originalItems]
+    [modifiedItems, originalItems],
   );
 
   // Check if a field has been modified
@@ -60,7 +60,7 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
       const changes = modifiedItems.get(itemId);
       return changes ? field in changes : false;
     },
-    [modifiedItems]
+    [modifiedItems],
   );
 
   // Check if an item has any modifications
@@ -68,7 +68,7 @@ export const useMenuItemChanges = (originalItems: MenuItem[]) => {
     (itemId: string) => {
       return modifiedItems.has(itemId);
     },
-    [modifiedItems]
+    [modifiedItems],
   );
 
   // Get all modified items for bulk update (complete objects)
