@@ -1,19 +1,20 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { MenuItem } from "@/types/menu-item.type";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useI18n } from "@/providers/i18n-provider";
+import React, { useState, useRef } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { MenuItem } from '@/types/menu-item.type';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
 import {
   EditableToggleCell,
   EditableSelectCell,
   EditableTextCell,
   EditableNumberCell,
-} from "./editable-cells-components";
-import { MultilingualText } from "@/types";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+} from './editable-cells-components';
+import { MultilingualText } from '@/types';
+import { ImageIcon, Loader2, Trash2, Upload } from 'lucide-react';
+import { getS3UrlFromKey } from '@/lib/upload-utils';
+import { Button } from '@/components/ui/button';
 
 interface EditableColumnsConfig {
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
@@ -25,12 +26,95 @@ interface EditableColumnsConfig {
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
   onDelete?: (menuItem: MenuItem) => void;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+}
+
+/**
+ * Extracted component to handle primary image cell rendering
+ * Allows use of React hooks within the cell
+ */
+function PrimaryImageCell({
+  menuItem,
+  imageKey,
+  onUploadImage,
+  updateField,
+}: {
+  menuItem: MenuItem;
+  imageKey: string;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+  updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
+}) {
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    imageKey ? getS3UrlFromKey(imageKey) : '',
+  );
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const result = await onUploadImage(file);
+      // Update preview immediately with the full URL
+      setPreviewUrl(result.url);
+      // Only save the KEY to the backend/state if it's a new/modified image
+      // This ensures we only send updates when there's an actual change
+      updateField(menuItem._id!, 'primaryImage', result.key);
+    } catch (error) {
+      console.error('Upload failed', error);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  return (
+    <div
+      className="h-10 w-10 relative rounded-md overflow-hidden bg-muted cursor-pointer group hover:opacity-80 transition-opacity"
+      onClick={() => !isUploading && fileInputRef.current?.click()}
+    >
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={isUploading}
+      />
+
+      {isUploading ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt={menuItem.itemName?.en || 'Menu Item'}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-secondary">
+              <ImageIcon className="h-4 w-4 text-muted-foreground group-hover:hidden" />
+              <Upload className="h-4 w-4 text-muted-foreground hidden group-hover:block" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+        </>
+      )}
+    </div>
+  );
 }
 
 export const createEditableMenuItemColumns = (
   config: EditableColumnsConfig,
-  t: ReturnType<typeof useTranslation>["t"],
-  locale: "en" | "ar"
+  t: ReturnType<typeof useTranslation>['t'],
+  locale: 'en' | 'ar',
 ): ColumnDef<MenuItem>[] => {
   const {
     updateField,
@@ -42,33 +126,53 @@ export const createEditableMenuItemColumns = (
 
     isLoadingOptions,
     onDelete,
+    onUploadImage,
   } = config;
 
   return [
+    // Primary Image
+    {
+      id: 'primaryImage',
+      header: t('menuItems.table.image'),
+      size: 80,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+        const imageKey = getFieldValue(menuItem._id!, 'primaryImage') as string;
+
+        return (
+          <PrimaryImageCell
+            menuItem={menuItem}
+            imageKey={imageKey}
+            onUploadImage={onUploadImage}
+            updateField={updateField}
+          />
+        );
+      },
+    },
     // Item Name (Editable Text - Multilingual)
     {
-      accessorKey: "itemName",
-      id: "itemName",
-      header: t("menuItems.table.itemName"),
+      accessorKey: 'itemName',
+      id: 'itemName',
+      header: t('menuItems.table.itemName'),
       size: 250,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "itemName"
+          'itemName',
         ) as MultilingualText;
 
         return (
           <EditableTextCell
-            value={currentValue?.[locale] || ""}
+            value={currentValue?.[locale] || ''}
             onChange={(value) =>
-              updateField(menuItem._id!, "itemName", {
+              updateField(menuItem._id!, 'itemName', {
                 ...currentValue,
                 [locale]: value,
               })
             }
-            isModified={isFieldModified(menuItem._id!, "itemName")}
-            placeholder={t("menuItems.table.itemName")}
+            isModified={isFieldModified(menuItem._id!, 'itemName')}
+            placeholder={t('menuItems.table.itemName')}
           />
         );
       },
@@ -76,21 +180,21 @@ export const createEditableMenuItemColumns = (
 
     // Short Code (Editable Text)
     {
-      id: "shortCode",
-      header: t("menuItems.table.shortCode"),
+      id: 'shortCode',
+      header: t('menuItems.table.shortCode'),
       size: 150,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "shortCode"
+          'shortCode',
         ) as string;
 
         return (
           <EditableTextCell
-            value={currentValue || ""}
-            onChange={(value) => updateField(menuItem._id!, "shortCode", value)}
-            isModified={isFieldModified(menuItem._id!, "shortCode")}
+            value={currentValue || ''}
+            onChange={(value) => updateField(menuItem._id!, 'shortCode', value)}
+            isModified={isFieldModified(menuItem._id!, 'shortCode')}
             placeholder="Code"
           />
         );
@@ -99,24 +203,24 @@ export const createEditableMenuItemColumns = (
 
     // Base Price (Editable Number)
     {
-      accessorKey: "baseItemPrice",
-      id: "baseItemPrice",
-      header: t("menuItems.table.basePrice"),
+      accessorKey: 'baseItemPrice',
+      id: 'baseItemPrice',
+      header: t('menuItems.table.basePrice'),
       size: 150,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "baseItemPrice"
+          'baseItemPrice',
         ) as number;
 
         return (
           <EditableNumberCell
             value={currentValue || 0}
             onChange={(value) =>
-              updateField(menuItem._id!, "baseItemPrice", value)
+              updateField(menuItem._id!, 'baseItemPrice', value)
             }
-            isModified={isFieldModified(menuItem._id!, "baseItemPrice")}
+            isModified={isFieldModified(menuItem._id!, 'baseItemPrice')}
             format="currency"
             min={0}
             step={0.01}
@@ -127,24 +231,24 @@ export const createEditableMenuItemColumns = (
 
     // Current Stock (Editable Number)
     {
-      accessorKey: "currentStock",
-      id: "currentStock",
-      header: t("menuItems.table.stock"),
+      accessorKey: 'currentStock',
+      id: 'currentStock',
+      header: t('menuItems.table.stock'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "currentStock"
+          'currentStock',
         ) as number;
 
         return (
           <EditableNumberCell
             value={currentValue || 0}
             onChange={(value) =>
-              updateField(menuItem._id!, "currentStock", value)
+              updateField(menuItem._id!, 'currentStock', value)
             }
-            isModified={isFieldModified(menuItem._id!, "currentStock")}
+            isModified={isFieldModified(menuItem._id!, 'currentStock')}
             format="integer"
             min={0}
           />
@@ -154,24 +258,24 @@ export const createEditableMenuItemColumns = (
 
     // Category (Editable Select)
     {
-      id: "category",
-      header: t("menuItems.table.category"),
+      id: 'category',
+      header: t('menuItems.table.category'),
       size: 200,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "categoryId"
+          'categoryId',
         ) as string;
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={categoriesOptions}
             onChange={(value) =>
-              updateField(menuItem._id!, "categoryId", value)
+              updateField(menuItem._id!, 'categoryId', value)
             }
-            isModified={isFieldModified(menuItem._id!, "categoryId")}
+            isModified={isFieldModified(menuItem._id!, 'categoryId')}
             isLoading={isLoadingOptions}
             placeholder="Select category"
           />
@@ -181,24 +285,24 @@ export const createEditableMenuItemColumns = (
 
     // Tax Product Group (Editable Select)
     {
-      id: "taxProductGroup",
-      header: t("menuItems.table.taxInfo"),
+      id: 'taxProductGroup',
+      header: t('menuItems.table.taxInfo'),
       size: 200,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "taxProductGroupId"
+          'taxProductGroupId',
         ) as string;
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={taxGroupsOptions}
             onChange={(value) =>
-              updateField(menuItem._id!, "taxProductGroupId", value)
+              updateField(menuItem._id!, 'taxProductGroupId', value)
             }
-            isModified={isFieldModified(menuItem._id!, "taxProductGroupId")}
+            isModified={isFieldModified(menuItem._id!, 'taxProductGroupId')}
             isLoading={isLoadingOptions}
             placeholder="Select tax group"
           />
@@ -208,24 +312,24 @@ export const createEditableMenuItemColumns = (
 
     // Kitchen Department (Editable Select)
     {
-      id: "kitchenDepartment",
-      header: t("menuItems.table.kitchenDepartment"),
+      id: 'kitchenDepartment',
+      header: t('menuItems.table.kitchenDepartment'),
       size: 200,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "kitchenDepartmentId"
+          'kitchenDepartmentId',
         ) as string;
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={kitchenDeptOptions}
             onChange={(value) =>
-              updateField(menuItem._id!, "kitchenDepartmentId", value)
+              updateField(menuItem._id!, 'kitchenDepartmentId', value)
             }
-            isModified={isFieldModified(menuItem._id!, "kitchenDepartmentId")}
+            isModified={isFieldModified(menuItem._id!, 'kitchenDepartmentId')}
             isLoading={isLoadingOptions}
             placeholder="Select department"
           />
@@ -235,25 +339,25 @@ export const createEditableMenuItemColumns = (
 
     // Food Type (Editable Select)
     {
-      id: "foodType",
-      header: t("menuItems.table.foodType"),
+      id: 'foodType',
+      header: t('menuItems.table.foodType'),
       size: 150,
       cell: ({ row }) => {
         const menuItem = row.original;
-        const currentValue = getFieldValue(menuItem._id!, "foodType") as string;
+        const currentValue = getFieldValue(menuItem._id!, 'foodType') as string;
 
         const foodTypeOptions = [
-          { value: "VEG", label: t("menuItems.foodTypes.VEG") },
-          { value: "NON_VEG", label: t("menuItems.foodTypes.NON_VEG") },
-          { value: "VEGAN", label: t("menuItems.foodTypes.VEGAN") },
+          { value: 'VEG', label: t('menuItems.foodTypes.VEG') },
+          { value: 'NON_VEG', label: t('menuItems.foodTypes.NON_VEG') },
+          { value: 'VEGAN', label: t('menuItems.foodTypes.VEGAN') },
         ];
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={foodTypeOptions}
-            onChange={(value) => updateField(menuItem._id!, "foodType", value)}
-            isModified={isFieldModified(menuItem._id!, "foodType")}
+            onChange={(value) => updateField(menuItem._id!, 'foodType', value)}
+            isModified={isFieldModified(menuItem._id!, 'foodType')}
             placeholder="Select type"
           />
         );
@@ -262,26 +366,26 @@ export const createEditableMenuItemColumns = (
 
     // Meat Type (Editable Select)
     {
-      id: "meatType",
-      header: t("menuItems.table.meatType"),
+      id: 'meatType',
+      header: t('menuItems.table.meatType'),
       size: 150,
       cell: ({ row }) => {
         const menuItem = row.original;
-        const currentValue = getFieldValue(menuItem._id!, "meatType") as string;
+        const currentValue = getFieldValue(menuItem._id!, 'meatType') as string;
 
         const meatTypeOptions = [
-          { value: "VEG", label: t("menuItems.meatTypes.VEG") },
-          { value: "CHICKEN", label: t("menuItems.meatTypes.CHICKEN") },
-          { value: "MUTTON", label: t("menuItems.meatTypes.MUTTON") },
-          { value: "FISH", label: t("menuItems.meatTypes.FISH") },
+          { value: 'VEG', label: t('menuItems.meatTypes.VEG') },
+          { value: 'CHICKEN', label: t('menuItems.meatTypes.CHICKEN') },
+          { value: 'MUTTON', label: t('menuItems.meatTypes.MUTTON') },
+          { value: 'FISH', label: t('menuItems.meatTypes.FISH') },
         ];
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={meatTypeOptions}
-            onChange={(value) => updateField(menuItem._id!, "meatType", value)}
-            isModified={isFieldModified(menuItem._id!, "meatType")}
+            onChange={(value) => updateField(menuItem._id!, 'meatType', value)}
+            isModified={isFieldModified(menuItem._id!, 'meatType')}
             placeholder="Select type"
           />
         );
@@ -290,28 +394,28 @@ export const createEditableMenuItemColumns = (
 
     // Discount Type (Editable Select with dependency)
     {
-      id: "discountType",
-      header: t("menuItems.table.discountType"),
+      id: 'discountType',
+      header: t('menuItems.table.discountType'),
       size: 150,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "discountType"
+          'discountType',
         ) as string;
         const discountTypeOptions = [
-          { value: "Fixed Amount", label: "Fixed Amount" },
-          { value: "Percentage", label: "Percentage" },
+          { value: 'Fixed Amount', label: 'Fixed Amount' },
+          { value: 'Percentage', label: 'Percentage' },
         ];
 
         return (
           <EditableSelectCell
-            value={currentValue || ""}
+            value={currentValue || ''}
             options={discountTypeOptions}
             onChange={(value) =>
-              updateField(menuItem._id!, "discountType", value)
+              updateField(menuItem._id!, 'discountType', value)
             }
-            isModified={isFieldModified(menuItem._id!, "discountType")}
+            isModified={isFieldModified(menuItem._id!, 'discountType')}
             placeholder="Select type"
           />
         );
@@ -319,24 +423,24 @@ export const createEditableMenuItemColumns = (
     },
 
     {
-      accessorKey: "discountedPrice",
-      id: "discountedPrice",
-      header: t("menuItems.table.discountedPrice"),
+      accessorKey: 'discountedPrice',
+      id: 'discountedPrice',
+      header: t('menuItems.table.discountedPrice'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "discountedPrice"
+          'discountedPrice',
         ) as number;
 
         return (
           <EditableNumberCell
             value={currentValue || 0}
             onChange={(value) =>
-              updateField(menuItem._id!, "discountedPrice", value)
+              updateField(menuItem._id!, 'discountedPrice', value)
             }
-            isModified={isFieldModified(menuItem._id!, "discountedPrice")}
+            isModified={isFieldModified(menuItem._id!, 'discountedPrice')}
             format="integer"
             min={0}
           />
@@ -345,23 +449,23 @@ export const createEditableMenuItemColumns = (
     },
     // Platform Status (Toggle)
     {
-      id: "platformStatus",
-      header: t("menuItems.table.platformStatus"),
+      id: 'platformStatus',
+      header: t('menuItems.table.platformStatus'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "platformStatus"
+          'platformStatus',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
             onChange={(value) =>
-              updateField(menuItem._id!, "platformStatus", value)
+              updateField(menuItem._id!, 'platformStatus', value)
             }
-            isModified={isFieldModified(menuItem._id!, "platformStatus")}
+            isModified={isFieldModified(menuItem._id!, 'platformStatus')}
           />
         );
       },
@@ -369,23 +473,23 @@ export const createEditableMenuItemColumns = (
 
     // Digital Discount (Toggle)
     {
-      id: "digitalDiscount",
-      header: t("menuItems.table.digitalDiscount"),
+      id: 'digitalDiscount',
+      header: t('menuItems.table.digitalDiscount'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "digitalDiscount"
+          'digitalDiscount',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
             onChange={(value) =>
-              updateField(menuItem._id!, "digitalDiscount", value)
+              updateField(menuItem._id!, 'digitalDiscount', value)
             }
-            isModified={isFieldModified(menuItem._id!, "digitalDiscount")}
+            isModified={isFieldModified(menuItem._id!, 'digitalDiscount')}
           />
         );
       },
@@ -393,23 +497,23 @@ export const createEditableMenuItemColumns = (
 
     // Is Recommended (Toggle)
     {
-      id: "isRecommended",
-      header: t("menuItems.table.recommended"),
+      id: 'isRecommended',
+      header: t('menuItems.table.recommended'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "isRecommended"
+          'isRecommended',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
             onChange={(value) =>
-              updateField(menuItem._id!, "isRecommended", value)
+              updateField(menuItem._id!, 'isRecommended', value)
             }
-            isModified={isFieldModified(menuItem._id!, "isRecommended")}
+            isModified={isFieldModified(menuItem._id!, 'isRecommended')}
           />
         );
       },
@@ -417,21 +521,21 @@ export const createEditableMenuItemColumns = (
 
     // Open Item (Toggle)
     {
-      id: "openItem",
-      header: t("menuItems.table.openItem"),
+      id: 'openItem',
+      header: t('menuItems.table.openItem'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "openItem"
+          'openItem',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
-            onChange={(value) => updateField(menuItem._id!, "openItem", value)}
-            isModified={isFieldModified(menuItem._id!, "openItem")}
+            onChange={(value) => updateField(menuItem._id!, 'openItem', value)}
+            isModified={isFieldModified(menuItem._id!, 'openItem')}
           />
         );
       },
@@ -439,21 +543,21 @@ export const createEditableMenuItemColumns = (
 
     // Open Price (Toggle)
     {
-      id: "openPrice",
-      header: t("menuItems.table.openPrice"),
+      id: 'openPrice',
+      header: t('menuItems.table.openPrice'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "openPrice"
+          'openPrice',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
-            onChange={(value) => updateField(menuItem._id!, "openPrice", value)}
-            isModified={isFieldModified(menuItem._id!, "openPrice")}
+            onChange={(value) => updateField(menuItem._id!, 'openPrice', value)}
+            isModified={isFieldModified(menuItem._id!, 'openPrice')}
           />
         );
       },
@@ -461,23 +565,23 @@ export const createEditableMenuItemColumns = (
 
     // Sync to Aggregator (Toggle)
     {
-      id: "syncToAggregator",
-      header: t("menuItems.table.syncToAggregator"),
+      id: 'syncToAggregator',
+      header: t('menuItems.table.syncToAggregator'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(
           menuItem._id!,
-          "syncToAggregator"
+          'syncToAggregator',
         ) as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
             onChange={(value) =>
-              updateField(menuItem._id!, "syncToAggregator", value)
+              updateField(menuItem._id!, 'syncToAggregator', value)
             }
-            isModified={isFieldModified(menuItem._id!, "syncToAggregator")}
+            isModified={isFieldModified(menuItem._id!, 'syncToAggregator')}
           />
         );
       },
@@ -485,18 +589,18 @@ export const createEditableMenuItemColumns = (
 
     // Is Combo (Toggle)
     {
-      id: "isCombo",
-      header: t("menuItems.table.isCombo"),
+      id: 'isCombo',
+      header: t('menuItems.table.isCombo'),
       size: 120,
       cell: ({ row }) => {
         const menuItem = row.original;
-        const currentValue = getFieldValue(menuItem._id!, "isCombo") as boolean;
+        const currentValue = getFieldValue(menuItem._id!, 'isCombo') as boolean;
 
         return (
           <EditableToggleCell
             value={currentValue || false}
-            onChange={(value) => updateField(menuItem._id!, "isCombo", value)}
-            isModified={isFieldModified(menuItem._id!, "isCombo")}
+            onChange={(value) => updateField(menuItem._id!, 'isCombo', value)}
+            isModified={isFieldModified(menuItem._id!, 'isCombo')}
           />
         );
       },
@@ -504,8 +608,8 @@ export const createEditableMenuItemColumns = (
 
     // Delete Action
     {
-      id: "actions",
-      header: t("table.actions"),
+      id: 'actions',
+      header: t('table.actions'),
       size: 100,
       cell: ({ row }) => {
         const menuItem = row.original;

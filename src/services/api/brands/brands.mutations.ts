@@ -3,18 +3,18 @@
  * TanStack Query mutations for brand operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { Brand, BrandFormData } from "@/types/brand.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { brandService } from "./brands.queries";
-import { uploadService } from "../upload/upload.queries";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { Brand, BrandFormData } from '@/types/brand.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { brandService } from './brands.queries';
+import { uploadService } from '../upload/upload.queries';
+import { toast } from 'sonner';
 
 // Create brand mutation
 export const useCreateBrand = (
-  options?: UseMutationOptions<SuccessResponse<Brand>, Error, BrandFormData>
+  options?: UseMutationOptions<SuccessResponse<Brand>, Error, BrandFormData>,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -25,7 +25,7 @@ export const useCreateBrand = (
 
       // Then confirm uploads if there are any upload keys
       const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith("http")) {
+      if (data.logo && !data.logo.startsWith('http')) {
         // If logo is a key (not a URL), add it to confirm list
         uploadKeys.push(data.logo);
       }
@@ -35,8 +35,8 @@ export const useCreateBrand = (
           await uploadService.confirmUploads(uploadKeys);
         } catch (error) {
           console.error(
-            "Failed to confirm uploads, but brand was created:",
-            error
+            'Failed to confirm uploads, but brand was created:',
+            error,
           );
           // Don't fail the entire operation if upload confirmation fails
         }
@@ -46,10 +46,10 @@ export const useCreateBrand = (
     },
     onSuccess: (data) => {
       // Show success message
-      toast.success("Brand created successfully");
+      toast.success('Brand created successfully');
 
       // Invalidate and refetch brands list - use partial matching to catch all brand list queries
-      queryUtils.invalidateQueries(["brands", "list"]);
+      queryUtils.invalidateQueries(['brands', 'list']);
 
       // Set the new brand in cache
       if (data.data) {
@@ -58,7 +58,7 @@ export const useCreateBrand = (
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to create brand";
+      const errorMessage = error.message || 'Failed to create brand';
       toast.error(errorMessage);
     },
     ...options,
@@ -71,7 +71,7 @@ export const useUpdateBrand = (
     SuccessResponse<Brand>,
     Error,
     { id: string; data: BrandFormData }
-  >
+  >,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -83,7 +83,7 @@ export const useUpdateBrand = (
 
       // Then confirm uploads if there are any upload keys
       const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith("http")) {
+      if (data.logo && !data.logo.startsWith('http')) {
         // If logo is a key (not a URL), add it to confirm list
         uploadKeys.push(data.logo);
       }
@@ -93,8 +93,8 @@ export const useUpdateBrand = (
           await uploadService.confirmUploads(uploadKeys);
         } catch (error) {
           console.error(
-            "Failed to confirm uploads, but brand was updated:",
-            error
+            'Failed to confirm uploads, but brand was updated:',
+            error,
           );
           // Don't fail the entire operation if upload confirmation fails
         }
@@ -106,7 +106,7 @@ export const useUpdateBrand = (
       const { id } = variables;
 
       // Show success message
-      toast.success("Brand updated successfully");
+      toast.success('Brand updated successfully');
 
       // Update specific brand cache
       if (data.data) {
@@ -114,11 +114,11 @@ export const useUpdateBrand = (
       }
 
       // Invalidate brands list to refresh the table - use partial matching
-      queryUtils.invalidateQueries(["brands", "list"]);
+      queryUtils.invalidateQueries(['brands', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update brand";
+      const errorMessage = error.message || 'Failed to update brand';
       toast.error(errorMessage);
     },
     ...options,
@@ -127,7 +127,7 @@ export const useUpdateBrand = (
 
 // Delete brand mutation
 export const useDeleteBrand = (
-  options?: UseMutationOptions<SuccessResponse<void>, Error, string>
+  options?: UseMutationOptions<SuccessResponse<void>, Error, string>,
 ) => {
   const queryUtils = useQueryUtils();
 
@@ -135,17 +135,17 @@ export const useDeleteBrand = (
     mutationFn: (id: string) => brandService.delete(id),
     onSuccess: (_, id) => {
       // Show success message
-      toast.success("Brand deleted successfully");
+      toast.success('Brand deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.BRANDS.DETAIL(id));
 
       // Invalidate brands list - use partial matching
-      queryUtils.invalidateQueries(["brands", "list"]);
+      queryUtils.invalidateQueries(['brands', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to delete brand";
+      const errorMessage = error.message || 'Failed to delete brand';
       toast.error(errorMessage);
     },
     ...options,

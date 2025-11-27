@@ -1,41 +1,63 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Layout from "@/components/common/layout";
-import { useSearchParams } from "next/navigation";
-import {
-  ConfirmationModal,
-  useConfirmationModal,
-} from "@/components/ui/crud-modal";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Layout from '@/components/common/layout';
+import { useSearchParams } from 'next/navigation';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { Save, X, UtensilsCrossed, Filter } from "lucide-react";
-import { MenuItem, MenuItemQueryParams } from "@/types/menu-item.type";
-import { useMenuItems } from "@/services/api/menu-items/menu-items.queries";
+} from '@tanstack/react-table';
+import {
+  Save,
+  X,
+  UtensilsCrossed,
+  Filter,
+  Upload,
+  Download,
+  Plus,
+} from 'lucide-react';
+import {
+  MenuItemQueryParams,
+  MenuItemFormData,
+  MenuItem,
+} from '@/types/menu-item.type';
+import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   useBulkUpdateMenuItems,
+  useUploadMenuExcel,
+  useCreateMenuItem,
   useDeleteMenuItem,
-} from "@/services/api/menu-items/menu-items.mutation";
-import { useActiveCategories } from "@/services/api/categories/categories.queries";
-import { useActiveTaxProductGroups } from "@/services/api/tax-product-groups.ts/tax-product-groups.queries";
-import { useActiveKitchenDepartments } from "@/services/api/kitchen-departments/kitchen-departments.queries";
-import { useActiveMenuItems } from "@/services/api/menu-items/menu-items.queries";
+} from '@/services/api/menu-items/menu-items.mutation';
+import { useUploadImage } from '@/services/api/upload/upload.mutations';
+import { UploadFolderType } from '@/types/upload';
+import { useActiveCategories } from '@/services/api/categories/categories.queries';
+import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
+import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
+import { useActiveMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
-} from "@/components/menu-management/menu-items/menu-item-table-columns";
-import { useEditableMenuItemColumns } from "@/components/menu-management/menu-items/editable-menu-item-columns";
-import { useMenuItemChanges } from "@/hooks/useMenuItemChanges";
-import { Suspense } from "react";
-import { useI18n } from "@/providers/i18n-provider";
+} from '@/components/menu-management/menu-items/menu-item-table-columns';
+import { useEditableMenuItemColumns } from '@/components/menu-management/menu-items/editable-menu-item-columns';
+import { useMenuItemChanges } from '@/hooks/useMenuItemChanges';
+import {
+  ConfirmationModal,
+  CrudModal,
+  useConfirmationModal,
+  useModal,
+} from '@/components/ui/crud-modal';
+import {
+  MenuItemFormContent,
+  useMenuItemForm,
+} from '@/components/menu-management/menu-items/menu-item-form';
+import { Suspense } from 'react';
+import { useI18n } from '@/providers/i18n-provider';
 
 export default function MenuItemsPage() {
   return (
@@ -49,7 +71,7 @@ function Page() {
   const { t } = useTranslation();
   const { locale } = useI18n();
   const searchParams = useSearchParams();
-  const menuId = searchParams.get("menuId");
+  const menuId = searchParams.get('menuId');
 
   // Table state
   const [pagination, setPagination] = useState<PaginationState>({
@@ -58,9 +80,9 @@ function Page() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Build query parameters
@@ -68,17 +90,17 @@ function Page() {
     const params: MenuItemQueryParams = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (menuId) params.menuId = menuId;
     if (searchTerm.trim()) params.term = searchTerm.trim();
 
     const sortField = getSortFieldForQuery(sorting);
-    if (sortField) params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+    if (sortField) params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
 
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -103,7 +125,7 @@ function Page() {
       limit: 100,
     });
   const { data: addonsData, isLoading: isLoadingAddons } = useActiveMenuItems({
-    isAddon: "true",
+    isAddon: 'true',
     limit: 100,
   });
 
@@ -114,7 +136,7 @@ function Page() {
         value: cat._id!,
         label: cat.name.en,
       })) || [],
-    [categoriesData]
+    [categoriesData],
   );
 
   const taxGroupsOptions = useMemo(
@@ -123,7 +145,7 @@ function Page() {
         value: tax._id!,
         label: tax.name.en,
       })) || [],
-    [taxGroupsData]
+    [taxGroupsData],
   );
 
   const kitchenDeptOptions = useMemo(
@@ -132,7 +154,7 @@ function Page() {
         value: dept._id!,
         label: dept.name.en,
       })) || [],
-    [kitchenDeptsData]
+    [kitchenDeptsData],
   );
 
   const addonsOptions = useMemo(
@@ -141,7 +163,7 @@ function Page() {
         value: item._id!,
         label: item.itemName.en,
       })) || [],
-    [addonsData]
+    [addonsData],
   );
 
   const isLoadingOptions =
@@ -162,7 +184,49 @@ function Page() {
   } = useMenuItemChanges(menuItems);
 
   // Bulk update mutation
-  const bulkUpdateMutation = useBulkUpdateMenuItems(menuId || "");
+  const bulkUpdateMutation = useBulkUpdateMenuItems(menuId || '');
+  const uploadMenuMutation = useUploadMenuExcel();
+  const createMenuItemMutation = useCreateMenuItem();
+  const uploadImageMutation = useUploadImage();
+  const { isOpen, openModal, closeModal } = useModal();
+  const { form } = useMenuItemForm(menuId || undefined, null);
+
+  const handleCreateSubmit = async (data: MenuItemFormData) => {
+    try {
+      await createMenuItemMutation.mutateAsync(data);
+      closeModal();
+    } catch (error) {
+      console.error('Failed to create menu item:', error);
+    }
+  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (file: File) => {
+    const result = await uploadImageMutation.mutateAsync({
+      file,
+      options: {
+        folderType: UploadFolderType.MENU_ITEMS,
+      },
+    });
+    return {
+      key: result.data.key,
+      url: result.data.url,
+    };
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && menuId) {
+      uploadMenuMutation.mutate({
+        file,
+        params: { menuId },
+      });
+    }
+    // Reset input value to allow selecting the same file again
+    if (event.target) {
+      event.target.value = '';
+    }
+  };
 
   // Delete mutation
   const deleteMenuItemMutation = useDeleteMenuItem();
@@ -189,17 +253,17 @@ function Page() {
         try {
           await deleteMenuItemMutation.mutateAsync(menuItem._id!);
         } catch (err) {
-          console.error("Failed to delete menu item:", err);
+          console.error('Failed to delete menu item:', err);
         }
       },
       {
-        title: t("menuItems.delete.title"),
-        description: t("menuItems.delete.description", {
+        title: t('menuItems.delete.title'),
+        description: t('menuItems.delete.description', {
           itemName: menuItem.itemName?.[locale] || menuItem.itemName?.en,
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
-      }
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
+      },
     );
   };
 
@@ -210,7 +274,7 @@ function Page() {
       await bulkUpdateMutation.mutateAsync(itemsToUpdate);
       clearChanges();
     } catch (error) {
-      console.error("Failed to save changes:", error);
+      console.error('Failed to save changes:', error);
     }
   };
 
@@ -225,6 +289,7 @@ function Page() {
     addonsOptions,
     isLoadingOptions,
     onDelete: deleteHandler,
+    onUploadImage: handleImageUpload,
   });
 
   return (
@@ -235,34 +300,75 @@ function Page() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <UtensilsCrossed className="h-6 w-6" />
-              <span>{t("menuItems.title")}</span>
+              <span>{t('menuItems.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("menuItems.subtitle")}</p>
+            <p className="text-muted-foreground">{t('menuItems.subtitle')}</p>
           </div>
 
           <div className="flex items-center space-x-2">
             {/* Status filter */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active"
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("menuItems.status.active")
-                : statusFilter === "inactive"
-                  ? t("menuItems.status.inactive")
-                  : t("categories.allStatus")}
+              {statusFilter === 'active'
+                ? t('menuItems.status.active')
+                : statusFilter === 'inactive'
+                  ? t('menuItems.status.inactive')
+                  : t('categories.allStatus')}
             </Button>
+
+            {/* Upload Button */}
+            {menuId && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    window.open(
+                      'https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com/sample_menu_sheet_50.xlsx',
+                      '_blank',
+                    )
+                  }
+                  className="h-8"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Sample
+                </Button>
+                <Button onClick={() => openModal()} className="h-8">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Item
+                </Button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept=".xlsx, .xls"
+                  onChange={handleFileUpload}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="h-8"
+                  disabled={uploadMenuMutation.isPending}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadMenuMutation.isPending
+                    ? 'Uploading...'
+                    : 'Upload Menu'}
+                </Button>
+              </>
+            )}
 
             {/* Save/Discard buttons */}
             {hasChanges && (
@@ -303,7 +409,7 @@ function Page() {
               totalCount={totalCount}
               isLoading={isLoading || bulkUpdateMutation.isPending}
               searchValue={searchTerm}
-              searchPlaceholder={t("menuItems.searchPlaceholder")}
+              searchPlaceholder={t('menuItems.searchPlaceholder')}
               onSearchChange={setSearchTerm}
               pagination={pagination}
               onPaginationChange={setPagination}
@@ -317,7 +423,7 @@ function Page() {
               showSearch={true}
               showPagination={true}
               showPageSizeSelector={true}
-              emptyMessage={t("menuItems.noDataFound")}
+              emptyMessage={t('menuItems.noDataFound')}
               enableMultiSort={false}
             />
           </CardContent>
@@ -334,6 +440,19 @@ function Page() {
           variant={confirmationConfig?.variant}
           loading={deleteMenuItemMutation.isPending}
         />
+        <CrudModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          title={t('menuItems.form.createTitle')}
+          description={t('menuItems.form.createDescription')}
+          form={form}
+          onSubmit={handleCreateSubmit}
+          loading={createMenuItemMutation.isPending}
+          size="xl"
+          submitButtonText={t('menuItems.form.createButton')}
+        >
+          <MenuItemFormContent form={form} />
+        </CrudModal>
       </div>
     </Layout>
   );

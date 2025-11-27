@@ -13,7 +13,6 @@
   "table.selectAll": "تحديد الكل",
   "table.selectRow": "تحديد الصف",
   "table.openMenu": "فتح القائمة",
-
   "form.address.title": "معلومات العنوان",
   "form.address.addressLine1": "العنوان الأول",
   "form.address.addressLine1Placeholder": "أدخل العنوان الأول",
@@ -30,15 +29,12 @@
   "form.address.location": "الموقع",
   "form.address.locationPlaceholder": "أدخل إحداثيات الموقع أو الوصف",
   "form.address.locationDescription": "اختياري: إحداثيات GPS أو وصف الموقع",
-
   "error.pageNotFound": "الصفحة غير موجودة",
   "error.pageNotFoundDescription": "عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
   "common.goBack": "العودة",
-
   "error.boundary.title": "حدث خطأ ما",
   "error.boundary.description": "حدث خطأ غير متوقع",
   "error.boundary.tryAgain": "حاول مرة أخرى",
-
   "auth.login.title": "مرحباً بك في نظام نقاط البيع",
   "auth.login.subtitle": "قم بتسجيل الدخول لإدارة الطلبات والطاولات والمبيعات",
   "auth.login.emailLabel": "عنوان البريد الإلكتروني",
@@ -53,7 +49,6 @@
   "auth.login.signingIn": "جاري تسجيل الدخول...",
   "auth.login.noAccount": "موظف جديد؟",
   "auth.login.signUpLink": "طلب وصول",
-
   "auth.register.title": "طلب وصول الموظفين",
   "auth.register.subtitle": "املأ بياناتك لطلب الوصول إلى نظام نقاط البيع",
   "auth.register.firstNameLabel": "الاسم الأول",
@@ -74,7 +69,6 @@
   "auth.register.creatingAccount": "جاري إرسال الطلب...",
   "auth.register.alreadyHaveAccount": "لديك حساب بالفعل؟",
   "auth.register.signInLink": "تسجيل الدخول",
-
   "auth.forgot.title": "إعادة تعيين كلمة المرور",
   "auth.forgot.subtitle": "أدخل بريدك الإلكتروني لاستقبال رابط إعادة تعيين كلمة المرور",
   "auth.forgot.emailLabel": "عنوان البريد الإلكتروني",
@@ -82,7 +76,6 @@
   "auth.forgot.sendResetLink": "إرسال رابط الإعادة",
   "auth.forgot.sendingLink": "جاري الإرسال...",
   "auth.forgot.backToLogin": "العودة لتسجيل الدخول",
-
   "auth.resetPassword.title": "تعيين كلمة مرور جديدة",
   "auth.resetPassword.subtitle": "أنشئ كلمة مرور جديدة لحساب نقاط البيع",
   "auth.resetPassword.newPasswordLabel": "كلمة المرور الجديدة",
@@ -92,7 +85,6 @@
   "auth.resetPassword.resetPasswordButton": "إعادة تعيين كلمة المرور",
   "auth.resetPassword.resettingPassword": "جاري إعادة التعيين...",
   "auth.resetPassword.backToLogin": "العودة لتسجيل الدخول",
-
   "common.loading": "جاري التحميل...",
   "common.error": "خطأ",
   "common.success": "نجح",
@@ -114,7 +106,6 @@
   "common.status": "الحالة",
   "common.createdAt": "تاريخ الإنشاء",
   "common.updatedAt": "تاريخ التحديث",
-
   "navigation.dashboard": "لوحة تحكم نقاط البيع",
   "navigation.orders": "الطلبات النشطة",
   "navigation.tables": "إدارة الطاولات",
@@ -125,7 +116,6 @@
   "navigation.settings": "إعدادات نقاط البيع",
   "navigation.staff": "إدارة الموظفين",
   "navigation.logout": "تسجيل خروج",
-
   "pos.takeOrder": "أخذ طلب",
   "pos.splitBill": "تقسيم الفاتورة",
   "pos.applyDiscount": "تطبيق خصم",
@@ -133,7 +123,6 @@
   "pos.tableStatus.available": "متاحة",
   "pos.tableStatus.occupied": "مشغولة",
   "pos.tableStatus.reserved": "محجوزة",
-
   "navigation.overview": "نظرة عامة",
   "navigation.analytics": "التحليلات",
   "navigation.salesReports": "تقارير المبيعات",
@@ -176,7 +165,7 @@
   "navigation.payments": "المدفوعات",
   "navigation.paymentMethods": "طرق الدفع",
   "navigation.transactions": "المعاملات",
-
+  "navigation.imageLibrary": "مكتبة الصور",
   "dashboard.selectBrand": "اختر العلامة التجارية",
   "dashboard.selectRestaurant": "اختر المطعم",
   "dashboard.searchPlaceholder": "بحث...",
@@ -184,7 +173,6 @@
   "dashboard.myAccount": "حسابي",
   "dashboard.profile": "الملف الشخصي",
   "dashboard.signOut": "تسجيل خروج",
-
   "dashboard.title": "لوحة التحكم",
   "dashboard.welcome": "نظرة عامة على علاماتك التجارية ومطاعمك",
   "dashboard.today": "اليوم",
@@ -212,7 +200,6 @@
   "dashboard.viewStaff": "عرض الموظفين",
   "dashboard.manageLocations": "إدارة المواقع",
   "dashboard.viewReports": "عرض التقارير",
-
   "brands.title": "إدارة العلامات التجارية",
   "brands.subtitle": "إدارة جميع علامات مطاعمك التجارية ومعلوماتها",
   "brands.addNewBrand": "إضافة علامة تجارية جديدة",
@@ -248,7 +235,6 @@
   "brands.updateBrand": "تحديث العلامة التجارية",
   "brands.createBrand": "إنشاء علامة تجارية",
   "brands.errorLoading": "خطأ في تحميل العلامات التجارية",
-
   "brands.form.createTitle": "إنشاء علامة تجارية جديدة",
   "brands.form.editTitle": "تعديل {brandName}",
   "brands.form.createDescription": "املأ المعلومات أدناه لإنشاء علامة تجارية جديدة.",
@@ -283,27 +269,22 @@
   "brands.form.panLabel": "رقم PAN",
   "brands.form.panPlaceholder": "أدخل رقم PAN",
   "brands.form.panDescription": "رقم الحساب الدائم",
-
   "theme.light": "فاتح",
   "theme.dark": "داكن",
   "theme.system": "النظام",
-
   "common.active": "نشط",
   "common.inactive": "غير نشط",
-
   "users.title": "إدارة المستخدمين",
   "users.subtitle": "إدارة جميع المستخدمين الذين لديهم وصول إلى نظام نقاط البيع في المطعم",
   "users.description": "إدارة جميع حسابات الموظفين الذين لديهم وصول إلى نظام نقاط البيع في المطعم. أضافة موظفين جدد، إدارة الوصول الحالي، والحفاظ على إشراف واضح على أذونات النظام.",
   "users.addUser": "إضافة مستخدم",
   "users.searchPlaceholder": "البحث في المستخدمين...",
-
   "users.table.user": "المستخدم",
   "users.table.role": "الدور",
   "users.table.contact": "جهة الاتصال",
   "users.table.restaurants": "المطاعم",
   "users.table.status": "الحالة",
   "users.table.lastLogin": "آخر تسجيل دخول",
-
   "users.form.personalInfo": "المعلومات الشخصية",
   "users.form.firstNameLabel": "الاسم الأول",
   "users.form.firstNamePlaceholder": "أدخل الاسم الأول",
@@ -318,40 +299,32 @@
   "common.form.phonePlaceholder": "أدخل رقم الهاتف",
   "common.form.contactEmailLabel": "عنوان البريد الإلكتروني",
   "common.form.contactEmailPlaceholder": "أدخل عنوان البريد الإلكتروني",
-
   "users.form.profileInfo": "معلومات الملف الشخصي",
   "users.form.profileImageLabel": "صورة الملف الشخصي",
   "users.form.profileImageDescription": "ارفع صورة الملف الشخصي (الحجم الموصى به: 400x400 بكسل)",
   "users.form.activeStatusLabel": "حالة الحساب",
   "users.form.activeStatusDescription": "قم بالتبديل لتنشيط أو إلغاء تنشيط هذا الحساب",
-
   "users.form.roleInfo": "الدور والأذونات",
   "users.form.roleLabel": "الدور",
   "users.form.rolePlaceholder": "اختر دور المستخدم",
   "users.form.designationLabel": "المسمى الوظيفي",
   "users.form.designationPlaceholder": "أدخل المسمى الوظيفي",
   "users.form.designationDescription": "المسمى الوظيفي أو المنصب (مثال: مدير أول، كاشير رئيسي)",
-
   "users.form.restaurantAccess": "الوصول للمطاعم",
   "users.form.restaurantLabel": "المطاعم المسندة",
   "users.form.restaurantDescription": "اختر المطاعم التي يمكن لهذا المستخدم الوصول إليها",
-
   "users.create.title": "إنشاء مستخدم جديد",
   "users.create.description": "املأ المعلومات أدناه لإنشاء حساب مستخدم جديد.",
   "users.create.success": "تم إنشاء المستخدم بنجاح!",
   "users.create.error": "فشل في إنشاء المستخدم",
-
   "users.edit.title": "تعديل المستخدم",
   "users.edit.description": "قم بتحديث معلومات المستخدم أدناه.",
-
   "users.update.success": "تم تحديث المستخدم بنجاح!",
   "users.update.error": "فشل في تحديث المستخدم",
-
   "users.delete.title": "حذف المستخدم",
   "users.delete.description": "هل أنت متأكد من رغبتك في حذف {name}؟ هذا الإجراء لا يمكن التراجع عنه وسيتم إلغاء جميع أذونات الوصول.",
   "users.delete.success": "تم حذف المستخدم بنجاح!",
   "users.delete.error": "فشل في حذف المستخدم",
-
   "users.permissions": "أذونات المستخدم",
   "users.permissions.title": "إدارة أذونات المستخدم",
   "users.permissions.description": "تكوين أذونات الوصول لـ {name}",
@@ -388,7 +361,6 @@
   "users.permissions.managePaymentsDescription": "معالجة المدفوعات والمردودات",
   "users.permissions.success": "تم تحديث أذونات المستخدم بنجاح!",
   "users.permissions.error": "فشل في تحديث أذونات المستخدم",
-
   "employees.title": "إدارة الموظفين",
   "employees.subtitle": "إدارة جميع الموظفين الذين لديهم وصول إلى نظام نقاط البيع",
   "employees.addEmployee": "إضافة موظف",
@@ -397,7 +369,6 @@
   "employees.roles.subtitle": "إنشاء وإدارة أدوار الموظفين مع أذونات محددة",
   "employees.roles.addRole": "إضافة دور",
   "employees.roles.searchPlaceholder": "البحث في الأدوار...",
-
   "roles.table.name": "اسم الدور",
   "roles.table.permissions": "الأذونات",
   "roles.table.employees": "الموظفون",
@@ -427,7 +398,6 @@
   "roles.delete.cannotDelete": "لا يمكن حذف دور مُعين للموظفين",
   "roles.permissions.count": "{count} إذن (أذونات)",
   "roles.employees.count": "{count} موظف (موظفون)",
-
   "restaurants.form.paymentLinkSettingsLabel": "إعدادات روابط الدفع",
   "restaurants.form.paymentLinkSettings.onWhatsapp": "روابط الدفع بالواتساب",
   "restaurants.form.paymentLinkSettings.onSms": "روابط الدفع بالرسائل النصية",
@@ -494,7 +464,6 @@
   "restaurants.form.brands.pizzaPalace": "قصر البيتزا",
   "restaurants.form.brands.burgerHouse": "بيت البرجر",
   "restaurants.form.noBrandsAvailable": "لا توجد علامات تجارية متاحة",
-
   "restaurants.form.createTitle": "إنشاء مطعم جديد",
   "restaurants.form.editTitle": "تعديل",
   "restaurants.form.createDescription": "املأ المعلومات أدناه لإنشاء مطعم جديد.",
@@ -525,7 +494,6 @@
   "restaurants.form.managerLabel": "اسم المدير",
   "restaurants.form.managerPlaceholder": "أدخل اسم المدير",
   "restaurants.form.managerDescription": "اسم مدير المطعم",
-
   "restaurants.form.systemConfig": "تكوين النظام",
   "restaurants.form.timezoneLabel": "المنطقة الزمنية",
   "restaurants.form.timezonePlaceholder": "اختر المنطقة الزمنية",
@@ -551,7 +519,6 @@
   "restaurants.form.trnOrGstNoDescription": "رقم التسجيل الضريبي",
   "restaurants.form.logoLabel": "الشعار",
   "restaurants.form.logoDescription": "ارفع شعار مطعمك (الحجم الموصى به: 512x512 بكسل)",
-
   "restaurants.form.posSettings": "إعدادات نقاط البيع",
   "restaurants.form.posLogoutOnCloseLabel": "تسجيل خروج عند الإغلاق",
   "restaurants.form.posLogoutOnCloseDescription": "تسجيل خروج تلقائي عند إغلاق نقاط البيع",
@@ -561,7 +528,6 @@
   "restaurants.form.generateOrderTypeWiseOrderNoDescription": "إنتاج أرقام طلبات منفصلة لأنواع طلبات مختلفة",
   "restaurants.form.isFeedBackActiveLabel": "نظام التقييم",
   "restaurants.form.isFeedBackActiveDescription": "تفعيل نظام تقييم العملاء",
-
   "restaurants.form.businessSettings": "إعدادات الأعمال",
   "restaurants.form.deductFromInventoryLabel": "خصم من المخزون",
   "restaurants.form.deductFromInventoryDescription": "خصم العناصر من المخزون تلقائياً عند الطلبات",
@@ -571,7 +537,6 @@
   "restaurants.form.tableReservationDescription": "تفعيل نظام حجز الطاولات",
   "restaurants.form.allowMultipleTaxLabel": "السماح بضرائب متعددة",
   "restaurants.form.allowMultipleTaxDescription": "السماح بمعدلات ضريبية متعددة على الطلبات",
-
   "restaurants.form.communicationSettings": "إعدادات التواصل",
   "restaurants.form.smsAndWhatsappSelectionLabel": "اختيار الرسائل النصية والواتساب",
   "restaurants.form.smsAndWhatsappSelectionPlaceholder": "اختر طريقة التواصل",
@@ -582,12 +547,10 @@
   "restaurants.form.whatsAppChannelLabel": "قناة الواتساب",
   "restaurants.form.whatsAppChannelPlaceholder": "أدخل معرف قناة الواتساب",
   "restaurants.form.whatsAppChannelDescription": "قناة الواتساب للإشعارات",
-
   "restaurants.form.sendReportsLabel": "إعدادات إرسال التقارير",
   "restaurants.form.sendReports.email": "تقارير بالبريد الإلكتروني",
   "restaurants.form.sendReports.whatsapp": "تقارير بالواتساب",
   "restaurants.form.sendReports.sms": "تقارير بالرسائل النصية",
-
   "tableSection.name": "اسم قسم الطاولات",
   "tableSection.restaurant": "اسم المطعم",
   "tableSection.searchPlaceholder": "ابحث في أقسام الطاولات...",
@@ -616,7 +579,6 @@
   "tableSection.editTableSection": "تعديل قسم الطاولات",
   "tableSection.createTableSection": "إنشاء قسم طاولات",
   "tableSection.updateTableSection": "تحديث قسم الطاولات",
-
   "tableSection.form.basicInfo": "المعلومات الأساسية",
   "tableSection.form.restaurantLabel": "المطعم",
   "tableSection.form.restaurantPlaceholder": "اختر مطعم",
@@ -624,12 +586,10 @@
   "tableSection.form.namePlaceholderEn": "Enter section name in English",
   "tableSection.form.namePlaceholderAr": "أدخل اسم القسم بالعربية",
   "tableSection.form.activeStatusLabel": "حالة النشاط",
-
   "tableSections.name": "الاسم",
   "tableSections.description": "الوصف",
   "tableSections.restaurant": "المطعم",
   "tableSection.form.activeStatusDescription": "قم بالتبديل لتنشيط أو إلغاء تنشيط هذا قسم الطاولات",
-
   "table.name": "الطاولة",
   "table.section": "قسم الطاولة",
   "table.capacity": "السعة",
@@ -645,7 +605,6 @@
   "table.addNew": " إضافة طاولة جديدة",
   "table.available": " متاح",
   "table.unavailable": "غير متاح",
-
   "table.form.createTitle": "إنشاء طاولة",
   "table.form.createDescription": "قم بتقديم التفاصيل أدناه لإنشاء طاولة جديدة أو عدة طاولات دفعة واحدة.",
   "table.form.addTitle": " إضافة طاولة",
@@ -675,7 +634,6 @@
   "table.deleteSuccess": "تم حذف الطاولة بنجاح",
   "tables.active": "نشط",
   "tables.inactive": "غير نشط",
-
   "table.deleteTable": "حذف الطاولة",
   "table.deleteConfirmation": "هل أنت متأكد من أنك تريد حذف {tableName}؟ لا يمكن التراجع عن هذا الإجراء.",
   "table.deleteTableButton": "حذف الطاولة",
@@ -689,11 +647,9 @@
   "table.form.editDescription": "قم بتحديث تفاصيل الطاولة المحددة.",
   "table.form.updateButton": "تحديث الطاولة",
   "table.form.createButton": "إنشاء الطاولة",
-
   "navigation.taxes": "الضرايح",
   "navigation.productGroup": "مجموعات المنتجات",
   "navigation.taxGroup": "تكوين الضرايح",
-
   "categories.title": "الفئات",
   "categories.subtitle": "إدارة فئات المنتجات لعلامتك التجارية.",
   "categories.addCategory": "إضافة فئة",
@@ -728,7 +684,6 @@
   "categories.form.sortOrderPlaceholder": "مثال، 1, 2, 3...",
   "categories.form.activeStatusLabel": "حالة النشاط",
   "categories.form.activeStatusDescription": "الفئة مرئية وقابلة للاستخدام.",
-
   "categories.deleteCategory": "حذف الفئة",
   "categories.deleteConfirmation": "هل أنت متأكد من أنك تريد حذف {categoryName}؟ لا يمكن التراجع عن هذا الإجراء.",
   "categories.deleteCategoryButton": "حذف الفئة",
@@ -738,7 +693,6 @@
   "categories.addNewCategory": "إضافة فئة جديدة",
   "categories.errorLoading": "خطأ في تحميل الفئات",
   "categories.noDataFound": "لم يتم العثور على فئات",
-
   "categories.form.editTitle": "تعديل الفئة",
   "categories.form.createTitle": "إنشاء فئة",
   "categories.form.editDescription": "قم بتحديث تفاصيل الفئة المحددة.",
@@ -760,7 +714,6 @@
   "categories.form.restaurantLabel": "المطعم (اختياري)",
   "categories.form.restaurantPlaceholder": "اختر مطعم",
   "categories.form.restaurantDescription": "اختياري. ربط هذه الفئة بمطعم محدد.",
-
   "categories.categoryName": "اسم الفئة",
   "categories.shortCode": "الرمز المختصر",
   "categories.status": "الحالة",
@@ -770,7 +723,6 @@
   "categories.delete": "حذف",
   "categories.form.noRestaurantsAvailable": "لا توجد مطاعم متاحة",
   "categories.form.noRestaurantSelected": "بدون مطعم (يطبق على جميع المطاعم)",
-
   "tableSections.form.basicInfo": "المعلومات الأساسية",
   "tableSections.form.nameEnPlaceholder": "e.g., Indoor Section",
   "tableSections.form.nameArPlaceholder": "مثال، القسم الداخلي",
@@ -780,7 +732,6 @@
   "tableSections.form.noRestaurantsAvailable": "لا توجد مطاعم متاحة",
   "tableSections.form.activeStatusLabel": "حالة التفعيل",
   "tableSections.form.activeStatusDescription": "القسم مرئي وقابل للاستخدام.",
-
   "taxGroups.form.productGroupName": "اسم مجموعة المنتجات",
   "taxGroups.form.productGroupNamePlaceholder": "مثال: مواد غذائية، مشروبات",
   "taxGroups.form.taxType": "نوع الضريبة",
@@ -789,11 +740,9 @@
   "taxGroups.form.taxValuePlaceholder": "أدخل قيمة الضريبة",
   "taxGroups.form.taxTypePercentage": "نسبة مئوية",
   "taxGroups.form.taxTypeFixedAmount": "مبلغ ثابت",
-
   "taxGroups.edit.title": "تعديل مجموعة الضرائب",
   "taxGroups.edit.description": "قم بتحديث تفاصيل مجموعة الضرائب المحددة.",
   "taxGroups.table.productGroupName": "اسم مجموعة المنتجات",
-
   "taxGroups.title": "مجموعات الضرائب",
   "taxGroups.subtitle": "إدارة جميع مجموعات الضرائب وتكوينها",
   "taxGroups.searchPlaceholder": "ابحث عن مجموعات الضرائب...",
@@ -849,7 +798,6 @@
   "kitchen.addSuccess": "تمت إضافة القسم بنجاح",
   "kitchen.editSuccess": "تم تحديث القسم بنجاح",
   "kitchen.deleteSuccess": "تم حذف القسم بنجاح",
-
   "kitchen.form.restaurant1": "قصر البيتزا - وسط المدينة",
   "kitchen.form.restaurant2": "بيت البرغر - المركزي",
   "kitchen.form.brands.pizzaPalace": "قصر البيتزا",
@@ -868,178 +816,120 @@
   "kitchen.form.activeStatusDescription": "قم بالتبديل لتفعيل أو إلغاء تفعيل هذا القسم",
   "taxGroups.update.success": "تم تحديث مجموعة الضرائب بنجاح",
   "taxGroups.create.success": "تم إنشاء مجموعة الضرائب بنجاح",
-
   "users.permissions.user:create": "إنشاء مستخدم",
   "users.permissions.user:createDescription": "يسمح بإنشاء مستخدمين جدد.",
-
   "users.permissions.user:read": "عرض المستخدم",
   "users.permissions.user:readDescription": "يسمح بعرض تفاصيل المستخدم.",
-
   "users.permissions.user:update": "تحديث المستخدم",
   "users.permissions.user:updateDescription": "يسمح بتعديل معلومات المستخدم.",
-
   "users.permissions.user:delete": "حذف المستخدم",
   "users.permissions.user:deleteDescription": "يسمح بحذف المستخدمين.",
-
   "users.permissions.user:list": "عرض المستخدمين",
   "users.permissions.user:listDescription": "يسمح بعرض جميع المستخدمين.",
-
   "users.permissions.user:manage_roles": "إدارة أدوار المستخدمين",
   "users.permissions.user:manage_rolesDescription": "يسمح بتعيين وتحديث أدوار المستخدمين.",
-
   "users.permissions.restaurant:create": "إنشاء مطعم",
   "users.permissions.restaurant:createDescription": "يسمح بإنشاء مطاعم جديدة.",
-
   "users.permissions.restaurant:read": "عرض المطعم",
   "users.permissions.restaurant:readDescription": "يسمح بعرض تفاصيل المطعم.",
-
   "users.permissions.restaurant:update": "تحديث المطعم",
   "users.permissions.restaurant:updateDescription": "يسمح بتعديل معلومات المطعم.",
-
   "users.permissions.restaurant:delete": "حذف المطعم",
   "users.permissions.restaurant:deleteDescription": "يسمح بحذف المطعم.",
-
   "users.permissions.restaurant:list": "عرض المطاعم",
   "users.permissions.restaurant:listDescription": "يسمح بعرض جميع المطاعم.",
-
   "users.permissions.restaurant:manage_tables": "إدارة الطاولات",
   "users.permissions.restaurant:manage_tablesDescription": "يسمح بإعداد وتعديل طاولات المطعم.",
-
   "users.permissions.brand:create": "إنشاء علامة تجارية",
   "users.permissions.brand:createDescription": "يسمح بإنشاء علامات تجارية جديدة.",
-
   "users.permissions.brand:read": "عرض العلامة التجارية",
   "users.permissions.brand:readDescription": "يسمح بعرض معلومات العلامة التجارية.",
-
   "users.permissions.brand:delete": "حذف العلامة التجارية",
   "users.permissions.brand:deleteDescription": "يسمح بحذف العلامة التجارية.",
-
   "users.permissions.brand:list": "عرض العلامات التجارية",
   "users.permissions.brand:listDescription": "يسمح بعرض جميع العلامات التجارية.",
-
   "users.permissions.brand:update": "تحديث العلامة التجارية",
   "users.permissions.brand:updateDescription": "يسمح بتعديل تفاصيل العلامة التجارية.",
-
   "users.permissions.menu:create": "إنشاء قائمة",
   "users.permissions.menu:createDescription": "يسمح بإنشاء قوائم أو عناصر جديدة.",
-
   "users.permissions.menu:read": "عرض القائمة",
   "users.permissions.menu:readDescription": "يسمح بعرض عناصر القائمة.",
-
   "users.permissions.menu:update": "تحديث القائمة",
   "users.permissions.menu:updateDescription": "يسمح بتعديل القوائم أو العناصر.",
-
   "users.permissions.menu:delete": "حذف القائمة",
   "users.permissions.menu:deleteDescription": "يسمح بحذف عناصر القائمة.",
-
   "users.permissions.menu:list": "عرض القوائم",
   "users.permissions.menu:listDescription": "يسمح بعرض جميع القوائم.",
-
   "users.permissions.menu:manage_categories": "إدارة فئات القائمة",
   "users.permissions.menu:manage_categoriesDescription": "يسمح بإنشاء وتعديل فئات القائمة.",
-
   "users.permissions.menu:manage_items": "إدارة عناصر القائمة",
   "users.permissions.menu:manage_itemsDescription": "يسمح بإدارة عناصر القائمة.",
-
   "users.permissions.menu:manage_pricing": "إدارة تسعير القائمة",
   "users.permissions.menu:manage_pricingDescription": "يسمح بتعديل الأسعار والخيارات.",
-
   "users.permissions.menu:publish": "نشر القائمة",
   "users.permissions.menu:publishDescription": "يسمح بنشر التحديثات على القائمة.",
-
   "users.permissions.order:create": "إنشاء طلب",
   "users.permissions.order:createDescription": "يسمح بإنشاء طلبات جديدة.",
-
   "users.permissions.order:read": "عرض الطلب",
   "users.permissions.order:readDescription": "يسمح بعرض تفاصيل الطلب.",
-
   "users.permissions.order:update": "تحديث الطلب",
   "users.permissions.order:updateDescription": "يسمح بتعديل الطلبات.",
-
   "users.permissions.order:delete": "حذف الطلب",
   "users.permissions.order:deleteDescription": "يسمح بحذف الطلبات.",
-
   "users.permissions.order:list": "عرض الطلبات",
   "users.permissions.order:listDescription": "يسمح بعرض جميع الطلبات.",
-
   "users.permissions.order:cancel": "إلغاء الطلب",
   "users.permissions.order:cancelDescription": "يسمح بإلغاء الطلبات.",
-
   "users.permissions.order:refund": "استرجاع الطلب",
   "users.permissions.order:refundDescription": "يسمح بمعالجة طلبات الاسترجاع.",
-
   "users.permissions.order:kitchen_view": "عرض طلبات المطبخ",
   "users.permissions.order:kitchen_viewDescription": "يسمح بعرض الطلبات في لوحة المطبخ.",
-
   "users.permissions.order:kitchen_update": "تحديث طلبات المطبخ",
   "users.permissions.order:kitchen_updateDescription": "يسمح بتحديث حالة الطلب من المطبخ.",
-
   "users.permissions.kitchen:view_orders": "عرض طلبات المطبخ",
   "users.permissions.kitchen:view_ordersDescription": "يسمح بعرض جميع طلبات المطبخ.",
-
   "users.permissions.kitchen:update_status": "تحديث حالة المطبخ",
   "users.permissions.kitchen:update_statusDescription": "يسمح بتحديث حالة طلبات المطبخ.",
-
   "users.permissions.kitchen:manage_departments": "إدارة أقسام المطبخ",
   "users.permissions.kitchen:manage_departmentsDescription": "يسمح بإدارة أقسام المطبخ.",
-
   "users.permissions.payment:process": "معالجة المدفوعات",
   "users.permissions.payment:processDescription": "يسمح بمعالجة المدفوعات.",
-
   "users.permissions.payment:view": "عرض المدفوعات",
   "users.permissions.payment:viewDescription": "يسمح بعرض تاريخ المدفوعات.",
-
   "users.permissions.payment:refund": "استرجاع المدفوعات",
   "users.permissions.payment:refundDescription": "يسمح بإصدار استرجاعات مالية.",
-
   "users.permissions.payment:view_reports": "عرض تقارير المدفوعات",
   "users.permissions.payment:view_reportsDescription": "يسمح بعرض تقارير المدفوعات.",
-
   "users.permissions.tax:create": "إنشاء ضريبة",
   "users.permissions.tax:createDescription": "يسمح بإنشاء قواعد ضريبية جديدة.",
-
   "users.permissions.tax:read": "عرض الضريبة",
   "users.permissions.tax:readDescription": "يسمح بعرض القواعد الضريبية.",
-
   "users.permissions.tax:update": "تحديث الضريبة",
   "users.permissions.tax:updateDescription": "يسمح بتعديل القواعد الضريبية.",
-
   "users.permissions.tax:delete": "حذف الضريبة",
   "users.permissions.tax:deleteDescription": "يسمح بحذف القواعد الضريبية.",
-
   "users.permissions.tax:list": "عرض الضرائب",
   "users.permissions.tax:listDescription": "يسمح بعرض جميع الضرائب.",
-
   "users.permissions.tax:manage_groups": "إدارة مجموعات الضريبة",
   "users.permissions.tax:manage_groupsDescription": "يسمح بإدارة مجموعات الضرائب.",
-
   "users.permissions.report:view_sales": "عرض تقارير المبيعات",
   "users.permissions.report:view_salesDescription": "يسمح بالوصول إلى تحليلات المبيعات.",
-
   "users.permissions.report:view_inventory": "عرض تقارير المخزون",
   "users.permissions.report:view_inventoryDescription": "يسمح بعرض تقارير المخزون.",
-
   "users.permissions.report:view_financial": "عرض التقارير المالية",
   "users.permissions.report:view_financialDescription": "يسمح بعرض التقارير المالية.",
-
   "users.permissions.report:view_user_activity": "عرض تقارير نشاط المستخدمين",
   "users.permissions.report:view_user_activityDescription": "يسمح بعرض تقارير نشاط المستخدمين.",
-
   "users.permissions.report:export": "تصدير التقارير",
   "users.permissions.report:exportDescription": "يسمح بتصدير بيانات التقارير.",
-
   "users.permissions.system:backup": "نسخ احتياطي للنظام",
   "users.permissions.system:backupDescription": "يسمح بإجراء نسخ احتياطي كامل للنظام.",
-
   "users.permissions.system:maintenance": "صيانة النظام",
   "users.permissions.system:maintenanceDescription": "يسمح بتنفيذ مهام الصيانة للنظام.",
-
   "users.permissions.system:manage_config": "إدارة إعدادات النظام",
   "users.permissions.system:manage_configDescription": "يسمح بتعديل الإعدادات الأساسية للنظام.",
-
   "users.permissions.system:view_logs": "عرض سجلات النظام",
   "users.permissions.system:view_logsDescription": "يسمح بعرض سجلات التطبيق والخادم.",
-
   "users.accountStatus.PENDING_VERIFICATION": "في انتظار التحقق",
   "users.accountStatus.PENDING_EMAIL_VERIFICATION": "في انتظار التحقق من البريد الإلكتروني",
   "users.accountStatus.PENDING_PHONE_VERIFICATION": "في انتظار التحقق من رقم الهاتف",
@@ -1051,12 +941,10 @@
   "users.table.actions": "الإجراءات",
   "users.updateUser": "تحديث المستخدم",
   "common.filter.all": "الكل",
-
   "auth.logout.success": "تم تسجيل الخروج بنجاح",
   "auth.logout.error": "فشل في تسجيل الخروج",
   "auth.login.success": "تم تسجيل الدخول بنجاح",
   "auth.login.error": "فشل في تسجيل الدخول",
-
   "menus.title": "القوايم",
   "menus.subtitle": "ادارة جميع القوايم في المطعم",
   "menus.form.basicInfo": "المعلومات الأساسية",
@@ -1065,33 +953,23 @@
   "menus.form.nameEnPlaceholder": "أدخل اسم القائمة بالإنجليزية",
   "menus.form.nameArPlaceholder": "أدخل اسم القائمة بالعربية",
   "menus.noDataFound": "لا توجد قوايم",
-
   "menus.form.shortCode": "الكود المختصر",
   "menus.form.shortCodePlaceholder": "أدخل الكود المختصر",
-
   "menus.form.shortName": "الاسم المختصر",
   "menus.form.shortNamePlaceholder": "أدخل الاسم المختصر",
-
   "menus.form.activeStatusLabel": "الحالة",
   "menus.form.activeStatusDescription": "تفعيل أو تعطيل هذه القائمة",
-
   "menus.form.additionalSettings": "إعدادات إضافية",
-
   "menus.form.posDefaultLabel": "القائمة الافتراضية لنقطة البيع",
   "menus.form.posDefaultDescription": "تعيين هذه القائمة كقائمة افتراضية لنقطة البيع",
-
   "menus.form.digitalDefaultLabel": "القائمة الرقمية الافتراضية",
   "menus.form.digitalDefaultDescription": "تعيين هذه القائمة كقائمة رقمية افتراضية",
-
   "menus.form.digitalMenuLabel": "القائمة الرقمية",
   "menus.form.digitalMenuDescription": "تفعيل هذه القائمة للعرض الرقمي",
-
   "menus.form.mobileAppLabel": "تطبيق الهاتف",
   "menus.form.mobileAppDescription": "إتاحة هذه القائمة في تطبيق الهاتف",
-
   "menus.form.ondcLabel": "ONDC",
   "menus.form.ondcDescription": "تفعيل دعم ONDC لهذه القائمة",
-
   "menus.create.title": "إنشاء قائمة",
   "menus.create.description": "املأ التفاصيل لإنشاء قائمة جديدة.",
   "menus.create.submit": "إنشاء القائمة",
@@ -1101,7 +979,6 @@
   "menus.edit.title": "تعديل قائمة",
   "menus.edit.description": "املأ التفاصيل لتحديث قائمة المحددة.",
   "menus.edit.submit": "تحديث القائمة",
-
   "menus.table.name": "اسم القائمة",
   "menus.table.shortCode": "الكود المختصر",
   "menus.table.status": "الحالة",
@@ -1116,7 +993,6 @@
   "common.no": "لا",
   "common.yes": "نعم",
   "common.allStatus": "جميع الحالات",
-
   "common.brandLabel": "الماركة",
   "common.restaurantLabel": "المطعم",
   "common.noBrandAvailable": "لا توجد علامات تجارية متاحة",
@@ -1124,21 +1000,17 @@
   "common.brandPlaceholder": "اختر العلامة التجارية",
   "common.restaurantPlaceholder": "اختر المطعم",
   "common.form.countryCode": "رمز البلد",
-
   "restaurants.form.notificationPhone": "أرقام الإشعارات الهاتفية (مفصولة بفواصل)",
   "restaurants.form.notificationPhonePlaceholder": "أدخل أرقام الهواتف مفصولة بفواصل",
-
   "restaurants.form.notificationEmails": "عناوين البريد الإلكتروني للإشعارات (مفصولة بفواصل)",
   "restaurants.form.notificationEmailsPlaceholder": "أدخل عناوين البريد الإلكتروني مفصولة بفواصل",
   "restaurants.form.autoResetSettings": "الاتفاقية التلقائية",
   "restaurants.form.billPrefixLabel": "بادئة الفاتورة المخصصة",
   "restaurants.form.billPrefixPlaceholder": "أدخل بادئة الفاتورة",
   "restaurants.form.billPrefixDescription": "بادئة مخصصة للفواتير",
-
   "restaurants.form.kotPrefixLabel": "بادئة KOT المخصصة",
   "restaurants.form.kotPrefixPlaceholder": "أدخل بادئة KOT",
   "restaurants.form.kotPrefixDescription": "بادئة مخصصة لأوامر المطبخ",
-
   "restaurants.form.qrCodeSettings": "الاتفاقية QR",
   "restaurants.form.customQRcodeLabel": "بادئة QR",
   "restaurants.form.qrCodeTitle": "بادئة QR",
@@ -1147,14 +1019,12 @@
   "restaurants.form.qrCodeLinkPlaceholder": "ادخل رابط QR",
   "restaurants.form.addQRCode": "اضافة رابط QR",
   "menus.table.menuItems": "العناصر",
-
   "menuItems.title": "عناصر القائمة",
   "menuItems.subtitle": "إدارة عناصر القائمة",
   "menuItems.addNewItem": "إضافة عنصر",
   "menuItems.searchPlaceholder": "البحث بالاسم أو الكود...",
   "menuItems.noDataFound": "لا توجد عناصر",
   "menuItems.errorLoading": "خطأ في تحميل العناصر",
-
   "menuItems.table.itemName": "اسم العنصر",
   "menuItems.table.shortCode": "الكود المختصر",
   "menuItems.table.menu": "القائمة",
@@ -1172,37 +1042,30 @@
   "menuItems.table.actions": "الإجراءات",
   "menuItems.table.edit": "تعديل",
   "menuItems.table.delete": "حذف",
-
   "menuItems.status.active": "نشط",
   "menuItems.status.inactive": "غير نشط",
   "menuItems.status.pos": "نقطة البيع",
   "menuItems.status.platform": "المنصة",
   "menuItems.status.recommended": "موصى به",
   "menuItems.status.combo": "كومبو",
-
   "menuItems.foodTypes.VEG": "نباتي",
   "menuItems.foodTypes.NON_VEG": "غير نباتي",
   "menuItems.foodTypes.VEGAN": "نباتي صرف",
-
   "menuItems.meatTypes.VEG": "نباتي",
   "menuItems.meatTypes.CHICKEN": "دجاج",
   "menuItems.meatTypes.MUTTON": "لحم غنم",
   "menuItems.meatTypes.FISH": "سمك",
-
   "menuItems.discountTypes.Percentage": "نسبة مئوية",
   "menuItems.discountTypes.Fixed Amount": "مبلغ ثابت",
-
   "menuItems.delete.title": "حذف عنصر القائمة",
   "menuItems.delete.description": "هل أنت متأكد من حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء.",
   "menuItems.delete.confirmButton": "حذف العنصر",
-
   "menuItems.form.createTitle": "إنشاء عنصر قائمة",
   "menuItems.form.editTitle": "تعديل عنصر القائمة",
   "menuItems.form.createDescription": "إضافة عنصر جديد إلى القائمة",
   "menuItems.form.editDescription": "تحديث تفاصيل عنصر القائمة",
   "menuItems.form.createButton": "إنشاء العنصر",
   "menuItems.form.updateButton": "تحديث العنصر",
-
   "menuItems.form.sections.basicInfo": "المعلومات الأساسية",
   "menuItems.form.sections.categorization": "التصنيف",
   "menuItems.form.sections.pricing": "التسعير والخصومات",
@@ -1214,7 +1077,6 @@
   "menuItems.form.sections.addOns": "الإضافات",
   "menuItems.form.sections.combo": "إعدادات الكومبو",
   "menuItems.form.sections.images": "الصور",
-
   "menuItems.form.fields.itemNameEn": "اسم العنصر (إنجليزي)",
   "menuItems.form.fields.itemNameAr": "اسم العنصر (عربي)",
   "menuItems.form.fields.descriptionEn": "الوصف (إنجليزي)",
@@ -1262,5 +1124,6 @@
   "menuItems.table.syncToAggregator": "مزامنة مع المجمع",
   "menuItems.table.isCombo": "عنصر كومبو",
   "menuItems.table.discountedPrice": "السعر بعد الخصم",
-  "taxGroups.errorLoading": "ٹیکس گروپس لوڈ کرنے میں خرابی۔"
+  "taxGroups.errorLoading": "ٹیکس گروپس لوڈ کرنے میں خرابی۔",
+  "menuItems.table.image": "الصورة"
 }
