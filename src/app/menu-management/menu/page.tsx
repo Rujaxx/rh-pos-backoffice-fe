@@ -1,43 +1,43 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Layout from "@/components/common/layout";
+import React, { useState, useMemo, useCallback, useRef } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import Layout from '@/components/common/layout';
 
 import {
   CrudModal,
   ConfirmationModal,
   useModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 
 import {
   MenuFormContent,
   useMenuForm,
-} from "@/components/menu-management/menu/menu-form";
+} from '@/components/menu-management/menu/menu-form';
 
-import { TanStackTable } from "@/components/ui/tanstack-table";
+import { TanStackTable } from '@/components/ui/tanstack-table';
 
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { Plus, UtensilsCrossed, Filter } from "lucide-react";
-import { Menu, MenuFormData, MenuQueryParams } from "@/types/menu.type";
-import { useMenus, useMenu } from "@/services/api/menus/menus.queries";
+} from '@tanstack/react-table';
+import { Plus, UtensilsCrossed, Filter } from 'lucide-react';
+import { Menu, MenuFormData, MenuQueryParams } from '@/types/menu.type';
+import { useMenus, useMenu } from '@/services/api/menus/menus.queries';
 import {
   useCreateMenu,
   useDeleteMenu,
   useUpdateMenu,
-} from "@/services/api/menus/menus.mutation";
+} from '@/services/api/menus/menus.mutation';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
   useMenuColumns,
-} from "@/components/menu-management/menu/menu-table-columns";
+} from '@/components/menu-management/menu/menu-table-columns';
 
 export default function MenusPage() {
   const { t } = useTranslation();
@@ -49,16 +49,16 @@ export default function MenusPage() {
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const queryParams = useMemo<MenuQueryParams>(() => {
     const params: MenuQueryParams = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (searchTerm.trim()) {
@@ -67,11 +67,11 @@ export default function MenusPage() {
 
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -108,7 +108,7 @@ export default function MenusPage() {
     data: individualMenuResponse,
     isLoading: isLoadingIndividualMenu,
     isFetching: isFetchingIndividualMenu,
-  } = useMenu(menuId || "", {
+  } = useMenu(menuId || '', {
     enabled: shouldFetchMenu,
   });
 
@@ -140,17 +140,17 @@ export default function MenusPage() {
         try {
           await deleteMenuMutation.mutateAsync(menu._id!);
         } catch (err) {
-          console.error("Failed to delete menu:", err);
+          console.error('Failed to delete menu:', err);
         }
       },
       {
-        title: t("menus.delete.title"),
-        description: t("menus.delete.description", {
+        title: t('menus.delete.title'),
+        description: t('menus.delete.description', {
           name: menu.name.en,
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
-      }
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
+      },
     );
   };
 
@@ -168,10 +168,10 @@ export default function MenusPage() {
 
         closeModal();
       } catch (err) {
-        console.error("Failed to save menu:", err);
+        console.error('Failed to save menu:', err);
       }
     },
-    [latestMenuData, updateMenuMutation, createMenuMutation, closeModal]
+    [latestMenuData, updateMenuMutation, createMenuMutation, closeModal],
   );
 
   const handleSearchChange = useCallback((search: string) => {
@@ -183,7 +183,7 @@ export default function MenusPage() {
     (newPagination: PaginationState) => {
       setPagination(newPagination);
     },
-    []
+    [],
   );
 
   const handleSortingChange = useCallback((newSorting: SortingState) => {
@@ -196,7 +196,7 @@ export default function MenusPage() {
       setColumnFilters(filters);
       setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     },
-    []
+    [],
   );
 
   const isFormLoading =
@@ -213,22 +213,22 @@ export default function MenusPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
               <UtensilsCrossed className="h-6 w-6" />
-              {t("menus.title")}
+              {t('menus.title')}
             </h2>
-            <p className="text-muted-foreground">{t("menus.subtitle")}</p>
+            <p className="text-muted-foreground">{t('menus.subtitle')}</p>
           </div>
 
           <div className="flex items-center space-x-2">
             {/* Add status filter button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active"
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
@@ -236,11 +236,11 @@ export default function MenusPage() {
             >
               <Filter className="h-4 w-4" />
               <span>
-                {statusFilter === "active"
-                  ? t("brands.active")
-                  : statusFilter === "inactive"
-                    ? t("brands.inactive")
-                    : t("brands.allStatus")}
+                {statusFilter === 'active'
+                  ? t('brands.active')
+                  : statusFilter === 'inactive'
+                    ? t('brands.inactive')
+                    : t('brands.allStatus')}
               </span>
             </Button>
             <Button
@@ -248,7 +248,7 @@ export default function MenusPage() {
               className="h-8 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              <span>{t("menus.addMenu")}</span>
+              <span>{t('menus.addMenu')}</span>
             </Button>
           </div>
         </div>
@@ -259,7 +259,7 @@ export default function MenusPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("menus.errorLoading")}: {error.message}
+                  {t('menus.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -269,7 +269,7 @@ export default function MenusPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("menus.searchPlaceholder")}
+                searchPlaceholder={t('menus.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -283,7 +283,7 @@ export default function MenusPage() {
                 showSearch
                 showPagination
                 showPageSizeSelector
-                emptyMessage={t("menus.noDataFound")}
+                emptyMessage={t('menus.noDataFound')}
                 enableMultiSort={false}
               />
             )}
@@ -295,19 +295,19 @@ export default function MenusPage() {
           isOpen={isOpen}
           onClose={closeModal}
           title={
-            latestMenuData ? t("menus.edit.title") : t("menus.create.title")
+            latestMenuData ? t('menus.edit.title') : t('menus.create.title')
           }
           description={
             latestMenuData
-              ? t("menus.edit.description")
-              : t("menus.create.description")
+              ? t('menus.edit.description')
+              : t('menus.create.description')
           }
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           size="xl"
           submitButtonText={
-            latestMenuData ? t("menus.edit.submit") : t("menus.create.submit")
+            latestMenuData ? t('menus.edit.submit') : t('menus.create.submit')
           }
         >
           <MenuFormContent form={form} />

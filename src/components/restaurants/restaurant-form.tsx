@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useForm, UseFormReturn } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
   RHFTimeInput,
@@ -12,34 +12,34 @@ import {
   RHFSelect,
   RHFSwitch,
   RHFAddressForm,
-} from "@/components/ui/form-components";
-import { ImageUpload } from "@/components/ui/image-upload";
-import { UploadFolderType } from "@/types/upload";
+} from '@/components/ui/form-components';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { UploadFolderType } from '@/types/upload';
 import {
   restaurantSchema,
   RestaurantFormData,
-} from "@/lib/validations/restaurant.validation";
-import { Restaurant } from "@/types/restaurant";
+} from '@/lib/validations/restaurant.validation';
+import { Restaurant } from '@/types/restaurant';
 import {
   timeStringToMinutes,
   DEFAULT_TIMES,
   backendTimeToMinutes,
-} from "@/lib/utils/time.utils";
+} from '@/lib/utils/time.utils';
 import {
   getTimezoneOptions,
   getDefaultTimezone,
-} from "@/lib/utils/timezone.utils";
-import { useActiveBrands } from "@/services/api/brands/brands.queries";
-import { useI18n } from "@/providers/i18n-provider";
+} from '@/lib/utils/timezone.utils';
+import { useActiveBrands } from '@/services/api/brands/brands.queries';
+import { useI18n } from '@/providers/i18n-provider';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Button } from "../ui/button";
-import { COUNTRY_CODES } from "@/mock/dropdown-constants";
+} from '../ui/form';
+import { Button } from '../ui/button';
+import { COUNTRY_CODES } from '@/mock/dropdown-constants';
 
 interface RestaurantFormContentProps {
   form: UseFormReturn<RestaurantFormData>;
@@ -67,28 +67,28 @@ export function RestaurantFormContent({
   const timezoneOptions = getTimezoneOptions(t);
 
   const resetOptions = [
-    { value: "daily", label: t("restaurants.form.resetBill.daily") },
-    { value: "weekly", label: t("restaurants.form.resetBill.weekly") },
-    { value: "monthly", label: t("restaurants.form.resetBill.monthly") },
-    { value: "yearly", label: t("restaurants.form.resetBill.yearly") },
+    { value: 'daily', label: t('restaurants.form.resetBill.daily') },
+    { value: 'weekly', label: t('restaurants.form.resetBill.weekly') },
+    { value: 'monthly', label: t('restaurants.form.resetBill.monthly') },
+    { value: 'yearly', label: t('restaurants.form.resetBill.yearly') },
   ];
 
   const smsWhatsappOptions = [
-    { value: "none", label: t("restaurants.form.smsWhatsapp.none") },
-    { value: "sms", label: t("restaurants.form.smsWhatsapp.sms") },
-    { value: "whatsapp", label: t("restaurants.form.smsWhatsapp.whatsapp") },
-    { value: "both", label: t("restaurants.form.smsWhatsapp.both") },
+    { value: 'none', label: t('restaurants.form.smsWhatsapp.none') },
+    { value: 'sms', label: t('restaurants.form.smsWhatsapp.sms') },
+    { value: 'whatsapp', label: t('restaurants.form.smsWhatsapp.whatsapp') },
+    { value: 'both', label: t('restaurants.form.smsWhatsapp.both') },
   ];
 
-  const [rawPhones, setRawPhones] = useState("");
-  const [rawEmails, setRawEmails] = useState("");
+  const [rawPhones, setRawPhones] = useState('');
+  const [rawEmails, setRawEmails] = useState('');
 
   useEffect(() => {
     if (editingRestaurant?.notificationPhone) {
-      setRawPhones(editingRestaurant.notificationPhone.join(", "));
+      setRawPhones(editingRestaurant.notificationPhone.join(', '));
     }
     if (editingRestaurant?.notificationEmails) {
-      setRawEmails(editingRestaurant.notificationEmails.join(", "));
+      setRawEmails(editingRestaurant.notificationEmails.join(', '));
     }
   }, [editingRestaurant]);
 
@@ -99,41 +99,41 @@ export function RestaurantFormContent({
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("restaurants.form.basicInfo")}
+              {t('restaurants.form.basicInfo')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <RHFMultilingualInput
               form={form}
               name="name"
-              label={t("restaurants.form.restaurantNameLabel")}
+              label={t('restaurants.form.restaurantNameLabel')}
               placeholder={{
-                en: t("restaurants.form.restaurantNamePlaceholderEn"),
-                ar: t("restaurants.form.restaurantNamePlaceholderAr"),
+                en: t('restaurants.form.restaurantNamePlaceholderEn'),
+                ar: t('restaurants.form.restaurantNamePlaceholderAr'),
               }}
             />
 
             <RHFMultilingualInput
               form={form}
               name="description"
-              label={t("restaurants.form.descriptionLabel")}
+              label={t('restaurants.form.descriptionLabel')}
               type="textarea"
               placeholder={{
-                en: t("restaurants.form.descriptionPlaceholderEn"),
-                ar: t("restaurants.form.descriptionPlaceholderAr"),
+                en: t('restaurants.form.descriptionPlaceholderEn'),
+                ar: t('restaurants.form.descriptionPlaceholderAr'),
               }}
             />
 
             <RHFSelect
               form={form}
               name="brandId"
-              label={t("restaurants.form.brandLabel")}
+              label={t('restaurants.form.brandLabel')}
               placeholder={
                 isLoadingBrands
-                  ? t("common.loading")
+                  ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t("common.noBrandsAvailable")
-                    : t("common.brandPlaceholder")
+                    ? t('common.noBrandsAvailable')
+                    : t('common.brandPlaceholder')
               }
               options={brandOptions}
               disabled={isLoadingBrands}
@@ -142,16 +142,16 @@ export function RestaurantFormContent({
             <ImageUpload
               form={form}
               name="logo"
-              label={t("restaurants.form.logoLabel")}
-              description={t("restaurants.form.logoDescription")}
+              label={t('restaurants.form.logoLabel')}
+              description={t('restaurants.form.logoDescription')}
               folderType={UploadFolderType.RESTAURANT}
             />
 
             <RHFSwitch
               form={form}
               name="isActive"
-              label={t("restaurants.form.activeStatusLabel")}
-              description={t("restaurants.form.activeStatusDescription")}
+              label={t('restaurants.form.activeStatusLabel')}
+              description={t('restaurants.form.activeStatusDescription')}
             />
           </CardContent>
         </Card>
@@ -162,7 +162,7 @@ export function RestaurantFormContent({
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">
-                {t("restaurants.form.systemConfig")}
+                {t('restaurants.form.systemConfig')}
               </CardTitle>
             </CardHeader>
 
@@ -170,8 +170,8 @@ export function RestaurantFormContent({
               <RHFSelect
                 form={form}
                 name="timezone"
-                label={t("restaurants.form.timezoneLabel")}
-                placeholder={t("restaurants.form.timezonePlaceholder")}
+                label={t('restaurants.form.timezoneLabel')}
+                placeholder={t('restaurants.form.timezonePlaceholder')}
                 options={timezoneOptions}
               />
 
@@ -179,33 +179,33 @@ export function RestaurantFormContent({
                 <RHFTimeInput
                   form={form}
                   name="startDayTime"
-                  label={t("restaurants.form.startDayTimeLabel")}
+                  label={t('restaurants.form.startDayTimeLabel')}
                   placeholder="10:00"
-                  description={t("restaurants.form.startDayTimeDescription")}
+                  description={t('restaurants.form.startDayTimeDescription')}
                 />
 
                 <RHFTimeInput
                   form={form}
                   name="endDayTime"
-                  label={t("restaurants.form.endDayTimeLabel")}
+                  label={t('restaurants.form.endDayTimeLabel')}
                   placeholder="23:00"
-                  description={t("restaurants.form.endDayTimeDescription")}
+                  description={t('restaurants.form.endDayTimeDescription')}
                 />
               </div>
               <RHFInput
                 form={form}
                 name="restoCode"
-                label={t("restaurants.form.restoCodeLabel")}
-                placeholder={t("restaurants.form.restoCodePlaceholder")}
-                description={t("restaurants.form.restoCodeDescription")}
+                label={t('restaurants.form.restoCodeLabel')}
+                placeholder={t('restaurants.form.restoCodePlaceholder')}
+                description={t('restaurants.form.restoCodeDescription')}
               />
 
               <RHFInput
                 form={form}
                 name="trnOrGstNo"
-                label={t("restaurants.form.trnOrGstNoLabel")}
-                placeholder={t("restaurants.form.trnOrGstNoPlaceholder")}
-                description={t("restaurants.form.trnOrGstNoDescription")}
+                label={t('restaurants.form.trnOrGstNoLabel')}
+                placeholder={t('restaurants.form.trnOrGstNoPlaceholder')}
+                description={t('restaurants.form.trnOrGstNoDescription')}
               />
             </CardContent>
           </Card>
@@ -214,7 +214,7 @@ export function RestaurantFormContent({
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">
-                {t("restaurants.form.autoResetSettings")}
+                {t('restaurants.form.autoResetSettings')}
               </CardTitle>
             </CardHeader>
 
@@ -223,16 +223,16 @@ export function RestaurantFormContent({
                 <RHFSelect
                   form={form}
                   name="nextResetBillFreq"
-                  label={t("restaurants.form.nextResetBillLabel")}
-                  placeholder={t("restaurants.form.nextResetBillPlaceholder")}
+                  label={t('restaurants.form.nextResetBillLabel')}
+                  placeholder={t('restaurants.form.nextResetBillPlaceholder')}
                   options={resetOptions}
                 />
 
                 <RHFInput
                   form={form}
                   name="billPrefix"
-                  label={t("restaurants.form.billPrefixLabel")}
-                  placeholder={t("restaurants.form.billPrefixPlaceholder")}
+                  label={t('restaurants.form.billPrefixLabel')}
+                  placeholder={t('restaurants.form.billPrefixPlaceholder')}
                 />
               </div>
 
@@ -240,23 +240,23 @@ export function RestaurantFormContent({
                 form={form}
                 type="date"
                 name="nextResetBillDate"
-                label={t("restaurants.form.nextResetBillDateLabel")}
+                label={t('restaurants.form.nextResetBillDateLabel')}
               />
 
               <div className="grid grid-cols-2 gap-4">
                 <RHFSelect
                   form={form}
                   name="nextResetKotFreq"
-                  label={t("restaurants.form.nextResetKotLabel")}
-                  placeholder={t("restaurants.form.nextResetKotPlaceholder")}
+                  label={t('restaurants.form.nextResetKotLabel')}
+                  placeholder={t('restaurants.form.nextResetKotPlaceholder')}
                   options={resetOptions}
                 />
 
                 <RHFInput
                   form={form}
                   name="kotPrefix"
-                  label={t("restaurants.form.kotPrefixLabel")}
-                  placeholder={t("restaurants.form.kotPrefixPlaceholder")}
+                  label={t('restaurants.form.kotPrefixLabel')}
+                  placeholder={t('restaurants.form.kotPrefixPlaceholder')}
                 />
               </div>
             </CardContent>
@@ -268,14 +268,14 @@ export function RestaurantFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t("restaurants.form.addressLabel")}
+            {t('restaurants.form.addressLabel')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <RHFAddressForm
             form={form}
             name="address"
-            label={t("restaurants.form.addressLabel")}
+            label={t('restaurants.form.addressLabel')}
           />
         </CardContent>
       </Card>
@@ -285,38 +285,38 @@ export function RestaurantFormContent({
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("restaurants.form.posSettings")}
+              {t('restaurants.form.posSettings')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <RHFSwitch
               form={form}
               name="posLogoutOnClose"
-              label={t("restaurants.form.posLogoutOnCloseLabel")}
-              description={t("restaurants.form.posLogoutOnCloseDescription")}
+              label={t('restaurants.form.posLogoutOnCloseLabel')}
+              description={t('restaurants.form.posLogoutOnCloseDescription')}
             />
 
             <RHFSwitch
               form={form}
               name="autoUpdatePos"
-              label={t("restaurants.form.autoUpdatePosLabel")}
-              description={t("restaurants.form.autoUpdatePosDescription")}
+              label={t('restaurants.form.autoUpdatePosLabel')}
+              description={t('restaurants.form.autoUpdatePosDescription')}
             />
 
             <RHFSwitch
               form={form}
               name="generateOrderTypeWiseOrderNo"
-              label={t("restaurants.form.generateOrderTypeWiseOrderNoLabel")}
+              label={t('restaurants.form.generateOrderTypeWiseOrderNoLabel')}
               description={t(
-                "restaurants.form.generateOrderTypeWiseOrderNoDescription"
+                'restaurants.form.generateOrderTypeWiseOrderNoDescription',
               )}
             />
 
             <RHFSwitch
               form={form}
               name="isFeedBackActive"
-              label={t("restaurants.form.isFeedBackActiveLabel")}
-              description={t("restaurants.form.isFeedBackActiveDescription")}
+              label={t('restaurants.form.isFeedBackActiveLabel')}
+              description={t('restaurants.form.isFeedBackActiveDescription')}
             />
           </CardContent>
         </Card>
@@ -325,38 +325,24 @@ export function RestaurantFormContent({
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("restaurants.form.businessSettings")}
+              {t('restaurants.form.businessSettings')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <RHFSwitch
               form={form}
               name="deductFromInventory"
-              label={t("restaurants.form.deductFromInventoryLabel")}
-              description={t("restaurants.form.deductFromInventoryDescription")}
+              label={t('restaurants.form.deductFromInventoryLabel')}
+              description={t('restaurants.form.deductFromInventoryDescription')}
             />
 
             <RHFSwitch
               form={form}
               name="multiplePriceSetting"
-              label={t("restaurants.form.multiplePriceSettingLabel")}
+              label={t('restaurants.form.multiplePriceSettingLabel')}
               description={t(
-                "restaurants.form.multiplePriceSettingDescription"
+                'restaurants.form.multiplePriceSettingDescription',
               )}
-            />
-
-            <RHFSwitch
-              form={form}
-              name="tableReservation"
-              label={t("restaurants.form.tableReservationLabel")}
-              description={t("restaurants.form.tableReservationDescription")}
-            />
-
-            <RHFSwitch
-              form={form}
-              name="allowMultipleTax"
-              label={t("restaurants.form.allowMultipleTaxLabel")}
-              description={t("restaurants.form.allowMultipleTaxDescription")}
             />
           </CardContent>
         </Card>
@@ -367,7 +353,7 @@ export function RestaurantFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t("restaurants.form.contactInfo")}
+            {t('restaurants.form.contactInfo')}
           </CardTitle>
         </CardHeader>
 
@@ -378,7 +364,7 @@ export function RestaurantFormContent({
             <RHFSelect
               form={form}
               name="countryCode"
-              label={t("common.form.countryCode") || "Code"}
+              label={t('common.form.countryCode') || 'Code'}
               placeholder="+91"
               options={COUNTRY_CODES}
               defaultValue={COUNTRY_CODES[0].value}
@@ -386,8 +372,8 @@ export function RestaurantFormContent({
             <RHFInput
               form={form}
               name="phoneNumber"
-              label={t("common.form.phoneLabel")}
-              placeholder={t("common.form.phonePlaceholder")}
+              label={t('common.form.phoneLabel')}
+              placeholder={t('common.form.phonePlaceholder')}
               type="tel"
               className="col-span-2"
             />
@@ -395,8 +381,8 @@ export function RestaurantFormContent({
           <RHFInput
             form={form}
             name="contactEmail"
-            label={t("common.form.contactEmailLabel")}
-            placeholder={t("common.form.contactEmailPlaceholder")}
+            label={t('common.form.contactEmailLabel')}
+            placeholder={t('common.form.contactEmailPlaceholder')}
             type="tel"
             className="w-80"
           />
@@ -406,7 +392,7 @@ export function RestaurantFormContent({
             name="notificationPhone"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel>{t("restaurants.form.notificationPhone")}</FormLabel>
+                <FormLabel>{t('restaurants.form.notificationPhone')}</FormLabel>
                 <FormControl>
                   <input
                     type="text"
@@ -415,17 +401,17 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawPhones}
                     placeholder={t(
-                      "restaurants.form.notificationPhonePlaceholder"
+                      'restaurants.form.notificationPhonePlaceholder',
                     )}
                     onChange={(e) => setRawPhones(e.target.value)}
                     onBlur={() => {
                       const values = rawPhones
-                        .split(",")
+                        .split(',')
                         .map((v) => v.trim())
                         .filter((v) => v.length > 0);
 
                       field.onChange(values); // push array into form
-                      setRawPhones(values.join(", ")); // reformat nicely
+                      setRawPhones(values.join(', ')); // reformat nicely
                     }}
                   />
                 </FormControl>
@@ -440,7 +426,7 @@ export function RestaurantFormContent({
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel>
-                  {t("restaurants.form.notificationEmails")}
+                  {t('restaurants.form.notificationEmails')}
                 </FormLabel>
                 <FormControl>
                   <input
@@ -450,17 +436,17 @@ export function RestaurantFormContent({
            focus-visible:ring-2 focus-visible:ring-ring"
                     value={rawEmails}
                     placeholder={t(
-                      "restaurants.form.notificationEmailsPlaceholder"
+                      'restaurants.form.notificationEmailsPlaceholder',
                     )}
                     onChange={(e) => setRawEmails(e.target.value)}
                     onBlur={() => {
                       const values = rawEmails
-                        .split(",")
+                        .split(',')
                         .map((v) => v.trim())
                         .filter((v) => v.length > 0);
 
                       field.onChange(values);
-                      setRawEmails(values.join(", "));
+                      setRawEmails(values.join(', '));
                     }}
                   />
                 </FormControl>
@@ -475,7 +461,7 @@ export function RestaurantFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t("restaurants.form.qrCodeSettings")}
+            {t('restaurants.form.qrCodeSettings')}
           </CardTitle>
         </CardHeader>
 
@@ -483,23 +469,23 @@ export function RestaurantFormContent({
           {/* Custom QR Codes */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <FormLabel>{t("restaurants.form.customQRcodeLabel")}</FormLabel>
+              <FormLabel>{t('restaurants.form.customQRcodeLabel')}</FormLabel>
               <Button
                 type="button"
                 size="sm"
                 onClick={() => {
-                  const items = form.getValues("customQRcode") || [];
-                  form.setValue("customQRcode", [
+                  const items = form.getValues('customQRcode') || [];
+                  form.setValue('customQRcode', [
                     ...items,
-                    { qrCodeTitle: "", qrCodeLink: "" },
+                    { qrCodeTitle: '', qrCodeLink: '' },
                   ]);
                 }}
               >
-                {t("restaurants.form.addQRCode")}
+                {t('restaurants.form.addQRCode')}
               </Button>
             </div>
 
-            {(form.watch("customQRcode") || []).map((item, index) => (
+            {(form.watch('customQRcode') || []).map((item, index) => (
               <div
                 key={index}
                 className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-md bg-secondary"
@@ -507,8 +493,8 @@ export function RestaurantFormContent({
                 <RHFInput
                   form={form}
                   name={`customQRcode.${index}.qrCodeTitle`}
-                  label={t("restaurants.form.qrCodeTitle")}
-                  placeholder={t("restaurants.form.qrCodeTitlePlaceholder")}
+                  label={t('restaurants.form.qrCodeTitle')}
+                  placeholder={t('restaurants.form.qrCodeTitlePlaceholder')}
                 />
 
                 <div className="flex items-start gap-2">
@@ -516,8 +502,8 @@ export function RestaurantFormContent({
                     <RHFInput
                       form={form}
                       name={`customQRcode.${index}.qrCodeLink`}
-                      label={t("restaurants.form.qrCodeLink")}
-                      placeholder={t("restaurants.form.qrCodeLinkPlaceholder")}
+                      label={t('restaurants.form.qrCodeLink')}
+                      placeholder={t('restaurants.form.qrCodeLinkPlaceholder')}
                     />
                   </div>
 
@@ -527,9 +513,9 @@ export function RestaurantFormContent({
                     size="icon"
                     className="mt-6"
                     onClick={() => {
-                      const items = form.getValues("customQRcode") || [];
+                      const items = form.getValues('customQRcode') || [];
                       items.splice(index, 1);
-                      form.setValue("customQRcode", [...items]);
+                      form.setValue('customQRcode', [...items]);
                     }}
                   >
                     ✕
@@ -545,16 +531,16 @@ export function RestaurantFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t("restaurants.form.communicationSettings")}
+            {t('restaurants.form.communicationSettings')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <RHFSelect
             form={form}
             name="smsAndWhatsappSelection"
-            label={t("restaurants.form.smsAndWhatsappSelectionLabel")}
+            label={t('restaurants.form.smsAndWhatsappSelectionLabel')}
             placeholder={t(
-              "restaurants.form.smsAndWhatsappSelectionPlaceholder"
+              'restaurants.form.smsAndWhatsappSelectionPlaceholder',
             )}
             options={smsWhatsappOptions}
           />
@@ -562,31 +548,31 @@ export function RestaurantFormContent({
           <RHFInput
             form={form}
             name="whatsAppChannel"
-            label={t("restaurants.form.whatsAppChannelLabel")}
-            placeholder={t("restaurants.form.whatsAppChannelPlaceholder")}
-            description={t("restaurants.form.whatsAppChannelDescription")}
+            label={t('restaurants.form.whatsAppChannelLabel')}
+            placeholder={t('restaurants.form.whatsAppChannelPlaceholder')}
+            description={t('restaurants.form.whatsAppChannelDescription')}
           />
 
           {/* Send Reports Settings */}
           <div className="space-y-3">
             <h4 className="font-medium">
-              {t("restaurants.form.sendReportsLabel")}
+              {t('restaurants.form.sendReportsLabel')}
             </h4>
             <div className="grid grid-cols-3 gap-4">
               <RHFSwitch
                 form={form}
                 name="sendReports.email"
-                label={t("restaurants.form.sendReports.email")}
+                label={t('restaurants.form.sendReports.email')}
               />
               <RHFSwitch
                 form={form}
                 name="sendReports.whatsapp"
-                label={t("restaurants.form.sendReports.whatsapp")}
+                label={t('restaurants.form.sendReports.whatsapp')}
               />
               <RHFSwitch
                 form={form}
                 name="sendReports.sms"
-                label={t("restaurants.form.sendReports.sms")}
+                label={t('restaurants.form.sendReports.sms')}
               />
             </div>
           </div>
@@ -594,18 +580,18 @@ export function RestaurantFormContent({
           {/* Payment Link Settings */}
           <div className="space-y-3">
             <h4 className="font-medium">
-              {t("restaurants.form.paymentLinkSettingsLabel")}
+              {t('restaurants.form.paymentLinkSettingsLabel')}
             </h4>
             <div className="grid grid-cols-2 gap-4">
               <RHFSwitch
                 form={form}
                 name="paymentLinkSettings.onWhatsapp"
-                label={t("restaurants.form.paymentLinkSettings.onWhatsapp")}
+                label={t('restaurants.form.paymentLinkSettings.onWhatsapp')}
               />
               <RHFSwitch
                 form={form}
                 name="paymentLinkSettings.onSms"
-                label={t("restaurants.form.paymentLinkSettings.onSms")}
+                label={t('restaurants.form.paymentLinkSettings.onSms')}
               />
             </div>
           </div>
@@ -613,23 +599,23 @@ export function RestaurantFormContent({
           {/* E-Bill Settings */}
           <div className="space-y-3">
             <h4 className="font-medium">
-              {t("restaurants.form.eBillSettingsLabel")}
+              {t('restaurants.form.eBillSettingsLabel')}
             </h4>
             <div className="grid grid-cols-3 gap-4">
               <RHFSwitch
                 form={form}
                 name="eBillSettings.onEmail"
-                label={t("restaurants.form.eBillSettings.onEmail")}
+                label={t('restaurants.form.eBillSettings.onEmail')}
               />
               <RHFSwitch
                 form={form}
                 name="eBillSettings.onWhatsapp"
-                label={t("restaurants.form.eBillSettings.onWhatsapp")}
+                label={t('restaurants.form.eBillSettings.onWhatsapp')}
               />
               <RHFSwitch
                 form={form}
                 name="eBillSettings.onSms"
-                label={t("restaurants.form.eBillSettings.onSms")}
+                label={t('restaurants.form.eBillSettings.onSms')}
               />
             </div>
           </div>
@@ -647,45 +633,45 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
   const form = useForm<RestaurantFormData>({
     resolver: zodResolver(restaurantSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
-      description: { en: "", ar: "" },
-      brandId: "",
+      name: { en: '', ar: '' },
+      description: { en: '', ar: '' },
+      brandId: '',
       isActive: true, // Backend default: true
-      logo: "",
+      logo: '',
       address: {
-        addressLine1: "",
-        addressLine2: "",
-        city: "",
-        location: "",
-        state: "",
-        country: "",
-        pincode: "",
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        location: '',
+        state: '',
+        country: '',
+        pincode: '',
       },
       timezone: getDefaultTimezone(), // Auto-detect user's timezone
       startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME), // 10:00 -> 600 minutes
       endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME), // 23:00 -> 1380 minutes
-      nextResetBillFreq: "daily",
+      nextResetBillFreq: 'daily',
       nextResetBillDate: undefined,
-      nextResetKotFreq: "daily",
+      nextResetKotFreq: 'daily',
       notificationPhone: [],
       phoneNumber: null,
       contactEmail: null,
-      countryCode: "",
+      countryCode: '',
       notificationEmails: [],
-      restoCode: "",
+      restoCode: '',
       posLogoutOnClose: true, // Backend default: true
       isFeedBackActive: false, // Backend default: false
-      trnOrGstNo: "",
+      trnOrGstNo: '',
       customQRcode: [],
-      inventoryWarehouse: "",
+      inventoryWarehouse: '',
       deductFromInventory: true, // Backend default: true
       multiplePriceSetting: false, // Backend default: false
       tableReservation: false, // Backend default: false
       autoUpdatePos: true, // Backend default: true
       allowMultipleTax: false, // Backend default: false
       generateOrderTypeWiseOrderNo: false, // Backend default: false
-      smsAndWhatsappSelection: "none", // Backend default: NONE
-      whatsAppChannel: "",
+      smsAndWhatsappSelection: 'none', // Backend default: NONE
+      whatsAppChannel: '',
       sendReports: {
         email: false, // Backend default: false
         whatsapp: false, // Backend default: false
@@ -700,8 +686,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         onWhatsapp: false, // Backend default: false
         onSms: false, // Backend default: false
       },
-      billPrefix: "",
-      kotPrefix: "",
+      billPrefix: '',
+      kotPrefix: '',
     },
   });
 
@@ -709,12 +695,12 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
   React.useEffect(() => {
     if (editingRestaurant) {
       const resetFreq =
-        editingRestaurant.nextResetBillFreq === "daily" ||
-        editingRestaurant.nextResetBillFreq === "weekly" ||
-        editingRestaurant.nextResetBillFreq === "monthly" ||
-        editingRestaurant.nextResetBillFreq === "yearly"
+        editingRestaurant.nextResetBillFreq === 'daily' ||
+        editingRestaurant.nextResetBillFreq === 'weekly' ||
+        editingRestaurant.nextResetBillFreq === 'monthly' ||
+        editingRestaurant.nextResetBillFreq === 'yearly'
           ? editingRestaurant.nextResetBillFreq
-          : "daily";
+          : 'daily';
 
       form.reset({
         _id: editingRestaurant._id,
@@ -722,7 +708,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         description: editingRestaurant.description,
         brandId: editingRestaurant.brandId,
         isActive: editingRestaurant.isActive ?? true,
-        logo: editingRestaurant.logo || "",
+        logo: editingRestaurant.logo || '',
         address: editingRestaurant.address,
         timezone: editingRestaurant.timezone,
         startDayTime: backendTimeToMinutes(editingRestaurant.startDayTime),
@@ -736,13 +722,13 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         nextResetKotFreq: resetFreq,
         phoneNumber: editingRestaurant.phoneNumber || null,
         contactEmail: editingRestaurant.contactEmail || null,
-        countryCode: editingRestaurant.countryCode || "",
+        countryCode: editingRestaurant.countryCode || '',
         notificationPhone: editingRestaurant.notificationPhone || [],
         notificationEmails: editingRestaurant.notificationEmails || [],
-        restoCode: editingRestaurant.restoCode || "",
+        restoCode: editingRestaurant.restoCode || '',
         posLogoutOnClose: editingRestaurant.posLogoutOnClose ?? true,
         isFeedBackActive: editingRestaurant.isFeedBackActive ?? false,
-        trnOrGstNo: editingRestaurant.trnOrGstNo || "",
+        trnOrGstNo: editingRestaurant.trnOrGstNo || '',
         customQRcode: editingRestaurant.customQRcode || [],
         deductFromInventory: editingRestaurant.deductFromInventory ?? true,
         multiplePriceSetting: editingRestaurant.multiplePriceSetting ?? false,
@@ -757,8 +743,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         generateOrderTypeWiseOrderNo:
           editingRestaurant.generateOrderTypeWiseOrderNo ?? false,
         smsAndWhatsappSelection:
-          editingRestaurant.smsAndWhatsappSelection || "none",
-        whatsAppChannel: editingRestaurant.whatsAppChannel || "",
+          editingRestaurant.smsAndWhatsappSelection || 'none',
+        whatsAppChannel: editingRestaurant.whatsAppChannel || '',
         paymentLinkSettings: editingRestaurant.paymentLinkSettings || {
           onWhatsapp: false,
           onSms: false,
@@ -773,37 +759,37 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
       });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
-        description: { en: "", ar: "" },
-        brandId: "",
+        name: { en: '', ar: '' },
+        description: { en: '', ar: '' },
+        brandId: '',
         isActive: true,
-        logo: "",
+        logo: '',
         address: {
-          addressLine1: "",
-          addressLine2: "",
-          city: "",
-          location: "",
-          state: "",
-          country: "",
-          pincode: "",
+          addressLine1: '',
+          addressLine2: '',
+          city: '',
+          location: '',
+          state: '',
+          country: '',
+          pincode: '',
         },
         timezone: getDefaultTimezone(),
         startDayTime: timeStringToMinutes(DEFAULT_TIMES.START_TIME),
         endDayTime: timeStringToMinutes(DEFAULT_TIMES.END_TIME),
-        nextResetBillFreq: "daily",
+        nextResetBillFreq: 'daily',
         nextResetBillDate: undefined,
-        nextResetKotFreq: "daily",
+        nextResetKotFreq: 'daily',
         phoneNumber: null,
         contactEmail: null,
-        countryCode: "",
+        countryCode: '',
         notificationPhone: [],
         notificationEmails: [],
-        restoCode: "",
+        restoCode: '',
         posLogoutOnClose: true,
         isFeedBackActive: false,
-        trnOrGstNo: "",
+        trnOrGstNo: '',
         customQRcode: [],
-        inventoryWarehouse: "",
+        inventoryWarehouse: '',
         deductFromInventory: true,
         multiplePriceSetting: false,
         tableReservation: false,
@@ -815,8 +801,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         },
         allowMultipleTax: false,
         generateOrderTypeWiseOrderNo: false,
-        smsAndWhatsappSelection: "none",
-        whatsAppChannel: "",
+        smsAndWhatsappSelection: 'none',
+        whatsAppChannel: '',
         paymentLinkSettings: {
           onWhatsapp: false,
           onSms: false,
@@ -826,8 +812,8 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
           onWhatsapp: false,
           onSms: false,
         },
-        billPrefix: "",
-        kotPrefix: "",
+        billPrefix: '',
+        kotPrefix: '',
       });
     }
   }, [editingRestaurant, form]);

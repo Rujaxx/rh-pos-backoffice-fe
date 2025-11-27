@@ -8,25 +8,12 @@ const getBaseUrl = (): string => {
   if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
 
   // Production fallback (update with your actual production API URL)
-  if (process.env.NODE_ENV === "production") {
-    return process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com';
   }
 
   // Development fallback - your backend API server
-  return "http://localhost:3000";
-};
-
-/**
- * Get S3 upload base URL based on environment
- */
-const getS3UploadBaseUrl = (): string => {
-  // Production environment
-  if (process.env.NODE_ENV === "production") {
-    return "https://rhpos-uploads-production.s3.me-central-1.amazonaws.com";
-  }
-
-  // Development environment
-  return "https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com";
+  return 'http://localhost:3000';
 };
 
 const baseUrl = getBaseUrl();
@@ -34,7 +21,6 @@ const fullApiUrl = `${baseUrl}/api/v1`;
 
 export const API_CONFIG = {
   BASE_URL: fullApiUrl,
-  S3_UPLOAD_BASE_URL: getS3UploadBaseUrl(),
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000, // 1 second
@@ -43,166 +29,178 @@ export const API_CONFIG = {
 // API endpoints
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: "/auth/login",
-    LOGOUT: "/auth/logout",
-    REFRESH: "/auth/refresh",
-    ME: "/auth/me",
+    LOGIN: '/auth/login',
+    LOGOUT: '/auth/logout',
+    REFRESH: '/auth/refresh',
+    ME: '/auth/me',
   },
   USERS: {
-    LIST: "/users",
-    CREATE: "/users",
+    LIST: '/users',
+    CREATE: '/users',
     UPDATE: (id: string) => `/users/${id}`,
     DELETE: (id: string) => `/users/${id}`,
     GET: (id: string) => `/users/${id}`,
   },
   ROLES: {
-    LIST: "/roles",
-    CREATE: "/roles",
+    LIST: '/roles',
+    CREATE: '/roles',
     UPDATE: (id: string) => `/roles/${id}`,
     DELETE: (id: string) => `/roles/${id}`,
     GET: (id: string) => `/roles/${id}`,
   },
   PERMISSIONS: {
-    LIST: "/permissions/modules",
+    LIST: '/permissions/modules',
     GET: (id: string) => `/permissions/${id}`,
   },
   BRANDS: {
-    LIST: "/brands",
-    CREATE: "/brands",
+    LIST: '/brands',
+    CREATE: '/brands',
     UPDATE: (id: string) => `/brands/${id}`,
     DELETE: (id: string) => `/brands/${id}`,
     GET: (id: string) => `/brands/${id}`,
   },
   RESTAURANTS: {
-    LIST: "/restaurants",
-    CREATE: "/restaurants",
+    LIST: '/restaurants',
+    CREATE: '/restaurants',
     UPDATE: (id: string) => `/restaurants/${id}`,
     DELETE: (id: string) => `/restaurants/${id}`,
     GET: (id: string) => `/restaurants/${id}`,
   },
   MENUS: {
-    LIST: "/menus",
-    CREATE: "/menus",
+    LIST: '/menus',
+    CREATE: '/menus',
     UPDATE: (id: string) => `/menus/${id}`,
     DELETE: (id: string) => `/menus/${id}`,
     GET: (id: string) => `/menus/${id}`,
   },
   CATEGORIES: {
-    LIST: "/categories",
-    CREATE: "/categories",
+    LIST: '/categories',
+    CREATE: '/categories',
     UPDATE: (id: string) => `/categories/${id}`,
     DELETE: (id: string) => `/categories/${id}`,
     GET: (id: string) => `/categories/${id}`,
   },
   MENU_ITEMS: {
-    LIST: "/menu-items",
-    CREATE: "/menu-items",
+    LIST: '/menu-items',
+    CREATE: '/menu-items',
     UPDATE: (id: string) => `/menu-items/${id}`,
     DELETE: (id: string) => `/menu-items/${id}`,
     GET: (id: string) => `/menu-items/${id}`,
   },
   KITCHEN_DEPARTMENTS: {
-    LIST: "/kitchen-departments",
-    CREATE: "/kitchen-departments",
+    LIST: '/kitchen-departments',
+    CREATE: '/kitchen-departments',
     UPDATE: (id: string) => `/kitchen-departments/${id}`,
     DELETE: (id: string) => `/kitchen-departments/${id}`,
     GET: (id: string) => `/kitchen-departments/${id}`,
   },
   TABLES: {
-    LIST: "/tables",
-    CREATE: "/tables",
+    LIST: '/tables',
+    CREATE: '/tables',
     UPDATE: (id: string) => `/tables/${id}`,
     DELETE: (id: string) => `/tables/${id}`,
     GET: (id: string) => `/tables/${id}`,
   },
   TABLE_SECTIONS: {
-    LIST: "/table-sections",
-    CREATE: "/table-sections",
+    LIST: '/table-sections',
+    CREATE: '/table-sections',
     UPDATE: (id: string) => `/table-sections/${id}`,
     DELETE: (id: string) => `/table-sections/${id}`,
     GET: (id: string) => `/table-sections/${id}`,
   },
   UPLOAD: {
-    IMAGE: "/upload/image",
-    IMAGES_MULTIPLE: "/upload/images/multiple",
-    CONFIRM: "/upload/confirm",
-    DELETE_TEMPORARY: "/upload/temporary",
+    IMAGE: '/upload/image',
+    IMAGES_MULTIPLE: '/upload/images/multiple',
+    CONFIRM: '/upload/confirm',
+    DELETE_TEMPORARY: '/upload/temporary',
   },
   TAX_PRODUCT_GROUPS: {
-    LIST: "/tax-product-groups",
-    CREATE: "/tax-product-groups",
+    LIST: '/tax-product-groups',
+    CREATE: '/tax-product-groups',
     UPDATE: (id: string) => `/tax-product-groups/${id}`,
     DELETE: (id: string) => `/tax-product-groups/${id}`,
     GET: (id: string) => `/tax-product-groups/${id}`,
+  },
+  IMAGE_LIBRARY: {
+    LIST: '/image-library',
+    CREATE: '/image-library',
+    UPDATE: (id: string) => `/image-library/${id}`,
+    DELETE: (id: string) => `/image-library/${id}`,
+    GET: (id: string) => `/image-library/${id}`,
   },
 } as const;
 
 // Query keys for consistent caching
 export const QUERY_KEYS = {
   AUTH: {
-    ME: ["auth", "me"] as const,
+    ME: ['auth', 'me'] as const,
   },
   USERS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["users", "list", params] as const,
-    DETAIL: (id: string) => ["users", "detail", id] as const,
+      ['users', 'list', params] as const,
+    DETAIL: (id: string) => ['users', 'detail', id] as const,
   },
   ROLES: {
     LIST: (params?: Record<string, unknown>) =>
-      ["roles", "list", params] as const,
-    DETAIL: (id: string) => ["roles", "detail", id] as const,
+      ['roles', 'list', params] as const,
+    DETAIL: (id: string) => ['roles', 'detail', id] as const,
   },
   PERMISSIONS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["permissions", "list", params] as const,
-    DETAIL: (id: string) => ["permissions", "detail", id] as const,
+      ['permissions', 'list', params] as const,
+    DETAIL: (id: string) => ['permissions', 'detail', id] as const,
   },
   BRANDS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["brands", "list", params] as const,
-    DETAIL: (id: string) => ["brands", "detail", id] as const,
+      ['brands', 'list', params] as const,
+    DETAIL: (id: string) => ['brands', 'detail', id] as const,
   },
   RESTAURANTS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["restaurants", "list", params] as const,
-    DETAIL: (id: string) => ["restaurants", "detail", id] as const,
+      ['restaurants', 'list', params] as const,
+    DETAIL: (id: string) => ['restaurants', 'detail', id] as const,
   },
   MENUS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["menus", "list", params] as const,
-    DETAIL: (id: string) => ["menus", "detail", id] as const,
+      ['menus', 'list', params] as const,
+    DETAIL: (id: string) => ['menus', 'detail', id] as const,
   },
   CATEGORIES: {
     LIST: (params?: Record<string, unknown>) =>
-      ["categories", "list", params] as const,
-    DETAIL: (id: string) => ["categories", "detail", id] as const,
+      ['categories', 'list', params] as const,
+    DETAIL: (id: string) => ['categories', 'detail', id] as const,
   },
   MENU_ITEMS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["menu-items", "list", params] as const,
-    DETAIL: (id: string) => ["menu-items", "detail", id] as const,
+      ['menu-items', 'list', params] as const,
+    DETAIL: (id: string) => ['menu-items', 'detail', id] as const,
   },
   KITCHEN_DEPARTMENTS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["kitchen-departments", "list", params] as const,
-    DETAIL: (id: string) => ["kitchen-departments", "detail", id] as const,
+      ['kitchen-departments', 'list', params] as const,
+    DETAIL: (id: string) => ['kitchen-departments', 'detail', id] as const,
   },
   TABLES: {
     LIST: (params?: Record<string, unknown>) =>
-      ["tables", "list", params] as const,
-    DETAIL: (id: string) => ["tables", "detail", id] as const,
+      ['tables', 'list', params] as const,
+    DETAIL: (id: string) => ['tables', 'detail', id] as const,
   },
   TABLE_SECTIONS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["table-sections", "list", params] as const,
-    DETAIL: (id: string) => ["table-sections", "detail", id] as const,
+      ['table-sections', 'list', params] as const,
+    DETAIL: (id: string) => ['table-sections', 'detail', id] as const,
   },
   UPLOAD: {
-    IMAGE: (key: string) => ["upload", "image", key] as const,
+    IMAGE: (key: string) => ['upload', 'image', key] as const,
   },
   TAX_PRODUCT_GROUPS: {
     LIST: (params?: Record<string, unknown>) =>
-      ["tax-product-groups", "list", params] as const,
-    DETAIL: (id: string) => ["tax-product-groups", "detail", id] as const,
+      ['tax-product-groups', 'list', params] as const,
+    DETAIL: (id: string) => ['tax-product-groups', 'detail', id] as const,
+  },
+  IMAGE_LIBRARY: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['image-library', 'list', params] as const,
+    DETAIL: (id: string) => ['image-library', 'detail', id] as const,
   },
 } as const;
