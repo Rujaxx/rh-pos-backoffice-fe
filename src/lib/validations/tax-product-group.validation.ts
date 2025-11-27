@@ -4,7 +4,7 @@ import { multilingualTextSchema } from './common/common.validation';
 export const taxProductGroupSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
-
+  billDisplayName: z.string().min(1),
   taxType: z.enum(['Percentage', 'Fixed Amount'], {
     error: 'You must select a tax type.',
   }),
@@ -17,8 +17,11 @@ export const taxProductGroupSchema = z.object({
       'Tax value cannot exceed 100 for percentage or be too large for fixed amount',
     ),
   isActive: z.boolean(),
+  isPrimary: z.boolean(),
+  isInclusive: z.boolean(),
+  isDivisible: z.boolean(),
   brandId: z.string(),
-  restaurantId: z.string().optional(),
+  restaurantIds: z.array(z.string()),
 });
 
 export type TaxProductGroupFormData = z.infer<typeof taxProductGroupSchema>;
