@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { MenuItem } from '@/types/menu-item.type';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -12,6 +12,8 @@ import {
   EditableNumberCell,
 } from './editable-cells-components';
 import { MultilingualText } from '@/types';
+import { ImageIcon, Loader2, Upload } from 'lucide-react';
+import { getS3UrlFromKey } from '@/lib/upload-utils';
 
 interface EditableColumnsConfig {
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
@@ -22,6 +24,89 @@ interface EditableColumnsConfig {
   kitchenDeptOptions: Array<{ value: string; label: string }>;
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+}
+
+/**
+ * Extracted component to handle primary image cell rendering
+ * Allows use of React hooks within the cell
+ */
+function PrimaryImageCell({
+  menuItem,
+  imageKey,
+  onUploadImage,
+  updateField,
+}: {
+  menuItem: MenuItem;
+  imageKey: string;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+  updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
+}) {
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    imageKey ? getS3UrlFromKey(imageKey) : '',
+  );
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const result = await onUploadImage(file);
+      // Update preview immediately with the full URL
+      setPreviewUrl(result.url);
+      // Only save the KEY to the backend/state if it's a new/modified image
+      // This ensures we only send updates when there's an actual change
+      updateField(menuItem._id!, 'primaryImage', result.key);
+    } catch (error) {
+      console.error('Upload failed', error);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  return (
+    <div
+      className="h-10 w-10 relative rounded-md overflow-hidden bg-muted cursor-pointer group hover:opacity-80 transition-opacity"
+      onClick={() => !isUploading && fileInputRef.current?.click()}
+    >
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={isUploading}
+      />
+
+      {isUploading ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt={menuItem.itemName?.en || 'Menu Item'}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-secondary">
+              <ImageIcon className="h-4 w-4 text-muted-foreground group-hover:hidden" />
+              <Upload className="h-4 w-4 text-muted-foreground hidden group-hover:block" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+        </>
+      )}
+    </div>
+  );
 }
 
 export const createEditableMenuItemColumns = (
@@ -38,9 +123,29 @@ export const createEditableMenuItemColumns = (
     kitchenDeptOptions,
 
     isLoadingOptions,
+    onUploadImage,
   } = config;
 
   return [
+    // Primary Image
+    {
+      id: 'primaryImage',
+      header: t('menuItems.table.image'),
+      size: 80,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+        const imageKey = getFieldValue(menuItem._id!, 'primaryImage') as string;
+
+        return (
+          <PrimaryImageCell
+            menuItem={menuItem}
+            imageKey={imageKey}
+            onUploadImage={onUploadImage}
+            updateField={updateField}
+          />
+        );
+      },
+    },
     // Item Name (Editable Text - Multilingual)
     {
       accessorKey: 'itemName',

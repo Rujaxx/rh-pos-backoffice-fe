@@ -4,17 +4,15 @@ import {
   MenuItem,
   MenuItemFormData,
   MenuItemQueryParams,
+  UploadMenuItemsQueryDto,
+  UploadFromExcelResponseDto,
 } from '@/types/menu-item.type';
 import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 import api from '@/lib/axios';
 
 // Menu Items service extending base service
-class MenuItemService extends BaseApiService<
-  MenuItem,
-  MenuItemFormData,
-  MenuItemFormData
-> {
+class MenuItemService extends BaseApiService<MenuItem, MenuItemFormData> {
   constructor() {
     super(API_ENDPOINTS.MENU_ITEMS.LIST);
   }
@@ -78,6 +76,26 @@ class MenuItemService extends BaseApiService<
     return api.patch<
       SuccessResponse<{ updated: number; failed: number; items: MenuItem[] }>
     >(`${this.baseEndpoint}/bulk/${menuId}`, { items });
+  }
+
+  // Upload menu items from Excel
+  async uploadFromExcel(
+    file: File,
+    params: UploadMenuItemsQueryDto,
+  ): Promise<UploadFromExcelResponseDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return api.post<UploadFromExcelResponseDto>(
+      `${this.baseEndpoint}/upload`,
+      formData,
+      {
+        params,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
   }
 }
 

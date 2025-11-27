@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,10 +13,24 @@ import {
   SortingState,
   ColumnFiltersState,
 } from '@tanstack/react-table';
-import { Save, X, UtensilsCrossed, Filter } from 'lucide-react';
-import { MenuItemQueryParams } from '@/types/menu-item.type';
+import {
+  Save,
+  X,
+  UtensilsCrossed,
+  Filter,
+  Upload,
+  Download,
+  Plus,
+} from 'lucide-react';
+import { MenuItemQueryParams, MenuItemFormData } from '@/types/menu-item.type';
 import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
-import { useBulkUpdateMenuItems } from '@/services/api/menu-items/menu-items.mutation';
+import {
+  useBulkUpdateMenuItems,
+  useUploadMenuExcel,
+  useCreateMenuItem,
+} from '@/services/api/menu-items/menu-items.mutation';
+import { useUploadImage } from '@/services/api/upload/upload.mutations';
+import { UploadFolderType } from '@/types/upload';
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
@@ -27,6 +41,11 @@ import {
 } from '@/components/menu-management/menu-items/menu-item-table-columns';
 import { useEditableMenuItemColumns } from '@/components/menu-management/menu-items/editable-menu-item-columns';
 import { useMenuItemChanges } from '@/hooks/useMenuItemChanges';
+import { CrudModal, useModal } from '@/components/ui/crud-modal';
+import {
+  MenuItemFormContent,
+  useMenuItemForm,
+} from '@/components/menu-management/menu-items/menu-item-form';
 import { Suspense } from 'react';
 
 export default function MenuItemsPage() {
@@ -157,6 +176,48 @@ function Page() {
 
   // Bulk update mutation
   const bulkUpdateMutation = useBulkUpdateMenuItems(menuId || '');
+  const uploadMenuMutation = useUploadMenuExcel();
+  const createMenuItemMutation = useCreateMenuItem();
+  const uploadImageMutation = useUploadImage();
+  const { isOpen, openModal, closeModal } = useModal();
+  const { form } = useMenuItemForm(menuId || undefined, null);
+
+  const handleCreateSubmit = async (data: MenuItemFormData) => {
+    try {
+      await createMenuItemMutation.mutateAsync(data);
+      closeModal();
+    } catch (error) {
+      console.error('Failed to create menu item:', error);
+    }
+  };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (file: File) => {
+    const result = await uploadImageMutation.mutateAsync({
+      file,
+      options: {
+        folderType: UploadFolderType.MENU_ITEMS,
+      },
+    });
+    return {
+      key: result.data.key,
+      url: result.data.url,
+    };
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && menuId) {
+      uploadMenuMutation.mutate({
+        file,
+        params: { menuId },
+      });
+    }
+    // Reset input value to allow selecting the same file again
+    if (event.target) {
+      event.target.value = '';
+    }
+  };
 
   // Handle save changes
   const handleSaveChanges = async () => {
@@ -179,6 +240,7 @@ function Page() {
     kitchenDeptOptions,
     addonsOptions,
     isLoadingOptions,
+    onUploadImage: handleImageUpload,
   });
 
   return (
@@ -217,6 +279,47 @@ function Page() {
                   ? t('menuItems.status.inactive')
                   : t('categories.allStatus')}
             </Button>
+
+            {/* Upload Button */}
+            {menuId && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    window.open(
+                      'https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com/sample_menu_sheet_50.xlsx',
+                      '_blank',
+                    )
+                  }
+                  className="h-8"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Sample
+                </Button>
+                <Button onClick={() => openModal()} className="h-8">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Item
+                </Button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept=".xlsx, .xls"
+                  onChange={handleFileUpload}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="h-8"
+                  disabled={uploadMenuMutation.isPending}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadMenuMutation.isPending
+                    ? 'Uploading...'
+                    : 'Upload Menu'}
+                </Button>
+              </>
+            )}
 
             {/* Save/Discard buttons */}
             {hasChanges && (
@@ -276,6 +379,20 @@ function Page() {
             />
           </CardContent>
         </Card>
+
+        <CrudModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          title={t('menuItems.form.createTitle')}
+          description={t('menuItems.form.createDescription')}
+          form={form}
+          onSubmit={handleCreateSubmit}
+          loading={createMenuItemMutation.isPending}
+          size="xl"
+          submitButtonText={t('menuItems.form.createButton')}
+        >
+          <MenuItemFormContent form={form} />
+        </CrudModal>
       </div>
     </Layout>
   );
