@@ -128,6 +128,7 @@ export function UserFormContent({ form }: UserFormContentProps) {
                 label={t('common.form.countryCode') || 'Code'}
                 placeholder="+91"
                 options={COUNTRY_CODES}
+                defaultValue={COUNTRY_CODES[0].value}
               />
               <RHFInput
                 form={form}

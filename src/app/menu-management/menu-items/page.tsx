@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,12 +22,17 @@ import {
   Download,
   Plus,
 } from 'lucide-react';
-import { MenuItemQueryParams, MenuItemFormData } from '@/types/menu-item.type';
+import {
+  MenuItemQueryParams,
+  MenuItemFormData,
+  MenuItem,
+} from '@/types/menu-item.type';
 import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   useBulkUpdateMenuItems,
   useUploadMenuExcel,
   useCreateMenuItem,
+  useDeleteMenuItem,
 } from '@/services/api/menu-items/menu-items.mutation';
 import { useUploadImage } from '@/services/api/upload/upload.mutations';
 import { UploadFolderType } from '@/types/upload';
@@ -41,12 +46,18 @@ import {
 } from '@/components/menu-management/menu-items/menu-item-table-columns';
 import { useEditableMenuItemColumns } from '@/components/menu-management/menu-items/editable-menu-item-columns';
 import { useMenuItemChanges } from '@/hooks/useMenuItemChanges';
-import { CrudModal, useModal } from '@/components/ui/crud-modal';
+import {
+  ConfirmationModal,
+  CrudModal,
+  useConfirmationModal,
+  useModal,
+} from '@/components/ui/crud-modal';
 import {
   MenuItemFormContent,
   useMenuItemForm,
 } from '@/components/menu-management/menu-items/menu-item-form';
 import { Suspense } from 'react';
+import { useI18n } from '@/providers/i18n-provider';
 
 export default function MenuItemsPage() {
   return (
@@ -58,6 +69,7 @@ export default function MenuItemsPage() {
 
 function Page() {
   const { t } = useTranslation();
+  const { locale } = useI18n();
   const searchParams = useSearchParams();
   const menuId = searchParams.get('menuId');
 
@@ -160,9 +172,6 @@ function Page() {
     isLoadingKitchenDepts ||
     isLoadingAddons;
 
-  //yet to impletent add and delelte api
-  //const editHandlerRef = useRef<((menuItem: MenuItem) => void) | null>(null);
-
   // Change tracking
   const {
     updateField,
@@ -219,6 +228,45 @@ function Page() {
     }
   };
 
+  // Delete mutation
+  const deleteMenuItemMutation = useDeleteMenuItem();
+
+  // Confirmation modal for delete
+  const {
+    isConfirmationOpen,
+    confirmationConfig,
+    openConfirmationModal,
+    closeConfirmationModal,
+    executeConfirmation,
+  } = useConfirmationModal();
+
+  // Delete handler with ref pattern
+  const deleteHandlerRef = useRef<((menuItem: MenuItem) => void) | null>(null);
+
+  const deleteHandler = useCallback((menuItem: MenuItem) => {
+    deleteHandlerRef.current?.(menuItem);
+  }, []);
+
+  deleteHandlerRef.current = (menuItem: MenuItem) => {
+    openConfirmationModal(
+      async () => {
+        try {
+          await deleteMenuItemMutation.mutateAsync(menuItem._id!);
+        } catch (err) {
+          console.error('Failed to delete menu item:', err);
+        }
+      },
+      {
+        title: t('menuItems.delete.title'),
+        description: t('menuItems.delete.description', {
+          itemName: menuItem.itemName?.[locale] || menuItem.itemName?.en,
+        }),
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
+      },
+    );
+  };
+
   // Handle save changes
   const handleSaveChanges = async () => {
     const itemsToUpdate = getModifiedItemsForUpdate();
@@ -241,6 +289,7 @@ function Page() {
     addonsOptions,
     isLoadingOptions,
     onUploadImage: handleImageUpload,
+    onDelete: deleteHandler,
   });
 
   return (
@@ -393,6 +442,17 @@ function Page() {
         >
           <MenuItemFormContent form={form} />
         </CrudModal>
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={isConfirmationOpen}
+          onClose={closeConfirmationModal}
+          onConfirm={executeConfirmation || (() => Promise.resolve())}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteMenuItemMutation.isPending}
+        />
       </div>
     </Layout>
   );

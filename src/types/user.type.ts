@@ -37,6 +37,7 @@ export interface User extends Record<string, unknown> {
   timeZone?: string;
   createdBy?: string;
   updatedBy?: string;
+  lastLoginAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
