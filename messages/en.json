@@ -695,6 +695,22 @@
   "taxGroups.form.taxValuePlaceholder": "Enter tax value",
   "taxGroups.form.taxTypePercentage": "Percentage",
   "taxGroups.form.taxTypeFixedAmount": "Fixed Amount",
+  "taxGroups.form.taxProductGroupLabel": "Tax Product Group",
+  "taxGroups.form.taxProductGroupPlaceholder": "Select a tax product group",
+  "taxGroups.form.noTaxProductGroupAvailable": "No tax product group available",
+  "taxGroups.form.activeStatusLabel": "Active",
+  "taxGroups.form.activeStatusDescription": "Enable or disable the tax group",
+  "taxGroups.form.inclusiveStatusLabel": "Inclusive",
+  "taxGroups.form.inclusiveStatusDescription": "Apply tax inclusively",
+  "taxGroups.form.divisibleStatusLabel": "Divisible",
+  "taxGroups.form.divisibleStatusDescription": "Apply tax divisibly (CGTS/SGTS)",
+  "taxGroups.form.restaurantLabel": "Restaurant",
+  "taxGroups.form.restaurantPlaceholder": "Select a restaurant",
+  "taxGroups.table.inclusive": "Inclusive",
+  "taxGroups.form.primaryStatusLabel": "Primary",
+  "taxGroups.form.primaryStatusDescription": "Set as primary tax group",
+  "taxGroups.table.billDisplayName": "Bill Display Name",
+  "taxGroups.form.billDisplayNamePlaceholder": "Enter bill display name",
 
   "taxGroups.edit.title": "Edit Tax Group",
   "taxGroups.edit.description": "Update the details of the selected tax group.",
@@ -1194,7 +1210,7 @@
   "menuItems.discountTypes.Fixed Amount": "Fixed Amount",
 
   "menuItems.delete.title": "Delete Menu Item",
-  "menuItems.delete.description": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+  "menuItems.delete.description": "Are you sure you want to delete  \"{itemName}\"? This action cannot be undone.",
   "menuItems.delete.confirmButton": "Delete Item",
 
   "menuItems.form.createTitle": "Create Menu Item",
@@ -1262,5 +1278,6 @@
   "menuItems.table.openPrice": "Open Price",
   "menuItems.table.syncToAggregator": "Sync to Aggregator",
   "menuItems.table.isCombo": "Combo Item",
-  "menuItems.table.discountedPrice": "Discounted Price"
+  "menuItems.table.discountedPrice": "Discounted Price",
+  "taxGroups.errorLoading": "Error loading tax groups"
 }

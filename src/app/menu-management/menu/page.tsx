@@ -248,7 +248,7 @@ export default function MenusPage() {
               className="h-8 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
-              <span>{t("brands.addNewBrand")}</span>
+              <span>{t("menus.addMenu")}</span>
             </Button>
           </div>
         </div>

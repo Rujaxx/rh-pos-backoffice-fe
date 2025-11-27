@@ -812,6 +812,22 @@
   "taxGroups.form.nameAr": "الاسم (بالعربية)",
   "taxGroups.form.nameArPlaceholder": "أدخل اسم المجموعة الضريبية بالعربية",
   "taxGroups.form.nameEnPlaceholder": "أدخل اسم المجموعة الضريبية بالإنجليزية",
+  "taxGroups.form.taxProductGroupLabel": "مجموعة المنتجات",
+  "taxGroups.form.taxProductGroupPlaceholder": "اختر مجموعة المنتجات",
+  "taxGroups.form.noTaxProductGroupAvailable": "لا توجد مجموعات منتجات ضريبية متاحة",
+  "taxGroups.form.activeStatusLabel": "الحالة",
+  "taxGroups.form.activeStatusDescription": "الضريبة مرئية وقابلة للاستخدام.",
+  "taxGroups.form.inclusiveStatusLabel": "الضريبة شاملة",
+  "taxGroups.form.inclusiveStatusDescription": "الضريبة شاملة.",
+  "taxGroups.form.divisibleStatusLabel": "الضريبة قابلة للقسمة",
+  "taxGroups.form.divisibleStatusDescription": "الضريبة قابلة للقسمة. (CGTS/SGTS)",
+  "taxGroups.form.restaurantLabel": "المطعم",
+  "taxGroups.form.restaurantPlaceholder": "اختر المطعم",
+  "taxGroups.table.inclusive": "الضريبة شاملة",
+  "taxGroups.form.primaryStatusLabel": "الضريبة الرئيسية",
+  "taxGroups.form.primaryStatusDescription": "الضريبة الرئيسية.",
+  "taxGroups.table.billDisplayName": "اسم العرض في الفاتورة",
+  "taxGroups.form.billDisplayNamePlaceholder": "أدخل اسم العرض في الفاتورة",
 
   "kitchen.title": "أقسام المطبخ",
   "kitchen.subtitle": "إدارة جميع أقسام المطبخ في مطعمك",
@@ -1245,5 +1261,6 @@
   "menuItems.table.openPrice": "سعر مفتوح",
   "menuItems.table.syncToAggregator": "مزامنة مع المجمع",
   "menuItems.table.isCombo": "عنصر كومبو",
-  "menuItems.table.discountedPrice": "السعر بعد الخصم"
+  "menuItems.table.discountedPrice": "السعر بعد الخصم",
+  "taxGroups.errorLoading": "ٹیکس گروپس لوڈ کرنے میں خرابی۔"
 }
