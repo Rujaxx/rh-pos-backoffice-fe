@@ -32,7 +32,7 @@ export const createUserColumns = (
   onEdit: (user: User) => void,
   onDelete: (user: User) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: "en" | "ar",
+  locale: "en" | "ar"
 ): ColumnDef<User>[] => [
   {
     accessorKey: "name",
@@ -147,7 +147,9 @@ export const createUserColumns = (
       return (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
-          <span>{new Date(user.createdAt)?.toLocaleDateString() || "N/A"}</span>
+          <span>
+            {new Date(user.lastLoginAt)?.toLocaleDateString() || "N/A"}
+          </span>
         </div>
       );
     },
@@ -201,7 +203,7 @@ export const createUserColumns = (
 // Hook for using user columns with current translation
 export const useUserColumns = (
   onEdit: (user: User) => void,
-  onDelete: (user: User) => void,
+  onDelete: (user: User) => void
 ) => {
   const { t } = useTranslation();
   const { locale } = useIntl();
@@ -210,7 +212,7 @@ export const useUserColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -227,7 +229,7 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? "desc" : "asc";

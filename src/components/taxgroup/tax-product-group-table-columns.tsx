@@ -20,7 +20,7 @@ export const createTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
   onDelete: (item: TaxProductGroup) => void,
   t: ReturnType<typeof useTranslation>["t"],
-  locale: string,
+  locale: string
 ): ColumnDef<TaxProductGroup>[] => {
   return [
     {
@@ -36,19 +36,18 @@ export const createTaxProductGroupColumns = (
       cell: ({ row }) => {
         const item = row.original;
         const displayName =
-          item.name?.[locale as keyof MultilingualText] || item.name?.en || "-";
-
-        return (
-          <div className="space-y-1">
-            <div className="font-medium text-sm">{displayName}</div>
-            {item.name?.ar && (
-              <div className="text-xs text-muted-foreground" dir="rtl">
-                {item.name.ar}
-              </div>
-            )}
-          </div>
-        );
+          item.name?.[locale as keyof MultilingualText] || "-";
+        return <div className="font-medium text-sm">{displayName}</div>;
       },
+    },
+    {
+      header: t("taxGroups.table.brand"),
+      enableSorting: false,
+      cell: ({ row }) => (
+        <span>
+          {row.original.brandName?.[locale as keyof MultilingualText]}
+        </span>
+      ),
     },
     {
       header: t("taxGroups.table.taxType"),
@@ -83,14 +82,18 @@ export const createTaxProductGroupColumns = (
     },
 
     {
-      header: t("taxGroups.table.brand"),
-      enableSorting: false,
-      cell: ({ row }) => (
-        <span>
-          {row.original.brandName?.[locale as keyof MultilingualText]}
-        </span>
-      ),
+      id: "inclusive",
+      header: t("taxGroups.table.inclusive"),
+      cell: ({ row }) => {
+        const inclusive = row.original.isInclusive;
+        return (
+          <Badge variant={inclusive ? "default" : "secondary"}>
+            {inclusive ? t("common.yes") : t("common.no")}
+          </Badge>
+        );
+      },
     },
+
     {
       id: "actions",
       header: t("table.actions"),
@@ -140,7 +143,7 @@ export const createTaxProductGroupColumns = (
 
 export const useTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
-  onDelete: (item: TaxProductGroup) => void,
+  onDelete: (item: TaxProductGroup) => void
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -148,7 +151,7 @@ export const useTaxProductGroupColumns = (
 };
 
 export const getSortFieldForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
@@ -158,12 +161,13 @@ export const getSortFieldForTaxProductGroupQuery = (
     taxType: "taxType",
     taxValue: "taxValue",
     status: "isActive",
+    inclusive: "isInclusive",
   };
 
   return fieldMap[sorting[0].id] || sorting[0].id;
 };
 
 export const getSortOrderForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>
 ): "asc" | "desc" | undefined =>
   sorting.length ? (sorting[0].desc ? "desc" : "asc") : undefined;
