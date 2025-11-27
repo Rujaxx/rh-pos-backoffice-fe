@@ -1,5 +1,5 @@
-import { MultilingualText } from "@/types/common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText } from '@/types/common/common.type';
+import { QueryParams } from './api';
 
 export interface MenuItem {
   _id: string;
@@ -20,9 +20,9 @@ export interface MenuItem {
   categoryId: string;
   subCategoryId?: string;
 
-  foodType?: "VEG" | "NON_VEG" | "VEGAN";
+  foodType?: 'VEG' | 'NON_VEG' | 'VEGAN';
 
-  meatType: "VEG" | "CHICKEN" | "MUTTON" | "FISH";
+  meatType: 'VEG' | 'CHICKEN' | 'MUTTON' | 'FISH';
 
   taxProductGroupId: string;
   kitchenDepartmentId: string;
@@ -34,7 +34,7 @@ export interface MenuItem {
   platformStatus: boolean;
 
   digitalDiscount: boolean;
-  discountType?: "Percentage" | "Fixed Amount";
+  discountType?: 'Percentage' | 'Fixed Amount';
   discountedPrice?: number;
 
   syncToAggregator: boolean;
@@ -122,53 +122,54 @@ export interface MenuItemFormData extends Record<string, unknown> {
 
   hsnCode?: string;
 
-  currentStock: number;
+  currentStock?: number;
 
   baseItemPrice: number;
 
   categoryId: string;
   subCategoryId?: string;
 
-  foodType?: "VEG" | "NON_VEG" | "VEGAN";
-  meatType: "VEG" | "CHICKEN" | "MUTTON" | "FISH";
+  foodType?: 'VEG' | 'NON_VEG' | 'VEGAN';
+  meatType: 'VEG' | 'CHICKEN' | 'MUTTON' | 'FISH';
 
   taxProductGroupId: string;
   kitchenDepartmentId: string;
 
-  isActive: boolean;
-  isRecommended: boolean;
+  isActive?: boolean;
+  isRecommended?: boolean;
 
-  posStatus: boolean;
-  platformStatus: boolean;
+  posStatus?: boolean;
+  platformStatus?: boolean;
 
-  digitalDiscount: boolean;
-  discountType?: "Percentage" | "Fixed Amount";
+  digitalDiscount?: boolean;
+  discountType?: 'Percentage' | 'Fixed Amount';
   discountedPrice?: number;
 
-  syncToAggregator: boolean;
+  syncToAggregator?: boolean;
 
   alternativeTitle?: string;
 
   preparationTime?: number;
 
-  openItem: boolean;
-  openPrice: boolean;
+  openItem?: boolean;
+  openPrice?: boolean;
 
   itemSortOrder?: number;
 
-  addOns: AddOn[];
-  comboItems: ComboItem[];
+  addOns?: AddOn[];
+  comboItems?: ComboItem[];
 
-  isCombo: boolean;
-  isAddon: boolean;
+  isCombo?: boolean;
+  isAddon?: boolean;
 
-  images: string[];
+  images?: string[];
+  primaryImageKey?: string;
   primaryImage?: string;
 
   brandId: string;
   restaurantId: string;
 
-  multiplePrices: MultiplePrice[];
+  multiplePrices?: MultiplePrice[];
 
   billPrefix?: string;
   kotPrefix?: string;
@@ -194,8 +195,8 @@ export interface MenuItemUpdateArray extends Record<string, unknown> {
   categoryId: string;
   subCategoryId?: string;
 
-  foodType?: "VEG" | "NON_VEG" | "VEGAN";
-  meatType: "VEG" | "CHICKEN" | "MUTTON" | "FISH";
+  foodType?: 'VEG' | 'NON_VEG' | 'VEGAN';
+  meatType: 'VEG' | 'CHICKEN' | 'MUTTON' | 'FISH';
 
   taxProductGroupId: string;
   kitchenDepartmentId: string;
@@ -207,7 +208,7 @@ export interface MenuItemUpdateArray extends Record<string, unknown> {
   platformStatus: boolean;
 
   digitalDiscount: boolean;
-  discountType?: "Percentage" | "Fixed Amount";
+  discountType?: 'Percentage' | 'Fixed Amount';
   discountedPrice?: number;
 
   syncToAggregator: boolean;
@@ -233,7 +234,7 @@ export interface MenuItemUpdateArray extends Record<string, unknown> {
   brandId: string;
   restaurantId: string;
 
-  multiplePrices: MultiplePrice[];
+  multiplePrices?: MultiplePrice[];
 
   billPrefix?: string;
   kotPrefix?: string;
@@ -259,17 +260,44 @@ export interface MenuItemQueryParams extends QueryParams {
   isRecommended?: string; // "true" | "false"
   isCombo?: string; // "true" | "false"
   isAddon?: string; // "true" | "false"
-  foodType?: "VEG" | "NON_VEG" | "VEGAN";
-  meatType?: "VEG" | "CHICKEN" | "MUTTON" | "FISH";
+  foodType?: 'VEG' | 'NON_VEG' | 'VEGAN';
+  meatType?: 'VEG' | 'CHICKEN' | 'MUTTON' | 'FISH';
   posStatus?: string; // "true" | "false"
   platformStatus?: string; // "true" | "false"
 
   // Sorting
   sortBy?:
-    | "itemName"
-    | "baseItemPrice"
-    | "currentStock"
-    | "createdAt"
-    | "updatedAt";
-  sortOrder?: "asc" | "desc";
+    | 'itemName'
+    | 'baseItemPrice'
+    | 'currentStock'
+    | 'createdAt'
+    | 'updatedAt';
+  sortOrder?: 'asc' | 'desc';
+}
+
+// ---------------------
+// Excel Upload Types
+// ---------------------
+
+export interface UploadMenuItemsQueryDto {
+  menuId: string;
+}
+
+export interface ExcelUploadErrorDto {
+  row: number;
+  shortCode?: string;
+  itemName?: string;
+  error: string;
+}
+
+export interface UploadFromExcelResponseDto {
+  status: 'success' | 'failed';
+  processed?: number;
+  inserted?: number;
+  updated?: number;
+  skipped?: number;
+  tableSectionsCreated?: string[];
+  errors?: ExcelUploadErrorDto[];
+  reason?: string;
+  rowsProcessed?: number;
 }

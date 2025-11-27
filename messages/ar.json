@@ -1106,5 +1106,7 @@
   "menuItems.table.openPrice": "سعر مفتوح",
   "menuItems.table.syncToAggregator": "مزامنة مع المجمع",
   "menuItems.table.isCombo": "عنصر كومبو",
-  "menuItems.table.discountedPrice": "السعر بعد الخصم"
+  "menuItems.table.discountedPrice": "السعر بعد الخصم",
+  "menuItems.table.addOns": "الإضافات",
+  "menuItems.table.image": "الصورة"
 }
