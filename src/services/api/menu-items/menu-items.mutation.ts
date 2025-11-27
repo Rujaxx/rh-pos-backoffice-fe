@@ -4,7 +4,12 @@
  */
 
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { MenuItem, MenuItemFormData } from '@/types/menu-item.type';
+import {
+  MenuItem,
+  MenuItemFormData,
+  UploadMenuItemsQueryDto,
+  UploadFromExcelResponseDto,
+} from '@/types/menu-item.type';
 import { SuccessResponse } from '@/types/api';
 import { QUERY_KEYS } from '@/config/api';
 import { useQueryUtils } from '@/lib/query-client';
@@ -145,6 +150,15 @@ export const useBulkUpdateMenuItems = (
 
   return useMutation({
     mutationFn: async (items: MenuItemFormData[]) => {
+      items.map((item) => {
+        if (item.primaryImage?.startsWith('http')) {
+          delete item.primaryImage;
+        }
+        return item;
+      });
+      items.forEach((item) => {
+        item.images = [item.primaryImage as string];
+      });
       const result = await menuItemService.bulkUpdate(menuId, items);
       return result;
     },
@@ -161,6 +175,40 @@ export const useBulkUpdateMenuItems = (
     onError: (error) => {
       // Show error message
       const errorMessage = error.message || 'Failed to update menu items';
+      toast.error(errorMessage);
+    },
+    ...options,
+  });
+};
+
+// Upload menu items from Excel mutation
+export const useUploadMenuExcel = (
+  options?: UseMutationOptions<
+    UploadFromExcelResponseDto,
+    Error,
+    { file: File; params: UploadMenuItemsQueryDto }
+  >,
+) => {
+  const queryUtils = useQueryUtils();
+
+  return useMutation({
+    mutationFn: async ({ file, params }) => {
+      const result = await menuItemService.uploadFromExcel(file, params);
+      return result;
+    },
+    onSuccess: (data) => {
+      if (data.status === 'success') {
+        toast.success(`Successfully processed ${data.processed} rows`);
+        // Invalidate menu items list
+        queryUtils.invalidateQueries(['menu-items', 'list']);
+        // Invalidate menus list
+        queryUtils.invalidateQueries(['menus', 'list']);
+      } else {
+        toast.error('Upload completed with errors');
+      }
+    },
+    onError: (error) => {
+      const errorMessage = error.message || 'Failed to upload menu items';
       toast.error(errorMessage);
     },
     ...options,

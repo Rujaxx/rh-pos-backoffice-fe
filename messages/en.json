@@ -13,7 +13,6 @@
   "table.selectAll": "Select all",
   "table.selectRow": "Select row",
   "table.openMenu": "Open menu",
-
   "form.address.title": "Address Information",
   "form.address.addressLine1": "Address Line 1",
   "form.address.addressLine1Placeholder": "Enter address line 1",
@@ -30,15 +29,12 @@
   "form.address.location": "Location",
   "form.address.locationPlaceholder": "Enter location coordinates or description",
   "form.address.locationDescription": "Optional: GPS coordinates or location description",
-
   "error.pageNotFound": "Page Not Found",
   "error.pageNotFoundDescription": "Sorry, the page you are looking for does not exist or has been moved.",
   "common.goBack": "Go Back",
-
   "error.boundary.title": "Something went wrong",
   "error.boundary.description": "An unexpected error occurred",
   "error.boundary.tryAgain": "Try again",
-
   "auth.login.title": "Welcome to RH POS",
   "auth.login.subtitle": "Sign in to manage orders, tables, and sales",
   "auth.login.emailLabel": "Email address",
@@ -53,7 +49,6 @@
   "auth.login.signingIn": "Signing in...",
   "auth.login.noAccount": "New staff member?",
   "auth.login.signUpLink": "Request access",
-
   "auth.register.title": "Request Staff Access",
   "auth.register.subtitle": "Fill in your details to request access to the POS system",
   "auth.register.firstNameLabel": "First name",
@@ -74,7 +69,6 @@
   "auth.register.creatingAccount": "Submitting request...",
   "auth.register.alreadyHaveAccount": "Already have access?",
   "auth.register.signInLink": "Sign in",
-
   "auth.forgot.title": "Reset Password",
   "auth.forgot.subtitle": "Enter your email to receive a password reset link",
   "auth.forgot.emailLabel": "Email address",
@@ -82,7 +76,6 @@
   "auth.forgot.sendResetLink": "Send reset link",
   "auth.forgot.sendingLink": "Sending link...",
   "auth.forgot.backToLogin": "Back to login",
-
   "auth.resetPassword.title": "Set New Password",
   "auth.resetPassword.subtitle": "Create a new password for your POS account",
   "auth.resetPassword.newPasswordLabel": "New password",
@@ -92,7 +85,6 @@
   "auth.resetPassword.resetPasswordButton": "Reset password",
   "auth.resetPassword.resettingPassword": "Resetting password...",
   "auth.resetPassword.backToLogin": "Back to login",
-
   "common.loading": "Processing...",
   "common.error": "Error",
   "common.success": "Success",
@@ -114,7 +106,6 @@
   "common.status": "Status",
   "common.createdAt": "Created At",
   "common.updatedAt": "Updated At",
-
   "navigation.dashboard": "POS Dashboard",
   "navigation.orders": "Active Orders",
   "navigation.tables": "Tables",
@@ -125,7 +116,6 @@
   "navigation.settings": "POS Settings",
   "navigation.staff": "Staff Management",
   "navigation.logout": "Logout",
-
   "pos.takeOrder": "Take Order",
   "pos.splitBill": "Split Bill",
   "pos.applyDiscount": "Apply Discount",
@@ -133,7 +123,6 @@
   "pos.tableStatus.available": "Available",
   "pos.tableStatus.occupied": "Occupied",
   "pos.tableStatus.reserved": "Reserved",
-
   "navigation.overview": "Overview",
   "navigation.analytics": "Analytics",
   "navigation.salesReports": "Sales Reports",
@@ -177,7 +166,6 @@
   "navigation.paymentMethods": "Payment Methods",
   "navigation.transactions": "Transactions",
   "navigation.imageLibrary": "Image Library",
-
   "dashboard.selectBrand": "Select Brand",
   "dashboard.selectRestaurant": "Select Restaurant",
   "dashboard.searchPlaceholder": "Search...",
@@ -185,7 +173,6 @@
   "dashboard.myAccount": "My Account",
   "dashboard.profile": "Profile",
   "dashboard.signOut": "Sign Out",
-
   "dashboard.title": "Dashboard",
   "dashboard.welcome": "Overview of your brands and restaurants",
   "dashboard.today": "Today",
@@ -213,7 +200,6 @@
   "dashboard.viewStaff": "View Staff",
   "dashboard.manageLocations": "Manage Locations",
   "dashboard.viewReports": "View Reports",
-
   "brands.title": "Brand Management",
   "brands.subtitle": "Manage all your restaurant brands and their information",
   "brands.addNewBrand": "Add New Brand",
@@ -249,7 +235,6 @@
   "brands.updateBrand": "Update Brand",
   "brands.createBrand": "Create Brand",
   "brands.errorLoading": "Error loading brands",
-
   "brands.form.createTitle": "Create New Brand",
   "brands.form.editTitle": "Edit {brandName}",
   "brands.form.createDescription": "Fill in the information below to create a new brand.",
@@ -284,11 +269,9 @@
   "brands.form.panLabel": "PAN Number",
   "brands.form.panPlaceholder": "Enter PAN number",
   "brands.form.panDescription": "Permanent Account Number",
-
   "theme.light": "Light",
   "theme.dark": "Dark",
   "theme.system": "System",
-
   "restaurants.title": "Restaurant Management",
   "restaurants.subtitle": "Manage all your restaurants and their operations",
   "restaurants.addNewRestaurant": "Add New Restaurant",
@@ -424,12 +407,10 @@
   "restaurants.form.whatsAppChannelLabel": "WhatsApp Channel",
   "restaurants.form.whatsAppChannelPlaceholder": "Enter WhatsApp channel ID",
   "restaurants.form.whatsAppChannelDescription": "WhatsApp channel for notifications",
-
   "restaurants.form.sendReportsLabel": "Send Reports Settings",
   "restaurants.form.sendReports.email": "Email Reports",
   "restaurants.form.sendReports.whatsapp": "WhatsApp Reports",
   "restaurants.form.sendReports.sms": "SMS Reports",
-
   "restaurants.form.paymentLinkSettingsLabel": "Payment Link Settings",
   "restaurants.form.paymentLinkSettings.onWhatsapp": "WhatsApp Payment Links",
   "restaurants.form.paymentLinkSettings.onSms": "SMS Payment Links",
@@ -439,45 +420,36 @@
   "restaurants.editRestaurant": "Edit Restaurant",
   "restaurants.createRestaurant": "Create Restaurant",
   "restaurants.updateRestaurant": "Update Restaurant",
-
   "common.active": "Active",
   "common.inactive": "Inactive",
-
   "users.title": "User Management",
   "users.subtitle": "Manage all users that have access to the POS system",
   "users.description": "Manage all staff accounts that have access to the restaurant's POS system. Add new employees, manage existing access, and maintain clear oversight of system permissions.",
   "users.addUser": "Add User",
   "users.searchPlaceholder": "Search users...",
-
   "users.table.user": "User",
   "users.table.role": "Role",
   "users.table.contact": "Contact",
   "users.table.restaurants": "Restaurants",
   "users.table.status": "Status",
   "users.table.lastLogin": "Last Login",
-
   "users.form.personalInfo": "Personal Information",
   "users.form.usernameLabel": "Username",
   "users.form.usernamePlaceholder": "Enter username",
   "users.form.usernameDescription": "Unique identifier for login. Only letters, numbers, underscores, and hyphens allowed.",
-
   "users.form.designationLabel": "Designation",
   "users.form.designationPlaceholder": "Enter job designation",
   "users.form.designationDescription": "Job title or position (e.g., Senior Manager, Lead Cashier)",
-
   "users.create.title": "Create New User",
   "users.create.description": "Fill in the information below to create a new user account.",
   "users.create.success": "User created successfully!",
   "users.create.error": "Failed to create user",
-
   "users.edit.title": "Edit User",
   "users.edit.description": "Update the user information below.",
-
   "restaurants.form.eBillSettingsLabel": "E-Bill Settings",
   "restaurants.form.eBillSettings.onEmail": "Email E-Bills",
   "restaurants.form.eBillSettings.onWhatsapp": "WhatsApp E-Bills",
   "restaurants.form.eBillSettings.onSms": "SMS E-Bills",
-
   "tableSection.name": "Table Section",
   "tableSection.restaurant": "Restaurant Name",
   "tableSection.searchPlaceholder": "Search Table Sections...",
@@ -508,7 +480,6 @@
   "tableSection.editTableSection": "Edit Table Section",
   "tableSection.createTableSection": "Create Table Section",
   "tableSection.updateTableSection": "Update Table Section",
-
   "tableSection.form.basicInfo": "Basic Information",
   "tableSection.form.restaurantLabel": "Restaurant",
   "tableSection.form.restaurantPlaceholder": "Select a restaurant",
@@ -517,11 +488,9 @@
   "tableSection.form.namePlaceholderAr": "أدخل اسم القسم بالعربية",
   "tableSection.form.activeStatusLabel": "Active Status",
   "tableSection.form.activeStatusDescription": "Toggle to activate or deactivate this table section",
-
   "tableSections.name": "Name",
   "tableSections.description": "Description",
   "tableSections.restaurant": "Restaurant",
-
   "table.name": "Table",
   "table.section": "Table Section",
   "table.capacity": "Capacity",
@@ -539,7 +508,6 @@
   "table.unavailable": "Unavailable",
   "table.deleteConfirmationTitle": "Delete Table",
   "table.deleteConfirmationDescription": "Are you sure you want to delete the table \"{name}\"? This action cannot be undone.",
-
   "table.form.createTitle": "Create Table",
   "table.form.createDescription": "Provide the details below to create a new table or multiple tables at once.",
   "table.form.addTitle": "Add Table",
@@ -565,7 +533,6 @@
   "table.deleteSuccess": "Table deleted successfully",
   "tables.active": "Active",
   "tables.inactive": "Inactive",
-
   "table.deleteTable": "Delete Table",
   "table.deleteConfirmation": "Are you sure you want to delete {tableName}? This action cannot be undone.",
   "table.deleteTableButton": "Delete Table",
@@ -582,13 +549,11 @@
   "table.form.selectRestaurantFirst": "Please select a restaurant first",
   "table.form.noTableSectionsAvailable": "No table sections available for this restaurant",
   "table.form.noRestaurantsAvailable": "No restaurants available",
-
   "roles.table.name": "Role Name",
   "roles.table.permissions": "Permissions",
   "roles.table.employees": "Employees",
   "roles.table.status": "Status",
   "roles.table.created": "Created Date",
-
   "roles.form.basicInfo": "Role Information",
   "roles.form.nameLabel": "Role Name",
   "roles.form.nameEnglishPlaceholder": "Enter role name in English",
@@ -598,26 +563,21 @@
   "roles.form.permissionsDescription": "Select the permissions that this role should have",
   "roles.form.activeStatusLabel": "Role Status",
   "roles.form.activeStatusDescription": "Toggle to activate or deactivate this role",
-
   "roles.create.title": "Create New Role",
   "roles.create.description": "Define a new role with specific permissions for your staff.",
   "roles.create.success": "Role created successfully!",
   "roles.create.error": "Failed to create role",
-
   "roles.edit.title": "Edit Role",
   "roles.edit.description": "Update role information and permissions.",
   "roles.update.success": "Role updated successfully!",
   "roles.update.error": "Failed to update role",
-
   "roles.delete.title": "Delete Role",
   "roles.delete.description": "Are you sure you want to delete {name}? This action cannot be undone and will affect all employees assigned to this role.",
   "roles.delete.success": "Role deleted successfully!",
   "roles.delete.error": "Failed to delete role",
   "roles.delete.cannotDelete": "Cannot delete a role assigned to employees",
-
   "roles.permissions.count": "{count} permission(s)",
   "roles.employees.count": "{count} employee(s)",
-
   "users.permissions": "User Permissions",
   "users.permissions.title": "Manage User Permissions",
   "users.permissions.description": "Configure access permissions for {name}",
@@ -654,7 +614,6 @@
   "users.permissions.managePaymentsDescription": "Handle payments and refunds",
   "users.permissions.success": "User permissions updated successfully!",
   "users.permissions.error": "Failed to update user permissions",
-
   "employees.title": "Employee Management",
   "employees.subtitle": "Manage all employees with access to the POS system",
   "employees.addEmployee": "Add Employee",
@@ -663,11 +622,9 @@
   "employees.roles.subtitle": "Create and manage employee roles with defined permissions",
   "employees.roles.addRole": "Add Role",
   "employees.roles.searchPlaceholder": "Search roles...",
-
   "navigation.taxes": "Taxes",
   "navigation.productGroup": "Tax Product Groups",
   "navigation.taxGroup": "Tax Groups",
-
   "taxGroups.title": "Tax Groups",
   "taxGroups.subtitle": "Manage all tax groups and their configurations",
   "taxGroups.searchPlaceholder": "Search tax groups...",
@@ -678,7 +635,6 @@
   "taxGroups.table.brand": "Brand",
   "taxGroups.type.percentage": "Percentage",
   "taxGroups.type.fixedAmount": "Fixed Amount",
-
   "taxGroups.create.title": "Create Tax Group",
   "taxGroups.create.description": "Define a new tax group with its type and value.",
   "taxGroups.form.title": "Tax Group Information",
@@ -687,7 +643,6 @@
   "taxGroups.form.nameAr": "Name (Arabic)",
   "taxGroups.form.nameArPlaceholder": "Enter tax group name in Arabic",
   "taxGroups.form.nameEnPlaceholder": "Enter tax group name in English",
-
   "taxGroups.form.productGroupName": "Product Group Name",
   "taxGroups.form.productGroupNamePlaceholder": "e.g., Food Items, Beverages",
   "taxGroups.form.taxType": "Tax Type",
@@ -696,11 +651,9 @@
   "taxGroups.form.taxValuePlaceholder": "Enter tax value",
   "taxGroups.form.taxTypePercentage": "Percentage",
   "taxGroups.form.taxTypeFixedAmount": "Fixed Amount",
-
   "taxGroups.edit.title": "Edit Tax Group",
   "taxGroups.edit.description": "Update the details of the selected tax group.",
   "taxGroups.table.productGroupName": "Product Group Name",
-
   "categories.title": "Categories",
   "categories.subtitle": "Manage product categories for your brand.",
   "categories.addCategory": "Add Category",
@@ -720,7 +673,6 @@
   "categories.delete.description": "Are you sure you want to delete {name}?",
   "categories.delete.success": "Category deleted successfully!",
   "categories.delete.error": "Failed to delete category.",
-
   "categories.form.details": "Category Details",
   "categories.form.options": "Category Options",
   "categories.form.nameEn": "English Name",
@@ -736,7 +688,6 @@
   "categories.form.sortOrderPlaceholder": "e.g., 1, 2, 3...",
   "categories.form.activeStatusLabel": "Active Status",
   "categories.form.activeStatusDescription": "Category is visible and usable.",
-
   "categories.deleteCategory": "Delete Category",
   "categories.deleteConfirmation": "Are you sure you want to delete {categoryName}? This action cannot be undone.",
   "categories.deleteCategoryButton": "Delete Category",
@@ -746,7 +697,6 @@
   "categories.addNewCategory": "Add New Category",
   "categories.errorLoading": "Error loading categories",
   "categories.noDataFound": "No categories found",
-
   "categories.form.editTitle": "Edit Category",
   "categories.form.createTitle": "Create Category",
   "categories.form.editDescription": "Update the details of the selected category.",
@@ -768,7 +718,6 @@
   "categories.form.restaurantLabel": "Restaurant",
   "categories.form.restaurantPlaceholder": "Select a restaurant",
   "categories.form.restaurantDescription": "Optional. Link this category to a specific restaurant.",
-
   "categories.categoryName": "Category Name",
   "categories.shortCode": "Short Code",
   "categories.status": "Status",
@@ -778,7 +727,6 @@
   "categories.delete": "Delete",
   "categories.form.noRestaurantsAvailable": "No restaurants available",
   "categories.form.noRestaurantSelected": "No restaurant (applies to all)",
-
   "kitchen.title": "Kitchen Departments",
   "kitchen.subtitle": "Manage all kitchen departments in your restaurant",
   "kitchen.addNew": "Add New Kitchen Department",
@@ -799,7 +747,6 @@
   "kitchen.addSuccess": "Department added successfully",
   "kitchen.editSuccess": "Department updated successfully",
   "kitchen.deleteSuccess": "Department deleted successfully",
-
   "kitchen.form.restaurant1": "Pizza Palace - Downtown",
   "kitchen.form.restaurant2": "Burger House - Central",
   "kitchen.form.brands.pizzaPalace": "Pizza Palace",
@@ -818,7 +765,6 @@
   "kitchen.form.activeStatusDescription": "Toggle to activate or deactivate this department",
   "taxGroups.update.success": "Tax group updated successfully",
   "taxGroups.create.success": "Tax group created successfully",
-
   "users.form.contactInfo": "Contact & Address",
   "users.form.emailLabel": "Email Address",
   "users.form.emailPlaceholder": "Enter email address",
@@ -826,13 +772,11 @@
   "common.form.phonePlaceholder": "Enter phone number",
   "common.form.contactEmailLabel": "Contact Email",
   "common.form.contactEmailPlaceholder": "Enter contact email",
-
   "users.form.nameLabel": "Full Name",
   "users.form.namePlaceholder": "Enter full name",
   "users.form.nameDescription": "User's full display name",
   "common.form.countryCode": "Country Code",
   "users.form.roleInfo": "Role",
-
   "users.form.addressLabel": "Address",
   "users.form.addressPlaceholder": "Enter address",
   "users.form.accessControl": "Access Control",
@@ -840,19 +784,16 @@
   "users.form.brandDescription": "Select which brands this user can access",
   "users.form.restaurantLabel": "Assigned Restaurants",
   "users.form.restaurantDescription": "Select which restaurants this user can access",
-
   "users.form.securityInfo": "Account & Security",
   "users.form.passwordLabel": "Password",
   "users.form.passwordPlaceholder": "Enter password",
   "users.form.roleLabel": "Role",
   "users.form.rolePlaceholder": "Select user role",
-
   "users.form.statusInfo": "Status & Permissions",
   "users.form.activeStatusLabel": "Account Status",
   "users.form.activeStatusDescription": "Toggle to activate or deactivate this user account",
   "users.form.webAccessLabel": "Web Access",
   "users.form.termsLabel": "Agree to Terms",
-
   "users.form.systemInfo": "System & Preferences",
   "users.form.languageLabel": "Language",
   "users.form.languagePlaceholder": "Select Language",
@@ -862,178 +803,120 @@
   "users.form.macAddressPlaceholder": "AA:BB:CC:DD:EE:FF",
   "users.form.shiftStartLabel": "Shift Start (Minutes)",
   "users.form.shiftEndLabel": "Shift End (Minutes)",
-
   "users.permissions.user:create": "Create User",
   "users.permissions.user:createDescription": "Allows creating new users.",
-
   "users.permissions.user:read": "Read User",
   "users.permissions.user:readDescription": "Allows viewing user details.",
-
   "users.permissions.user:update": "Update User",
   "users.permissions.user:updateDescription": "Allows editing existing users.",
-
   "users.permissions.user:delete": "Delete User",
   "users.permissions.user:deleteDescription": "Allows deleting users.",
-
   "users.permissions.user:list": "List Users",
   "users.permissions.user:listDescription": "Allows listing all users.",
-
   "users.permissions.user:manage_roles": "Manage User Roles",
   "users.permissions.user:manage_rolesDescription": "Allows assigning and updating user roles.",
-
   "users.permissions.restaurant:create": "Create Restaurant",
   "users.permissions.restaurant:createDescription": "Allows creating new restaurants.",
-
   "users.permissions.restaurant:read": "Read Restaurant",
   "users.permissions.restaurant:readDescription": "Allows viewing restaurant details.",
-
   "users.permissions.restaurant:update": "Update Restaurant",
   "users.permissions.restaurant:updateDescription": "Allows modifying restaurant information.",
-
   "users.permissions.restaurant:delete": "Delete Restaurant",
   "users.permissions.restaurant:deleteDescription": "Allows removing a restaurant.",
-
   "users.permissions.restaurant:list": "List Restaurants",
   "users.permissions.restaurant:listDescription": "Allows listing all restaurants.",
-
   "users.permissions.restaurant:manage_tables": "Manage Tables",
   "users.permissions.restaurant:manage_tablesDescription": "Allows configuring restaurant tables and sections.",
-
   "users.permissions.brand:create": "Create Brand",
   "users.permissions.brand:createDescription": "Allows creating new brands.",
-
   "users.permissions.brand:read": "Read Brand",
   "users.permissions.brand:readDescription": "Allows viewing brand information.",
-
   "users.permissions.brand:delete": "Delete Brand",
   "users.permissions.brand:deleteDescription": "Allows removing a brand.",
-
   "users.permissions.brand:list": "List Brands",
   "users.permissions.brand:listDescription": "Allows listing all brands.",
-
   "users.permissions.brand:update": "Update Brand",
   "users.permissions.brand:updateDescription": "Allows modifying brand details.",
-
   "users.permissions.menu:create": "Create Menu",
   "users.permissions.menu:createDescription": "Allows creating new menus or menu items.",
-
   "users.permissions.menu:read": "Read Menu",
   "users.permissions.menu:readDescription": "Allows viewing menu items.",
-
   "users.permissions.menu:update": "Update Menu",
   "users.permissions.menu:updateDescription": "Allows modifying menus or items.",
-
   "users.permissions.menu:delete": "Delete Menu",
   "users.permissions.menu:deleteDescription": "Allows removing menu items.",
-
   "users.permissions.menu:list": "List Menus",
   "users.permissions.menu:listDescription": "Allows listing menus.",
-
   "users.permissions.menu:manage_categories": "Manage Menu Categories",
   "users.permissions.menu:manage_categoriesDescription": "Allows creating and editing menu categories.",
-
   "users.permissions.menu:manage_items": "Manage Menu Items",
   "users.permissions.menu:manage_itemsDescription": "Allows managing individual menu items.",
-
   "users.permissions.menu:manage_pricing": "Manage Menu Pricing",
   "users.permissions.menu:manage_pricingDescription": "Allows updating pricing and variations.",
-
   "users.permissions.menu:publish": "Publish Menu",
   "users.permissions.menu:publishDescription": "Allows publishing menu changes.",
-
   "users.permissions.order:create": "Create Order",
   "users.permissions.order:createDescription": "Allows creating new customer orders.",
-
   "users.permissions.order:read": "Read Order",
   "users.permissions.order:readDescription": "Allows viewing order details.",
-
   "users.permissions.order:update": "Update Order",
   "users.permissions.order:updateDescription": "Allows modifying orders.",
-
   "users.permissions.order:delete": "Delete Order",
   "users.permissions.order:deleteDescription": "Allows deleting orders.",
-
   "users.permissions.order:list": "List Orders",
   "users.permissions.order:listDescription": "Allows listing all orders.",
-
   "users.permissions.order:cancel": "Cancel Order",
   "users.permissions.order:cancelDescription": "Allows cancelling orders.",
-
   "users.permissions.order:refund": "Refund Order",
   "users.permissions.order:refundDescription": "Allows processing refunds.",
-
   "users.permissions.order:kitchen_view": "Kitchen Order View",
   "users.permissions.order:kitchen_viewDescription": "Allows viewing orders in the kitchen panel.",
-
   "users.permissions.order:kitchen_update": "Kitchen Order Update",
   "users.permissions.order:kitchen_updateDescription": "Allows updating order status from kitchen.",
-
   "users.permissions.kitchen:view_orders": "Kitchen View Orders",
   "users.permissions.kitchen:view_ordersDescription": "Allows viewing all kitchen orders.",
-
   "users.permissions.kitchen:update_status": "Kitchen Update Status",
   "users.permissions.kitchen:update_statusDescription": "Allows updating kitchen order status.",
-
   "users.permissions.kitchen:manage_departments": "Manage Kitchen Departments",
   "users.permissions.kitchen:manage_departmentsDescription": "Allows managing kitchen sections and departments.",
-
   "users.permissions.payment:process": "Process Payments",
   "users.permissions.payment:processDescription": "Allows processing customer payments.",
-
   "users.permissions.payment:view": "View Payments",
   "users.permissions.payment:viewDescription": "Allows viewing payment history.",
-
   "users.permissions.payment:refund": "Refund Payments",
   "users.permissions.payment:refundDescription": "Allows issuing payment refunds.",
-
   "users.permissions.payment:view_reports": "View Payment Reports",
   "users.permissions.payment:view_reportsDescription": "Allows viewing payment-related reports.",
-
   "users.permissions.tax:create": "Create Tax",
   "users.permissions.tax:createDescription": "Allows defining new tax rules.",
-
   "users.permissions.tax:read": "Read Tax",
   "users.permissions.tax:readDescription": "Allows viewing tax rules.",
-
   "users.permissions.tax:update": "Update Tax",
   "users.permissions.tax:updateDescription": "Allows editing existing tax rules.",
-
   "users.permissions.tax:delete": "Delete Tax",
   "users.permissions.tax:deleteDescription": "Allows deleting tax rules.",
-
   "users.permissions.tax:list": "List Taxes",
   "users.permissions.tax:listDescription": "Allows viewing all tax entries.",
-
   "users.permissions.tax:manage_groups": "Manage Tax Groups",
   "users.permissions.tax:manage_groupsDescription": "Allows configuring tax groups.",
-
   "users.permissions.report:view_sales": "View Sales Reports",
   "users.permissions.report:view_salesDescription": "Allows accessing sales analytics.",
-
   "users.permissions.report:view_inventory": "View Inventory Reports",
   "users.permissions.report:view_inventoryDescription": "Allows viewing inventory-related reports.",
-
   "users.permissions.report:view_financial": "View Financial Reports",
   "users.permissions.report:view_financialDescription": "Allows viewing financial reporting.",
-
   "users.permissions.report:view_user_activity": "View User Activity Reports",
   "users.permissions.report:view_user_activityDescription": "Allows accessing user activity reports.",
-
   "users.permissions.report:export": "Export Reports",
   "users.permissions.report:exportDescription": "Allows exporting report data.",
-
   "users.permissions.system:backup": "System Backup",
   "users.permissions.system:backupDescription": "Allows performing full system backups.",
-
   "users.permissions.system:maintenance": "System Maintenance",
   "users.permissions.system:maintenanceDescription": "Allows executing maintenance and system upkeep tasks.",
-
   "users.permissions.system:manage_config": "Manage System Configuration",
   "users.permissions.system:manage_configDescription": "Allows modifying core system configuration settings.",
-
   "users.permissions.system:view_logs": "View System Logs",
   "users.permissions.system:view_logsDescription": "Allows viewing application and server logs.",
-
   "users.accountStatus.PENDING_VERIFICATION": "Pending Verification",
   "users.accountStatus.PENDING_EMAIL_VERIFICATION": "Pending Email Verification",
   "users.accountStatus.PENDING_PHONE_VERIFICATION": "Pending Phone Verification",
@@ -1047,49 +930,35 @@
   "users.update.error": "Failed to update user",
   "users.updateUser": "Update User",
   "common.filter.all": "All",
-
   "auth.logout.success": "Logout Successfully",
   "auth.logout.error": "Failed to logout",
   "auth.login.success": "Login Successfully",
   "auth.login.error": "Failed to login",
-
   "menus.form.basicInfo": "Basic Information",
-
   "menus.title": "Menus",
   "menus.subtitle": "Manage all menus in your restaurant",
   "menus.searchPlaceholder": "Search menus...",
   "menus.noDataFound": "No menus found",
-
   "menus.form.nameLabel": "Menu Name",
   "menus.form.nameEnPlaceholder": "Enter menu name in English",
   "menus.form.nameArPlaceholder": "Enter menu name in Arabic",
-
   "menus.form.shortCode": "Short Code",
   "menus.form.shortCodePlaceholder": "Enter short code",
-
   "menus.form.shortName": "Short Name",
   "menus.form.shortNamePlaceholder": "Enter short name",
-
   "menus.form.activeStatusLabel": "Active Status",
   "menus.form.activeStatusDescription": "Enable or disable this menu",
-
   "menus.form.additionalSettings": "Additional Settings",
-
   "menus.form.posDefaultLabel": "POS Default",
   "menus.form.posDefaultDescription": "Set this menu as the default POS menu",
-
   "menus.form.digitalDefaultLabel": "Digital Default",
   "menus.form.digitalDefaultDescription": "Set this menu as the default digital menu",
-
   "menus.form.digitalMenuLabel": "Digital Menu",
   "menus.form.digitalMenuDescription": "Enable this menu for digital display",
-
   "menus.form.mobileAppLabel": "Mobile App",
   "menus.form.mobileAppDescription": "Make this menu available on the mobile app",
-
   "menus.form.ondcLabel": "ONDC",
   "menus.form.ondcDescription": "Enable ONDC support for this menu",
-
   "menus.create.title": "Create Menu",
   "menus.edit.title": "Update Menu",
   "menus.create.submit": "Create Menu",
@@ -1102,7 +971,6 @@
   "menus.edit.error": "Failed to update menu",
   "menus.delete.submit": "Delete Menu",
   "menus.addMenu": "Add Menu",
-
   "menus.table.name": "Menu Name",
   "menus.table.shortCode": "Short Code",
   "menus.table.status": "Status",
@@ -1126,15 +994,12 @@
   "common.noRestaurantAvailable": "No restaurant available",
   "common.brandPlaceholder": "Select a brand",
   "common.restaurantPlaceholder": "Select a restaurant",
-
   "restaurants.form.notificationPhone": "Notification Phone Numbers (Comma separated)",
   "restaurants.form.notificationPhonePlaceholder": "Enter phone numbers, separated by commas",
-
   "restaurants.form.notificationEmails": "Notification Emails (Comma separated)",
   "restaurants.form.notificationEmailsPlaceholder": "Enter email addresses, separated by commas",
   "restaurants.form.autoResetSettings": "Auto Reset Settings",
   "restaurants.form.nextResetBillDateLabel": "Enter next reset bill date",
-
   "restaurants.form.billPrefixLabel": "Custom Bill Prefix",
   "restaurants.form.billPrefixPlaceholder": "Enter bill prefix",
   "restaurants.form.billPrefixDescription": "Custom prefix for bills",
@@ -1149,14 +1014,12 @@
   "restaurants.form.qrCodeLinkPlaceholder": "Enter QR Link",
   "restaurants.form.addQRCode": "Add QR Code",
   "menus.table.menuItems": "Menu Items",
-
   "menuItems.title": "Menu Items",
   "menuItems.subtitle": "Manage menu items",
   "menuItems.addNewItem": "Add Menu Item",
   "menuItems.searchPlaceholder": "Search by name or code...",
   "menuItems.noDataFound": "No menu items found",
   "menuItems.errorLoading": "Error loading menu items",
-
   "menuItems.table.itemName": "Item Name",
   "menuItems.table.shortCode": "Short Code",
   "menuItems.table.menu": "Menu",
@@ -1174,37 +1037,30 @@
   "menuItems.table.actions": "Actions",
   "menuItems.table.edit": "Edit",
   "menuItems.table.delete": "Delete",
-
   "menuItems.status.active": "Active",
   "menuItems.status.inactive": "Inactive",
   "menuItems.status.pos": "POS",
   "menuItems.status.platform": "Platform",
   "menuItems.status.recommended": "Recommended",
   "menuItems.status.combo": "Combo",
-
   "menuItems.foodTypes.VEG": "Vegetarian",
   "menuItems.foodTypes.NON_VEG": "Non-Vegetarian",
   "menuItems.foodTypes.VEGAN": "Vegan",
-
   "menuItems.meatTypes.VEG": "Vegetarian",
   "menuItems.meatTypes.CHICKEN": "Chicken",
   "menuItems.meatTypes.MUTTON": "Mutton",
   "menuItems.meatTypes.FISH": "Fish",
-
   "menuItems.discountTypes.Percentage": "Percentage",
   "menuItems.discountTypes.Fixed Amount": "Fixed Amount",
-
   "menuItems.delete.title": "Delete Menu Item",
   "menuItems.delete.description": "Are you sure you want to delete {{name}}? This action cannot be undone.",
   "menuItems.delete.confirmButton": "Delete Item",
-
   "menuItems.form.createTitle": "Create Menu Item",
   "menuItems.form.editTitle": "Edit Menu Item",
   "menuItems.form.createDescription": "Add a new item to the menu",
   "menuItems.form.editDescription": "Update menu item details",
   "menuItems.form.createButton": "Create Item",
   "menuItems.form.updateButton": "Update Item",
-
   "menuItems.form.sections.basicInfo": "Basic Information",
   "menuItems.form.sections.categorization": "Categorization",
   "menuItems.form.sections.pricing": "Pricing & Discounts",
@@ -1216,7 +1072,6 @@
   "menuItems.form.sections.addOns": "Add-ons",
   "menuItems.form.sections.combo": "Combo Configuration",
   "menuItems.form.sections.images": "Images",
-
   "menuItems.form.fields.itemNameEn": "Item Name (English)",
   "menuItems.form.fields.itemNameAr": "Item Name (Arabic)",
   "menuItems.form.fields.descriptionEn": "Description (English)",
@@ -1263,5 +1118,6 @@
   "menuItems.table.openPrice": "Open Price",
   "menuItems.table.syncToAggregator": "Sync to Aggregator",
   "menuItems.table.isCombo": "Combo Item",
-  "menuItems.table.discountedPrice": "Discounted Price"
+  "menuItems.table.discountedPrice": "Discounted Price",
+  "menuItems.table.image": "Image"
 }
