@@ -3,7 +3,15 @@
  * Helper functions for handling upload URLs and S3 paths
  */
 
-import { API_CONFIG } from "@/config/api";
+/**
+ * Get full S3 URL from upload key
+ * @param uploadKey - The S3 key returned from upload API
+ * @returns Full S3 URL or empty string if no key
+ */
+const DEV_BUCKET_URL =
+  'https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com';
+const PROD_BUCKET_URL =
+  'https://rhpos-uploads-production.s3.me-central-1.amazonaws.com';
 
 /**
  * Get full S3 URL from upload key
@@ -13,15 +21,17 @@ import { API_CONFIG } from "@/config/api";
 export const getS3UrlFromKey = (
   uploadKey: string | null | undefined,
 ): string => {
-  if (!uploadKey) return "";
+  if (!uploadKey) return '';
 
   // If it's already a full URL, return as is
-  if (uploadKey.startsWith("http")) {
+  if (uploadKey.startsWith('http')) {
     return uploadKey;
   }
 
-  // Construct full S3 URL from key
-  return `${API_CONFIG.S3_UPLOAD_BASE_URL}/${uploadKey}`;
+  // If it's a key, prepend the base URL (defaulting to dev for now)
+  // Remove leading slash if present to avoid double slashes
+  const cleanKey = uploadKey.startsWith('/') ? uploadKey.slice(1) : uploadKey;
+  return `${DEV_BUCKET_URL}/${cleanKey}`;
 };
 
 /**
@@ -32,12 +42,7 @@ export const getS3UrlFromKey = (
 export const isValidS3Url = (url: string): boolean => {
   if (!url) return false;
 
-  const devBucketUrl =
-    "https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com";
-  const prodBucketUrl =
-    "https://rhpos-uploads-production.s3.me-central-1.amazonaws.com";
-
-  return url.startsWith(devBucketUrl) || url.startsWith(prodBucketUrl);
+  return url.startsWith(DEV_BUCKET_URL) || url.startsWith(PROD_BUCKET_URL);
 };
 
 /**
@@ -46,19 +51,14 @@ export const isValidS3Url = (url: string): boolean => {
  * @returns S3 key or original URL if not an S3 URL
  */
 export const getKeyFromS3Url = (url: string): string => {
-  if (!url) return "";
+  if (!url) return '';
 
-  const devBucketUrl =
-    "https://rhpos-uploads-dev.s3.me-central-1.amazonaws.com/";
-  const prodBucketUrl =
-    "https://rhpos-uploads-production.s3.me-central-1.amazonaws.com/";
-
-  if (url.startsWith(devBucketUrl)) {
-    return url.replace(devBucketUrl, "");
+  if (url.startsWith(DEV_BUCKET_URL)) {
+    return url.replace(DEV_BUCKET_URL + '/', '');
   }
 
-  if (url.startsWith(prodBucketUrl)) {
-    return url.replace(prodBucketUrl, "");
+  if (url.startsWith(PROD_BUCKET_URL)) {
+    return url.replace(PROD_BUCKET_URL + '/', '');
   }
 
   return url;

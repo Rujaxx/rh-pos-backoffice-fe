@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
   RHFSelect,
   RHFSwitch,
   RHFMultilingualInput,
-} from "@/components/ui/form-components";
-import { useTranslation } from "@/hooks/useTranslation";
-import { menuSchema, MenuFormData } from "@/lib/validations/menu.validation";
-import { Menu } from "@/types/menu.type";
-import { useActiveBrands } from "@/services/api/brands/brands.queries";
-import { useI18n } from "@/providers/i18n-provider";
-import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
+} from '@/components/ui/form-components';
+import { useTranslation } from '@/hooks/useTranslation';
+import { menuSchema, MenuFormData } from '@/lib/validations/menu.validation';
+import { Menu } from '@/types/menu.type';
+import { useActiveBrands } from '@/services/api/brands/brands.queries';
+import { useI18n } from '@/providers/i18n-provider';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
 
 interface MenuFormContentProps {
   form: ReturnType<typeof useForm<MenuFormData>>;
@@ -43,7 +43,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    })
+    }),
   );
 
   return (
@@ -53,7 +53,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("menus.form.basicInfo")}
+              {t('menus.form.basicInfo')}
             </CardTitle>
           </CardHeader>
 
@@ -62,10 +62,10 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
             <RHFMultilingualInput
               form={form}
               name="name"
-              label={t("menus.form.nameLabel")}
+              label={t('menus.form.nameLabel')}
               placeholder={{
-                en: t("menus.form.nameEnPlaceholder"),
-                ar: t("menus.form.nameArPlaceholder"),
+                en: t('menus.form.nameEnPlaceholder'),
+                ar: t('menus.form.nameArPlaceholder'),
               }}
             />
 
@@ -73,29 +73,29 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
             <RHFInput
               form={form}
               name="shortCode"
-              label={t("menus.form.shortCode")}
-              placeholder={t("menus.form.shortCodePlaceholder")}
+              label={t('menus.form.shortCode')}
+              placeholder={t('menus.form.shortCodePlaceholder')}
             />
 
             {/* Short Name */}
             <RHFInput
               form={form}
               name="shortName"
-              label={t("menus.form.shortName")}
-              placeholder={t("menus.form.shortNamePlaceholder")}
+              label={t('menus.form.shortName')}
+              placeholder={t('menus.form.shortNamePlaceholder')}
             />
 
             {/* Brand */}
             <RHFSelect
               form={form}
               name="brandId"
-              label={t("categories.form.brandLabel")}
+              label={t('categories.form.brandLabel')}
               placeholder={
                 isLoadingBrands
-                  ? t("common.loading")
+                  ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t("common.noBrandsAvailable")
-                    : t("common.brandPlaceholder")
+                    ? t('common.noBrandsAvailable')
+                    : t('common.brandPlaceholder')
               }
               options={brandOptions}
             />
@@ -104,8 +104,8 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
             <RHFSwitch
               form={form}
               name="isActive"
-              label={t("menus.form.activeStatusLabel")}
-              description={t("menus.form.activeStatusDescription")}
+              label={t('menus.form.activeStatusLabel')}
+              description={t('menus.form.activeStatusDescription')}
             />
           </CardContent>
         </Card>
@@ -114,7 +114,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {t("menus.form.additionalSettings")}
+              {t('menus.form.additionalSettings')}
             </CardTitle>
           </CardHeader>
 
@@ -123,13 +123,13 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
             <RHFSelect
               form={form}
               name="restaurantId"
-              label={t("categories.form.restaurantLabel")}
+              label={t('categories.form.restaurantLabel')}
               placeholder={
                 isLoadingRestaurants
-                  ? t("common.loading")
+                  ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t("categories.form.noRestaurantsAvailable")
-                    : t("categories.form.restaurantPlaceholder")
+                    ? t('categories.form.noRestaurantsAvailable')
+                    : t('categories.form.restaurantPlaceholder')
               }
               options={restaurantOptions}
             />
@@ -138,16 +138,16 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
             <RHFSwitch
               form={form}
               name="isPosDefault"
-              label={t("menus.form.posDefaultLabel")}
-              description={t("menus.form.posDefaultDescription")}
+              label={t('menus.form.posDefaultLabel')}
+              description={t('menus.form.posDefaultDescription')}
             />
 
             {/* Digital Menu */}
             <RHFSwitch
               form={form}
               name="isDigitalMenu"
-              label={t("menus.form.digitalMenuLabel")}
-              description={t("menus.form.digitalMenuDescription")}
+              label={t('menus.form.digitalMenuLabel')}
+              description={t('menus.form.digitalMenuDescription')}
             />
 
             {/* ONDC Hidden for now*/}
@@ -169,15 +169,15 @@ export function useMenuForm(editingMenu?: Menu | null) {
   const form = useForm<MenuFormData>({
     resolver: zodResolver(menuSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
-      shortCode: "",
-      shortName: "",
+      name: { en: '', ar: '' },
+      shortCode: '',
+      shortName: '',
       isActive: true,
       isPosDefault: false,
       isDigitalMenu: false,
       isONDC: false,
-      brandId: "",
-      restaurantId: "",
+      brandId: '',
+      restaurantId: '',
     },
   });
 
@@ -197,15 +197,15 @@ export function useMenuForm(editingMenu?: Menu | null) {
       });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
-        shortCode: "",
-        shortName: "",
+        name: { en: '', ar: '' },
+        shortCode: '',
+        shortName: '',
         isActive: true,
         isPosDefault: false,
         isDigitalMenu: false,
         isONDC: false,
-        brandId: "",
-        restaurantId: "",
+        brandId: '',
+        restaurantId: '',
       });
     }
   }, [editingMenu, form]);

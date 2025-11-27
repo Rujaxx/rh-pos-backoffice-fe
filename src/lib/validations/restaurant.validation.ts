@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   addressSchema,
   multilingualTextSchema,
@@ -7,7 +7,7 @@ import {
   validateFormSubmission,
   formatValidationErrors,
   getNestedFieldError,
-} from "./common/common.validation";
+} from './common/common.validation';
 
 // Validation schemas for restaurant settings
 
@@ -29,8 +29,8 @@ export const sendReportsSchema = z.object({
 });
 
 const customQRCodeSchema = z.object({
-  qrCodeTitle: z.string().min(1, "Title is required"),
-  qrCodeLink: z.url("Invalid URL"),
+  qrCodeTitle: z.string().min(1, 'Title is required'),
+  qrCodeLink: z.url('Invalid URL'),
 });
 
 // Restaurant validation schema matching backend CreateRestaurantDto
@@ -38,31 +38,34 @@ export const restaurantSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
   description: multilingualTextSchema.optional(),
-  brandId: z.string().min(1, "Brand is required"),
+  brandId: z.string().min(1, 'Brand is required'),
   logo: z.string().optional(),
   address: addressSchema.optional(),
-  timezone: z.string().min(1, "Timezone is required"),
+  timezone: z.string().min(1, 'Timezone is required'),
 
   startDayTime: z
     .number()
-    .min(0, "Start day time must be between 0 and 1439 minutes")
-    .max(1439, "Start day time must be between 0 and 1439 minutes"),
+    .min(0, 'Start day time must be between 0 and 1439 minutes')
+    .max(1439, 'Start day time must be between 0 and 1439 minutes'),
 
   endDayTime: z
     .number()
-    .min(0, "End day time must be between 0 and 1439 minutes")
-    .max(1439, "End day time must be between 0 and 1439 minutes"),
+    .min(0, 'End day time must be between 0 and 1439 minutes')
+    .max(1439, 'End day time must be between 0 and 1439 minutes'),
 
-  nextResetBillFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
   nextResetBillDate: z.string().optional(),
-  nextResetKotFreq: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  nextResetKotFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
   notificationPhone: z.array(z.string()).default([]),
-  notificationEmails: z.array(z.email("Invalid email format")).default([]),
+  notificationEmails: z.array(z.email('Invalid email format')).default([]),
   phoneNumber: z.string().nullable().optional(),
-  contactEmail: z.email("Invalid email format").nullable().optional(),
+  contactEmail: z.email('Invalid email format').nullable().optional(),
   countryCode: z.string().optional(),
   isActive: z.boolean().default(true),
-  restoCode: z.string().max(50).optional(),
+  restoCode: z
+    .string()
+    .max(6, 'Resto code must be at most 6 characters')
+    .optional(),
   posLogoutOnClose: z.boolean().default(true),
   isFeedBackActive: z.boolean().default(false),
   trnOrGstNo: z.string().max(50).optional(),
@@ -75,8 +78,8 @@ export const restaurantSchema = z.object({
   allowMultipleTax: z.boolean().default(false),
   generateOrderTypeWiseOrderNo: z.boolean().default(false),
   smsAndWhatsappSelection: z
-    .enum(["none", "sms", "whatsapp", "both"])
-    .default("none"),
+    .enum(['none', 'sms', 'whatsapp', 'both'])
+    .default('none'),
   whatsAppChannel: z.string().optional(),
   sendReports: sendReportsSchema.default({
     email: false,

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { MenuItem } from "@/types/menu-item.type";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { MenuItem } from '@/types/menu-item.type';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Tag,
   Star,
@@ -24,39 +24,39 @@ import {
   AlertTriangle,
   MoreHorizontal,
   UtensilsCrossed,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useI18n } from "@/providers/i18n-provider";
-import { MultilingualText } from "@/types";
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
+import { MultilingualText } from '@/types';
 
 export const foodTypeColors = {
-  VEG: "bg-green-100 text-green-800 border-green-300",
-  NON_VEG: "bg-red-100 text-red-800 border-red-300",
-  VEGAN: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  VEG: 'bg-green-100 text-green-800 border-green-300',
+  NON_VEG: 'bg-red-100 text-red-800 border-red-300',
+  VEGAN: 'bg-emerald-100 text-emerald-800 border-emerald-300',
 };
 
 export const meatTypeColors = {
-  VEG: "bg-green-50 text-green-700",
-  CHICKEN: "bg-orange-50 text-orange-700",
-  MUTTON: "bg-red-50 text-red-700",
-  FISH: "bg-blue-50 text-blue-700",
+  VEG: 'bg-green-50 text-green-700',
+  CHICKEN: 'bg-orange-50 text-orange-700',
+  MUTTON: 'bg-red-50 text-red-700',
+  FISH: 'bg-blue-50 text-blue-700',
 };
 
 // Column definitions for the menu items table
 export const createMenuItemColumns = (
   onEdit: (menuItem: MenuItem) => void,
   onDelete: (menuItem: MenuItem) => void,
-  t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  t: ReturnType<typeof useTranslation>['t'],
+  locale: string,
 ): ColumnDef<MenuItem>[] => [
   {
-    accessorKey: "itemName",
-    id: "itemName",
-    header: t("menuItems.table.itemName"),
+    accessorKey: 'itemName',
+    id: 'itemName',
+    header: t('menuItems.table.itemName'),
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      const aValue = (rowA.original.itemName.en || "").toLowerCase();
-      const bValue = (rowB.original.itemName.en || "").toLowerCase();
+      const aValue = (rowA.original.itemName.en || '').toLowerCase();
+      const bValue = (rowB.original.itemName.en || '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -80,8 +80,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "shortCode",
-    header: t("menuItems.table.shortCode"),
+    id: 'shortCode',
+    header: t('menuItems.table.shortCode'),
     size: 120,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -95,8 +95,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "menu",
-    header: t("menuItems.table.menu"),
+    id: 'menu',
+    header: t('menuItems.table.menu'),
     size: 150,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -114,8 +114,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "category",
-    header: t("menuItems.table.category"),
+    id: 'category',
+    header: t('menuItems.table.category'),
     size: 150,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -133,8 +133,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "subCategory",
-    header: t("menuItems.table.subCategory"),
+    id: 'subCategory',
+    header: t('menuItems.table.subCategory'),
     size: 150,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -142,7 +142,7 @@ export const createMenuItemColumns = (
         <div className="space-y-1">
           {menuItem.subCategoryName?.en && (
             <div className="text-xs text-muted-foreground">
-              →{" "}
+              →{' '}
               {menuItem.subCategoryName?.[locale as keyof MultilingualText] ||
                 menuItem.subCategoryName.en}
             </div>
@@ -153,9 +153,9 @@ export const createMenuItemColumns = (
   },
 
   {
-    accessorKey: "baseItemPrice",
-    id: "baseItemPrice",
-    header: t("menuItems.table.basePrice"),
+    accessorKey: 'baseItemPrice',
+    id: 'baseItemPrice',
+    header: t('menuItems.table.basePrice'),
     enableSorting: true,
     size: 140,
     cell: ({ row }) => {
@@ -171,8 +171,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "foodType",
-    header: t("menuItems.table.foodType"),
+    id: 'foodType',
+    header: t('menuItems.table.foodType'),
     size: 140,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -193,8 +193,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "meatType",
-    header: t("menuItems.table.meatType"),
+    id: 'meatType',
+    header: t('menuItems.table.meatType'),
     size: 140,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -215,9 +215,9 @@ export const createMenuItemColumns = (
   },
 
   {
-    accessorKey: "currentStock",
-    id: "currentStock",
-    header: t("menuItems.table.stock"),
+    accessorKey: 'currentStock',
+    id: 'currentStock',
+    header: t('menuItems.table.stock'),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
@@ -237,10 +237,10 @@ export const createMenuItemColumns = (
           <span
             className={`text-sm font-medium ${
               isOutOfStock
-                ? "text-red-600"
+                ? 'text-red-600'
                 : isLowStock
-                  ? "text-orange-600"
-                  : "text-green-600"
+                  ? 'text-orange-600'
+                  : 'text-green-600'
             }`}
           >
             {menuItem.currentStock}
@@ -251,8 +251,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "kitchenDepartment",
-    header: t("menuItems.table.kitchenDepartment"),
+    id: 'kitchenDepartment',
+    header: t('menuItems.table.kitchenDepartment'),
     size: 150,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -268,7 +268,7 @@ export const createMenuItemColumns = (
           )}
           {menuItem.preparationTime && (
             <div className="text-xs text-muted-foreground">
-              {menuItem.preparationTime} {t("menuItems.table.minutes")}
+              {menuItem.preparationTime} {t('menuItems.table.minutes')}
             </div>
           )}
         </div>
@@ -277,24 +277,24 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "status",
-    header: t("menuItems.table.status"),
+    id: 'status',
+    header: t('menuItems.table.status'),
     size: 200,
     cell: ({ row }) => {
       const menuItem = row.original;
       return (
         <div className="flex flex-wrap gap-1">
-          <Badge variant={menuItem.isActive ? "default" : "secondary"}>
+          <Badge variant={menuItem.isActive ? 'default' : 'secondary'}>
             {menuItem.isActive
-              ? t("menuItems.status.active")
-              : t("menuItems.status.inactive")}
+              ? t('menuItems.status.active')
+              : t('menuItems.status.inactive')}
           </Badge>
           {menuItem.posStatus && (
             <Badge
               variant="outline"
               className="bg-blue-50 text-blue-700 border-blue-300"
             >
-              {t("menuItems.status.pos")}
+              {t('menuItems.status.pos')}
             </Badge>
           )}
           {menuItem.platformStatus && (
@@ -302,7 +302,7 @@ export const createMenuItemColumns = (
               variant="outline"
               className="bg-purple-50 text-purple-700 border-purple-300"
             >
-              {t("menuItems.status.platform")}
+              {t('menuItems.status.platform')}
             </Badge>
           )}
           {menuItem.isRecommended && (
@@ -310,7 +310,7 @@ export const createMenuItemColumns = (
               variant="outline"
               className="bg-yellow-50 text-yellow-700 border-yellow-300"
             >
-              {t("menuItems.status.recommended")}
+              {t('menuItems.status.recommended')}
             </Badge>
           )}
           {menuItem.isCombo && (
@@ -318,7 +318,7 @@ export const createMenuItemColumns = (
               variant="outline"
               className="bg-indigo-50 text-indigo-700 border-indigo-300"
             >
-              {t("menuItems.status.combo")}
+              {t('menuItems.status.combo')}
             </Badge>
           )}
         </div>
@@ -327,8 +327,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "taxInfo",
-    header: t("menuItems.table.taxInfo"),
+    id: 'taxInfo',
+    header: t('menuItems.table.taxInfo'),
     size: 150,
     cell: ({ row }) => {
       const menuItem = row.original;
@@ -341,7 +341,7 @@ export const createMenuItemColumns = (
           )}
           {taxInfo && (
             <div className="text-xs text-muted-foreground">
-              {taxInfo.taxType === "Percentage"
+              {taxInfo.taxType === 'Percentage'
                 ? `${taxInfo.taxValue}%`
                 : `SAR ${taxInfo.taxValue}`}
             </div>
@@ -352,9 +352,9 @@ export const createMenuItemColumns = (
   },
 
   {
-    accessorKey: "createdAt",
-    id: "createdAt",
-    header: t("menuItems.table.created"),
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: t('menuItems.table.created'),
     enableSorting: true,
     size: 140,
     cell: ({ row }) => {
@@ -365,7 +365,7 @@ export const createMenuItemColumns = (
           <span>
             {menuItem.createdAt
               ? new Date(menuItem.createdAt).toLocaleDateString()
-              : "N/A"}
+              : 'N/A'}
           </span>
         </div>
       );
@@ -373,8 +373,8 @@ export const createMenuItemColumns = (
   },
 
   {
-    id: "actions",
-    header: t("table.actions"),
+    id: 'actions',
+    header: t('table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -398,7 +398,7 @@ export const createMenuItemColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("menuItems.table.edit")}
+              {t('menuItems.table.edit')}
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -409,7 +409,7 @@ export const createMenuItemColumns = (
               className="cursor-pointer text-destructive focus:text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("menuItems.table.delete")}
+              {t('menuItems.table.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -421,7 +421,7 @@ export const createMenuItemColumns = (
 // Hook for using menu item columns with current translation
 export const useMenuItemColumns = (
   onEdit: (menuItem: MenuItem) => void,
-  onDelete: (menuItem: MenuItem) => void
+  onDelete: (menuItem: MenuItem) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -430,18 +430,18 @@ export const useMenuItemColumns = (
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const sort = sorting[0];
   // Map TanStack column IDs to backend field names
   const fieldMap: Record<string, string> = {
-    itemName: "itemName.en",
-    shortCode: "shortCode",
-    baseItemPrice: "baseItemPrice",
-    currentStock: "currentStock",
-    createdAt: "createdAt",
+    itemName: 'itemName.en',
+    shortCode: 'shortCode',
+    baseItemPrice: 'baseItemPrice',
+    currentStock: 'currentStock',
+    createdAt: 'createdAt',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -449,8 +449,8 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
-): "asc" | "desc" | undefined => {
+  sorting: Array<{ id: string; desc: boolean }>,
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

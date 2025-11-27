@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Menu } from "@/types/menu.type";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Menu } from '@/types/menu.type';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Edit,
   Trash2,
@@ -19,25 +19,25 @@ import {
   Calendar,
   UtensilsCrossed,
   List,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useRouter } from "next/navigation";
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useRouter } from 'next/navigation';
 
 // Column definitions for the menus table
 export const createMenuColumns = (
   onEdit: (menu: Menu) => void,
   onDelete: (menu: Menu) => void,
-  t: ReturnType<typeof useTranslation>["t"],
-  router: ReturnType<typeof useRouter>
+  t: ReturnType<typeof useTranslation>['t'],
+  router: ReturnType<typeof useRouter>,
 ): ColumnDef<Menu>[] => [
   {
-    accessorKey: "name",
-    id: "name",
-    header: t("menus.table.name"),
+    accessorKey: 'name',
+    id: 'name',
+    header: t('menus.table.name'),
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      const aValue = (rowA.original.name?.en || "").toLowerCase();
-      const bValue = (rowB.original.name?.en || "").toLowerCase();
+      const aValue = (rowA.original.name?.en || '').toLowerCase();
+      const bValue = (rowB.original.name?.en || '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -59,8 +59,8 @@ export const createMenuColumns = (
   },
 
   {
-    id: "shortCode",
-    header: t("menus.table.shortCode"),
+    id: 'shortCode',
+    header: t('menus.table.shortCode'),
     size: 100,
     cell: ({ row }) => {
       const menu = row.original;
@@ -74,49 +74,49 @@ export const createMenuColumns = (
   },
 
   {
-    id: "isActive",
-    header: t("menus.table.status"),
+    id: 'isActive',
+    header: t('menus.table.status'),
     size: 120,
     cell: ({ row }) => {
       const menu = row.original;
       return (
-        <Badge variant={menu.isActive ? "default" : "secondary"}>
-          {menu.isActive ? t("common.active") : t("common.inactive")}
+        <Badge variant={menu.isActive ? 'default' : 'secondary'}>
+          {menu.isActive ? t('common.active') : t('common.inactive')}
         </Badge>
       );
     },
   },
 
   {
-    id: "isPosDefault",
-    header: t("menus.table.posDefault"),
+    id: 'isPosDefault',
+    header: t('menus.table.posDefault'),
     size: 120,
     cell: ({ row }) => {
       const menu = row.original;
       return menu.isPosDefault ? (
-        <Badge variant="default">{t("menus.table.pos")}</Badge>
+        <Badge variant="default">{t('menus.table.pos')}</Badge>
       ) : (
-        <Badge variant="secondary">{t("common.no")}</Badge>
+        <Badge variant="secondary">{t('common.no')}</Badge>
       );
     },
   },
 
   {
-    id: "isDigitalDefault",
-    header: t("menus.table.digitalDefault"),
+    id: 'isDigitalDefault',
+    header: t('menus.table.digitalDefault'),
     size: 140,
     cell: ({ row }) => {
       const menu = row.original;
       return menu.isDigitalDefault ? (
-        <Badge variant="default">{t("menus.table.digital")}</Badge>
+        <Badge variant="default">{t('menus.table.digital')}</Badge>
       ) : (
-        <Badge variant="secondary">{t("common.no")}</Badge>
+        <Badge variant="secondary">{t('common.no')}</Badge>
       );
     },
   },
   {
-    id: "menuItemCount",
-    header: t("menus.table.itemCount"),
+    id: 'menuItemCount',
+    header: t('menus.table.itemCount'),
     size: 100,
     cell: ({ row }) => {
       const menu = row.original;
@@ -128,9 +128,9 @@ export const createMenuColumns = (
     },
   },
   {
-    accessorKey: "createdAt",
-    id: "createdAt",
-    header: t("menus.table.created"),
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: t('menus.table.created'),
     enableSorting: true,
     size: 140,
     cell: ({ row }) => {
@@ -141,7 +141,7 @@ export const createMenuColumns = (
           <span>
             {menu.createdAt
               ? new Date(menu.createdAt).toLocaleDateString()
-              : "N/A"}
+              : 'N/A'}
           </span>
         </div>
       );
@@ -149,8 +149,8 @@ export const createMenuColumns = (
   },
 
   {
-    id: "actions",
-    header: t("table.actions"),
+    id: 'actions',
+    header: t('table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -173,7 +173,7 @@ export const createMenuColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("menus.table.edit")}
+              {t('menus.table.edit')}
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -184,7 +184,7 @@ export const createMenuColumns = (
               className="cursor-pointer"
             >
               <List className="mr-2 h-4 w-4" />
-              {t("menus.table.menuItems")} ({menu.menuItemCount || 0})
+              {t('menus.table.menuItems')} ({menu.menuItemCount || 0})
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -196,7 +196,7 @@ export const createMenuColumns = (
               disabled={menu.isActive} // prevent deleting active menu
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("menus.table.delete")}
+              {t('menus.table.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -207,7 +207,7 @@ export const createMenuColumns = (
 
 export const useMenuColumns = (
   onEdit: (menu: Menu) => void,
-  onDelete: (menu: Menu) => void
+  onDelete: (menu: Menu) => void,
 ) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -215,26 +215,26 @@ export const useMenuColumns = (
 };
 
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const fieldMap: Record<string, string> = {
-    name: "name.en",
-    shortCode: "shortCode",
-    isActive: "isActive",
-    isPosDefault: "isPosDefault",
-    isDigitalDefault: "isDigitalDefault",
-    menuItemCount: "menuItemCount",
-    createdAt: "createdAt",
+    name: 'name.en',
+    shortCode: 'shortCode',
+    isActive: 'isActive',
+    isPosDefault: 'isPosDefault',
+    isDigitalDefault: 'isDigitalDefault',
+    menuItemCount: 'menuItemCount',
+    createdAt: 'createdAt',
   };
 
   return fieldMap[sorting[0].id] || sorting[0].id;
 };
 
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
-): "asc" | "desc" | undefined => {
+  sorting: Array<{ id: string; desc: boolean }>,
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

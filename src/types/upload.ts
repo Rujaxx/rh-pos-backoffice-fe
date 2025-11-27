@@ -4,10 +4,11 @@
  */
 
 export enum UploadFolderType {
-  BRAND = "brand",
-  RESTAURANT = "restaurant",
-  USERS = "users",
-  MENU_ITEMS = "menu-items",
+  BRAND = 'brand',
+  RESTAURANT = 'restaurant',
+  USERS = 'users',
+  MENU_ITEMS = 'menu-items',
+  IMAGE_LIBRARY = 'image-library',
 }
 
 export interface UploadResponse {
@@ -43,13 +44,13 @@ export const UPLOAD_CONSTRAINTS = {
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   MAX_FILES_PER_REQUEST: 10,
   SUPPORTED_MIME_TYPES: [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-    "image/gif",
-    "image/bmp",
-    "image/tiff",
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+    'image/bmp',
+    'image/tiff',
   ],
   DEFAULT_QUALITY: 80,
   DEFAULT_MAX_WIDTH: 1920,
