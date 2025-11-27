@@ -6,7 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   RHFInput,
-  RHFSelect, // UPDATED: Replaced RHFRadioGroup with RHFSelect
+  RHFMultilingualInput,
+  RHFSelect,
+  RHFSwitch, // UPDATED: Replaced RHFRadioGroup with RHFSelect
 } from "@/components/ui/form-components";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
@@ -16,6 +18,15 @@ import {
 import { useActiveBrands } from "@/services/api/brands/brands.queries";
 import { useI18n } from "@/providers/i18n-provider";
 import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
+import { MultiSelectDropdown } from "../ui/multi-select-dropdown";
+import {
+  FormItem,
+  FormLabel,
+  FormField,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { TaxProductGroup } from "@/types";
 
 interface TaxGroupFormContentProps {
   form: ReturnType<typeof useForm<TaxProductGroupFormData>>;
@@ -49,7 +60,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
     (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }),
+    })
   );
 
   return (
@@ -64,21 +75,21 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
         <CardContent>
           <div className="grid grid-cols-1 gap-6">
             {/* Multilingual Name Input */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <RHFInput
-                form={form}
-                name="name.en"
-                label={t("taxGroups.form.nameEn")}
-                placeholder={t("taxGroups.form.nameEnPlaceholder")}
-              />
-              <RHFInput
-                form={form}
-                name="name.ar"
-                label={t("taxGroups.form.nameAr")}
-                placeholder={t("taxGroups.form.nameArPlaceholder")}
-              />
-            </div>
-
+            <RHFMultilingualInput
+              form={form}
+              name="name"
+              label={t("taxGroups.table.name")}
+              placeholder={{
+                en: t("taxGroups.form.nameEnPlaceholder"),
+                ar: t("taxGroups.form.nameArPlaceholder"),
+              }}
+            />
+            <RHFInput
+              form={form}
+              name="billDisplayName"
+              label={t("taxGroups.table.billDisplayName")}
+              placeholder={t("taxGroups.form.billDisplayNamePlaceholder")}
+            />
             <RHFSelect
               form={form}
               name="brandId"
@@ -94,21 +105,26 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
               disabled={isLoadingBrands}
             />
 
-            <RHFSelect
-              form={form}
-              name="restaurantId"
-              label={t("kitchen.form.restaurantLabel")}
-              placeholder={
-                isLoadingRestaurants
-                  ? t("common.loading")
-                  : restaurantOptions.length === 0
-                    ? t("restaurants.form.noRestaurantsAvailable")
-                    : t("kitchen.form.restaurantPlaceholder")
-              }
-              options={restaurantOptions}
-              disabled={isLoadingRestaurants}
+            <FormField
+              control={form.control}
+              name="restaurantIds"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-medium">
+                    {t("taxGroups.form.restaurantLabel")}
+                  </FormLabel>
+                  <FormControl>
+                    <MultiSelectDropdown
+                      options={restaurantOptions}
+                      value={field.value || []}
+                      onChange={(val) => field.onChange(val)}
+                      placeholder={t("taxGroups.form.restaurantPlaceholder")}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-
             {/* Tax Type and Tax Value */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <RHFSelect
@@ -127,6 +143,33 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
                 step="0.01"
               />
             </div>
+            {/* boolean feilds */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <RHFSwitch
+                form={form}
+                name="isPrimary"
+                label={t("taxGroups.form.primaryStatusLabel")}
+                description={t("taxGroups.form.primaryStatusDescription")}
+              />
+              <RHFSwitch
+                form={form}
+                name="isActive"
+                label={t("taxGroups.form.activeStatusLabel")}
+                description={t("taxGroups.form.activeStatusDescription")}
+              />
+              <RHFSwitch
+                form={form}
+                name="isInclusive"
+                label={t("taxGroups.form.inclusiveStatusLabel")}
+                description={t("taxGroups.form.inclusiveStatusDescription")}
+              />
+              <RHFSwitch
+                form={form}
+                name="isDivisible"
+                label={t("taxGroups.form.divisibleStatusLabel")}
+                description={t("taxGroups.form.divisibleStatusDescription")}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -136,17 +179,21 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
 
 // Hook for tax group form logic
 export function useTaxProductGroupForm(
-  editingTaxGroup?: TaxProductGroupFormData | null,
+  editingTaxGroup?: TaxProductGroup | null
 ) {
   const form = useForm<TaxProductGroupFormData>({
     resolver: zodResolver(taxProductGroupSchema),
     defaultValues: {
       name: { en: "", ar: "" },
+      billDisplayName: "",
       taxType: "Percentage" as const,
       taxValue: 0,
       isActive: true,
+      isPrimary: false,
+      isInclusive: false,
+      isDivisible: false,
       brandId: "",
-      restaurantId: "",
+      restaurantIds: [],
     },
   });
 
@@ -155,20 +202,28 @@ export function useTaxProductGroupForm(
       form.reset({
         _id: editingTaxGroup._id,
         name: editingTaxGroup.name,
+        billDisplayName: editingTaxGroup.billDisplayName,
         taxType: editingTaxGroup.taxType || ("Percentage" as const),
         taxValue: editingTaxGroup.taxValue || 0,
         isActive: editingTaxGroup.isActive ?? true,
+        isPrimary: editingTaxGroup.isPrimary ?? false,
+        isInclusive: editingTaxGroup.isInclusive ?? false,
+        isDivisible: editingTaxGroup.isDivisible ?? false,
         brandId: editingTaxGroup.brandId,
-        restaurantId: editingTaxGroup.restaurantId || "",
+        restaurantIds: editingTaxGroup.restaurantIds,
       });
     } else {
       form.reset({
         name: { en: "", ar: "" },
+        billDisplayName: "",
         taxType: "Percentage" as const,
         taxValue: 0,
         isActive: true,
+        isPrimary: false,
+        isInclusive: false,
+        isDivisible: false,
         brandId: "",
-        restaurantId: "",
+        restaurantIds: [],
       });
     }
   }, [editingTaxGroup, form]);

@@ -12,6 +12,8 @@ import {
   EditableNumberCell,
 } from "./editable-cells-components";
 import { MultilingualText } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface EditableColumnsConfig {
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
@@ -22,6 +24,7 @@ interface EditableColumnsConfig {
   kitchenDeptOptions: Array<{ value: string; label: string }>;
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
+  onDelete?: (menuItem: MenuItem) => void;
 }
 
 export const createEditableMenuItemColumns = (
@@ -38,6 +41,7 @@ export const createEditableMenuItemColumns = (
     kitchenDeptOptions,
 
     isLoadingOptions,
+    onDelete,
   } = config;
 
   return [
@@ -494,6 +498,29 @@ export const createEditableMenuItemColumns = (
             onChange={(value) => updateField(menuItem._id!, "isCombo", value)}
             isModified={isFieldModified(menuItem._id!, "isCombo")}
           />
+        );
+      },
+    },
+
+    // Delete Action
+    {
+      id: "actions",
+      header: t("table.actions"),
+      size: 100,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+
+        return (
+          <div className="flex items-center justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete?.(menuItem)}
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
         );
       },
     },
