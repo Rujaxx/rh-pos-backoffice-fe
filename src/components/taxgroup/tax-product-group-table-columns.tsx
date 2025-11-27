@@ -91,6 +91,7 @@ export const createTaxProductGroupColumns = (
         </span>
       ),
     },
+
     {
       id: 'actions',
       header: t('table.actions'),
@@ -158,6 +159,7 @@ export const getSortFieldForTaxProductGroupQuery = (
     taxType: 'taxType',
     taxValue: 'taxValue',
     status: 'isActive',
+    inclusive: 'isInclusive',
   };
 
   return fieldMap[sorting[0].id] || sorting[0].id;
