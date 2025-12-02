@@ -1206,5 +1206,11 @@
   "discounts.form.orderTypesLabel": "Order Types",
   "discounts.form.orderTypesPlaceholder": "Select order types",
   "common.noOrderTypesAvailable": "No order types available",
-  "discount.form.orderTypesPlaceholder": "No order types available"
+  "discount.form.orderTypesPlaceholder": "No order types available",
+  "discount.form.nameEnPlaceholder": "Enter discount name in English",
+  "discount.form.nameArPlaceholder": "Enter discount name in Arabic",
+  "discounts.form.nameLabel": "Discount Name",
+  "discounts.form.tableSectionsLabel": "Table Sections",
+  "discounts.form.tableSectionsPlaceholder": "Select table sections",
+  "common.noTableSectionsAvailable": "No table sections available"
 }
