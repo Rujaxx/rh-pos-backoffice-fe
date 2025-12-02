@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { MenuItem } from '@/types/menu-item.type';
+import { MeatType, MenuItem } from '@/types/menu-item.type';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import {
@@ -129,7 +129,34 @@ export const createEditableMenuItemColumns = (
     onUploadImage,
   } = config;
 
+  const meatTypeOptions = MeatType.map((type) => ({
+    value: type.value,
+    label: t(`menuItems.meatTypes.${type.label}`),
+  }));
+
   return [
+    //delete menu item
+    {
+      id: 'actions',
+      header: t('table.actions'),
+      size: 100,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+
+        return (
+          <div className="flex items-center justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete?.(menuItem)}
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
+    },
     // Primary Image
     {
       id: 'primaryImage',
@@ -373,13 +400,6 @@ export const createEditableMenuItemColumns = (
         const menuItem = row.original;
         const currentValue = getFieldValue(menuItem._id!, 'meatType') as string;
 
-        const meatTypeOptions = [
-          { value: 'VEG', label: t('menuItems.meatTypes.VEG') },
-          { value: 'CHICKEN', label: t('menuItems.meatTypes.CHICKEN') },
-          { value: 'MUTTON', label: t('menuItems.meatTypes.MUTTON') },
-          { value: 'FISH', label: t('menuItems.meatTypes.FISH') },
-        ];
-
         return (
           <EditableSelectCell
             value={currentValue || ''}
@@ -602,29 +622,6 @@ export const createEditableMenuItemColumns = (
             onChange={(value) => updateField(menuItem._id!, 'isCombo', value)}
             isModified={isFieldModified(menuItem._id!, 'isCombo')}
           />
-        );
-      },
-    },
-
-    // Delete Action
-    {
-      id: 'actions',
-      header: t('table.actions'),
-      size: 100,
-      cell: ({ row }) => {
-        const menuItem = row.original;
-
-        return (
-          <div className="flex items-center justify-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onDelete?.(menuItem)}
-              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
         );
       },
     },

@@ -27,7 +27,6 @@ import {
   MenuItemFormData,
   MenuItem,
 } from '@/types/menu-item.type';
-import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   useBulkUpdateMenuItems,
   useUploadMenuExcel,
@@ -39,7 +38,10 @@ import { UploadFolderType } from '@/types/upload';
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
-import { useActiveMenuItems } from '@/services/api/menu-items/menu-items.queries';
+import {
+  useMenuItems,
+  useActiveMenuItems,
+} from '@/services/api/menu-items/menu-items.queries';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
