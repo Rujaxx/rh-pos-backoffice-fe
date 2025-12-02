@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Lock, CheckCircle, ArrowLeft } from "lucide-react";
-import { Logo } from "../common/logo";
-import { LanguageSwitcher } from "../common/language-switcher";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Eye, EyeOff, Lock, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Logo } from '../common/logo';
+import { LanguageSwitcher } from '../common/language-switcher';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function ResetPasswordForm() {
   const { t } = useTranslation();
@@ -19,8 +19,8 @@ export function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
+    password: '',
+    confirmPassword: '',
   });
 
   const getPasswordStrength = (password: string) => {
@@ -34,19 +34,19 @@ export function ResetPasswordForm() {
   };
 
   const passwordStrength = getPasswordStrength(formData.password);
-  const strengthLabels = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
+  const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
   const strengthColors = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-yellow-500",
-    "bg-blue-500",
-    "bg-green-500",
+    'bg-red-500',
+    'bg-orange-500',
+    'bg-yellow-500',
+    'bg-blue-500',
+    'bg-green-500',
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      alert('Passwords do not match');
       return;
     }
 
@@ -72,25 +72,25 @@ export function ResetPasswordForm() {
 
               <div className="text-center lg:text-left">
                 <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                  {t("auth.resetPassword.title")}
+                  {t('auth.resetPassword.title')}
                 </h2>
                 <p className="text-slate-600">
-                  {t("auth.resetPassword.subtitle")}
+                  {t('auth.resetPassword.subtitle')}
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="password">
-                    {t("auth.resetPassword.newPasswordLabel")}
+                    {t('auth.resetPassword.newPasswordLabel')}
                   </Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="password"
-                      type={showPassword ? "text" : "password"}
+                      type={showPassword ? 'text' : 'password'}
                       placeholder={t(
-                        "auth.resetPassword.newPasswordPlaceholder",
+                        'auth.resetPassword.newPasswordPlaceholder',
                       )}
                       className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
                       value={formData.password}
@@ -121,14 +121,14 @@ export function ResetPasswordForm() {
                             className={`h-2 w-full rounded-full ${
                               level <= passwordStrength
                                 ? strengthColors[passwordStrength - 1]
-                                : "bg-slate-200"
+                                : 'bg-slate-200'
                             }`}
                           />
                         ))}
                       </div>
                       <p className="text-xs text-slate-600">
-                        Password strength:{" "}
-                        {strengthLabels[passwordStrength - 1] || "Very Weak"}
+                        Password strength:{' '}
+                        {strengthLabels[passwordStrength - 1] || 'Very Weak'}
                       </p>
                     </div>
                   )}
@@ -136,15 +136,15 @@ export function ResetPasswordForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">
-                    {t("auth.resetPassword.confirmPasswordLabel")}
+                    {t('auth.resetPassword.confirmPasswordLabel')}
                   </Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
+                      type={showConfirmPassword ? 'text' : 'password'}
                       placeholder={t(
-                        "auth.resetPassword.confirmPasswordPlaceholder",
+                        'auth.resetPassword.confirmPasswordPlaceholder',
                       )}
                       className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
                       value={formData.confirmPassword}
@@ -185,25 +185,25 @@ export function ResetPasswordForm() {
                   <ul className="text-sm text-slate-600 space-y-1">
                     <li className="flex items-center space-x-2">
                       <div
-                        className={`w-2 h-2 rounded-full ${formData.password.length >= 8 ? "bg-green-500" : "bg-slate-300"}`}
+                        className={`w-2 h-2 rounded-full ${formData.password.length >= 8 ? 'bg-green-500' : 'bg-slate-300'}`}
                       />
                       <span>At least 8 characters</span>
                     </li>
                     <li className="flex items-center space-x-2">
                       <div
-                        className={`w-2 h-2 rounded-full ${/[A-Z]/.test(formData.password) ? "bg-green-500" : "bg-slate-300"}`}
+                        className={`w-2 h-2 rounded-full ${/[A-Z]/.test(formData.password) ? 'bg-green-500' : 'bg-slate-300'}`}
                       />
                       <span>One uppercase letter</span>
                     </li>
                     <li className="flex items-center space-x-2">
                       <div
-                        className={`w-2 h-2 rounded-full ${/[a-z]/.test(formData.password) ? "bg-green-500" : "bg-slate-300"}`}
+                        className={`w-2 h-2 rounded-full ${/[a-z]/.test(formData.password) ? 'bg-green-500' : 'bg-slate-300'}`}
                       />
                       <span>One lowercase letter</span>
                     </li>
                     <li className="flex items-center space-x-2">
                       <div
-                        className={`w-2 h-2 rounded-full ${/[0-9]/.test(formData.password) ? "bg-green-500" : "bg-slate-300"}`}
+                        className={`w-2 h-2 rounded-full ${/[0-9]/.test(formData.password) ? 'bg-green-500' : 'bg-slate-300'}`}
                       />
                       <span>One number</span>
                     </li>
@@ -220,8 +220,8 @@ export function ResetPasswordForm() {
                   }
                 >
                   {isLoading
-                    ? t("auth.resetPassword.resettingPassword")
-                    : t("auth.resetPassword.resetPasswordButton")}
+                    ? t('auth.resetPassword.resettingPassword')
+                    : t('auth.resetPassword.resetPasswordButton')}
                 </Button>
               </form>
 
@@ -231,7 +231,7 @@ export function ResetPasswordForm() {
                   className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2 rtl:rotate-180" />
-                  {t("auth.resetPassword.backToLogin")}
+                  {t('auth.resetPassword.backToLogin')}
                 </Link>
               </div>
             </div>

@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, Mail, Lock, User, Building } from "lucide-react";
-import { Logo } from "../common/logo";
-import { LanguageSwitcher } from "../common/language-switcher";
-import { useTranslation } from "@/hooks/useTranslation";
+import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Eye, EyeOff, Mail, Lock, User, Building } from 'lucide-react';
+import { Logo } from '../common/logo';
+import { LanguageSwitcher } from '../common/language-switcher';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function RegisterForm() {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    company: "",
-    password: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    password: '',
     agreeToTerms: false,
     subscribeNewsletter: false,
   });
@@ -35,7 +35,7 @@ export function RegisterForm() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Redirect to dashboard
-    window.location.href = "/dashboard";
+    window.location.href = '/dashboard';
   };
 
   return (
@@ -50,23 +50,23 @@ export function RegisterForm() {
 
             <div className="text-center lg:text-left">
               <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                {t("auth.register.title")}
+                {t('auth.register.title')}
               </h2>
-              <p className="text-slate-600">{t("auth.register.subtitle")}</p>
+              <p className="text-slate-600">{t('auth.register.subtitle')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">
-                    {t("auth.register.firstNameLabel")}
+                    {t('auth.register.firstNameLabel')}
                   </Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                     <Input
                       id="firstName"
                       type="text"
-                      placeholder={t("auth.register.firstNamePlaceholder")}
+                      placeholder={t('auth.register.firstNamePlaceholder')}
                       className="pl-10 rtl:pl-3 rtl:pr-10"
                       value={formData.firstName}
                       onChange={(e) =>
@@ -78,12 +78,12 @@ export function RegisterForm() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">
-                    {t("auth.register.lastNameLabel")}
+                    {t('auth.register.lastNameLabel')}
                   </Label>
                   <Input
                     id="lastName"
                     type="text"
-                    placeholder={t("auth.register.lastNamePlaceholder")}
+                    placeholder={t('auth.register.lastNamePlaceholder')}
                     value={formData.lastName}
                     onChange={(e) =>
                       setFormData({ ...formData, lastName: e.target.value })
@@ -94,13 +94,13 @@ export function RegisterForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">{t("auth.register.emailLabel")}</Label>
+                <Label htmlFor="email">{t('auth.register.emailLabel')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder={t("auth.register.emailPlaceholder")}
+                    placeholder={t('auth.register.emailPlaceholder')}
                     className="pl-10 rtl:pl-3 rtl:pr-10"
                     value={formData.email}
                     onChange={(e) =>
@@ -112,13 +112,13 @@ export function RegisterForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">{t("auth.register.roleLabel")}</Label>
+                <Label htmlFor="company">{t('auth.register.roleLabel')}</Label>
                 <div className="relative">
                   <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                   <Input
                     id="company"
                     type="text"
-                    placeholder={t("auth.register.rolePlaceholder")}
+                    placeholder={t('auth.register.rolePlaceholder')}
                     className="pl-10 rtl:pl-3 rtl:pr-10"
                     value={formData.company}
                     onChange={(e) =>
@@ -130,14 +130,14 @@ export function RegisterForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="password">
-                  {t("auth.register.passwordLabel")}
+                  {t('auth.register.passwordLabel')}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder={t("auth.register.passwordPlaceholder")}
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder={t('auth.register.passwordPlaceholder')}
                     className="pl-10 pr-10 rtl:pl-10 rtl:pr-10"
                     value={formData.password}
                     onChange={(e) =>
@@ -176,19 +176,19 @@ export function RegisterForm() {
                     htmlFor="terms"
                     className="text-sm text-slate-600 leading-5"
                   >
-                    {t("auth.register.agreeToTerms")}{" "}
+                    {t('auth.register.agreeToTerms')}{' '}
                     <Link
                       href="/terms"
                       className="text-slate-900 hover:text-slate-700 font-medium"
                     >
-                      {t("auth.register.termsOfService")}
-                    </Link>{" "}
-                    {t("auth.register.and")}{" "}
+                      {t('auth.register.termsOfService')}
+                    </Link>{' '}
+                    {t('auth.register.and')}{' '}
                     <Link
                       href="/privacy"
                       className="text-slate-900 hover:text-slate-700 font-medium"
                     >
-                      {t("auth.register.privacyPolicy")}
+                      {t('auth.register.privacyPolicy')}
                     </Link>
                   </Label>
                 </div>
@@ -200,19 +200,19 @@ export function RegisterForm() {
                 disabled={isLoading || !formData.agreeToTerms}
               >
                 {isLoading
-                  ? t("auth.register.creatingAccount")
-                  : t("auth.register.createAccountButton")}
+                  ? t('auth.register.creatingAccount')
+                  : t('auth.register.createAccountButton')}
               </Button>
             </form>
 
             <div className="text-center">
               <p className="text-sm text-slate-600">
-                {t("auth.register.alreadyHaveAccount")}{" "}
+                {t('auth.register.alreadyHaveAccount')}{' '}
                 <Link
                   href="/auth/login"
                   className="text-slate-900 hover:text-slate-700 font-medium"
                 >
-                  {t("auth.register.signInLink")}
+                  {t('auth.register.signInLink')}
                 </Link>
               </p>
             </div>

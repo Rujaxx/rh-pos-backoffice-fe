@@ -1,41 +1,41 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   SortingState,
   PaginationState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+} from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 import {
   useUserForm,
   UserFormContent,
-} from "@/components/employees/users/user-form";
+} from '@/components/employees/users/user-form';
 
-import Layout from "@/components/common/layout";
-import { Plus, Users, Filter } from "lucide-react";
-import { UserFormData, userSchema } from "@/lib/validations/user.validation";
+import Layout from '@/components/common/layout';
+import { Plus, Users, Filter } from 'lucide-react';
+import { UserFormData, userSchema } from '@/lib/validations/user.validation';
 import {
   useUserColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from "@/components/employees/users/user-table-columns";
-import { useUser, useUsers } from "@/services/api/users/users.queries";
+} from '@/components/employees/users/user-table-columns';
+import { useUser, useUsers } from '@/services/api/users/users.queries';
 import {
   useCreateUser,
   useDeleteUser,
   useUpdateUser,
-} from "@/services/api/users/users.mutations";
-import { User, UserQueryParams } from "@/types/user.type";
+} from '@/services/api/users/users.mutations';
+import { User, UserQueryParams } from '@/types/user.type';
 
 export default function UsersPage() {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export default function UsersPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -56,7 +56,7 @@ export default function UsersPage() {
     const params: UserQueryParams = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (searchTerm.trim()) {
@@ -65,11 +65,11 @@ export default function UsersPage() {
 
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     if (statusFilter !== undefined) {
-      params.accountStatus = statusFilter as UserQueryParams["accountStatus"];
+      params.accountStatus = statusFilter as UserQueryParams['accountStatus'];
     }
 
     return params;
@@ -108,7 +108,7 @@ export default function UsersPage() {
     data: individualUserResponse,
     isLoading: isLoadingIndividualUser,
     isFetching: isFetchingIndividualUser,
-  } = useUser(userId || "", { enabled: shouldFetchUser });
+  } = useUser(userId || '', { enabled: shouldFetchUser });
 
   const latestUserData: User | null =
     individualUserResponse?.data || editingUser;
@@ -140,16 +140,16 @@ export default function UsersPage() {
         try {
           await deleteUserMutation.mutateAsync(user._id);
         } catch (error) {
-          console.error("Failed to delete user:", error);
+          console.error('Failed to delete user:', error);
         }
       },
       {
-        title: t("users.delete.title"),
-        description: t("users.delete.description", {
+        title: t('users.delete.title'),
+        description: t('users.delete.description', {
           name: user.name ?? user.username,
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
       },
     );
   };
@@ -170,7 +170,7 @@ export default function UsersPage() {
         }
         closeModal();
       } catch (error) {
-        console.error("Failed to save user:", error);
+        console.error('Failed to save user:', error);
       }
     },
     [latestUserData, updateUserMutation, createUserMutation, closeModal],
@@ -214,23 +214,23 @@ export default function UsersPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Users className="h-6 w-6" />
-              <span>{t("users.title")}</span>
+              <span>{t('users.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("users.subtitle")}</p>
+            <p className="text-muted-foreground">{t('users.subtitle')}</p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Status Filter Button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 // Cycle: All -> Active -> Inactive -> Suspended -> All
                 const nextStatus =
                   statusFilter === undefined
-                    ? "ACTIVE"
-                    : statusFilter === "ACTIVE"
-                      ? "INACTIVE"
-                      : statusFilter === "INACTIVE"
-                        ? "SUSPENDED"
+                    ? 'ACTIVE'
+                    : statusFilter === 'ACTIVE'
+                      ? 'INACTIVE'
+                      : statusFilter === 'INACTIVE'
+                        ? 'SUSPENDED'
                         : undefined;
                 setStatusFilter(nextStatus);
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
@@ -238,19 +238,19 @@ export default function UsersPage() {
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "ACTIVE"
-                ? t("users.accountStatus.ACTIVE")
-                : statusFilter === "INACTIVE"
-                  ? t("users.accountStatus.INACTIVE")
-                  : statusFilter === "SUSPENDED"
-                    ? t("users.accountStatus.SUSPENDED")
-                    : t("users.allStatus")}
+              {statusFilter === 'ACTIVE'
+                ? t('users.accountStatus.ACTIVE')
+                : statusFilter === 'INACTIVE'
+                  ? t('users.accountStatus.INACTIVE')
+                  : statusFilter === 'SUSPENDED'
+                    ? t('users.accountStatus.SUSPENDED')
+                    : t('users.allStatus')}
             </Button>
 
             {/* Add User Button */}
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t("users.addUser")}
+              {t('users.addUser')}
             </Button>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function UsersPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("users.errorLoading")}: {error.message}
+                  {t('users.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -271,7 +271,7 @@ export default function UsersPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("users.searchPlaceholder")}
+                searchPlaceholder={t('users.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -285,7 +285,7 @@ export default function UsersPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -298,8 +298,8 @@ export default function UsersPage() {
           onClose={closeModal}
           title={
             latestUserData
-              ? t("users.edit.title") || "Edit User"
-              : t("users.addUser") || "Add User"
+              ? t('users.edit.title') || 'Edit User'
+              : t('users.addUser') || 'Add User'
           }
           size="xl" // Good size for a user form
           form={form} // Pass the form object
@@ -307,8 +307,8 @@ export default function UsersPage() {
           loading={isFormLoading}
           submitButtonText={
             latestUserData
-              ? t("common.update") || "Update User"
-              : t("common.create") || "Create User"
+              ? t('common.update') || 'Update User'
+              : t('common.create') || 'Create User'
           }
         >
           <UserFormContent form={form} />

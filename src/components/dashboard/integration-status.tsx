@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, AlertCircle, XCircle, Settings } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle, AlertCircle, XCircle, Settings } from 'lucide-react';
 
 export function IntegrationStatus() {
   const integrations = [
-    { name: "Shopify", status: "connected", lastSync: "2 min ago" },
-    { name: "Amazon", status: "connected", lastSync: "5 min ago" },
-    { name: "eBay", status: "warning", lastSync: "1 hour ago" },
-    { name: "Facebook Shop", status: "connected", lastSync: "10 min ago" },
-    { name: "Google Merchant", status: "error", lastSync: "Failed" },
-    { name: "Instagram Shop", status: "connected", lastSync: "3 min ago" },
+    { name: 'Shopify', status: 'connected', lastSync: '2 min ago' },
+    { name: 'Amazon', status: 'connected', lastSync: '5 min ago' },
+    { name: 'eBay', status: 'warning', lastSync: '1 hour ago' },
+    { name: 'Facebook Shop', status: 'connected', lastSync: '10 min ago' },
+    { name: 'Google Merchant', status: 'error', lastSync: 'Failed' },
+    { name: 'Instagram Shop', status: 'connected', lastSync: '3 min ago' },
   ];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "connected":
+      case 'connected':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "warning":
+      case 'warning':
         return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case "error":
+      case 'error':
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Settings className="h-4 w-4 text-gray-400" />;

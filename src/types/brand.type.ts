@@ -1,5 +1,5 @@
-import { MultilingualText, Address } from "./common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText, Address } from './common/common.type';
+import { QueryParams } from './api';
 
 export interface Brand extends Record<string, unknown> {
   _id: string;
@@ -49,5 +49,5 @@ export interface BrandQueryParams extends QueryParams {
 
   // From BrandQueryDto
   isActive?: string; // Filter by active/inactive status
-  sortOrder?: "asc" | "desc"; // Sort order
+  sortOrder?: 'asc' | 'desc'; // Sort order
 }

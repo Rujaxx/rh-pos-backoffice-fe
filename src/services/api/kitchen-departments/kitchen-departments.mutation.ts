@@ -1,13 +1,13 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   KitchenDepartment,
   KitchenDepartmentFormData,
-} from "@/types/kitchen-department.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { kitchenDepartmentService } from "./kitchen-departments.queries";
-import { toast } from "sonner";
+} from '@/types/kitchen-department.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { kitchenDepartmentService } from './kitchen-departments.queries';
+import { toast } from 'sonner';
 
 // Create kitchen department mutation
 export const useCreateKitchenDepartment = (
@@ -25,8 +25,8 @@ export const useCreateKitchenDepartment = (
       return result;
     },
     onSuccess: (data) => {
-      toast.success("Kitchen department created successfully");
-      queryUtils.invalidateQueries(["kitchen-departments", "list"]);
+      toast.success('Kitchen department created successfully');
+      queryUtils.invalidateQueries(['kitchen-departments', 'list']);
 
       if (data.data) {
         queryUtils.setQueryData(
@@ -37,7 +37,7 @@ export const useCreateKitchenDepartment = (
     },
     onError: (error) => {
       const errorMessage =
-        error.message || "Failed to create kitchen department";
+        error.message || 'Failed to create kitchen department';
       toast.error(errorMessage);
     },
     ...options,
@@ -69,7 +69,7 @@ export const useUpdateKitchenDepartment = (
     onSuccess: (data, variables) => {
       const { id } = variables;
 
-      toast.success("Kitchen department updated successfully");
+      toast.success('Kitchen department updated successfully');
 
       // Update cached item
       if (data.data) {
@@ -80,11 +80,11 @@ export const useUpdateKitchenDepartment = (
       }
 
       // Refresh list
-      queryUtils.invalidateQueries(["kitchen-departments", "list"]);
+      queryUtils.invalidateQueries(['kitchen-departments', 'list']);
     },
     onError: (error) => {
       const errorMessage =
-        error.message || "Failed to update kitchen department";
+        error.message || 'Failed to update kitchen department';
       toast.error(errorMessage);
     },
     ...options,
@@ -100,17 +100,17 @@ export const useDeleteKitchenDepartment = (
   return useMutation({
     mutationFn: (id: string) => kitchenDepartmentService.delete(id),
     onSuccess: (_, id) => {
-      toast.success("Kitchen department deleted successfully");
+      toast.success('Kitchen department deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.KITCHEN_DEPARTMENTS.DETAIL(id));
 
       // Refresh list
-      queryUtils.invalidateQueries(["kitchen-departments", "list"]);
+      queryUtils.invalidateQueries(['kitchen-departments', 'list']);
     },
     onError: (error) => {
       const errorMessage =
-        error.message || "Failed to delete kitchen department";
+        error.message || 'Failed to delete kitchen department';
       toast.error(errorMessage);
     },
     ...options,

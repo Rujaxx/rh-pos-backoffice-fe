@@ -3,15 +3,15 @@
  * TanStack Query hooks for restaurant management
  */
 
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
 import {
   Restaurant,
   RestaurantFormData,
   RestaurantQueryParams,
-} from "@/types/restaurant";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+} from '@/types/restaurant';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Restaurant service extending base service
 class RestaurantService extends BaseApiService<
@@ -37,15 +37,15 @@ class RestaurantService extends BaseApiService<
 
   // Get active restaurants only (for dropdowns)
   async getActiveRestaurants(
-    params?: Omit<RestaurantQueryParams, "isActive">,
+    params?: Omit<RestaurantQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<Restaurant>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Get restaurants by brand ID
   async getRestaurantsByBrand(
     brandId: string,
-    params?: Omit<RestaurantQueryParams, "brandId">,
+    params?: Omit<RestaurantQueryParams, 'brandId'>,
   ): Promise<PaginatedResponse<Restaurant>> {
     return this.getAll({ ...params, brandId });
   }
@@ -61,7 +61,7 @@ export const useRestaurants = (
   params?: RestaurantQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Restaurant>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -76,7 +76,7 @@ export const useRestaurant = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<Restaurant>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -89,14 +89,14 @@ export const useRestaurant = (
 
 // Get active restaurants only (for dropdowns and filters)
 export const useActiveRestaurants = (
-  params?: Omit<RestaurantQueryParams, "isActive">,
+  params?: Omit<RestaurantQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Restaurant>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.RESTAURANTS.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.RESTAURANTS.LIST({ ...params, isActive: 'true' }),
     queryFn: () => restaurantService.getActiveRestaurants(params),
     ...options,
   });
@@ -105,10 +105,10 @@ export const useActiveRestaurants = (
 // Get restaurants by brand ID
 export const useRestaurantsByBrand = (
   brandId: string,
-  params?: Omit<RestaurantQueryParams, "brandId">,
+  params?: Omit<RestaurantQueryParams, 'brandId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Restaurant>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
