@@ -301,3 +301,14 @@ export interface UploadFromExcelResponseDto {
   reason?: string;
   rowsProcessed?: number;
 }
+
+export const MeatType = [
+  { value: 'VEG', label: 'VEG' },
+  { value: 'CHICKEN', label: 'CHICKEN' },
+  { value: 'MUTTON', label: 'MUTTON' },
+  { value: 'FISH', label: 'FISH' },
+  { value: 'BEEF', label: 'BEEF' },
+  { value: 'SEAFOOD', label: 'SEAFOOD' },
+  { value: 'PORK', label: 'PORK' },
+  { value: 'N/A', label: 'NONE' },
+];
