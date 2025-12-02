@@ -1193,9 +1193,19 @@
   "discounts.delete.title": "حذف الخصم",
   "discounts.delete.description": "هل أنت متأكد أنك تريد حذف {name}؟ هذا الإجراء لا يمكن التراجع عنه.",
   "discounts.errorLoading": "حدث خطأ أثناء تحميل الخصومات",
-  "categories.form.discountLabel": "الخصم",
-  "categories.form.noDiscountsAvailable": "لا توجد خصومات متاحة",
-  "categories.form.discountPlaceholder": "اختر خصماً",
-  "categories.form.noDiscountSelected": "بدون خصم",
-  "categories.form.discountDescription": "اختر خصماً ليتم تطبيقه على هذه الفئة"
+  "discounts.form.categoriesLabel": "الفئات",
+  "discounts.form.categoriesPlaceholder": "اختر الفئات",
+
+  "discounts.form.taxProductGroupsLabel": "مجموعات المنتجات الضريبية",
+  "discounts.form.taxProductGroupsPlaceholder": "اختر مجموعات المنتجات الضريبية",
+  "discounts.form.orderTypesLabel": "أنواع الطلبات",
+  "discounts.form.orderTypesPlaceholder": "اختر أنواع الطلبات",
+  "common.noOrderTypesAvailable": "لا توجد أنواع طلبات متاحة",
+  "discount.form.orderTypesPlaceholder": "لا توجد أنواع طلبات متاحة",
+  "discount.form.nameEnPlaceholder": "أدخل اسم الخصم باللغة الإنجليزية",
+  "discount.form.nameArPlaceholder": "أدخل اسم الخصم باللغة العربية",
+  "discounts.form.nameLabel": "اسم الخصم",
+  "discounts.form.tableSectionsLabel": "أقسام الطاولات",
+  "discounts.form.tableSectionsPlaceholder": "اختر أقسام الطاولات",
+  "common.noTableSectionsAvailable": "لا توجد أقسام طاولات متاحة"
 }

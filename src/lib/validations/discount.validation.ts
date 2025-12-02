@@ -22,6 +22,7 @@ export const discountSchema = z.object({
   categoryIds: z.array(z.string()),
   taxProductGroupIds: z.array(z.string()),
   orderTypeIds: z.array(z.string()),
+  tableSectionIds: z.array(z.string()),
 });
 
 export type DiscountFormData = z.infer<typeof discountSchema>;
