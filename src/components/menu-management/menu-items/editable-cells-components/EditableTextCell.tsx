@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 interface EditableTextCellProps {
   value: string;
@@ -44,10 +44,10 @@ export const EditableTextCell: React.FC<EditableTextCellProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !multiline) {
+    if (e.key === 'Enter' && !multiline) {
       (e.currentTarget as HTMLElement).blur();
     }
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       setLocalValue(value);
       (e.currentTarget as HTMLElement).blur();
     }
@@ -66,9 +66,9 @@ export const EditableTextCell: React.FC<EditableTextCellProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            "w-full",
-            isModified && "ring-2 ring-orange-400",
-            error && "border-red-500",
+            'w-full',
+            isModified && 'ring-2 ring-orange-400',
+            error && 'border-red-500',
           )}
         />
         {isModified && <span className="text-xs text-orange-600">●</span>}

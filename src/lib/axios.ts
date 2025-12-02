@@ -8,10 +8,10 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
   AxiosRequestConfig,
-} from "axios";
-import { API_CONFIG } from "@/config/api";
-import { ApiError, ErrorResponse, SuccessResponse } from "@/types/api";
-import { useAuthStore } from "@/stores/auth.store";
+} from 'axios';
+import { API_CONFIG } from '@/config/api';
+import { ApiError, ErrorResponse, SuccessResponse } from '@/types/api';
+import { useAuthStore } from '@/stores/auth.store';
 
 // Interface for config with retry properties
 interface RetryableAxiosRequestConfig extends AxiosRequestConfig {
@@ -25,8 +25,8 @@ const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
 });
 
@@ -73,7 +73,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 api.interceptors.response.use(
   ((response: AxiosResponse) => {
     // Log response time in development
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       const endTime = new Date();
       const startTime = response.config.metadata?.startTime;
       if (startTime) {
@@ -96,10 +96,10 @@ api.interceptors.response.use(
       throw new ApiError({
         success: false,
         statusCode: 0,
-        message: "Network error occurred. Please check your connection.",
+        message: 'Network error occurred. Please check your connection.',
         timestamp: new Date().toISOString(),
-        path: config?.url || "",
-        errorCode: "NETWORK_ERROR",
+        path: config?.url || '',
+        errorCode: 'NETWORK_ERROR',
       });
     }
 
@@ -108,13 +108,13 @@ api.interceptors.response.use(
     // Handle authentication errors with token refresh
     if (errorData.statusCode === 401 && !originalRequest._retry) {
       // Skip refresh for auth endpoints to prevent infinite loops
-      const isAuthEndpoint = originalRequest.url?.includes("/auth/");
+      const isAuthEndpoint = originalRequest.url?.includes('/auth/');
       if (isAuthEndpoint) {
         const { logout } = useAuthStore.getState();
         logout();
 
-        if (typeof window !== "undefined") {
-          window.location.href = "/";
+        if (typeof window !== 'undefined') {
+          window.location.href = '/';
         }
         throw new ApiError(errorData);
       }
@@ -155,7 +155,7 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } else {
-          throw new Error("Token refresh failed");
+          throw new Error('Token refresh failed');
         }
       } catch (refreshError) {
         processQueue(refreshError, null);
@@ -165,14 +165,14 @@ api.interceptors.response.use(
         if (
           !(
             refreshError instanceof Error &&
-            refreshError.message === "REFRESH_TOKEN_EXPIRED"
+            refreshError.message === 'REFRESH_TOKEN_EXPIRED'
           )
         ) {
           const { logout } = useAuthStore.getState();
           logout();
 
-          if (typeof window !== "undefined") {
-            window.location.href = "/";
+          if (typeof window !== 'undefined') {
+            window.location.href = '/';
           }
         }
 
@@ -195,7 +195,7 @@ api.interceptors.response.use(
 // Retry logic for failed requests
 const shouldRetry = (config: RetryableAxiosRequestConfig): boolean => {
   const retryCount = config.__retryCount || 0;
-  return retryCount < API_CONFIG.RETRY_ATTEMPTS && config.method === "get";
+  return retryCount < API_CONFIG.RETRY_ATTEMPTS && config.method === 'get';
 };
 
 const retryRequest = async (config: RetryableAxiosRequestConfig) => {
@@ -208,7 +208,7 @@ const retryRequest = async (config: RetryableAxiosRequestConfig) => {
 };
 
 // Extend axios config interface to include metadata
-declare module "axios" {
+declare module 'axios' {
   interface InternalAxiosRequestConfig {
     metadata?: {
       startTime: Date;

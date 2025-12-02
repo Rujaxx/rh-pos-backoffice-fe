@@ -46,7 +46,7 @@ export class ApiError extends Error {
     message?: string,
   ) {
     super(message || response.message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
   }
 }
 
@@ -55,7 +55,7 @@ export interface QueryParams {
   page?: number;
   limit?: number;
   sort?: string;
-  order?: "asc" | "desc";
+  order?: 'asc' | 'desc';
   search?: string;
   fields?: string[];
   [key: string]: string | number | boolean | string[] | undefined;

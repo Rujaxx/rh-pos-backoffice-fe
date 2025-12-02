@@ -1,6 +1,6 @@
-import { TableAction } from "./common/common.type";
-import { MultilingualText } from "./common/common.type";
-import { QueryParams } from "./api";
+import { TableAction } from './common/common.type';
+import { MultilingualText } from './common/common.type';
+import { QueryParams } from './api';
 
 export type { TableAction };
 
@@ -43,11 +43,11 @@ export interface TableQueryParams extends QueryParams {
   // From TableQueryDto
   isAvailable?: string; // Filter by availability status
   capacity?: number; // Filter by minimum capacity
-  sortOrder?: "asc" | "desc"; // Sort order
+  sortOrder?: 'asc' | 'desc'; // Sort order
 }
 
 export interface TableColumn {
-  id: keyof Table | "actions";
+  id: keyof Table | 'actions';
   label: string;
   sortable?: boolean;
   filterable?: boolean;

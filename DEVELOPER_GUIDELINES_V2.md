@@ -44,9 +44,9 @@ export default function ModulePage() {
   return (
     <div className="container space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">{t("module.title")}</h1>
+        <h1 className="text-3xl font-bold">{t('module.title')}</h1>
         <Button onClick={() => setShowCreateModal(true)}>
-          {t("common.create")}
+          {t('common.create')}
         </Button>
       </div>
       <ModuleTable data={data} />
@@ -78,12 +78,12 @@ Add your route to `src/components/common/sidebar.tsx`:
 
 ```tsx
 // src/lib/validations/{module}.ts
-import { z } from "zod";
+import { z } from 'zod';
 
 export const moduleSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  status: z.enum(["active", "inactive"]),
+  status: z.enum(['active', 'inactive']),
   translations: z.object({
     en: z.string(),
     ar: z.string(),
@@ -97,8 +97,8 @@ export type ModuleFormData = z.infer<typeof moduleSchema>;
 
 ```tsx
 // src/components/{module}/module-form.tsx
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormField,
@@ -106,14 +106,14 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form';
 
 export function ModuleForm() {
   const form = useForm<ModuleFormData>({
     resolver: zodResolver(moduleSchema),
     defaultValues: {
-      name: "",
-      status: "active",
+      name: '',
+      status: 'active',
     },
   });
 
@@ -124,7 +124,7 @@ export function ModuleForm() {
         control={form.control}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t("module.form.name")}</FormLabel>
+            <FormLabel>{t('module.form.name')}</FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>
@@ -147,7 +147,7 @@ const onSubmit = async (data: ModuleFormData) => {
     data,
     (validData) => {
       // Success handling
-      toast.success(t("module.messages.created"));
+      toast.success(t('module.messages.created'));
     },
     (errors) => {
       // Error handling
@@ -165,24 +165,24 @@ const onSubmit = async (data: ModuleFormData) => {
 // src/components/{module}/module-table.tsx
 const columns: ColumnDef<Module>[] = [
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={t("module.table.name")} />
+      <DataTableColumnHeader column={column} title={t('module.table.name')} />
     ),
   },
   {
-    accessorKey: "status",
-    header: t("module.table.status"),
+    accessorKey: 'status',
+    header: t('module.table.status'),
     cell: ({ row }) => (
       <Badge
-        variant={row.getValue("status") === "active" ? "success" : "secondary"}
+        variant={row.getValue('status') === 'active' ? 'success' : 'secondary'}
       >
-        {t(`module.status.${row.getValue("status")}`)}
+        {t(`module.status.${row.getValue('status')}`)}
       </Badge>
     ),
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => (
       <DataTableRowActions
         row={row}
@@ -219,7 +219,7 @@ export function ModuleTable({ data }: Props) {
 export const customFieldValidation = z
   .string()
   .refine((value) => customValidationLogic(value), {
-    message: "Custom validation message",
+    message: 'Custom validation message',
   });
 ```
 
@@ -293,12 +293,12 @@ const { t } = useTranslation()
 ### 8.2. Modal Implementation
 
 ```tsx
-import { CrudModal } from "@/components/ui/crud-modal";
+import { CrudModal } from '@/components/ui/crud-modal';
 
 export function CreateModuleModal({ open, onOpenChange }: CrudModalProps) {
   return (
     <CrudModal
-      title={t("module.create.title")}
+      title={t('module.create.title')}
       open={open}
       onOpenChange={onOpenChange}
     >

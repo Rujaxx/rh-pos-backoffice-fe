@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { KitchenDepartment } from "@/types/kitchen-department.type";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { KitchenDepartment } from '@/types/kitchen-department.type';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Edit, Trash2, MoreHorizontal } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useI18n } from "@/providers/i18n-provider";
-import { MultilingualText } from "@/types";
+} from '@/components/ui/dropdown-menu';
+import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
+import { MultilingualText } from '@/types';
 
 // Column definitions
 export const createKitchenDepartmentColumns = (
   onEdit: (department: KitchenDepartment) => void,
   onDelete: (department: KitchenDepartment) => void,
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>['t'],
   locale: string,
 ): ColumnDef<KitchenDepartment>[] => {
   return [
     // Name column
     {
-      accessorKey: "name",
-      id: "name",
-      header: t("kitchenDepartment.name"),
+      accessorKey: 'name',
+      id: 'name',
+      header: t('kitchenDepartment.name'),
       enableSorting: true,
       sortingFn: (rowA, rowB) => {
-        const a = (rowA.original.name?.en || "").toLowerCase();
-        const b = (rowB.original.name?.en || "").toLowerCase();
+        const a = (rowA.original.name?.en || '').toLowerCase();
+        const b = (rowB.original.name?.en || '').toLowerCase();
         return a.localeCompare(b);
       },
       cell: ({ row }) => {
@@ -50,48 +50,48 @@ export const createKitchenDepartmentColumns = (
       },
     },
     {
-      id: "brandName",
-      header: t("brands.brandName"),
+      id: 'brandName',
+      header: t('brands.brandName'),
       cell: ({ row }) => {
         const brandName = row.original.brandName;
         return (
           <div className="font-medium text-foreground truncate">
             {brandName?.[locale as keyof MultilingualText] ||
               brandName?.en ||
-              "N/A"}
+              'N/A'}
           </div>
         );
       },
     },
     {
-      id: "restaurantName",
-      header: t("restaurants.name"),
+      id: 'restaurantName',
+      header: t('restaurants.name'),
       cell: ({ row }) => {
         const restaurantName = row.original.restaurantName;
         return (
           <div className="font-medium text-foreground truncate">
             {restaurantName?.[locale as keyof MultilingualText] ||
               restaurantName?.en ||
-              "N/A"}
+              'N/A'}
           </div>
         );
       },
     },
     {
-      id: "status",
-      header: t("common.status"),
+      id: 'status',
+      header: t('common.status'),
       cell: ({ row }) => {
         const isActive = row.original.isActive;
         return (
-          <Badge variant={isActive ? "default" : "secondary"}>
-            {isActive ? t("common.active") : t("common.inactive")}
+          <Badge variant={isActive ? 'default' : 'secondary'}>
+            {isActive ? t('common.active') : t('common.inactive')}
           </Badge>
         );
       },
     },
     {
-      id: "actions",
-      header: t("table.actions"),
+      id: 'actions',
+      header: t('table.actions'),
       enableSorting: false,
       size: 80,
       cell: ({ row }) => {
@@ -115,7 +115,7 @@ export const createKitchenDepartmentColumns = (
                 className="cursor-pointer"
               >
                 <Edit className="mr-2 h-4 w-4" />
-                {t("common.edit")}
+                {t('common.edit')}
               </DropdownMenuItem>
 
               <DropdownMenuItem
@@ -126,7 +126,7 @@ export const createKitchenDepartmentColumns = (
                 className="cursor-pointer text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                {t("common.delete")}
+                {t('common.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -154,10 +154,10 @@ export const getSortFieldForQuery = (
   const sort = sorting[0];
 
   const fieldMap: Record<string, string> = {
-    name: "name.en",
-    brandName: "brandName",
-    restaurantName: "restaurantName",
-    status: "isActive",
+    name: 'name.en',
+    brandName: 'brandName',
+    restaurantName: 'restaurantName',
+    status: 'isActive',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -165,7 +165,7 @@ export const getSortFieldForQuery = (
 
 export const getSortOrderForQuery = (
   sorting: Array<{ id: string; desc: boolean }>,
-): "asc" | "desc" | undefined => {
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

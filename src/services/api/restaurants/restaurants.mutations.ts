@@ -3,15 +3,15 @@
  * TanStack Query mutations for restaurant operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { Restaurant, RestaurantFormData } from "@/types/restaurant";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { restaurantService } from "./restaurants.queries";
-import { uploadService } from "../upload/upload.queries";
-import { minutesToBackendTime } from "@/lib/utils/time.utils";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { Restaurant, RestaurantFormData } from '@/types/restaurant';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { restaurantService } from './restaurants.queries';
+import { uploadService } from '../upload/upload.queries';
+import { minutesToBackendTime } from '@/lib/utils/time.utils';
+import { toast } from 'sonner';
 
 function transformToBackendFormat(
   data: RestaurantFormData,
@@ -57,7 +57,7 @@ export const useCreateRestaurant = (
 
       // Then confirm uploads if there are any upload keys
       const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith("http")) {
+      if (data.logo && !data.logo.startsWith('http')) {
         // If logo is a key (not a URL), add it to confirm list
         uploadKeys.push(data.logo);
       }
@@ -67,7 +67,7 @@ export const useCreateRestaurant = (
           await uploadService.confirmUploads(uploadKeys);
         } catch (error) {
           console.error(
-            "Failed to confirm uploads, but restaurant was created:",
+            'Failed to confirm uploads, but restaurant was created:',
             error,
           );
           // Don't fail the entire operation if upload confirmation fails
@@ -78,16 +78,16 @@ export const useCreateRestaurant = (
     },
     onSuccess: (data) => {
       // Show success message
-      toast.success("Restaurant created successfully");
+      toast.success('Restaurant created successfully');
 
       // Invalidate and refetch all restaurant-related queries
-      queryUtils.invalidateQueries(["restaurants"]);
+      queryUtils.invalidateQueries(['restaurants']);
 
       // Also directly refetch the main restaurants list query
       queryUtils.invalidateQueries(QUERY_KEYS.RESTAURANTS.LIST());
 
       // Force immediate refetch to update the UI
-      queryUtils.refetchQueries(["restaurants"]);
+      queryUtils.refetchQueries(['restaurants']);
 
       // Set the new restaurant in cache
       if (data.data) {
@@ -99,7 +99,7 @@ export const useCreateRestaurant = (
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to create restaurant";
+      const errorMessage = error.message || 'Failed to create restaurant';
       toast.error(errorMessage);
     },
     ...options,
@@ -132,7 +132,7 @@ export const useUpdateRestaurant = (
 
       // Then confirm uploads if there are any upload keys
       const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith("http")) {
+      if (data.logo && !data.logo.startsWith('http')) {
         // If logo is a key (not a URL), add it to confirm list
         uploadKeys.push(data.logo);
       }
@@ -142,7 +142,7 @@ export const useUpdateRestaurant = (
           await uploadService.confirmUploads(uploadKeys);
         } catch (error) {
           console.error(
-            "Failed to confirm uploads, but restaurant was updated:",
+            'Failed to confirm uploads, but restaurant was updated:',
             error,
           );
           // Don't fail the entire operation if upload confirmation fails
@@ -155,7 +155,7 @@ export const useUpdateRestaurant = (
       const { id } = variables;
 
       // Show success message
-      toast.success("Restaurant updated successfully");
+      toast.success('Restaurant updated successfully');
 
       // Update specific restaurant cache
       if (data.data) {
@@ -163,17 +163,17 @@ export const useUpdateRestaurant = (
       }
 
       // Invalidate all restaurant-related queries to refresh the data
-      queryUtils.invalidateQueries(["restaurants"]);
+      queryUtils.invalidateQueries(['restaurants']);
 
       // Also directly refetch the main restaurants list query
       queryUtils.invalidateQueries(QUERY_KEYS.RESTAURANTS.LIST());
 
       // Force immediate refetch to update the UI
-      queryUtils.refetchQueries(["restaurants"]);
+      queryUtils.refetchQueries(['restaurants']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update restaurant";
+      const errorMessage = error.message || 'Failed to update restaurant';
       toast.error(errorMessage);
     },
     ...options,
@@ -190,23 +190,23 @@ export const useDeleteRestaurant = (
     mutationFn: (id: string) => restaurantService.delete(id),
     onSuccess: (_, id) => {
       // Show success message
-      toast.success("Restaurant deleted successfully");
+      toast.success('Restaurant deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.RESTAURANTS.DETAIL(id));
 
       // Invalidate all restaurant-related queries
-      queryUtils.invalidateQueries(["restaurants"]);
+      queryUtils.invalidateQueries(['restaurants']);
 
       // Also directly refetch the main restaurants list query
       queryUtils.invalidateQueries(QUERY_KEYS.RESTAURANTS.LIST());
 
       // Force immediate refetch to update the UI
-      queryUtils.refetchQueries(["restaurants"]);
+      queryUtils.refetchQueries(['restaurants']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to delete restaurant";
+      const errorMessage = error.message || 'Failed to delete restaurant';
       toast.error(errorMessage);
     },
     ...options,

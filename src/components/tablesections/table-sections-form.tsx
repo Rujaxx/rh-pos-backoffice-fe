@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useForm, UseFormReturn } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFMultilingualInput,
   RHFSelect,
   RHFSwitch,
-} from "@/components/ui/form-components";
+} from '@/components/ui/form-components';
 import {
   tableSectionSchema,
   TableSectionFormData,
-} from "@/lib/validations/table-section.validation";
-import { TableSection } from "@/types/table-section.type";
-import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
-import { useI18n } from "@/providers/i18n-provider";
+} from '@/lib/validations/table-section.validation';
+import { TableSection } from '@/types/table-section.type';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface TableSectionFormContentProps {
   form: UseFormReturn<TableSectionFormData>;
@@ -46,30 +46,30 @@ export function TableSectionFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t("tableSection.form.basicInfo")}
+            {t('tableSection.form.basicInfo')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <RHFMultilingualInput
             form={form}
             name="name"
-            label={t("tableSection.form.nameLabel")}
+            label={t('tableSection.form.nameLabel')}
             placeholder={{
-              en: t("tableSection.form.namePlaceholderEn"),
-              ar: t("tableSection.form.namePlaceholderAr"),
+              en: t('tableSection.form.namePlaceholderEn'),
+              ar: t('tableSection.form.namePlaceholderAr'),
             }}
           />
 
           <RHFSelect
             form={form}
             name="restaurantId"
-            label={t("tableSection.form.restaurantLabel")}
+            label={t('tableSection.form.restaurantLabel')}
             placeholder={
               isLoadingRestaurants
-                ? t("common.loading")
+                ? t('common.loading')
                 : restaurantOptions.length === 0
-                  ? t("restaurants.form.noRestaurantsAvailable")
-                  : t("tableSection.form.restaurantPlaceholder")
+                  ? t('restaurants.form.noRestaurantsAvailable')
+                  : t('tableSection.form.restaurantPlaceholder')
             }
             options={restaurantOptions}
             disabled={isLoadingRestaurants}
@@ -78,8 +78,8 @@ export function TableSectionFormContent({
           <RHFSwitch
             form={form}
             name="isActive"
-            label={t("tableSection.form.activeStatusLabel")}
-            description={t("tableSection.form.activeStatusDescription")}
+            label={t('tableSection.form.activeStatusLabel')}
+            description={t('tableSection.form.activeStatusDescription')}
           />
         </CardContent>
       </Card>
@@ -97,8 +97,8 @@ export function useTableSectionForm(
   const form = useForm<TableSectionFormData>({
     resolver: zodResolver(tableSectionSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
-      restaurantId: "",
+      name: { en: '', ar: '' },
+      restaurantId: '',
       isActive: true, // Backend default: true
     },
   });
@@ -114,8 +114,8 @@ export function useTableSectionForm(
       });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
-        restaurantId: "",
+        name: { en: '', ar: '' },
+        restaurantId: '',
         isActive: true,
       });
     }

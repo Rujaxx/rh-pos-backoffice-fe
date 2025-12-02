@@ -1,46 +1,46 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useMemo, useCallback, useRef } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   CrudModal,
   ConfirmationModal,
   useModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 import {
   CategoryFormContent,
   useCategoryForm,
-} from "@/components/menu-management/categories/category-form";
+} from '@/components/menu-management/categories/category-form';
 import {
   useCategoryColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
-} from "@/components/menu-management/categories/category-table-columns";
-import { TanStackTable } from "@/components/ui/tanstack-table";
-import Layout from "@/components/common/layout";
-import { Plus, Tag, Filter } from "lucide-react";
-import { Category, CategoryQueryParams } from "@/types/category.type";
+} from '@/components/menu-management/categories/category-table-columns';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import Layout from '@/components/common/layout';
+import { Plus, Tag, Filter } from 'lucide-react';
+import { Category, CategoryQueryParams } from '@/types/category.type';
 import {
   CategoryFormData,
   categorySchema,
-} from "@/lib/validations/category.validation";
+} from '@/lib/validations/category.validation';
 import {
   useCategories,
   useCategory,
-} from "@/services/api/categories/categories.queries";
+} from '@/services/api/categories/categories.queries';
 import {
   useCreateCategory,
   useUpdateCategory,
   useDeleteCategory,
-} from "@/services/api/categories/categories.mutations";
+} from '@/services/api/categories/categories.mutations';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
 export default function CategoriesPage() {
   const { t } = useTranslation();
@@ -52,7 +52,7 @@ export default function CategoriesPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -62,7 +62,7 @@ export default function CategoriesPage() {
     const params: CategoryQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
     };
 
     // Add search term
@@ -73,12 +73,12 @@ export default function CategoriesPage() {
     // Add sorting field
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     // Add status filter
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -122,7 +122,7 @@ export default function CategoriesPage() {
     data: individualCategoryResponse,
     isLoading: isLoadingIndividualCategory,
     isFetching: isFetchingIndividualCategory,
-  } = useCategory(categoryId || "", {
+  } = useCategory(categoryId || '', {
     enabled: shouldFetchCategory, // The hook already checks !!id, we just need to check if modal is open
   });
 
@@ -160,16 +160,16 @@ export default function CategoriesPage() {
         try {
           await deleteCategoryMutation.mutateAsync(category._id);
         } catch (error) {
-          console.error("Failed to delete category:", error);
+          console.error('Failed to delete category:', error);
         }
       },
       {
-        title: t("categories.deleteCategory"),
-        description: t("categories.deleteConfirmation", {
+        title: t('categories.deleteCategory'),
+        description: t('categories.deleteConfirmation', {
           categoryName: category.name.en,
         }),
-        confirmButtonText: t("categories.deleteCategoryButton"),
-        variant: "destructive",
+        confirmButtonText: t('categories.deleteCategoryButton'),
+        variant: 'destructive',
       },
     );
   };
@@ -182,7 +182,7 @@ export default function CategoriesPage() {
         const processedData = {
           ...data,
           restaurantId:
-            data.restaurantId === "none" ? undefined : data.restaurantId,
+            data.restaurantId === 'none' ? undefined : data.restaurantId,
         };
 
         // Parse and apply defaults using the schema to ensure all fields have proper values
@@ -198,7 +198,7 @@ export default function CategoriesPage() {
         }
         closeModal();
       } catch (error) {
-        console.error("Failed to save category:", error);
+        console.error('Failed to save category:', error);
       }
     },
     [
@@ -255,36 +255,36 @@ export default function CategoriesPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Tag className="h-6 w-6" />
-              <span>{t("categories.title")}</span>
+              <span>{t('categories.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("categories.subtitle")}</p>
+            <p className="text-muted-foreground">{t('categories.subtitle')}</p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Status filter button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active",
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("categories.active")
-                : statusFilter === "inactive"
-                  ? t("categories.inactive")
-                  : t("categories.allStatus")}
+              {statusFilter === 'active'
+                ? t('categories.active')
+                : statusFilter === 'inactive'
+                  ? t('categories.inactive')
+                  : t('categories.allStatus')}
             </Button>
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t("categories.addNewCategory")}
+              {t('categories.addNewCategory')}
             </Button>
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function CategoriesPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("categories.errorLoading")}: {error.message}
+                  {t('categories.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -305,7 +305,7 @@ export default function CategoriesPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("categories.searchPlaceholder")}
+                searchPlaceholder={t('categories.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -319,7 +319,7 @@ export default function CategoriesPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("categories.noDataFound")}
+                emptyMessage={t('categories.noDataFound')}
                 enableMultiSort={false}
               />
             )}
@@ -332,13 +332,13 @@ export default function CategoriesPage() {
           onClose={closeModal}
           title={
             editingCategory
-              ? t("categories.form.editTitle")
-              : t("categories.form.createTitle")
+              ? t('categories.form.editTitle')
+              : t('categories.form.createTitle')
           }
           description={
             editingCategory
-              ? t("categories.form.editDescription")
-              : t("categories.form.createDescription")
+              ? t('categories.form.editDescription')
+              : t('categories.form.createDescription')
           }
           form={form}
           onSubmit={handleSubmit}
@@ -346,8 +346,8 @@ export default function CategoriesPage() {
           size="xl"
           submitButtonText={
             editingCategory
-              ? t("categories.form.updateButton")
-              : t("categories.form.createButton")
+              ? t('categories.form.updateButton')
+              : t('categories.form.createButton')
           }
         >
           <CategoryFormContent form={form} />

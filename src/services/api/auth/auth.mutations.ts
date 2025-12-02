@@ -3,14 +3,14 @@
  * TanStack Query mutations for authentication operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import api from "@/lib/axios";
-import { useAuthStore } from "@/stores/auth.store";
-import { LoginCredentials, AuthUser } from "@/types/auth";
-import { User } from "@/types/user";
-import { SuccessResponse, MutationResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import api from '@/lib/axios';
+import { useAuthStore } from '@/stores/auth.store';
+import { LoginCredentials, AuthUser } from '@/types/auth';
+import { User } from '@/types/user';
+import { SuccessResponse, MutationResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
 
 // Login mutation
 export const useLogin = (
@@ -59,9 +59,9 @@ export const useLogout = (
       return {
         success: true,
         statusCode: 200,
-        message: "Logged out successfully",
+        message: 'Logged out successfully',
         timestamp: new Date().toISOString(),
-        path: "",
+        path: '',
         data: undefined,
       };
     },
@@ -83,7 +83,7 @@ export const useRefreshToken = (
   return useMutation({
     mutationFn: async (): MutationResponse<AuthUser> => {
       if (!refreshToken) {
-        throw new Error("No refresh token available");
+        throw new Error('No refresh token available');
       }
 
       return api.post(API_ENDPOINTS.AUTH.REFRESH, { refreshToken });
@@ -113,7 +113,7 @@ export const useUpdateProfile = (
   return useMutation({
     mutationFn: async (userData: Partial<User>): MutationResponse<User> => {
       if (!user) {
-        throw new Error("User not authenticated");
+        throw new Error('User not authenticated');
       }
 
       return api.patch(`/users/${user._id}`, userData);
@@ -143,7 +143,7 @@ export const useChangePassword = (
       currentPassword: string;
       newPassword: string;
     }): MutationResponse<void> => {
-      return api.patch("/auth/change-password", data);
+      return api.patch('/auth/change-password', data);
     },
 
     ...options,
