@@ -22,7 +22,7 @@ import { useI18n } from '@/providers/i18n-provider';
 import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
-import { useActiveOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { useGetActiveTableSections } from '@/services/api/tablesections/tablesections.queries';
 
 interface DiscountFormContentProps {
@@ -52,7 +52,7 @@ export function DiscountFormContent({ form }: DiscountFormContentProps) {
   const { data: taxGroupsResponse, isLoading: isLoadingTaxGroups } =
     useActiveTaxProductGroups();
   const { data: orderTypesResponse, isLoading: isLoadingOrderTypes } =
-    useActiveOrderTypes();
+    useOrderTypes();
   const { data: tableSectionsResponse, isLoading: isLoadingTableSections } =
     useGetActiveTableSections();
 
