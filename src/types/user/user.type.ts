@@ -3,7 +3,7 @@
  * Defines user and role-related types and interfaces
  */
 
-import { LocalizedName } from "../common/common.type";
+import { LocalizedName } from '../common/common.type';
 
 // Role entity
 export interface Role {
@@ -30,7 +30,7 @@ export interface User {
   role: Role;
   designation?: string;
   isActive?: boolean;
-  accountStatus?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+  accountStatus?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
   phone?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -54,9 +54,9 @@ export interface CreateUserPayload {
 
 // User update payload
 export interface UpdateUserPayload
-  extends Partial<Omit<CreateUserPayload, "password">> {
+  extends Partial<Omit<CreateUserPayload, 'password'>> {
   isActive?: boolean;
-  accountStatus?: User["accountStatus"];
+  accountStatus?: User['accountStatus'];
 }
 
 // User query parameters
@@ -68,9 +68,9 @@ export interface UserQueryParams {
   brandId?: string;
   restaurantId?: string;
   isActive?: boolean;
-  accountStatus?: User["accountStatus"];
+  accountStatus?: User['accountStatus'];
   sort?: string;
-  order?: "asc" | "desc";
+  order?: 'asc' | 'desc';
 }
 
 // User statistics

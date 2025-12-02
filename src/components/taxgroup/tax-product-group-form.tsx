@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
   RHFSelect, // UPDATED: Replaced RHFRadioGroup with RHFSelect
-} from "@/components/ui/form-components";
-import { useTranslation } from "@/hooks/useTranslation";
+} from '@/components/ui/form-components';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   TaxProductGroupFormData,
   taxProductGroupSchema,
-} from "@/lib/validations/tax-product-group.validation";
-import { useActiveBrands } from "@/services/api/brands/brands.queries";
-import { useI18n } from "@/providers/i18n-provider";
-import { useActiveRestaurants } from "@/services/api/restaurants/restaurants.queries";
+} from '@/lib/validations/tax-product-group.validation';
+import { useActiveBrands } from '@/services/api/brands/brands.queries';
+import { useI18n } from '@/providers/i18n-provider';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
 
 interface TaxGroupFormContentProps {
   form: ReturnType<typeof useForm<TaxProductGroupFormData>>;
@@ -26,12 +26,12 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
   const { locale } = useI18n();
   const taxTypeOptions = [
     {
-      label: t("taxGroups.form.taxTypePercentage"),
-      value: "Percentage",
+      label: t('taxGroups.form.taxTypePercentage'),
+      value: 'Percentage',
     },
     {
-      label: t("taxGroups.form.taxTypeFixedAmount"),
-      value: "Fixed Amount",
+      label: t('taxGroups.form.taxTypeFixedAmount'),
+      value: 'Fixed Amount',
     },
   ];
 
@@ -57,7 +57,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-semibold">
-            {t("taxGroups.form.title")}
+            {t('taxGroups.form.title')}
           </CardTitle>
         </CardHeader>
 
@@ -68,27 +68,27 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
               <RHFInput
                 form={form}
                 name="name.en"
-                label={t("taxGroups.form.nameEn")}
-                placeholder={t("taxGroups.form.nameEnPlaceholder")}
+                label={t('taxGroups.form.nameEn')}
+                placeholder={t('taxGroups.form.nameEnPlaceholder')}
               />
               <RHFInput
                 form={form}
                 name="name.ar"
-                label={t("taxGroups.form.nameAr")}
-                placeholder={t("taxGroups.form.nameArPlaceholder")}
+                label={t('taxGroups.form.nameAr')}
+                placeholder={t('taxGroups.form.nameArPlaceholder')}
               />
             </div>
 
             <RHFSelect
               form={form}
               name="brandId"
-              label={t("restaurants.form.brandLabel")}
+              label={t('restaurants.form.brandLabel')}
               placeholder={
                 isLoadingBrands
-                  ? t("common.loading")
+                  ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t("common.noBrandsAvailable")
-                    : t("common.brandPlaceholder")
+                    ? t('common.noBrandsAvailable')
+                    : t('common.brandPlaceholder')
               }
               options={brandOptions}
               disabled={isLoadingBrands}
@@ -97,13 +97,13 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
             <RHFSelect
               form={form}
               name="restaurantId"
-              label={t("kitchen.form.restaurantLabel")}
+              label={t('kitchen.form.restaurantLabel')}
               placeholder={
                 isLoadingRestaurants
-                  ? t("common.loading")
+                  ? t('common.loading')
                   : restaurantOptions.length === 0
-                    ? t("restaurants.form.noRestaurantsAvailable")
-                    : t("kitchen.form.restaurantPlaceholder")
+                    ? t('restaurants.form.noRestaurantsAvailable')
+                    : t('kitchen.form.restaurantPlaceholder')
               }
               options={restaurantOptions}
               disabled={isLoadingRestaurants}
@@ -114,15 +114,15 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
               <RHFSelect
                 form={form}
                 name="taxType"
-                label={t("taxGroups.table.taxType")}
-                placeholder={t("taxGroups.form.taxTypePlaceholder")}
+                label={t('taxGroups.table.taxType')}
+                placeholder={t('taxGroups.form.taxTypePlaceholder')}
                 options={taxTypeOptions}
               />
               <RHFInput
                 form={form}
                 name="taxValue"
-                label={t("taxGroups.table.taxValue")}
-                placeholder={t("taxGroups.form.taxValuePlaceholder")}
+                label={t('taxGroups.table.taxValue')}
+                placeholder={t('taxGroups.form.taxValuePlaceholder')}
                 type="number"
                 step="0.01"
               />
@@ -141,12 +141,12 @@ export function useTaxProductGroupForm(
   const form = useForm<TaxProductGroupFormData>({
     resolver: zodResolver(taxProductGroupSchema),
     defaultValues: {
-      name: { en: "", ar: "" },
-      taxType: "Percentage" as const,
+      name: { en: '', ar: '' },
+      taxType: 'Percentage' as const,
       taxValue: 0,
       isActive: true,
-      brandId: "",
-      restaurantId: "",
+      brandId: '',
+      restaurantId: '',
     },
   });
 
@@ -155,20 +155,20 @@ export function useTaxProductGroupForm(
       form.reset({
         _id: editingTaxGroup._id,
         name: editingTaxGroup.name,
-        taxType: editingTaxGroup.taxType || ("Percentage" as const),
+        taxType: editingTaxGroup.taxType || ('Percentage' as const),
         taxValue: editingTaxGroup.taxValue || 0,
         isActive: editingTaxGroup.isActive ?? true,
         brandId: editingTaxGroup.brandId,
-        restaurantId: editingTaxGroup.restaurantId || "",
+        restaurantId: editingTaxGroup.restaurantId || '',
       });
     } else {
       form.reset({
-        name: { en: "", ar: "" },
-        taxType: "Percentage" as const,
+        name: { en: '', ar: '' },
+        taxType: 'Percentage' as const,
         taxValue: 0,
         isActive: true,
-        brandId: "",
-        restaurantId: "",
+        brandId: '',
+        restaurantId: '',
       });
     }
   }, [editingTaxGroup, form]);

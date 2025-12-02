@@ -26,6 +26,10 @@ import {
   HelpCircle,
   Percent,
   Image as ImageIcon,
+  Table,
+  CookingPot,
+  TicketPercent,
+  Sofa,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -148,13 +152,19 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
             id: 'tables',
             label: t('navigation.tables'),
             href: '/restaurants/tables',
-            icon: Store,
+            icon: Sofa,
           },
           {
             id: 'kitchen-department',
             label: t('navigation.kitchendept'),
             href: '/restaurants/kitchendepartment',
-            icon: Store,
+            icon: CookingPot,
+          },
+          {
+            id: 'discounts',
+            label: t('navigation.discounts'),
+            href: '/restaurants/discounts',
+            icon: TicketPercent,
           },
         ],
       },
@@ -279,6 +289,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.taxGroup'),
         href: '/taxgroup/tax-product-group',
         icon: Percent,
+      },
+    ],
+  },
+  {
+    id: 'reports',
+    label: t('navigation.reports'),
+    items: [
+      {
+        id: 'sales-reports',
+        label: t('navigation.salesReports'),
+        href: '/reports/sales-reports',
+        icon: TrendingUp,
       },
     ],
   },

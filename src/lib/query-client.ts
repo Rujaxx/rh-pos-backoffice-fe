@@ -3,7 +3,7 @@
  * Utilities for working with query client instances
  */
 
-import { useQueryClient, type QueryKey } from "@tanstack/react-query";
+import { useQueryClient, type QueryKey } from '@tanstack/react-query';
 
 // Hook to get query utilities
 export const useQueryUtils = () => {

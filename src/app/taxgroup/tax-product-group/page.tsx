@@ -1,53 +1,53 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 
-import Layout from "@/components/common/layout";
+import Layout from '@/components/common/layout';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 
-import { Tag, Plus, Filter } from "lucide-react";
+import { Tag, Plus, Filter } from 'lucide-react';
 
 import {
   TaxProductGroup,
   TaxProductGroupQueryParams,
-} from "@/types/tax-product-group.type";
+} from '@/types/tax-product-group.type';
 import {
   TaxProductGroupFormData,
   taxProductGroupSchema,
-} from "@/lib/validations/tax-product-group.validation";
+} from '@/lib/validations/tax-product-group.validation';
 
 import {
   useTaxProductGroupColumns,
   getSortFieldForTaxProductGroupQuery,
   getSortOrderForTaxProductGroupQuery,
-} from "@/components/taxgroup/tax-product-group-table-columns";
+} from '@/components/taxgroup/tax-product-group-table-columns';
 import {
   useTaxProductGroup,
   useTaxProductGroups,
-} from "@/services/api/tax-product-groups.ts/tax-product-groups.queries";
+} from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import {
   useCreateTaxProductGroup,
   useDeleteTaxProductGroup,
   useUpdateTaxProductGroup,
-} from "@/services/api/tax-product-groups.ts/tax-product-groups.mutations";
+} from '@/services/api/tax-product-groups.ts/tax-product-groups.mutations';
 import TaxGroupFormContent, {
   useTaxProductGroupForm,
-} from "@/components/taxgroup/tax-product-group-form";
+} from '@/components/taxgroup/tax-product-group-form';
 
 export default function TaxProductGroupsPage() {
   const { t } = useTranslation();
@@ -59,7 +59,7 @@ export default function TaxProductGroupsPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -69,7 +69,7 @@ export default function TaxProductGroupsPage() {
     const params: TaxProductGroupQueryParams = {
       page: pagination.pageIndex + 1, // backend is 1-based
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForTaxProductGroupQuery(sorting) || "desc",
+      sortOrder: getSortOrderForTaxProductGroupQuery(sorting) || 'desc',
     };
 
     if (searchTerm.trim()) {
@@ -79,13 +79,13 @@ export default function TaxProductGroupsPage() {
     const sortField = getSortFieldForTaxProductGroupQuery(sorting);
     if (sortField) {
       // Keeping same pattern as other pages (only sortOrder sent)
-      params.sortOrder = getSortOrderForTaxProductGroupQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForTaxProductGroupQuery(sorting) || 'desc';
       // If you add sortBy on backend, this is where you'd set it.
       // params.sortBy = sortField as TaxProductGroupQueryParams["sortBy"];
     }
 
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -129,7 +129,7 @@ export default function TaxProductGroupsPage() {
     data: individualTaxGroupResponse,
     isLoading: isLoadingIndividualTaxGroup,
     isFetching: isFetchingIndividualTaxGroup,
-  } = useTaxProductGroup(taxGroupId || "", {
+  } = useTaxProductGroup(taxGroupId || '', {
     enabled: shouldFetchTaxGroup,
   });
 
@@ -167,19 +167,19 @@ export default function TaxProductGroupsPage() {
           if (!item._id) return;
           await deleteTaxProductGroupMutation.mutateAsync(item._id);
         } catch (err) {
-          console.error("Failed to delete tax product group:", err);
+          console.error('Failed to delete tax product group:', err);
         }
       },
       {
-        title: t("taxGroups.delete.title"),
-        description: t("taxGroups.delete.description", {
+        title: t('taxGroups.delete.title'),
+        description: t('taxGroups.delete.description', {
           name:
-            typeof item.name === "object"
+            typeof item.name === 'object'
               ? item.name.en
               : (item.name as unknown as string),
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
       },
     );
   };
@@ -201,7 +201,7 @@ export default function TaxProductGroupsPage() {
 
         closeModal();
       } catch (err) {
-        console.error("Failed to save tax product group:", err);
+        console.error('Failed to save tax product group:', err);
       }
     },
     [
@@ -255,38 +255,38 @@ export default function TaxProductGroupsPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Tag className="h-6 w-6" />
-              <span>{t("taxGroups.title")}</span>
+              <span>{t('taxGroups.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("taxGroups.subtitle")}</p>
+            <p className="text-muted-foreground">{t('taxGroups.subtitle')}</p>
           </div>
 
           <div className="flex items-center space-x-2">
             {/* Status filter */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active",
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("common.active")
-                : statusFilter === "inactive"
-                  ? t("common.inactive")
-                  : t("restaurants.allStatus")}
+              {statusFilter === 'active'
+                ? t('common.active')
+                : statusFilter === 'inactive'
+                  ? t('common.inactive')
+                  : t('restaurants.allStatus')}
             </Button>
 
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t("taxGroups.addTaxGroup")}
+              {t('taxGroups.addTaxGroup')}
             </Button>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function TaxProductGroupsPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("taxGroups.errorLoading")}: {error.message}
+                  {t('taxGroups.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -307,7 +307,7 @@ export default function TaxProductGroupsPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("taxGroups.searchPlaceholder")}
+                searchPlaceholder={t('taxGroups.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -321,7 +321,7 @@ export default function TaxProductGroupsPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -334,15 +334,15 @@ export default function TaxProductGroupsPage() {
           onClose={closeModal}
           title={
             latestTaxGroupData
-              ? t("taxGroups.edit.title") || "Edit Tax Product Group"
-              : t("taxGroups.create.title") || "Add Tax Product Group"
+              ? t('taxGroups.edit.title') || 'Edit Tax Product Group'
+              : t('taxGroups.create.title') || 'Add Tax Product Group'
           }
           size="lg"
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           submitButtonText={
-            latestTaxGroupData ? t("common.update") : t("common.create")
+            latestTaxGroupData ? t('common.update') : t('common.create')
           }
         >
           <TaxGroupFormContent form={form} />

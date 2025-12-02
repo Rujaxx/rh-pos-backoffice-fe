@@ -128,6 +128,23 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/image-library/${id}`,
     GET: (id: string) => `/image-library/${id}`,
   },
+  REPORTS: {
+    LIST: '/reports',
+  },
+  BILLS: {
+    UPDATE: (id: string) => `/bills/${id}`,
+  },
+  DISCOUNTS: {
+    LIST: '/discounts',
+    CREATE: '/discounts',
+    UPDATE: (id: string) => `/discounts/${id}`,
+    DELETE: (id: string) => `/discounts/${id}`,
+    GET: (id: string) => `/discounts/${id}`,
+  },
+  ORDER_TYPES: {
+    LIST: '/order-types',
+    GET: (id: string) => `/order-types/${id}`,
+  },
 } as const;
 
 // Query keys for consistent caching
@@ -202,5 +219,19 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['image-library', 'list', params] as const,
     DETAIL: (id: string) => ['image-library', 'detail', id] as const,
+  },
+  REPORTS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['reports', 'list', params] as const,
+  },
+  DISCOUNTS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['discounts', 'list', params] as const,
+    DETAIL: (id: string) => ['discounts', 'detail', id] as const,
+  },
+  ORDER_TYPES: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['order-types', 'list', params] as const,
+    DETAIL: (id: string) => ['order-types', 'detail', id] as const,
   },
 } as const;

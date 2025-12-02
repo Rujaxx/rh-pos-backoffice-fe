@@ -1,10 +1,10 @@
-import { MultilingualText } from "@/types/common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText } from '@/types/common/common.type';
+import { QueryParams } from './api';
 
 export interface TaxProductGroup extends Record<string, unknown> {
   _id?: string;
   name: MultilingualText;
-  taxType: "Percentage" | "Fixed Amount";
+  taxType: 'Percentage' | 'Fixed Amount';
   taxValue: number;
   isActive: boolean;
   brandId: string;
@@ -20,7 +20,7 @@ export interface TaxProductGroup extends Record<string, unknown> {
 
 export interface TaxProductGroupFormData extends Record<string, unknown> {
   name: MultilingualText;
-  taxType: "Percentage" | "Fixed Amount";
+  taxType: 'Percentage' | 'Fixed Amount';
   taxValue: number;
   isActive: boolean;
   brandId: string;
@@ -38,6 +38,6 @@ export interface TaxProductGroupQueryParams extends QueryParams {
   restaurantId?: string;
   isActive?: string;
 
-  sortBy?: "name" | "createdAt" | "updatedAt" | "shortCode";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'shortCode';
+  sortOrder?: 'asc' | 'desc';
 }
