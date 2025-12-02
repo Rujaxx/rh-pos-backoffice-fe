@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { MenuItem } from '@/types/menu-item.type';
+import { MeatType, MenuItem } from '@/types/menu-item.type';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import {
@@ -12,10 +12,9 @@ import {
   EditableNumberCell,
 } from './editable-cells-components';
 import { MultilingualText } from '@/types';
-import { ImageIcon, Loader2, Upload } from 'lucide-react';
+import { ImageIcon, Loader2, Trash2, Upload } from 'lucide-react';
 import { getS3UrlFromKey } from '@/lib/upload-utils';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
 
 interface EditableColumnsConfig {
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
@@ -26,8 +25,8 @@ interface EditableColumnsConfig {
   kitchenDeptOptions: Array<{ value: string; label: string }>;
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
-  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
   onDelete?: (menuItem: MenuItem) => void;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
 }
 
 /**
@@ -126,11 +125,38 @@ export const createEditableMenuItemColumns = (
     kitchenDeptOptions,
 
     isLoadingOptions,
-    onUploadImage,
     onDelete,
+    onUploadImage,
   } = config;
 
+  const meatTypeOptions = MeatType.map((type) => ({
+    value: type.value,
+    label: t(`menuItems.meatTypes.${type.label}`),
+  }));
+
   return [
+    //delete menu item
+    {
+      id: 'actions',
+      header: t('table.actions'),
+      size: 100,
+      cell: ({ row }) => {
+        const menuItem = row.original;
+
+        return (
+          <div className="flex items-center justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete?.(menuItem)}
+              className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
+    },
     // Primary Image
     {
       id: 'primaryImage',
@@ -373,13 +399,6 @@ export const createEditableMenuItemColumns = (
       cell: ({ row }) => {
         const menuItem = row.original;
         const currentValue = getFieldValue(menuItem._id!, 'meatType') as string;
-
-        const meatTypeOptions = [
-          { value: 'VEG', label: t('menuItems.meatTypes.VEG') },
-          { value: 'CHICKEN', label: t('menuItems.meatTypes.CHICKEN') },
-          { value: 'MUTTON', label: t('menuItems.meatTypes.MUTTON') },
-          { value: 'FISH', label: t('menuItems.meatTypes.FISH') },
-        ];
 
         return (
           <EditableSelectCell

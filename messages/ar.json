@@ -1056,6 +1056,11 @@
   "menuItems.meatTypes.CHICKEN": "دجاج",
   "menuItems.meatTypes.MUTTON": "لحم غنم",
   "menuItems.meatTypes.FISH": "سمك",
+  "menuItems.meatTypes.BEEF": "بب",
+  "menuItems.meatTypes.SEAFOOD": "شريش",
+  "menuItems.meatTypes.PORK": "لحم بقر",
+  "menuItems.meatTypes.LAMB": "لحم بقر",
+  "menuItems.meatTypes.NONE": "لا يوجد",
   "menuItems.discountTypes.Percentage": "نسبة مئوية",
   "menuItems.discountTypes.Fixed Amount": "مبلغ ثابت",
   "menuItems.delete.title": "حذف عنصر القائمة",
@@ -1160,7 +1165,6 @@
   "taxGroups.fixed": "مبلغ ثابت",
   "taxGroups.delete.title": "حذف مجموعة الضريبة",
   "taxGroups.delete.description": "هل أنت متأكد أنك تريد حذف {name}؟ هذا الإجراء لا يمكن التراجع عنه.",
-  "taxGroups.errorLoading": "حدث خطأ أثناء تحميل مجموعات الضريبة",
 
   "discounts.title": "الخصومات",
   "discounts.subtitle": "إدارة جميع الخصومات وإعداداتها",
@@ -1207,5 +1211,6 @@
   "discounts.form.nameLabel": "اسم الخصم",
   "discounts.form.tableSectionsLabel": "أقسام الطاولات",
   "discounts.form.tableSectionsPlaceholder": "اختر أقسام الطاولات",
-  "common.noTableSectionsAvailable": "لا توجد أقسام طاولات متاحة"
+  "common.noTableSectionsAvailable": "لا توجد أقسام طاولات متاحة",
+  "taxGroups.errorLoading": "ٹیکس گروپس لوڈ کرنے میں خرابی۔"
 }

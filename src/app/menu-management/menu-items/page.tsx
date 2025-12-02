@@ -27,7 +27,6 @@ import {
   MenuItemFormData,
   MenuItem,
 } from '@/types/menu-item.type';
-import { useMenuItems } from '@/services/api/menu-items/menu-items.queries';
 import {
   useBulkUpdateMenuItems,
   useUploadMenuExcel,
@@ -39,7 +38,10 @@ import { UploadFolderType } from '@/types/upload';
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
-import { useActiveMenuItems } from '@/services/api/menu-items/menu-items.queries';
+import {
+  useMenuItems,
+  useActiveMenuItems,
+} from '@/services/api/menu-items/menu-items.queries';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
@@ -288,8 +290,8 @@ function Page() {
     kitchenDeptOptions,
     addonsOptions,
     isLoadingOptions,
-    onUploadImage: handleImageUpload,
     onDelete: deleteHandler,
+    onUploadImage: handleImageUpload,
   });
 
   return (
@@ -429,6 +431,17 @@ function Page() {
           </CardContent>
         </Card>
 
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={isConfirmationOpen}
+          onClose={closeConfirmationModal}
+          onConfirm={executeConfirmation || (() => Promise.resolve())}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteMenuItemMutation.isPending}
+        />
         <CrudModal
           isOpen={isOpen}
           onClose={closeModal}
