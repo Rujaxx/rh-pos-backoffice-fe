@@ -1068,6 +1068,11 @@
   "menuItems.meatTypes.CHICKEN": "Chicken",
   "menuItems.meatTypes.MUTTON": "Mutton",
   "menuItems.meatTypes.FISH": "Fish",
+  "menuItems.meatTypes.BEEF": "Beef",
+  "menuItems.meatTypes.SEAFOOD": "Seafood",
+  "menuItems.meatTypes.PORK": "Pork",
+  "menuItems.meatTypes.LAMB": "Lamb",
+  "menuItems.meatTypes.NONE": "None",
   "menuItems.discountTypes.Percentage": "Percentage",
   "menuItems.discountTypes.Fixed Amount": "Fixed Amount",
   "menuItems.delete.title": "Delete Menu Item",
@@ -1170,7 +1175,6 @@
   "taxGroups.fixed": "Fixed Amount",
   "taxGroups.delete.title": "Delete Tax Group",
   "taxGroups.delete.description": "Are you sure you want to delete {name}? This action cannot be undone.",
-  "taxGroups.errorLoading": "Error loading tax groups",
   "discounts.title": "Discounts",
   "discounts.subtitle": "Manage all discounts and their configurations",
   "discounts.searchPlaceholder": "Search discounts...",
@@ -1212,5 +1216,6 @@
   "discounts.form.nameLabel": "Discount Name",
   "discounts.form.tableSectionsLabel": "Table Sections",
   "discounts.form.tableSectionsPlaceholder": "Select table sections",
-  "common.noTableSectionsAvailable": "No table sections available"
+  "common.noTableSectionsAvailable": "No table sections available",
+  "taxGroups.errorLoading": "Error loading tax groups"
 }
