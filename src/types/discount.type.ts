@@ -13,6 +13,7 @@ export interface Discount extends Record<string, unknown> {
   categoryIds: string[];
   taxProductGroupIds: string[];
   orderTypeIds: string[];
+  tableSectionIds: string[];
   createdBy?: string;
   updatedBy?: string;
   deletedBy?: string;

@@ -4,7 +4,11 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RHFInput, RHFSelect } from '@/components/ui/form-components';
+import {
+  RHFInput,
+  RHFMultilingualInput,
+  RHFSelect,
+} from '@/components/ui/form-components';
 import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
 import { FormLabel, FormItem, FormMessage } from '@/components/ui/form';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -19,6 +23,7 @@ import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.que
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useActiveOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { useGetActiveTableSections } from '@/services/api/tablesections/tablesections.queries';
 
 interface DiscountFormContentProps {
   form: ReturnType<typeof useForm<DiscountFormData>>;
@@ -46,9 +51,10 @@ export function DiscountFormContent({ form }: DiscountFormContentProps) {
     useActiveCategories();
   const { data: taxGroupsResponse, isLoading: isLoadingTaxGroups } =
     useActiveTaxProductGroups();
-
   const { data: orderTypesResponse, isLoading: isLoadingOrderTypes } =
     useActiveOrderTypes();
+  const { data: tableSectionsResponse, isLoading: isLoadingTableSections } =
+    useGetActiveTableSections();
 
   const brandOptions = (brandsResponse?.data || []).map((brand) => ({
     value: brand._id,
@@ -83,6 +89,13 @@ export function DiscountFormContent({ form }: DiscountFormContentProps) {
       label: orderType.name[locale] || orderType.name.en,
     }));
 
+  const tableSectionOptions = (tableSectionsResponse?.data || [])
+    .filter((tableSection) => tableSection._id)
+    .map((tableSection) => ({
+      value: tableSection._id as string,
+      label: tableSection.name[locale] || tableSection.name.en,
+    }));
+
   return (
     <div className="space-y-6">
       <Card>
@@ -95,20 +108,15 @@ export function DiscountFormContent({ form }: DiscountFormContentProps) {
         <CardContent>
           <div className="grid grid-cols-1 gap-6">
             {/* Multilingual Name Input */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <RHFInput
-                form={form}
-                name="name.en"
-                label={t('discounts.form.nameEn')}
-                placeholder={t('discounts.form.nameEnPlaceholder')}
-              />
-              <RHFInput
-                form={form}
-                name="name.ar"
-                label={t('discounts.form.nameAr')}
-                placeholder={t('discounts.form.nameArPlaceholder')}
-              />
-            </div>
+            <RHFMultilingualInput
+              form={form}
+              name="name"
+              label={t('discounts.form.nameLabel')}
+              placeholder={{
+                en: t('discount.form.nameEnPlaceholder'),
+                ar: t('discount.form.nameArPlaceholder'),
+              }}
+            />
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <RHFSelect
@@ -234,6 +242,31 @@ export function DiscountFormContent({ form }: DiscountFormContentProps) {
                   </FormItem>
                 )}
               />
+              <Controller
+                control={form.control}
+                name="tableSectionIds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('discounts.form.tableSectionsLabel')}
+                    </FormLabel>
+                    <MultiSelectDropdown
+                      options={tableSectionOptions}
+                      value={field.value || []}
+                      onChange={field.onChange}
+                      placeholder={
+                        isLoadingTableSections
+                          ? t('common.loading')
+                          : tableSectionOptions.length === 0
+                            ? t('common.noTableSectionsAvailable')
+                            : t('discounts.form.tableSectionsPlaceholder')
+                      }
+                      className="w-full"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
         </CardContent>
@@ -256,6 +289,7 @@ export function useDiscountForm(editingDiscount?: Discount | null) {
       categoryIds: [],
       taxProductGroupIds: [],
       orderTypeIds: [],
+      tableSectionIds: [],
     },
   });
 
@@ -272,6 +306,7 @@ export function useDiscountForm(editingDiscount?: Discount | null) {
         categoryIds: editingDiscount.categoryIds || [],
         taxProductGroupIds: editingDiscount.taxProductGroupIds || [],
         orderTypeIds: editingDiscount.orderTypeIds || [],
+        tableSectionIds: editingDiscount.tableSectionIds || [],
       });
     } else {
       form.reset({
@@ -284,6 +319,7 @@ export function useDiscountForm(editingDiscount?: Discount | null) {
         categoryIds: [],
         taxProductGroupIds: [],
         orderTypeIds: [],
+        tableSectionIds: [],
       });
     }
   }, [editingDiscount, form]);
