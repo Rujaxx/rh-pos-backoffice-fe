@@ -10,14 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Shield,
-  UserCheck,
-  UserX,
-} from 'lucide-react';
+import { Edit, Trash2, MoreHorizontal, Shield } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Role } from '@/types/role.type';
 import { Permission } from '@/types/permission.type';

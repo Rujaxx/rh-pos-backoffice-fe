@@ -26,7 +26,6 @@ import {
   HelpCircle,
   Percent,
   Image as ImageIcon,
-  Table,
   CookingPot,
   TicketPercent,
   Sofa,
@@ -580,7 +579,7 @@ export default function Sidebar() {
                   className="flex-shrink-0"
                 />
                 <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
-                  CMSFullForm
+                  RHPOS
                 </span>
               </Link>
             </div>

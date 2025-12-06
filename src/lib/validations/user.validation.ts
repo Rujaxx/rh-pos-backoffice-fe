@@ -10,7 +10,7 @@ export const userSchema = z.object({
     .max(30)
     .regex(/^[a-zA-Z0-9_-]+$/),
   email: z.email(),
-  password: z.string().min(8).max(30).optional(),
+  password: z.string().min(4).max(30).optional(),
 
   countryCode: z.string().optional().or(z.literal('')).nullable(),
   phoneNumber: z.string().nullable().optional(),

@@ -242,9 +242,7 @@ export function ResetPasswordForm() {
                 <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center mr-3">
                   <span className="text-white font-bold text-xl">C</span>
                 </div>
-                <h1 className="text-2xl font-bold text-slate-900">
-                  CMS Full Form
-                </h1>
+                <h1 className="text-2xl font-bold text-slate-900">RHPOS</h1>
               </div>
 
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">

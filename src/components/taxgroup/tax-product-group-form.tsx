@@ -117,7 +117,7 @@ export function TaxGroupFormContent({ form }: TaxGroupFormContentProps) {
                     <MultiSelectDropdown
                       options={restaurantOptions}
                       value={field.value || []}
-                      onChange={(val) => field.onChange(val)}
+                      onChange={(val: string[]) => field.onChange(val)}
                       placeholder={t('taxGroups.form.restaurantPlaceholder')}
                     />
                   </FormControl>
@@ -210,7 +210,7 @@ export function useTaxProductGroupForm(
         isInclusive: editingTaxGroup.isInclusive ?? false,
         isDivisible: editingTaxGroup.isDivisible ?? false,
         brandId: editingTaxGroup.brandId,
-        restaurantIds: editingTaxGroup.restaurantIds,
+        restaurantIds: editingTaxGroup.restaurantIds?.map((r) => r._id) ?? [],
       });
     } else {
       form.reset({
