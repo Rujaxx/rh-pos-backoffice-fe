@@ -94,7 +94,7 @@ export function MenuFormContent({ form }: MenuFormContentProps) {
                 isLoadingBrands
                   ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t('common.noBrandsAvailable')
+                    ? t('common.noBrandAvailable')
                     : t('common.brandPlaceholder')
               }
               options={brandOptions}

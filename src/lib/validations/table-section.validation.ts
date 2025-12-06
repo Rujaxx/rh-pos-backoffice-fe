@@ -13,6 +13,7 @@ export const tableSectionSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
   restaurantId: z.string().min(14, { message: "Restaurant is required" }),
+  taxProductGroupId: z.string().optional(),
   isActive: z.boolean().default(true),
 });
 

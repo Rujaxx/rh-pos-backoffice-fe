@@ -15,7 +15,7 @@ import {
   menuItemSchema,
   MenuItemFormData,
 } from '@/lib/validations/menu-item.validation';
-import { MenuItem } from '@/types/menu-item.type';
+import { MeatType, MenuItem } from '@/types/menu-item.type';
 import { useActiveCategories } from '@/services/api/categories/categories.queries';
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useActiveKitchenDepartments } from '@/services/api/kitchen-departments/kitchen-departments.queries';
@@ -60,12 +60,10 @@ export function MenuItemFormContent({ form }: MenuItemFormContentProps) {
     { value: 'VEGAN', label: t('menuItems.foodTypes.VEGAN') },
   ];
 
-  const meatTypeOptions = [
-    { value: 'VEG', label: t('menuItems.meatTypes.VEG') },
-    { value: 'CHICKEN', label: t('menuItems.meatTypes.CHICKEN') },
-    { value: 'MUTTON', label: t('menuItems.meatTypes.MUTTON') },
-    { value: 'FISH', label: t('menuItems.meatTypes.FISH') },
-  ];
+  const meatTypeOptions = MeatType.map((type) => ({
+    value: type.value,
+    label: t(`menuItems.meatTypes.${type.value}`),
+  }));
 
   return (
     <div className="space-y-6">

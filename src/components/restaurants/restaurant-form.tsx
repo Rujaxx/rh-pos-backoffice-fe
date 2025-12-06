@@ -132,7 +132,7 @@ export function RestaurantFormContent({
                 isLoadingBrands
                   ? t('common.loading')
                   : brandOptions.length === 0
-                    ? t('common.noBrandsAvailable')
+                    ? t('common.noBrandAvailable')
                     : t('common.brandPlaceholder')
               }
               options={brandOptions}
@@ -691,9 +691,13 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
     },
   });
 
+  // First, fetch the brands data
+  const { data: brandsResponse, isLoading: isLoadingBrands } =
+    useActiveBrands();
+
   // Reset form when editing restaurant changes
   React.useEffect(() => {
-    if (editingRestaurant) {
+    if (editingRestaurant && brandsResponse?.data) {
       const resetFreq =
         editingRestaurant.nextResetBillFreq === 'daily' ||
         editingRestaurant.nextResetBillFreq === 'weekly' ||
@@ -816,7 +820,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         kotPrefix: '',
       });
     }
-  }, [editingRestaurant, form]);
+  }, [editingRestaurant, brandsResponse?.data, form]);
 
   return {
     form,
