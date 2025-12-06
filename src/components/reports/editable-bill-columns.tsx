@@ -2,37 +2,46 @@
 
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Bill, BillStatus, PaymentStatus } from '@/types/report.type';
+import { Bill, BillStatus, PaymentStatus } from '@/types/bill.type';
 import { EditableSelectCell } from '@/components/menu-management/menu-items/editable-cells-components';
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface EditableBillColumnsConfig {
-  onBillStatusChange: (billId: string, status: BillStatus) => Promise<void>;
-  onPaymentStatusChange: (
-    billId: string,
-    status: PaymentStatus,
-  ) => Promise<void>;
+  onBillUpdate: (billId: string, data: Partial<Bill>) => Promise<void>;
+  onBillDelete: (billId: string) => Promise<void>;
   onViewDetails: (bill: Bill) => void;
   loadingBills: Set<string>;
 }
 
 export function createEditableBillColumns(
-  t: (key: string) => string,
   config: EditableBillColumnsConfig,
+  t: (key: string) => string,
+  locale: string,
 ): ColumnDef<Bill>[] {
-  const { onBillStatusChange, onViewDetails, loadingBills } = config;
+  const { onBillUpdate, onBillDelete, onViewDetails, loadingBills } = config;
 
   // Bill status options
   const billStatusOptions = [
-    { value: BillStatus.ACTIVE, label: 'Active' },
-    { value: BillStatus.COMPLETED, label: 'Completed' },
-    { value: BillStatus.CANCELLED, label: 'Cancelled' },
+    {
+      value: BillStatus.ACTIVE,
+      label: t('reports.table.billStatusOptions.active'),
+    },
+    {
+      value: BillStatus.COMPLETED,
+      label: t('reports.table.billStatusOptions.completed'),
+    },
+    {
+      value: BillStatus.CANCELLED,
+      label: t('reports.table.billStatusOptions.cancelled'),
+    },
   ];
 
   // Format currency helper
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'INR',
     }).format(amount);
@@ -105,7 +114,7 @@ export function createEditableBillColumns(
             value={bill.status}
             options={billStatusOptions}
             onChange={(value) =>
-              onBillStatusChange(bill._id, value as BillStatus)
+              onBillUpdate(bill._id, { status: value as BillStatus })
             }
             isLoading={loadingBills.has(bill._id)}
             placeholder="Select status"
@@ -150,17 +159,33 @@ export function createEditableBillColumns(
       cell: ({ row }) => {
         const bill = row.original;
         return (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onViewDetails(bill)}
-            className="flex items-center gap-2"
-          >
-            <Eye className="h-4 w-4" />
-            {t('reports.table.viewDetails')}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onViewDetails(bill)}
+              className="flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              {t('reports.table.viewDetails')}
+            </Button>
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => onBillDelete(bill._id)}
+              disabled={loadingBills.has(bill._id)}
+            >
+              {t('common.delete') || 'Delete'}
+            </Button>
+          </div>
         );
       },
     },
   ];
 }
+
+export const useEditableBillsColumns = (config: EditableBillColumnsConfig) => {
+  const { t } = useTranslation();
+  const { locale } = useI18n();
+  return createEditableBillColumns(config, t, locale);
+};

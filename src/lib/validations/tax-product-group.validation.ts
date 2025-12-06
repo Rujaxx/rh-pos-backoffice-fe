@@ -21,7 +21,7 @@ export const taxProductGroupSchema = z.object({
   isInclusive: z.boolean(),
   isDivisible: z.boolean(),
   brandId: z.string(),
-  restaurantIds: z.array(z.string()),
+  restaurantIds: z.array(z.string()).min(1),
 });
 
 export type TaxProductGroupFormData = z.infer<typeof taxProductGroupSchema>;

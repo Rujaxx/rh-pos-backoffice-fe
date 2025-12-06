@@ -8,14 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { FilterX } from 'lucide-react';
-import {
-  ReportQueryParams,
-  BillStatus,
-  PaymentMethods,
-} from '@/types/report.type';
+import { ReportQueryParams } from '@/types/report.type';
 import { useActiveBrands } from '@/services/api/brands/brands.queries';
 import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
+import { useActiveMenus } from '@/services/api/menus/menus.queries';
+import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { useI18n } from '@/providers/i18n-provider';
+import { BillStatus, PaymentMethods } from '@/types/bill.type';
 
 interface ReportFiltersProps {
   filters: ReportQueryParams;
@@ -31,12 +30,16 @@ export function ReportFilters({
   const { t } = useTranslation();
   const { locale } = useI18n();
 
-  // Fetch active brands and restaurants
+  // Fetch active brands, restaurants, menus, and order types
   const { data: brandsData } = useActiveBrands();
   const { data: restaurantsData } = useActiveRestaurants();
+  const { data: menusData } = useActiveMenus();
+  const { data: orderTypesData } = useOrderTypes();
 
   const brands = brandsData?.data || [];
   const restaurants = restaurantsData?.data || [];
+  const menus = menusData?.data || [];
+  const orderTypes = orderTypesData?.data || [];
 
   // Options for dropdowns
   const brandOptions = brands.map((brand) => ({
@@ -49,9 +52,19 @@ export function ReportFilters({
     value: restaurant._id!,
   }));
 
+  const menuOptions = menus.map((menu) => ({
+    label: menu.name[locale] || menu.name.en,
+    value: menu._id!,
+  }));
+
+  const orderTypeOptions = orderTypes.map((orderType) => ({
+    label: orderType.name[locale] || orderType.name.en,
+    value: orderType._id!,
+  }));
+
   const paymentModeOptions = Object.values(PaymentMethods).map((mode) => ({
-    label: mode,
-    value: mode,
+    label: t(`paymentMethods.${mode.label}`),
+    value: mode.value,
   }));
 
   const billStatusOptions = Object.values(BillStatus).map((status) => ({
@@ -122,6 +135,30 @@ export function ReportFilters({
             />
           </div>
 
+          {/* Menus */}
+          <div className="space-y-2">
+            <Label>{t('menus.title') || 'Menus'}</Label>
+            <MultiSelectDropdown
+              options={menuOptions}
+              value={filters.menuIds || []}
+              onChange={(value) => handleMultiSelectChange('menuIds', value)}
+              placeholder={t('common.selectMenus') || 'Select Menus'}
+            />
+          </div>
+
+          {/* Order Types */}
+          <div className="space-y-2">
+            <Label>{t('orderTypes.title') || 'Order Types'}</Label>
+            <MultiSelectDropdown
+              options={orderTypeOptions}
+              value={filters.orderTypeIds || []}
+              onChange={(value) =>
+                handleMultiSelectChange('orderTypeIds', value)
+              }
+              placeholder={t('common.selectOrderTypes') || 'Select Order Types'}
+            />
+          </div>
+
           {/* Payment Modes */}
           <div className="space-y-2">
             <Label>
@@ -129,9 +166,9 @@ export function ReportFilters({
             </Label>
             <MultiSelectDropdown
               options={paymentModeOptions}
-              value={filters.paymentModes || []}
+              value={filters.paymentMethods || []}
               onChange={(value) =>
-                handleMultiSelectChange('paymentModes', value)
+                handleMultiSelectChange('paymentMethods', value)
               }
               placeholder={
                 t('reports.filters.selectPaymentModes') || 'Select Modes'
