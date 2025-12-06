@@ -345,11 +345,11 @@ function Page() {
                   className="h-8"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Download Sample
+                  {t('menuItems.downloadSample')}
                 </Button>
                 <Button onClick={() => openModal()} className="h-8">
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Item
+                  {t('menuItems.addNewItem')}
                 </Button>
                 <input
                   type="file"
@@ -366,8 +366,8 @@ function Page() {
                 >
                   <Upload className="h-4 w-4 mr-2" />
                   {uploadMenuMutation.isPending
-                    ? 'Uploading...'
-                    : 'Upload Menu'}
+                    ? t('menuItems.uploading')
+                    : t('menuItems.uploadMenu')}
                 </Button>
               </>
             )}
@@ -382,7 +382,7 @@ function Page() {
                   disabled={bulkUpdateMutation.isPending}
                 >
                   <X className="h-4 w-4 mr-2" />
-                  Discard Changes
+                  {t('common.discardChanges')}
                 </Button>
                 <Button
                   onClick={handleSaveChanges}
@@ -390,7 +390,7 @@ function Page() {
                   disabled={bulkUpdateMutation.isPending}
                 >
                   <Save className="h-4 w-4 mr-2" />
-                  Save Changes
+                  {t('common.saveChanges')}
                   {modifiedCount > 0 && (
                     <Badge variant="secondary" className="ml-2">
                       {modifiedCount}
@@ -425,7 +425,7 @@ function Page() {
               showSearch={true}
               showPagination={true}
               showPageSizeSelector={true}
-              emptyMessage={t('menuItems.noDataFound')}
+              emptyMessage={t('menuItems.errorLoading')}
               enableMultiSort={false}
             />
           </CardContent>
