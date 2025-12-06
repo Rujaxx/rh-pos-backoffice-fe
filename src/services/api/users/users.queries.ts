@@ -3,12 +3,12 @@
  * TanStack Query hooks for employee/user management
  */
 
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { UserFormData } from "@/lib/validations/user.validation";
-import { User, UserQueryParams } from "@/types/user.type";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { UserFormData } from '@/lib/validations/user.validation';
+import { User, UserQueryParams } from '@/types/user.type';
 
 // User service extending base service for common CRUD
 class UserService extends BaseApiService<User, UserFormData, UserFormData> {
@@ -30,15 +30,15 @@ class UserService extends BaseApiService<User, UserFormData, UserFormData> {
 
   // Get active users only (for dropdowns, role assignments, etc.)
   async getActiveUsers(
-    params?: Omit<UserQueryParams, "isActive">,
+    params?: Omit<UserQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<User>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Get users by restaurant ID (for restaurant-lev el staff)
   async getUsersByRestaurant(
     restaurantId: string,
-    params?: Omit<UserQueryParams, "restaurantId">,
+    params?: Omit<UserQueryParams, 'restaurantId'>,
   ): Promise<PaginatedResponse<User>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -57,7 +57,7 @@ export const useUsers = (
   params?: UserQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<User>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) =>
   useQuery({
@@ -71,7 +71,7 @@ export const useUser = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<User>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) =>
   useQuery({
@@ -83,14 +83,14 @@ export const useUser = (
 
 // Get active users (used for dropdowns, staff filters, etc.)
 export const useActiveUsers = (
-  params?: Omit<UserQueryParams, "isActive">,
+  params?: Omit<UserQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<User>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) =>
   useQuery({
-    queryKey: QUERY_KEYS.USERS.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.USERS.LIST({ ...params, isActive: 'true' }),
     queryFn: () => userService.getActiveUsers(params),
     ...options,
   });
@@ -98,10 +98,10 @@ export const useActiveUsers = (
 // Get users by restaurant (for restaurant-specific staff lists)
 export const useUsersByRestaurant = (
   restaurantId: string,
-  params?: Omit<UserQueryParams, "restaurantId">,
+  params?: Omit<UserQueryParams, 'restaurantId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<User>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) =>
   useQuery({

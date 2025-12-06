@@ -3,13 +3,13 @@
  * TanStack Query mutations for menu operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { Menu, MenuFormData } from "@/types/menu.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { menuService } from "./menus.queries";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { Menu, MenuFormData } from '@/types/menu.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { menuService } from './menus.queries';
+import { toast } from 'sonner';
 
 // Create menu mutation
 export const useCreateMenu = (
@@ -23,10 +23,10 @@ export const useCreateMenu = (
     },
 
     onSuccess: (data) => {
-      toast.success("Menu created successfully");
+      toast.success('Menu created successfully');
 
       // Invalidate menu list queries
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
 
       // Cache new menu
       if (data.data) {
@@ -35,7 +35,7 @@ export const useCreateMenu = (
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to create menu");
+      toast.error(error.message || 'Failed to create menu');
     },
 
     ...options,
@@ -61,17 +61,17 @@ export const useUpdateMenu = (
     onSuccess: (data, variables) => {
       const { id } = variables;
 
-      toast.success("Menu updated successfully");
+      toast.success('Menu updated successfully');
 
       if (data.data) {
         queryUtils.setQueryData(QUERY_KEYS.MENUS.DETAIL(id), data);
       }
 
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to update menu");
+      toast.error(error.message || 'Failed to update menu');
     },
 
     ...options,
@@ -88,14 +88,14 @@ export const useDeleteMenu = (
     mutationFn: (id: string) => menuService.delete(id),
 
     onSuccess: (_, id) => {
-      toast.success("Menu deleted successfully");
+      toast.success('Menu deleted successfully');
 
       queryUtils.removeQueries(QUERY_KEYS.MENUS.DETAIL(id));
-      queryUtils.invalidateQueries(["menus", "list"]);
+      queryUtils.invalidateQueries(['menus', 'list']);
     },
 
     onError: (error) => {
-      toast.error(error.message || "Failed to delete menu");
+      toast.error(error.message || 'Failed to delete menu');
     },
 
     ...options,

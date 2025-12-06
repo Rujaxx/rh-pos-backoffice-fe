@@ -1,4 +1,4 @@
-import { DashboardSaasLayout } from "../dashboard";
+import { DashboardSaasLayout } from '../dashboard';
 
 export default function Content() {
   return (

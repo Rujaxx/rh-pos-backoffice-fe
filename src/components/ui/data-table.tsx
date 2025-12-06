@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -8,16 +8,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 import {
   ChevronDown,
   ChevronUp,
@@ -25,10 +25,10 @@ import {
   MoreHorizontal,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useTranslation } from "@/hooks/useTranslation";
-import { DataTableProps } from "@/types";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useTranslation } from '@/hooks/useTranslation';
+import { DataTableProps } from '@/types';
 
 export interface TableColumn<T> {
   id: string;
@@ -44,15 +44,15 @@ export function DataTable<T extends Record<string, unknown>>({
   columns,
   actions = [],
   searchable = true,
-  searchValue = "",
-  searchPlaceholder = "Search...",
+  searchValue = '',
+  searchPlaceholder = 'Search...',
   pagination = true,
   loading = false,
   onSort,
   onSearch,
 }: DataTableProps<T>) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const { t } = useTranslation();
@@ -65,21 +65,21 @@ export function DataTable<T extends Record<string, unknown>>({
       const bValue = b[sortColumn as keyof T];
 
       // Handle multilingual objects
-      if (typeof aValue === "object" && aValue !== null) {
+      if (typeof aValue === 'object' && aValue !== null) {
         const aObj = aValue as Record<string, unknown>;
         const bObj = (bValue as Record<string, unknown>) || {};
-        const aText = String(aObj.en || Object.values(aObj)[0] || "");
-        const bText = String(bObj.en || Object.values(bObj)[0] || "");
-        return sortDirection === "asc"
+        const aText = String(aObj.en || Object.values(aObj)[0] || '');
+        const bText = String(bObj.en || Object.values(bObj)[0] || '');
+        return sortDirection === 'asc'
           ? aText.localeCompare(bText)
           : bText.localeCompare(aText);
       }
 
-      const aStr = String(aValue || "");
-      const bStr = String(bValue || "");
+      const aStr = String(aValue || '');
+      const bStr = String(bValue || '');
 
-      if (aStr < bStr) return sortDirection === "asc" ? -1 : 1;
-      if (aStr > bStr) return sortDirection === "asc" ? 1 : -1;
+      if (aStr < bStr) return sortDirection === 'asc' ? -1 : 1;
+      if (aStr > bStr) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
   }, [data, sortColumn, sortDirection]);
@@ -96,22 +96,22 @@ export function DataTable<T extends Record<string, unknown>>({
 
   const handleSort = (columnId: string) => {
     if (sortColumn === columnId) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortColumn(columnId);
-      setSortDirection("asc");
+      setSortDirection('asc');
     }
 
     if (onSort) {
       onSort(
         columnId,
-        sortColumn === columnId && sortDirection === "asc" ? "desc" : "asc",
+        sortColumn === columnId && sortDirection === 'asc' ? 'desc' : 'asc',
       );
     }
   };
 
   const renderCellValue = (item: T, column: TableColumn<T>) => {
-    if (typeof column.accessor === "function") {
+    if (typeof column.accessor === 'function') {
       return column.accessor(item);
     }
 
@@ -120,23 +120,23 @@ export function DataTable<T extends Record<string, unknown>>({
       : item[column.id as keyof T];
 
     // Handle different data types
-    if (typeof value === "object" && value !== null) {
+    if (typeof value === 'object' && value !== null) {
       // Handle multilingual objects
       const obj = value as Record<string, unknown>;
-      if ("en" in obj) {
-        return String(obj.en || Object.values(obj)[0] || "");
+      if ('en' in obj) {
+        return String(obj.en || Object.values(obj)[0] || '');
       }
       return JSON.stringify(value);
     }
 
-    if (typeof value === "boolean") {
+    if (typeof value === 'boolean') {
       return (
-        <Badge variant={value ? "default" : "secondary"}>
-          {value ? t("table.status.active") : t("table.status.inactive")}
+        <Badge variant={value ? 'default' : 'secondary'}>
+          {value ? t('table.status.active') : t('table.status.inactive')}
         </Badge>
       );
     }
-    return String(value || "");
+    return String(value || '');
   };
 
   if (loading) {
@@ -173,8 +173,8 @@ export function DataTable<T extends Record<string, unknown>>({
                 <TableHead
                   key={column.id}
                   className={cn(
-                    "font-medium",
-                    column.sortable && "cursor-pointer hover:bg-muted/50",
+                    'font-medium',
+                    column.sortable && 'cursor-pointer hover:bg-muted/50',
                     column.width && `w-[${column.width}]`,
                   )}
                   onClick={
@@ -185,7 +185,7 @@ export function DataTable<T extends Record<string, unknown>>({
                     <span>{column.label}</span>
                     {column.sortable &&
                       sortColumn === column.id &&
-                      (sortDirection === "asc" ? (
+                      (sortDirection === 'asc' ? (
                         <ChevronUp className="h-4 w-4" />
                       ) : (
                         <ChevronDown className="h-4 w-4" />
@@ -195,7 +195,7 @@ export function DataTable<T extends Record<string, unknown>>({
               ))}
               {actions.length > 0 && (
                 <TableHead className="w-[100px]">
-                  {t("table.actions")}
+                  {t('table.actions')}
                 </TableHead>
               )}
             </TableRow>
@@ -207,7 +207,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   colSpan={columns.length + (actions.length > 0 ? 1 : 0)}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  {t("table.noData")}
+                  {t('table.noData')}
                 </TableCell>
               </TableRow>
             ) : (
@@ -235,8 +235,8 @@ export function DataTable<T extends Record<string, unknown>>({
                               onClick={() => action.onClick(item)}
                               disabled={action.disabled?.(item)}
                               className={cn(
-                                action.variant === "destructive" &&
-                                  "text-destructive focus:text-destructive",
+                                action.variant === 'destructive' &&
+                                  'text-destructive focus:text-destructive',
                               )}
                             >
                               {action.icon && (
@@ -260,11 +260,11 @@ export function DataTable<T extends Record<string, unknown>>({
       {pagination && totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {t("table.showing")}{" "}
-            {Math.min((currentPage - 1) * itemsPerPage + 1, sortedData.length)}{" "}
-            {t("table.to")}{" "}
-            {Math.min(currentPage * itemsPerPage, sortedData.length)}{" "}
-            {t("table.of")} {sortedData.length} {t("table.entries")}
+            {t('table.showing')}{' '}
+            {Math.min((currentPage - 1) * itemsPerPage + 1, sortedData.length)}{' '}
+            {t('table.to')}{' '}
+            {Math.min(currentPage * itemsPerPage, sortedData.length)}{' '}
+            {t('table.of')} {sortedData.length} {t('table.entries')}
           </p>
           <div className="flex items-center space-x-2">
             <Button
@@ -274,10 +274,10 @@ export function DataTable<T extends Record<string, unknown>>({
               disabled={currentPage === 1}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
-              {t("table.previous")}
+              {t('table.previous')}
             </Button>
             <span className="text-sm">
-              {t("table.page")} {currentPage} {t("table.of")} {totalPages}
+              {t('table.page')} {currentPage} {t('table.of')} {totalPages}
             </span>
             <Button
               variant="outline"
@@ -287,7 +287,7 @@ export function DataTable<T extends Record<string, unknown>>({
               }
               disabled={currentPage === totalPages}
             >
-              {t("table.next")}
+              {t('table.next')}
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </div>

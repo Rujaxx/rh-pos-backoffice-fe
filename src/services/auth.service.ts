@@ -3,9 +3,9 @@
  * Handles all authentication-related API calls including token refresh
  */
 
-import api from "@/lib/axios";
-import { API_ENDPOINTS } from "@/config/api";
-import { AuthTokens, AuthUser, LoginCredentials } from "@/types/auth/auth.type";
+import api from '@/lib/axios';
+import { API_ENDPOINTS } from '@/config/api';
+import { AuthTokens, AuthUser, LoginCredentials } from '@/types/auth/auth.type';
 
 export class AuthService {
   /**
@@ -30,7 +30,7 @@ export class AuthService {
       return response;
     } catch (error) {
       // If refresh fails, the token is expired or invalid
-      throw new Error("REFRESH_TOKEN_EXPIRED");
+      throw new Error('REFRESH_TOKEN_EXPIRED');
     }
   }
 
@@ -50,7 +50,7 @@ export class AuthService {
       await api.post(API_ENDPOINTS.AUTH.LOGOUT);
     } catch (error) {
       // Ignore logout errors - we'll clear local state anyway
-      console.warn("Logout request failed:", error);
+      console.warn('Logout request failed:', error);
     }
   }
 }

@@ -187,8 +187,8 @@ Use our [PR Template](./.github/pull_request_template.md) which includes:
 
 ```tsx
 // 1. Imports
-import React from "react";
-import { useTranslation } from "@/hooks/useTranslation";
+import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 // 2. Types/Interfaces
 interface MyComponentProps {

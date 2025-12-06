@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Globe, Eye, Smartphone, Monitor } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Globe, Eye, Smartphone, Monitor } from 'lucide-react';
 
 export function WebsiteBuilder() {
   const websites = [
     {
-      name: "Main Store",
-      url: "mystore.com",
-      visitors: "12.4K",
-      status: "live",
-      mobile: "98%",
-      desktop: "95%",
+      name: 'Main Store',
+      url: 'mystore.com',
+      visitors: '12.4K',
+      status: 'live',
+      mobile: '98%',
+      desktop: '95%',
     },
     {
-      name: "Fashion Blog",
-      url: "fashion.mystore.com",
-      visitors: "8.2K",
-      status: "live",
-      mobile: "92%",
-      desktop: "88%",
+      name: 'Fashion Blog',
+      url: 'fashion.mystore.com',
+      visitors: '8.2K',
+      status: 'live',
+      mobile: '92%',
+      desktop: '88%',
     },
     {
-      name: "Landing Page",
-      url: "promo.mystore.com",
-      visitors: "3.1K",
-      status: "draft",
-      mobile: "85%",
-      desktop: "90%",
+      name: 'Landing Page',
+      url: 'promo.mystore.com',
+      visitors: '3.1K',
+      status: 'draft',
+      mobile: '85%',
+      desktop: '90%',
     },
   ];
 
@@ -55,9 +55,9 @@ export function WebsiteBuilder() {
                 </h4>
                 <span
                   className={`px-2 py-1 text-xs rounded-full ${
-                    website.status === "live"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                    website.status === 'live'
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                   }`}
                 >
                   {website.status}

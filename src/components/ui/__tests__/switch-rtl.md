@@ -51,7 +51,7 @@ The Switch component now supports proper RTL (Right-to-Left) animations for Arab
 <Switch
   checked={isChecked}
   onCheckedChange={setIsChecked}
-  rtl={locale === "ar"}
+  rtl={locale === 'ar'}
 />
 ```
 

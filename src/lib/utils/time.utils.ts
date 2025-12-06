@@ -10,11 +10,11 @@
  * @returns Minutes from 00:00 (e.g., 570 for "09:30")
  */
 export function timeStringToMinutes(timeString: string): number {
-  if (!timeString || !timeString.includes(":")) {
+  if (!timeString || !timeString.includes(':')) {
     return 0;
   }
 
-  const [hours, minutes] = timeString.split(":").map(Number);
+  const [hours, minutes] = timeString.split(':').map(Number);
 
   // Validate input
   if (
@@ -38,7 +38,7 @@ export function timeStringToMinutes(timeString: string): number {
  */
 export function minutesToTimeString(minutes: number): string {
   if (isNaN(minutes) || minutes < 0) {
-    return "00:00";
+    return '00:00';
   }
 
   // Handle values over 1439 (24 hours) by wrapping around
@@ -47,7 +47,7 @@ export function minutesToTimeString(minutes: number): string {
   const hours = Math.floor(normalizedMinutes / 60);
   const mins = normalizedMinutes % 60;
 
-  return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 }
 
 /**
@@ -106,6 +106,6 @@ export function isValidTimeString(timeString: string): boolean {
  * Get default time strings for restaurant opening hours
  */
 export const DEFAULT_TIMES = {
-  START_TIME: "10:00", // 10:00 AM
-  END_TIME: "23:00", // 11:00 PM
+  START_TIME: '10:00', // 10:00 AM
+  END_TIME: '23:00', // 11:00 PM
 } as const;

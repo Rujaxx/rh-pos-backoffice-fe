@@ -1,9 +1,9 @@
 ---
 name: ✨ Feature Request
 about: Suggest a new feature for the RH POS system
-title: "[FEATURE] "
-labels: ["enhancement", "needs triage"]
-assignees: ""
+title: '[FEATURE] '
+labels: ['enhancement', 'needs triage']
+assignees: ''
 ---
 
 ## ✨ Feature Description

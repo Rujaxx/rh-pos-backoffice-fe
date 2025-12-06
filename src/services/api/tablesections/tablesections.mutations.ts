@@ -3,13 +3,13 @@
  * TanStack Query mutations for table section operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { TableSection, TableSectionFormData } from "@/types/table-section.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { tableSectionService } from "./tablesections.queries";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { TableSection, TableSectionFormData } from '@/types/table-section.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { tableSectionService } from './tablesections.queries';
+import { toast } from 'sonner';
 
 // Create table section mutation
 export const useCreateTableSection = (
@@ -28,10 +28,10 @@ export const useCreateTableSection = (
     },
     onSuccess: (data) => {
       // Show success message
-      toast.success("Table section created successfully");
+      toast.success('Table section created successfully');
 
       // Invalidate and refetch table sections list - use partial matching to catch all queries
-      queryUtils.invalidateQueries(["table-sections", "list"]);
+      queryUtils.invalidateQueries(['table-sections', 'list']);
 
       // Set the new table section in cache
       if (data.data) {
@@ -43,7 +43,7 @@ export const useCreateTableSection = (
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to create table section";
+      const errorMessage = error.message || 'Failed to create table section';
       toast.error(errorMessage);
     },
     ...options,
@@ -77,7 +77,7 @@ export const useUpdateTableSection = (
       const { id } = variables;
 
       // Show success message
-      toast.success("Table section updated successfully");
+      toast.success('Table section updated successfully');
 
       // Update specific table section cache
       if (data.data) {
@@ -85,11 +85,11 @@ export const useUpdateTableSection = (
       }
 
       // Invalidate table sections list to refresh the table - use partial matching
-      queryUtils.invalidateQueries(["table-sections", "list"]);
+      queryUtils.invalidateQueries(['table-sections', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update table section";
+      const errorMessage = error.message || 'Failed to update table section';
       toast.error(errorMessage);
     },
     ...options,
@@ -106,17 +106,17 @@ export const useDeleteTableSection = (
     mutationFn: (id: string) => tableSectionService.delete(id),
     onSuccess: (_, id) => {
       // Show success message
-      toast.success("Table section deleted successfully");
+      toast.success('Table section deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.TABLE_SECTIONS.DETAIL(id));
 
       // Invalidate table sections list - use partial matching
-      queryUtils.invalidateQueries(["table-sections", "list"]);
+      queryUtils.invalidateQueries(['table-sections', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to delete table section";
+      const errorMessage = error.message || 'Failed to delete table section';
       toast.error(errorMessage);
     },
     ...options,

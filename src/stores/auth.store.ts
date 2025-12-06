@@ -3,10 +3,10 @@
  * Zustand store for managing authentication state with persistence and devtools
  */
 
-import { create } from "zustand";
-import { AuthTokens } from "@/types/auth/auth.type";
-import { User } from "@/types/user";
-import { AuthService } from "@/services/auth.service";
+import { create } from 'zustand';
+import { AuthTokens } from '@/types/auth/auth.type';
+import { User } from '@/types/user';
+import { AuthService } from '@/services/auth.service';
 
 // Auth state interface
 interface AuthState {
@@ -52,10 +52,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     });
 
     // Manual localStorage save
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(
-          "rh-pos-auth",
+          'rh-pos-auth',
           JSON.stringify({
             user,
             accessToken,
@@ -64,7 +64,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           }),
         );
       } catch (error) {
-        console.warn("Failed to save auth to localStorage:", error);
+        console.warn('Failed to save auth to localStorage:', error);
       }
     }
   },
@@ -74,11 +74,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(initialState);
 
     // Manual localStorage clear
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
-        localStorage.removeItem("rh-pos-auth");
+        localStorage.removeItem('rh-pos-auth');
       } catch (error) {
-        console.warn("Failed to clear auth from localStorage:", error);
+        console.warn('Failed to clear auth from localStorage:', error);
       }
     }
   },
@@ -91,13 +91,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set({ user: updatedUser });
 
       // Update localStorage
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         try {
-          const stored = localStorage.getItem("rh-pos-auth");
+          const stored = localStorage.getItem('rh-pos-auth');
           if (stored) {
             const parsed = JSON.parse(stored);
             localStorage.setItem(
-              "rh-pos-auth",
+              'rh-pos-auth',
               JSON.stringify({
                 ...parsed,
                 user: updatedUser,
@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             );
           }
         } catch (error) {
-          console.warn("Failed to update user in localStorage:", error);
+          console.warn('Failed to update user in localStorage:', error);
         }
       }
     }
@@ -124,11 +124,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   // Clear all auth data
   clearAuth: () => {
     set(initialState);
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
-        localStorage.removeItem("rh-pos-auth");
+        localStorage.removeItem('rh-pos-auth');
       } catch (error) {
-        console.warn("Failed to clear auth from localStorage:", error);
+        console.warn('Failed to clear auth from localStorage:', error);
       }
     }
   },
@@ -152,13 +152,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       });
 
       // Update localStorage
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         try {
-          const stored = localStorage.getItem("rh-pos-auth");
+          const stored = localStorage.getItem('rh-pos-auth');
           if (stored) {
             const parsed = JSON.parse(stored);
             localStorage.setItem(
-              "rh-pos-auth",
+              'rh-pos-auth',
               JSON.stringify({
                 ...parsed,
                 accessToken: newTokens.accessToken,
@@ -167,17 +167,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             );
           }
         } catch (error) {
-          console.warn("Failed to update tokens in localStorage:", error);
+          console.warn('Failed to update tokens in localStorage:', error);
         }
       }
 
       return true;
     } catch (error) {
       set({ isLoading: false });
-      console.warn("Token refresh failed:", error);
+      console.warn('Token refresh failed:', error);
 
       // If refresh token is expired, clear auth and redirect to home
-      if (error instanceof Error && error.message === "REFRESH_TOKEN_EXPIRED") {
+      if (error instanceof Error && error.message === 'REFRESH_TOKEN_EXPIRED') {
         get().clearAuth();
         get().redirectToHome();
       }
@@ -188,8 +188,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   // Redirect to homepage
   redirectToHome: () => {
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
     }
   },
 }));
@@ -216,9 +216,9 @@ export const useIsInRole = (roleId: string) =>
 
 // Function to restore auth state from localStorage
 export const restoreAuthFromStorage = () => {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     try {
-      const stored = localStorage.getItem("rh-pos-auth");
+      const stored = localStorage.getItem('rh-pos-auth');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.isAuthenticated && parsed.user && parsed.accessToken) {
@@ -232,9 +232,9 @@ export const restoreAuthFromStorage = () => {
         }
       }
     } catch (error) {
-      console.warn("Failed to restore auth from localStorage:", error);
+      console.warn('Failed to restore auth from localStorage:', error);
       // Clear corrupted data
-      localStorage.removeItem("rh-pos-auth");
+      localStorage.removeItem('rh-pos-auth');
     }
   }
 };

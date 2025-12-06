@@ -1,18 +1,18 @@
-import { QueryParams } from "./api";
-import { MultilingualText, TableAction } from "./common/common.type";
+import { QueryParams } from './api';
+import { MultilingualText, TableAction } from './common/common.type';
 
 // Re-export TableAction for backward compatibility
 export type { TableAction };
 export type UserTableAction<T = Record<string, unknown>> = TableAction<T>;
 
 // Account status values
-export type AccountStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
+export type AccountStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 // Used for permissions and access control
 export type Permission = string;
 
 // Used for system-level feature flags (e.g., web access)
-export type AccessType = "WEB" | "POS" | "BOTH";
+export type AccessType = 'WEB' | 'POS' | 'BOTH';
 
 export interface User extends Record<string, unknown> {
   _id: string;
@@ -37,6 +37,7 @@ export interface User extends Record<string, unknown> {
   timeZone?: string;
   createdBy?: string;
   updatedBy?: string;
+  lastLoginAt: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,7 +65,7 @@ export interface Brand {
 }
 
 export interface UserTableColumn {
-  id: keyof User | "actions";
+  id: keyof User | 'actions';
   label: string;
   sortable?: boolean;
   filterable?: boolean;
@@ -101,7 +102,7 @@ export interface UserQueryParams extends QueryParams {
   isActive?: string;
   accountStatus?: AccountStatus;
   sortField?: string;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface UserStats extends Record<string, unknown> {

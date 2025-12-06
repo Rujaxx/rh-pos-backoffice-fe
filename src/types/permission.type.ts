@@ -1,4 +1,4 @@
-import { QueryParams } from "./api";
+import { QueryParams } from './api';
 
 export interface Permission extends Record<string, unknown> {
   _id: string;

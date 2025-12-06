@@ -1,60 +1,60 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, MessageSquare, Phone, Mail } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Users, MessageSquare, Phone, Mail } from 'lucide-react';
 
 export function SalesTeamActivity() {
   const activities = [
     {
-      user: "Sarah Johnson",
+      user: 'Sarah Johnson',
       avatar:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face",
-      action: "Closed deal with TechCorp",
-      value: "$15,000",
-      time: "5 min ago",
+        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face',
+      action: 'Closed deal with TechCorp',
+      value: '$15,000',
+      time: '5 min ago',
       icon: MessageSquare,
-      color: "text-green-600",
+      color: 'text-green-600',
     },
     {
-      user: "Mike Chen",
+      user: 'Mike Chen',
       avatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face",
-      action: "Called prospect",
-      value: "Follow-up scheduled",
-      time: "12 min ago",
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face',
+      action: 'Called prospect',
+      value: 'Follow-up scheduled',
+      time: '12 min ago',
       icon: Phone,
-      color: "text-blue-600",
+      color: 'text-blue-600',
     },
     {
-      user: "Emma Wilson",
+      user: 'Emma Wilson',
       avatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face",
-      action: "Sent proposal",
-      value: "$8,500 potential",
-      time: "25 min ago",
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face',
+      action: 'Sent proposal',
+      value: '$8,500 potential',
+      time: '25 min ago',
       icon: Mail,
-      color: "text-purple-600",
+      color: 'text-purple-600',
     },
     {
-      user: "David Brown",
+      user: 'David Brown',
       avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face",
-      action: "Updated lead status",
-      value: "Hot prospect",
-      time: "1 hour ago",
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
+      action: 'Updated lead status',
+      value: 'Hot prospect',
+      time: '1 hour ago',
       icon: MessageSquare,
-      color: "text-orange-600",
+      color: 'text-orange-600',
     },
     {
-      user: "Lisa Wang",
+      user: 'Lisa Wang',
       avatar:
-        "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=32&h=32&fit=crop&crop=face",
-      action: "Scheduled demo",
-      value: "Tomorrow 2 PM",
-      time: "2 hours ago",
+        'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=32&h=32&fit=crop&crop=face',
+      action: 'Scheduled demo',
+      value: 'Tomorrow 2 PM',
+      time: '2 hours ago',
       icon: Phone,
-      color: "text-indigo-600",
+      color: 'text-indigo-600',
     },
   ];
 
@@ -80,9 +80,9 @@ export function SalesTeamActivity() {
                 <AvatarImage src={activity.avatar} alt={activity.user} />
                 <AvatarFallback>
                   {activity.user
-                    .split(" ")
+                    .split(' ')
                     .map((n) => n[0])
-                    .join("")}
+                    .join('')}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">

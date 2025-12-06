@@ -1,5 +1,5 @@
-import { DashboardContent } from "./content";
-import Layout from "../common/layout";
+import { DashboardContent } from './content';
+import Layout from '../common/layout';
 
 export function DashboardSaasLayout() {
   return (

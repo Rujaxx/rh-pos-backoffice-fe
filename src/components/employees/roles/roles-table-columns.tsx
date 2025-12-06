@@ -1,36 +1,29 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Shield,
-  UserCheck,
-  UserX,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Role } from "@/types/role.type";
-import { Permission } from "@/types/permission.type";
+} from '@/components/ui/dropdown-menu';
+import { Edit, Trash2, MoreHorizontal, Shield } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Role } from '@/types/role.type';
+import { Permission } from '@/types/permission.type';
 
 // Table columns definition
 export const createRoleColumns = (
   onEdit: (role: Role) => void,
   onDelete: (role: Role) => void,
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>['t'],
 ): ColumnDef<Role>[] => [
   {
-    id: "icon",
-    header: "",
+    id: 'icon',
+    header: '',
     size: 60,
     enableSorting: false,
     cell: () => (
@@ -40,15 +33,15 @@ export const createRoleColumns = (
     ),
   },
   {
-    accessorKey: "name.en",
-    id: "name",
-    header: t("roles.table.name"),
+    accessorKey: 'name.en',
+    id: 'name',
+    header: t('roles.table.name'),
     enableSorting: true,
     cell: ({ row }) => {
       const role = row.original;
       return (
         <div>
-          <div className="font-medium text-sm">{role.name.en ?? "—"}</div>
+          <div className="font-medium text-sm">{role.name.en ?? '—'}</div>
           {role.name.ar && (
             <div className="text-xs text-muted-foreground" dir="rtl">
               {role.name.ar}
@@ -59,8 +52,8 @@ export const createRoleColumns = (
     },
   },
   {
-    id: "permissions",
-    header: t("roles.table.permissions"),
+    id: 'permissions',
+    header: t('roles.table.permissions'),
     enableSorting: false,
     cell: ({ row }) => {
       const { permissions } = row.original;
@@ -68,7 +61,7 @@ export const createRoleColumns = (
       return (
         <div className="text-sm space-y-1">
           <div className="font-medium">
-            {t("roles.permissions.count", { count: permissions.length })}
+            {t('roles.permissions.count', { count: permissions.length })}
           </div>
           <div className="flex flex-wrap gap-1 mt-1">
             {shown.map((perm: Permission) => (
@@ -87,8 +80,8 @@ export const createRoleColumns = (
     },
   },
   {
-    id: "actions",
-    header: t("table.actions"),
+    id: 'actions',
+    header: t('table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -108,7 +101,7 @@ export const createRoleColumns = (
               }}
             >
               <Edit className="h-4 w-4 mr-2" />
-              {t("common.edit")}
+              {t('common.edit')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -118,7 +111,7 @@ export const createRoleColumns = (
               className="text-destructive focus:text-destructive"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              {t("common.delete")}
+              {t('common.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -143,15 +136,15 @@ export const getSortFieldForQuery = (
   if (!sorting.length) return undefined;
   const sort = sorting[0];
   const fieldMap: Record<string, string> = {
-    name: "name.en",
-    createdAt: "createdAt",
+    name: 'name.en',
+    createdAt: 'createdAt',
   };
   return fieldMap[sort.id] || sort.id;
 };
 
 export const getSortOrderForQuery = (
   sorting: Array<{ id: string; desc: boolean }>,
-): "asc" | "desc" | undefined => {
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

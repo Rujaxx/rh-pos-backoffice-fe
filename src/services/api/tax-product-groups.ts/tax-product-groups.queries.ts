@@ -1,12 +1,12 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
 import {
   TaxProductGroup,
   TaxProductGroupFormData,
   TaxProductGroupQueryParams,
-} from "@/types/tax-product-group.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+} from '@/types/tax-product-group.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Tax Product Group service extending base service
 class TaxProductGroupService extends BaseApiService<
@@ -34,15 +34,15 @@ class TaxProductGroupService extends BaseApiService<
 
   // Get only active groups
   async getActiveTaxProductGroups(
-    params?: Omit<TaxProductGroupQueryParams, "isActive">,
+    params?: Omit<TaxProductGroupQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<TaxProductGroup>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Get groups filtered by brand
   async getTaxProductGroupsByBrand(
     brandId: string,
-    params?: Omit<TaxProductGroupQueryParams, "brandId">,
+    params?: Omit<TaxProductGroupQueryParams, 'brandId'>,
   ): Promise<PaginatedResponse<TaxProductGroup>> {
     return this.getAll({ ...params, brandId });
   }
@@ -50,7 +50,7 @@ class TaxProductGroupService extends BaseApiService<
   // Get groups filtered by restaurant
   async getTaxProductGroupsByRestaurant(
     restaurantId: string,
-    params?: Omit<TaxProductGroupQueryParams, "restaurantId">,
+    params?: Omit<TaxProductGroupQueryParams, 'restaurantId'>,
   ): Promise<PaginatedResponse<TaxProductGroup>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -62,7 +62,7 @@ export const useTaxProductGroups = (
   params?: TaxProductGroupQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TaxProductGroup>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -77,7 +77,7 @@ export const useTaxProductGroup = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<TaxProductGroup>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -90,16 +90,16 @@ export const useTaxProductGroup = (
 
 // Get only active groups
 export const useActiveTaxProductGroups = (
-  params?: Omit<TaxProductGroupQueryParams, "isActive">,
+  params?: Omit<TaxProductGroupQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TaxProductGroup>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.TAX_PRODUCT_GROUPS.LIST({
       ...params,
-      isActive: "true",
+      isActive: 'true',
     }),
     queryFn: () => taxProductGroupService.getActiveTaxProductGroups(params),
     ...options,
@@ -109,10 +109,10 @@ export const useActiveTaxProductGroups = (
 // Get groups by brand
 export const useTaxProductGroupsByBrand = (
   brandId: string,
-  params?: Omit<TaxProductGroupQueryParams, "brandId">,
+  params?: Omit<TaxProductGroupQueryParams, 'brandId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TaxProductGroup>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -130,10 +130,10 @@ export const useTaxProductGroupsByBrand = (
 // Get groups by restaurant
 export const useTaxProductGroupsByRestaurant = (
   restaurantId: string,
-  params?: Omit<TaxProductGroupQueryParams, "restaurantId">,
+  params?: Omit<TaxProductGroupQueryParams, 'restaurantId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<TaxProductGroup>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({

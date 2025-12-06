@@ -78,9 +78,9 @@ src / services / api / users / queries.ts;
 src / stores / auth.ts;
 
 // Old imports
-import { useLogin } from "@/services/api/auth/mutations";
-import { useUsers } from "@/services/api/users/queries";
-import { useAuthStore } from "@/stores/auth";
+import { useLogin } from '@/services/api/auth/mutations';
+import { useUsers } from '@/services/api/users/queries';
+import { useAuthStore } from '@/stores/auth';
 ```
 
 ### **After**
@@ -92,9 +92,9 @@ src / services / api / users / users.queries.ts;
 src / stores / auth.store.ts;
 
 // New imports
-import { useLogin } from "@/services/api/auth/auth.mutations";
-import { useUsers } from "@/services/api/users/users.queries";
-import { useAuthStore } from "@/stores/auth.store";
+import { useLogin } from '@/services/api/auth/auth.mutations';
+import { useUsers } from '@/services/api/users/users.queries';
+import { useAuthStore } from '@/stores/auth.store';
 ```
 
 ## File Types Reference
@@ -130,14 +130,14 @@ import { useAuthStore } from "@/stores/auth.store";
 
 ```typescript
 // ✅ Good - Clear and specific
-import { useLogin, useLogout } from "@/services/api/auth/auth.mutations";
-import { useUsers } from "@/services/api/users/users.queries";
-import { useAuthStore } from "@/stores/auth.store";
+import { useLogin, useLogout } from '@/services/api/auth/auth.mutations';
+import { useUsers } from '@/services/api/users/users.queries';
+import { useAuthStore } from '@/stores/auth.store';
 
 // ❌ Avoid - Generic and unclear
-import { useLogin } from "@/services/api/auth/mutations";
-import { useUsers } from "@/services/api/users/queries";
-import { useAuthStore } from "@/stores/auth";
+import { useLogin } from '@/services/api/auth/mutations';
+import { useUsers } from '@/services/api/users/queries';
+import { useAuthStore } from '@/stores/auth';
 ```
 
 ## Current Implementation

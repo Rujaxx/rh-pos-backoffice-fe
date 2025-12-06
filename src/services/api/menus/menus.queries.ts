@@ -1,8 +1,8 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
-import { Menu, MenuFormData, MenuQueryParams } from "@/types/menu.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
+import { Menu, MenuFormData, MenuQueryParams } from '@/types/menu.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 class MenuService extends BaseApiService<Menu, MenuFormData, MenuFormData> {
   constructor() {
@@ -20,21 +20,21 @@ class MenuService extends BaseApiService<Menu, MenuFormData, MenuFormData> {
   }
 
   async getActiveMenus(
-    params?: Omit<MenuQueryParams, "isActive">,
+    params?: Omit<MenuQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<Menu>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   async getMenusByBrand(
     brandId: string,
-    params?: Omit<MenuQueryParams, "brandId">,
+    params?: Omit<MenuQueryParams, 'brandId'>,
   ): Promise<PaginatedResponse<Menu>> {
     return this.getAll({ ...params, brandId });
   }
 
   async getMenusByRestaurant(
     restaurantId: string,
-    params?: Omit<MenuQueryParams, "restaurantId">,
+    params?: Omit<MenuQueryParams, 'restaurantId'>,
   ): Promise<PaginatedResponse<Menu>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -46,7 +46,7 @@ export const useMenus = (
   params?: MenuQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Menu>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -61,7 +61,7 @@ export const useMenu = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<Menu>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -73,14 +73,14 @@ export const useMenu = (
 };
 
 export const useActiveMenus = (
-  params?: Omit<MenuQueryParams, "isActive">,
+  params?: Omit<MenuQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Menu>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.MENUS.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.MENUS.LIST({ ...params, isActive: 'true' }),
     queryFn: () => menuService.getActiveMenus(params),
     ...options,
   });
@@ -89,10 +89,10 @@ export const useActiveMenus = (
 // Menus by Brand
 export const useMenusByBrand = (
   brandId: string,
-  params?: Omit<MenuQueryParams, "brandId">,
+  params?: Omit<MenuQueryParams, 'brandId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Menu>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -106,10 +106,10 @@ export const useMenusByBrand = (
 // Menus by Restaurant
 export const useMenusByRestaurant = (
   restaurantId: string,
-  params?: Omit<MenuQueryParams, "restaurantId">,
+  params?: Omit<MenuQueryParams, 'restaurantId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Menu>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({

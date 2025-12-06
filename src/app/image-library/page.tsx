@@ -93,7 +93,7 @@ export default function ImageLibraryPage() {
   }, []);
 
   const fetchAllItemsForExport = useCallback(async () => {
-    const limit = 200;
+    const limit = 100;
     let pageNumber = 1;
     let hasNext = true;
     const aggregated: ImageLibraryItem[] = [];
