@@ -455,6 +455,17 @@ function Page() {
         >
           <MenuItemFormContent form={form} />
         </CrudModal>
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={isConfirmationOpen}
+          onClose={closeConfirmationModal}
+          onConfirm={executeConfirmation || (() => Promise.resolve())}
+          title={confirmationConfig?.title}
+          description={confirmationConfig?.description}
+          confirmButtonText={confirmationConfig?.confirmButtonText}
+          variant={confirmationConfig?.variant}
+          loading={deleteMenuItemMutation.isPending}
+        />
       </div>
     </Layout>
   );

@@ -1,7 +1,7 @@
 // same as you used for Restaurant
-import { TableAction } from "@/types/common/common.type";
-import { MultilingualText } from "@/types/common/common.type";
-import { QueryParams } from "./api";
+import { TableAction } from '@/types/common/common.type';
+import { MultilingualText } from '@/types/common/common.type';
+import { QueryParams } from './api';
 
 export type { TableAction };
 
@@ -41,6 +41,6 @@ export interface TableSectionQueryParams extends QueryParams {
   restaurantId?: string; // Filter by restaurant ID
   taxProductGroupId?: string; // Filter by tax product group ID
   isActive?: string; // Filter by active/inactive status
-  sortBy?: "name" | "createdAt" | "updatedAt";
-  sortOrder?: "asc" | "desc"; // Sort order
+  sortBy?: 'name' | 'createdAt' | 'updatedAt';
+  sortOrder?: 'asc' | 'desc'; // Sort order
 }

@@ -1,11 +1,12 @@
-import { MultilingualText } from "@/types/common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText } from '@/types/common/common.type';
+import { QueryParams } from './api';
+import { Restaurant } from './user.type';
 
 export interface TaxProductGroup extends Record<string, unknown> {
   _id: string;
   name: MultilingualText;
   billDisplayName: string;
-  taxType: "Percentage" | "Fixed Amount";
+  taxType: 'Percentage' | 'Fixed Amount';
   taxValue: number;
   isActive: boolean;
   isPrimary?: boolean;
@@ -13,7 +14,7 @@ export interface TaxProductGroup extends Record<string, unknown> {
   isDivisible: boolean;
   brandId: string;
   brandName: MultilingualText;
-  restaurantIds?: string[];
+  restaurantIds: Restaurant[];
   createdBy?: string;
   updatedBy?: string;
   deletedBy?: string;
@@ -25,14 +26,14 @@ export interface TaxProductGroup extends Record<string, unknown> {
 export interface TaxProductGroupFormData extends Record<string, unknown> {
   name: MultilingualText;
   billDisplayName: string;
-  taxType: "Percentage" | "Fixed Amount";
+  taxType: 'Percentage' | 'Fixed Amount';
   taxValue: number;
   isActive: boolean;
   isPrimary: boolean;
   isInclusive: boolean;
   isDivisible: boolean;
   brandId: string;
-  restaurantIds?: string[];
+  restaurantIds: string[];
 }
 
 export interface TaxProductGroupQueryParams extends QueryParams {
@@ -46,6 +47,6 @@ export interface TaxProductGroupQueryParams extends QueryParams {
   restaurantId?: string;
   isActive?: string;
 
-  sortBy?: "name" | "createdAt" | "updatedAt" | "shortCode";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'shortCode';
+  sortOrder?: 'asc' | 'desc';
 }

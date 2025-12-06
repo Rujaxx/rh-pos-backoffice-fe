@@ -79,8 +79,8 @@ export function TableSectionFormContent({
               isLoadingRestaurants
                 ? t('common.loading')
                 : restaurantOptions.length === 0
-                  ? t('table.form.noRestaurantsAvailable')
-                  : t('tableSection.form.restaurantPlaceholder')
+                  ? t('common.noRestaurantAvailable')
+                  : t('common.restaurantPlaceholder')
             }
             options={restaurantOptions}
             disabled={isLoadingRestaurants}
@@ -136,9 +136,8 @@ export function useTableSectionForm(
       form.reset({
         _id: editingTableSection._id,
         name: editingTableSection.name,
-        restaurantId: editingTableSection.restaurantId?.toString() || '',
-        taxProductGroupId:
-          editingTableSection.taxProductGroupId?.toString() || '',
+        restaurantId: editingTableSection.restaurantId,
+        taxProductGroupId: editingTableSection.taxProductGroupId || '',
         isActive: editingTableSection.isActive ?? true,
       });
     } else {

@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RHFInput,
   RHFSelect,
   RHFSwitch,
-} from "@/components/ui/form-components";
-import { userSchema, UserFormData } from "@/lib/validations/user.validation";
-import { User } from "@/types/user.type";
+} from '@/components/ui/form-components';
+import { userSchema, UserFormData } from '@/lib/validations/user.validation';
+import { User } from '@/types/user.type';
 import {
   FormItem,
   FormLabel,
   FormField,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { useIntl } from "react-intl";
-import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
+} from '@/components/ui/form';
+import { useIntl } from 'react-intl';
+import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
 import {
   backendTimeToMinutes,
   DEFAULT_TIMES,
   timeStringToMinutes,
-} from "@/lib/utils/time.utils";
-import { LANGUAGES, COUNTRY_CODES } from "@/mock/dropdown-constants";
+} from '@/lib/utils/time.utils';
+import { LANGUAGES, COUNTRY_CODES } from '@/mock/dropdown-constants';
 import {
   getTimezoneOptions,
   getDefaultTimezone,
-} from "@/lib/utils/timezone.utils";
-import { useRestaurants } from "@/services/api/restaurants/restaurants.queries";
-import { useRoles } from "@/services/api/roles/roles.queries";
-import { useBrands } from "@/services/api/brands/brands.queries";
-import { Lock } from "lucide-react";
+} from '@/lib/utils/timezone.utils';
+import { useRestaurants } from '@/services/api/restaurants/restaurants.queries';
+import { useRoles } from '@/services/api/roles/roles.queries';
+import { useBrands } from '@/services/api/brands/brands.queries';
+import { Lock } from 'lucide-react';
 
 interface UserFormContentProps {
   form: ReturnType<typeof useForm<UserFormData>>;
@@ -42,7 +42,7 @@ interface UserFormContentProps {
 
 export function UserFormContent({ form }: UserFormContentProps) {
   const { t } = useTranslation();
-  const locale = useIntl().locale as "en" | "ar";
+  const locale = useIntl().locale as 'en' | 'ar';
   const [showPassword, setShowPassword] = useState(false);
   const { data: restaurantsResponse } = useRestaurants();
   const { data: brandsResponse } = useBrands();
@@ -77,30 +77,30 @@ export function UserFormContent({ form }: UserFormContentProps) {
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold">
-              {t("users.form.personalInfo")}
+              {t('users.form.personalInfo')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <RHFInput
               form={form}
               name="name"
-              label={t("users.form.nameLabel")}
-              placeholder={t("users.form.namePlaceholder")}
-              description={t("users.form.nameDescription")}
+              label={t('users.form.nameLabel')}
+              placeholder={t('users.form.namePlaceholder')}
+              description={t('users.form.nameDescription')}
             />
             <RHFInput
               form={form}
               name="username"
-              label={t("users.form.usernameLabel")}
-              placeholder={t("users.form.usernamePlaceholder")}
-              description={t("users.form.usernameDescription")}
+              label={t('users.form.usernameLabel')}
+              placeholder={t('users.form.usernamePlaceholder')}
+              description={t('users.form.usernameDescription')}
             />
             <RHFInput
               form={form}
               name="designation"
-              label={t("users.form.designationLabel")}
-              placeholder={t("users.form.designationPlaceholder")}
-              description={t("users.form.designationDescription")}
+              label={t('users.form.designationLabel')}
+              placeholder={t('users.form.designationPlaceholder')}
+              description={t('users.form.designationDescription')}
             />
           </CardContent>
         </Card>
@@ -109,15 +109,15 @@ export function UserFormContent({ form }: UserFormContentProps) {
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold">
-              {t("users.form.contactInfo") || "Contact & Address"}
+              {t('users.form.contactInfo') || 'Contact & Address'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <RHFInput
               form={form}
               name="email"
-              label={t("users.form.emailLabel")}
-              placeholder={t("users.form.emailPlaceholder")}
+              label={t('users.form.emailLabel')}
+              placeholder={t('users.form.emailPlaceholder')}
               type="email"
             />
 
@@ -125,7 +125,7 @@ export function UserFormContent({ form }: UserFormContentProps) {
               <RHFSelect
                 form={form}
                 name="countryCode"
-                label={t("common.form.countryCode") || "Code"}
+                label={t('common.form.countryCode') || 'Code'}
                 placeholder="+91"
                 options={COUNTRY_CODES}
                 defaultValue={COUNTRY_CODES[0].value}
@@ -133,8 +133,8 @@ export function UserFormContent({ form }: UserFormContentProps) {
               <RHFInput
                 form={form}
                 name="phoneNumber"
-                label={t("common.form.phoneLabel")}
-                placeholder={t("common.form.phonePlaceholder")}
+                label={t('common.form.phoneLabel')}
+                placeholder={t('common.form.phonePlaceholder')}
                 type="tel"
                 className="col-span-2"
               />
@@ -143,9 +143,9 @@ export function UserFormContent({ form }: UserFormContentProps) {
             <RHFInput
               form={form}
               name="address"
-              label={t("users.form.addressLabel") || "Address"}
+              label={t('users.form.addressLabel') || 'Address'}
               placeholder={
-                t("users.form.addressPlaceholder") || "Enter address"
+                t('users.form.addressPlaceholder') || 'Enter address'
               }
             />
           </CardContent>
@@ -156,7 +156,7 @@ export function UserFormContent({ form }: UserFormContentProps) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-semibold">
-            {t("users.form.accessControl") || "Access Control"}
+            {t('users.form.accessControl') || 'Access Control'}
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -166,7 +166,7 @@ export function UserFormContent({ form }: UserFormContentProps) {
             render={({ field }) => (
               <FormItem className="space-y-3">
                 <FormLabel className="text-sm font-medium">
-                  {t("users.form.brandLabel") || "Assigned Brands"}
+                  {t('users.form.brandLabel') || 'Assigned Brands'}
                 </FormLabel>
                 <FormControl>
                   <MultiSelectDropdown
@@ -174,8 +174,8 @@ export function UserFormContent({ form }: UserFormContentProps) {
                     value={field.value || []}
                     onChange={(val) => field.onChange(val)}
                     placeholder={
-                      t("users.form.brandDescription") ||
-                      "Select which brands this user can access"
+                      t('users.form.brandDescription') ||
+                      'Select which brands this user can access'
                     }
                   />
                 </FormControl>
@@ -189,14 +189,14 @@ export function UserFormContent({ form }: UserFormContentProps) {
             render={({ field }) => (
               <FormItem className="space-y-3">
                 <FormLabel className="text-sm font-medium">
-                  {t("users.form.restaurantLabel")}
+                  {t('users.form.restaurantLabel')}
                 </FormLabel>
                 <FormControl>
                   <MultiSelectDropdown
                     options={restaurantOptions}
                     value={field.value || []}
                     onChange={(val) => field.onChange(val)}
-                    placeholder={t("users.form.restaurantDescription")}
+                    placeholder={t('users.form.restaurantDescription')}
                   />
                 </FormControl>
                 <FormMessage />
@@ -212,7 +212,7 @@ export function UserFormContent({ form }: UserFormContentProps) {
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold">
-              {t("users.form.securityInfo") || "Account & Security"}
+              {t('users.form.securityInfo') || 'Account & Security'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -221,15 +221,15 @@ export function UserFormContent({ form }: UserFormContentProps) {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("users.form.passwordLabel")}</FormLabel>
+                  <FormLabel>{t('users.form.passwordLabel')}</FormLabel>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                     <FormControl>
                       <input
                         {...field}
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 rtl:pl-10 rtl:pr-10"
-                        placeholder={t("users.form.passwordPlaceholder")}
+                        placeholder={t('users.form.passwordPlaceholder')}
                         disabled={isPending}
                       />
                     </FormControl>
@@ -283,8 +283,8 @@ export function UserFormContent({ form }: UserFormContentProps) {
             <RHFSelect
               form={form}
               name="role"
-              label={t("users.form.roleLabel")}
-              placeholder={t("users.form.rolePlaceholder")}
+              label={t('users.form.roleLabel')}
+              placeholder={t('users.form.rolePlaceholder')}
               options={roleOptions}
             />
           </CardContent>
@@ -294,25 +294,25 @@ export function UserFormContent({ form }: UserFormContentProps) {
         <Card>
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold">
-              {t("users.form.statusInfo") || "Status & Permissions"}
+              {t('users.form.statusInfo') || 'Status & Permissions'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <RHFSwitch
               form={form}
               name="isActive"
-              label={t("users.form.activeStatusLabel")}
-              description={t("users.form.activeStatusDescription")}
+              label={t('users.form.activeStatusLabel')}
+              description={t('users.form.activeStatusDescription')}
             />
             <RHFSwitch
               form={form}
               name="webAccess"
-              label={t("users.form.webAccessLabel") || "Web Access"}
+              label={t('users.form.webAccessLabel') || 'Web Access'}
             />
             <RHFSwitch
               form={form}
               name="agreeToTerms"
-              label={t("users.form.termsLabel") || "Agree to Terms"}
+              label={t('users.form.termsLabel') || 'Agree to Terms'}
             />
           </CardContent>
         </Card>
@@ -322,46 +322,46 @@ export function UserFormContent({ form }: UserFormContentProps) {
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-semibold">
-            {t("users.form.systemInfo") || "System & Preferences"}
+            {t('users.form.systemInfo') || 'System & Preferences'}
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <RHFSelect
             form={form}
             name="language"
-            label={t("users.form.languageLabel") || "Language"}
+            label={t('users.form.languageLabel') || 'Language'}
             placeholder={
-              t("users.form.languagePlaceholder") || "Select Language"
+              t('users.form.languagePlaceholder') || 'Select Language'
             }
             options={LANGUAGES}
           />
           <RHFSelect
             form={form}
             name="timeZone"
-            label={t("users.form.timeZoneLabel") || "Time Zone"}
+            label={t('users.form.timeZoneLabel') || 'Time Zone'}
             placeholder={
-              t("users.form.timeZonePlaceholder") || "Select Time Zone"
+              t('users.form.timeZonePlaceholder') || 'Select Time Zone'
             }
             options={timezoneOptions}
           />
           <RHFInput
             form={form}
             name="macAddress"
-            label={t("users.form.macAddressLabel") || "MAC Address"}
+            label={t('users.form.macAddressLabel') || 'MAC Address'}
             placeholder={
-              t("users.form.macAddressPlaceholder") || "AA:BB:CC:DD:EE:FF"
+              t('users.form.macAddressPlaceholder') || 'AA:BB:CC:DD:EE:FF'
             }
           />
           <RHFInput
             form={form}
             name="shiftStart"
-            label={t("users.form.shiftStartLabel") || "Shift Start"}
+            label={t('users.form.shiftStartLabel') || 'Shift Start'}
             type="number"
           />
           <RHFInput
             form={form}
             name="shiftEnd"
-            label={t("users.form.shiftEndLabel") || "Shift End"}
+            label={t('users.form.shiftEndLabel') || 'Shift End'}
             type="number"
           />
         </CardContent>
@@ -375,15 +375,15 @@ export function useUserForm(editingUser?: User | null) {
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      name: "",
-      username: "",
-      password: "",
-      email: "",
+      name: '',
+      username: '',
+      password: '',
+      email: '',
       phoneNumber: null,
-      countryCode: "",
-      address: "",
-      role: "",
-      designation: "",
+      countryCode: '',
+      address: '',
+      role: '',
+      designation: '',
       restaurantIds: [],
       brandIds: [],
       isActive: true,
@@ -391,8 +391,8 @@ export function useUserForm(editingUser?: User | null) {
       shiftStart: timeStringToMinutes(DEFAULT_TIMES.START_TIME),
       shiftEnd: timeStringToMinutes(DEFAULT_TIMES.END_TIME),
       webAccess: false,
-      macAddress: "",
-      language: "en",
+      macAddress: '',
+      language: 'en',
       timeZone: getDefaultTimezone(),
     },
   });
@@ -401,14 +401,14 @@ export function useUserForm(editingUser?: User | null) {
     if (editingUser) {
       form.reset({
         _id: editingUser._id,
-        name: editingUser.name || "",
+        name: editingUser.name || '',
         username: editingUser.username,
         email: editingUser.email,
         phoneNumber: editingUser.phoneNumber || null,
         countryCode: editingUser.countryCode || null,
-        address: editingUser.address || "",
+        address: editingUser.address || '',
         role: editingUser.role._id,
-        designation: editingUser.designation || "",
+        designation: editingUser.designation || '',
         restaurantIds: editingUser.restaurantIds.map((r) => r._id),
         brandIds: editingUser.brandIds.map((b) => b._id),
         isActive: editingUser.isActive ?? true,
@@ -416,8 +416,8 @@ export function useUserForm(editingUser?: User | null) {
         shiftStart: backendTimeToMinutes(editingUser.shiftStart || 0),
         shiftEnd: backendTimeToMinutes(editingUser.shiftEnd || 0),
         webAccess: editingUser.webAccess ?? false,
-        macAddress: editingUser.macAddress || "",
-        language: editingUser.language || "en",
+        macAddress: editingUser.macAddress || '',
+        language: editingUser.language || 'en',
         timeZone: editingUser.timeZone || getDefaultTimezone(),
       });
     }

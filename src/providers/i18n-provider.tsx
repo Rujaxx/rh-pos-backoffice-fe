@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { IntlProvider } from "react-intl";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { IntlProvider } from 'react-intl';
 
 // Import messages
-import enMessages from "../../messages/en.json";
-import arMessages from "../../messages/ar.json";
+import enMessages from '../../messages/en.json';
+import arMessages from '../../messages/ar.json';
 
-type Locale = "en" | "ar";
+type Locale = 'en' | 'ar';
 
 interface I18nContextType {
   locale: Locale;
@@ -23,12 +23,12 @@ const messages = {
 };
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>('en');
 
   useEffect(() => {
     // Get locale from localStorage or default to 'en'
-    const savedLocale = localStorage.getItem("locale") as Locale;
-    if (savedLocale && (savedLocale === "en" || savedLocale === "ar")) {
+    const savedLocale = localStorage.getItem('locale') as Locale;
+    if (savedLocale && (savedLocale === 'en' || savedLocale === 'ar')) {
       setLocaleState(savedLocale);
     }
   }, []);
@@ -36,12 +36,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Update HTML attributes when locale changes
     document.documentElement.lang = locale;
-    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
   }, [locale]);
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
-    localStorage.setItem("locale", newLocale);
+    localStorage.setItem('locale', newLocale);
   };
 
   const value = {
@@ -66,7 +66,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 export const useI18n = () => {
   const context = useContext(I18nContext);
   if (context === undefined) {
-    throw new Error("useI18n must be used within an I18nProvider");
+    throw new Error('useI18n must be used within an I18nProvider');
   }
   return context;
 };
