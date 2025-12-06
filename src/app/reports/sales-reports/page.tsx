@@ -4,13 +4,12 @@ import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent } from '@/components/ui/card';
-import { useReports, useUpdateBill } from '@/services/api/reports';
 import {
-  ReportQueryParams,
-  BillStatus,
-  PaymentStatus,
-  Bill,
-} from '@/types/report.type';
+  useReports,
+  useUpdateBill,
+  useDeleteBill,
+} from '@/services/api/reports';
+import { ReportQueryParams } from '@/types/report.type';
 import {
   TrendingUp,
   DollarSign,
@@ -19,27 +18,63 @@ import {
   FileText,
 } from 'lucide-react';
 import { ReportFilters } from '@/components/reports/report-filters';
-import { BillsTable } from '@/components/reports/bills-table';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import { useEditableBillsColumns } from '@/components/reports/editable-bill-columns';
+import { BillDetailsModal } from '@/components/reports/bill-details-modal';
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
+import { Bill } from '@/types/bill.type';
+import { toast } from 'sonner';
 
 export default function SalesReportsPage() {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<ReportQueryParams>({});
   const [loadingBills, setLoadingBills] = useState<Set<string>>(new Set());
 
+  // Modal state
+  const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Table state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // Build query params
+  const queryParams: ReportQueryParams = {
+    ...filters,
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+    term: searchTerm || undefined,
+    sortBy: sorting[0]?.id,
+    sortOrder: sorting[0]?.desc ? 'desc' : 'asc',
+  };
+
   // Fetch reports
-  const { data: reportsData, isLoading } = useReports(filters);
+  const { data: reportsData, isLoading } = useReports(queryParams);
   const reportData = reportsData?.data;
   const bills = reportData?.bills || [];
+  const totalCount = reportData?.meta?.total || 0;
 
   const updateBillMutation = useUpdateBill();
+  const deleteBillMutation = useDeleteBill();
 
   // Filter handlers
   const handleFilterChange = (newFilters: ReportQueryParams) => {
     setFilters(newFilters);
+    setPagination({ pageIndex: 0, pageSize: pagination.pageSize }); // Reset to first page
   };
 
   const handleClearFilters = () => {
     setFilters({});
+    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
   };
 
   // Format currency
@@ -50,43 +85,17 @@ export default function SalesReportsPage() {
     }).format(amount);
   };
 
-  // Handle bill status change - IMMEDIATE UPDATE
-  const handleBillStatusChange = async (
-    billId: string,
-    newStatus: BillStatus,
-  ) => {
+  const handleUpdateBill = async (billId: string, newBill: Partial<Bill>) => {
     setLoadingBills((prev) => new Set(prev).add(billId));
-
     try {
       await updateBillMutation.mutateAsync({
         billId,
-        data: { status: newStatus },
+        data: newBill,
       });
+      toast.success('Bill updated successfully');
     } catch (error) {
-      console.error('Failed to update bill status:', error);
-    } finally {
-      setLoadingBills((prev) => {
-        const next = new Set(prev);
-        next.delete(billId);
-        return next;
-      });
-    }
-  };
-
-  // Handle payment status change - IMMEDIATE UPDATE
-  const handlePaymentStatusChange = async (
-    billId: string,
-    newStatus: PaymentStatus,
-  ) => {
-    setLoadingBills((prev) => new Set(prev).add(billId));
-
-    try {
-      await updateBillMutation.mutateAsync({
-        billId,
-        data: { paymentStatus: newStatus },
-      });
-    } catch (error) {
-      console.error('Failed to update payment status:', error);
+      console.error('Failed to update bill:', error);
+      toast.error('Failed to update bill');
     } finally {
       setLoadingBills((prev) => {
         const next = new Set(prev);
@@ -98,9 +107,35 @@ export default function SalesReportsPage() {
 
   // Handle view details
   const handleViewDetails = (bill: Bill) => {
-    // TODO: Implement bill details modal
-    console.log('View bill details:', bill);
+    setSelectedBill(bill);
+    setIsModalOpen(true);
   };
+
+  const handleDeleteBill = async (billId: string) => {
+    setLoadingBills((prev) => new Set(prev).add(billId));
+    try {
+      await deleteBillMutation.mutateAsync({
+        billId,
+      });
+      toast.success('Bill deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete bill:', error);
+      toast.error('Failed to delete bill');
+    } finally {
+      setLoadingBills((prev) => {
+        const next = new Set(prev);
+        next.delete(billId);
+        return next;
+      });
+    }
+  };
+
+  const columns = useEditableBillsColumns({
+    onBillUpdate: handleUpdateBill,
+    onBillDelete: handleDeleteBill,
+    onViewDetails: handleViewDetails,
+    loadingBills,
+  });
 
   return (
     <Layout>
@@ -127,7 +162,7 @@ export default function SalesReportsPage() {
 
         {/* Summary Cards */}
         {reportData?.summary && (
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between space-x-4">
@@ -207,17 +242,65 @@ export default function SalesReportsPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between space-x-4">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {t('reports.summary.duePayment') || 'Due Payment'}
+                    </p>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {formatCurrency(reportData.summary.duePayment || 0)}
+                    </p>
+                  </div>
+                  <DollarSign className="h-8 w-8 text-yellow-500" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
 
-        {/* Bills Table */}
-        <BillsTable
-          bills={bills}
-          isLoading={isLoading}
-          onBillStatusChange={handleBillStatusChange}
-          onPaymentStatusChange={handlePaymentStatusChange}
-          onViewDetails={handleViewDetails}
-          loadingBills={loadingBills}
+        <Card>
+          <CardContent className="p-6">
+            <TanStackTable
+              data={bills}
+              columns={columns}
+              totalCount={totalCount}
+              isLoading={
+                isLoading ||
+                updateBillMutation.isPending ||
+                deleteBillMutation.isPending
+              }
+              searchValue={searchTerm}
+              searchPlaceholder={
+                t('reports.searchPlaceholder') || 'Search bills...'
+              }
+              onSearchChange={setSearchTerm}
+              pagination={pagination}
+              onPaginationChange={setPagination}
+              sorting={sorting}
+              onSortingChange={setSorting}
+              columnFilters={columnFilters}
+              onColumnFiltersChange={setColumnFilters}
+              manualPagination={true}
+              manualSorting={true}
+              manualFiltering={true}
+              showSearch={true}
+              showPagination={true}
+              showPageSizeSelector={true}
+              emptyMessage={t('reports.noDataFound')}
+              enableMultiSort={false}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Bill Details Modal */}
+        <BillDetailsModal
+          bill={selectedBill}
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          onUpdateBill={handleUpdateBill}
         />
       </div>
     </Layout>

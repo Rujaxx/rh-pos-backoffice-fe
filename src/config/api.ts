@@ -129,10 +129,13 @@ export const API_ENDPOINTS = {
     GET: (id: string) => `/image-library/${id}`,
   },
   REPORTS: {
-    LIST: '/reports',
+    LIST_SALES: '/reports/sales',
+    LIST_ORDERTYPE: '/reports/order-type',
+    LIST_MENU: '/reports/menu',
   },
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
+    DELETE: (id: string) => `/bills/${id}`,
   },
   DISCOUNTS: {
     LIST: '/discounts',

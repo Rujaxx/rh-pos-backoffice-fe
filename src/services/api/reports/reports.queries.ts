@@ -1,12 +1,12 @@
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { ReportData, ReportQueryParams } from '@/types/report.type';
 import { SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
-// Reports service
+// Reports service - custom implementation since ReportData has unique structure
 class ReportService {
-  private readonly baseEndpoint = API_ENDPOINTS.REPORTS.LIST;
+  private readonly baseEndpoint = API_ENDPOINTS.REPORTS.LIST_SALES;
 
   async getReports(
     params?: ReportQueryParams,
@@ -14,29 +14,19 @@ class ReportService {
     const searchParams = new URLSearchParams();
 
     if (params) {
-      // Handle single date
-      if (params.date) {
-        searchParams.append('date', params.date);
-      }
-
-      // Handle date range
-      if (params.from) searchParams.append('from', params.from);
-      if (params.to) searchParams.append('to', params.to);
-
-      // Handle array parameters
-      if (params.restaurantIds?.length) {
-        params.restaurantIds.forEach((id) =>
-          searchParams.append('restaurantIds', id),
-        );
-      }
-      if (params.brandIds?.length) {
-        params.brandIds.forEach((id) => searchParams.append('brandIds', id));
-      }
-      if (params.paymentModes?.length) {
-        params.paymentModes.forEach((mode) =>
-          searchParams.append('paymentModes', mode),
-        );
-      }
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          // Handle arrays (restaurantIds, brandIds, paymentModes, billStatus)
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
+            // Handle primitive values
+            searchParams.append(key, String(value));
+          }
+        }
+      });
     }
 
     const url = searchParams.toString()

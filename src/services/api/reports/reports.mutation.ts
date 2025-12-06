@@ -4,18 +4,13 @@
  */
 
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import {
-  Bill,
-  UpdateBillStatusDto,
-  UpdatePaymentStatusDto,
-} from '@/types/report.type';
+import { Bill } from '@/types/bill.type';
 import { SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
 import { useQueryUtils } from '@/lib/query-client';
 import api from '@/lib/axios';
-import { toast } from 'sonner';
 
-// Update bill mutation (can update any fields)
+// Update bill mutation (can update any fields including status, payments, etc.)
 export const useUpdateBill = (
   options?: UseMutationOptions<
     SuccessResponse<Bill>,
@@ -30,81 +25,43 @@ export const useUpdateBill = (
       return api.patch(API_ENDPOINTS.BILLS.UPDATE(billId), data);
     },
 
-    onSuccess: (data, variables) => {
-      const { billId } = variables;
-
-      toast.success('Bill updated successfully');
-
+    onSuccess: () => {
       // Invalidate reports list to refresh the data
       queryUtils.invalidateQueries(['reports', 'list']);
     },
 
     onError: (error) => {
-      toast.error(error.message || 'Failed to update bill');
+      // Error toast is handled by the component
+      console.error('Failed to update bill:', error);
     },
 
     ...options,
   });
 };
 
-// Update bill status mutation
-export const useUpdateBillStatus = (
+// Delete bill mutation
+export const useDeleteBill = (
   options?: UseMutationOptions<
-    SuccessResponse<Bill>,
+    SuccessResponse<void>,
     Error,
-    { billId: string; data: UpdateBillStatusDto }
+    { billId: string }
   >,
 ) => {
   const queryUtils = useQueryUtils();
 
   return useMutation({
-    mutationFn: async ({ billId, data }) => {
-      return api.patch(API_ENDPOINTS.BILLS.UPDATE(billId), data);
+    mutationFn: async ({ billId }) => {
+      return api.delete(API_ENDPOINTS.BILLS.DELETE(billId));
     },
 
-    onSuccess: (data, variables) => {
-      const { billId } = variables;
-
-      toast.success('Bill status updated successfully');
-
+    onSuccess: () => {
       // Invalidate reports list to refresh the data
       queryUtils.invalidateQueries(['reports', 'list']);
     },
 
     onError: (error) => {
-      toast.error(error.message || 'Failed to update bill status');
-    },
-
-    ...options,
-  });
-};
-
-// Update payment status mutation
-export const useUpdatePaymentStatus = (
-  options?: UseMutationOptions<
-    SuccessResponse<Bill>,
-    Error,
-    { billId: string; data: UpdatePaymentStatusDto }
-  >,
-) => {
-  const queryUtils = useQueryUtils();
-
-  return useMutation({
-    mutationFn: async ({ billId, data }) => {
-      return api.patch(API_ENDPOINTS.BILLS.UPDATE(billId), data);
-    },
-
-    onSuccess: (data, variables) => {
-      const { billId } = variables;
-
-      toast.success('Payment status updated successfully');
-
-      // Invalidate reports list to refresh the data
-      queryUtils.invalidateQueries(['reports', 'list']);
-    },
-
-    onError: (error) => {
-      toast.error(error.message || 'Failed to update payment status');
+      // Error toast is handled by the component
+      console.error('Failed to delete bill:', error);
     },
 
     ...options,
