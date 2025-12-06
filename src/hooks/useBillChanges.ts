@@ -1,5 +1,5 @@
+import { Bill } from '@/types/bill.type';
 import { useState, useCallback, useMemo } from 'react';
-import { Bill } from '@/types/report.type';
 
 export const useBillChanges = (originalBills: Bill[]) => {
   const [modifiedBills, setModifiedBills] = useState<
