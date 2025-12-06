@@ -3,15 +3,15 @@
  * TanStack Query hooks for category management
  */
 
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
 import {
   Category,
   CategoryFormData,
   CategoryQueryParams,
-} from "@/types/category.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+} from '@/types/category.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Category service extending base service
 class CategoryService extends BaseApiService<
@@ -37,15 +37,15 @@ class CategoryService extends BaseApiService<
 
   // Get active categories only (for dropdowns)
   async getActiveCategories(
-    params?: Omit<CategoryQueryParams, "isActive">,
+    params?: Omit<CategoryQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<Category>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Get categories by brand ID
   async getCategoriesByBrand(
     brandId: string,
-    params?: Omit<CategoryQueryParams, "brandId">,
+    params?: Omit<CategoryQueryParams, 'brandId'>,
   ): Promise<PaginatedResponse<Category>> {
     return this.getAll({ ...params, brandId });
   }
@@ -53,7 +53,7 @@ class CategoryService extends BaseApiService<
   // Get categories by parent category ID (subcategories)
   async getSubcategories(
     parentCategoryId: string,
-    params?: Omit<CategoryQueryParams, "parentCategoryId">,
+    params?: Omit<CategoryQueryParams, 'parentCategoryId'>,
   ): Promise<PaginatedResponse<Category>> {
     return this.getAll({ ...params, parentCategoryId });
   }
@@ -76,7 +76,7 @@ export const useCategories = (
   params?: CategoryQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -91,7 +91,7 @@ export const useCategory = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -104,14 +104,14 @@ export const useCategory = (
 
 // Get active categories only (for dropdowns and filters)
 export const useActiveCategories = (
-  params?: Omit<CategoryQueryParams, "isActive">,
+  params?: Omit<CategoryQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.CATEGORIES.LIST({ ...params, isActive: "true" }),
+    queryKey: QUERY_KEYS.CATEGORIES.LIST({ ...params, isActive: 'true' }),
     queryFn: () => categoryService.getActiveCategories(params),
     ...options,
   });
@@ -120,10 +120,10 @@ export const useActiveCategories = (
 // Get categories by brand ID
 export const useCategoriesByBrand = (
   brandId: string,
-  params?: Omit<CategoryQueryParams, "brandId">,
+  params?: Omit<CategoryQueryParams, 'brandId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -137,10 +137,10 @@ export const useCategoriesByBrand = (
 // Get subcategories by parent category ID
 export const useSubcategories = (
   parentCategoryId: string,
-  params?: Omit<CategoryQueryParams, "parentCategoryId">,
+  params?: Omit<CategoryQueryParams, 'parentCategoryId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -156,7 +156,7 @@ export const useRootCategories = (
   params?: CategoryQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Category>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+} from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
 interface SelectOption {
   value: string;
@@ -32,7 +32,7 @@ export const EditableSelectCell: React.FC<EditableSelectCellProps> = ({
   onChange,
   isLoading = false,
   isModified = false,
-  placeholder = "Select...",
+  placeholder = 'Select...',
   disabled = false,
 }) => {
   return (
@@ -43,7 +43,7 @@ export const EditableSelectCell: React.FC<EditableSelectCellProps> = ({
         disabled={disabled || isLoading}
       >
         <SelectTrigger
-          className={cn("w-full", isModified && "ring-2 ring-orange-400")}
+          className={cn('w-full', isModified && 'ring-2 ring-orange-400')}
         >
           {isLoading ? (
             <div className="flex items-center gap-2">

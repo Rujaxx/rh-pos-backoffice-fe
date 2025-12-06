@@ -1,12 +1,12 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
 import {
   KitchenDepartment,
   KitchenDepartmentFormData,
   KitchenDepartmentQueryParams,
-} from "@/types/kitchen-department.type";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
+} from '@/types/kitchen-department.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Kitchen Department service extending base service
 class KitchenDepartmentService extends BaseApiService<
@@ -34,15 +34,15 @@ class KitchenDepartmentService extends BaseApiService<
 
   // Get active-only departments
   async getActiveKitchenDepartments(
-    params?: Omit<KitchenDepartmentQueryParams, "isActive">,
+    params?: Omit<KitchenDepartmentQueryParams, 'isActive'>,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
-    return this.getAll({ ...params, isActive: "true" });
+    return this.getAll({ ...params, isActive: 'true' });
   }
 
   // Filter departments by brand
   async getKitchenDepartmentsByBrand(
     brandId: string,
-    params?: Omit<KitchenDepartmentQueryParams, "brandId">,
+    params?: Omit<KitchenDepartmentQueryParams, 'brandId'>,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll({ ...params, brandId });
   }
@@ -50,7 +50,7 @@ class KitchenDepartmentService extends BaseApiService<
   // Filter departments by restaurant
   async getKitchenDepartmentsByRestaurant(
     restaurantId: string,
-    params?: Omit<KitchenDepartmentQueryParams, "restaurantId">,
+    params?: Omit<KitchenDepartmentQueryParams, 'restaurantId'>,
   ): Promise<PaginatedResponse<KitchenDepartment>> {
     return this.getAll({ ...params, restaurantId });
   }
@@ -66,7 +66,7 @@ export const useKitchenDepartments = (
   params?: KitchenDepartmentQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -81,7 +81,7 @@ export const useKitchenDepartment = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<KitchenDepartment>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -94,16 +94,16 @@ export const useKitchenDepartment = (
 
 // Get active-only departments
 export const useActiveKitchenDepartments = (
-  params?: Omit<KitchenDepartmentQueryParams, "isActive">,
+  params?: Omit<KitchenDepartmentQueryParams, 'isActive'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
     queryKey: QUERY_KEYS.KITCHEN_DEPARTMENTS.LIST({
       ...params,
-      isActive: "true",
+      isActive: 'true',
     }),
     queryFn: () => kitchenDepartmentService.getActiveKitchenDepartments(params),
     ...options,
@@ -113,10 +113,10 @@ export const useActiveKitchenDepartments = (
 // Get departments by brand
 export const useKitchenDepartmentsByBrand = (
   brandId: string,
-  params?: Omit<KitchenDepartmentQueryParams, "brandId">,
+  params?: Omit<KitchenDepartmentQueryParams, 'brandId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -131,10 +131,10 @@ export const useKitchenDepartmentsByBrand = (
 // Get departments by restaurant
 export const useKitchenDepartmentsByRestaurant = (
   restaurantId: string,
-  params?: Omit<KitchenDepartmentQueryParams, "restaurantId">,
+  params?: Omit<KitchenDepartmentQueryParams, 'restaurantId'>,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<KitchenDepartment>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({

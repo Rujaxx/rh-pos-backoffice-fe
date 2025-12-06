@@ -3,16 +3,16 @@
  * Upload service following existing API patterns
  */
 
-import api from "@/lib/axios";
-import { API_ENDPOINTS } from "@/config/api";
-import { SuccessResponse } from "@/types/api";
+import api from '@/lib/axios';
+import { API_ENDPOINTS } from '@/config/api';
+import { SuccessResponse } from '@/types/api';
 import {
   UploadResponse,
   UploadOptions,
   ConfirmUploadsRequest,
   UploadConfirmResponse,
   DeleteTemporaryUploadResponse,
-} from "@/types/upload";
+} from '@/types/upload';
 
 // Upload service class
 class UploadService {
@@ -26,23 +26,23 @@ class UploadService {
     options: UploadOptions,
   ): Promise<SuccessResponse<UploadResponse>> {
     const formData = new FormData();
-    formData.append("image", file);
-    formData.append("folderType", options.folderType);
+    formData.append('image', file);
+    formData.append('folderType', options.folderType);
 
     if (options.quality !== undefined) {
-      formData.append("quality", options.quality.toString());
+      formData.append('quality', options.quality.toString());
     }
     if (options.maxWidth !== undefined) {
-      formData.append("maxWidth", options.maxWidth.toString());
+      formData.append('maxWidth', options.maxWidth.toString());
     }
     if (options.maxHeight !== undefined) {
-      formData.append("maxHeight", options.maxHeight.toString());
+      formData.append('maxHeight', options.maxHeight.toString());
     }
 
     // Use axios instance with multipart/form-data
     return api.post(this.baseEndpoint.IMAGE, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
   }
@@ -58,24 +58,24 @@ class UploadService {
 
     // Append files
     files.forEach((file) => {
-      formData.append("images", file);
+      formData.append('images', file);
     });
 
     // Append options
-    formData.append("folderType", options.folderType);
+    formData.append('folderType', options.folderType);
     if (options.quality !== undefined) {
-      formData.append("quality", options.quality.toString());
+      formData.append('quality', options.quality.toString());
     }
     if (options.maxWidth !== undefined) {
-      formData.append("maxWidth", options.maxWidth.toString());
+      formData.append('maxWidth', options.maxWidth.toString());
     }
     if (options.maxHeight !== undefined) {
-      formData.append("maxHeight", options.maxHeight.toString());
+      formData.append('maxHeight', options.maxHeight.toString());
     }
 
     return api.post(this.baseEndpoint.IMAGES_MULTIPLE, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
   }

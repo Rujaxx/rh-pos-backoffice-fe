@@ -1,13 +1,13 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   TaxProductGroup,
   TaxProductGroupFormData,
-} from "@/types/tax-product-group.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { taxProductGroupService } from "./tax-product-groups.queries";
-import { toast } from "sonner";
+} from '@/types/tax-product-group.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { taxProductGroupService } from './tax-product-groups.queries';
+import { toast } from 'sonner';
 
 // Create tax product group mutation
 export const useCreateTaxProductGroup = (
@@ -25,10 +25,10 @@ export const useCreateTaxProductGroup = (
     },
 
     onSuccess: (data) => {
-      toast.success("Tax product group created successfully");
+      toast.success('Tax product group created successfully');
 
       // Invalidate list queries
-      queryUtils.invalidateQueries(["tax-product-groups", "list"]);
+      queryUtils.invalidateQueries(['tax-product-groups', 'list']);
 
       // Cache the created item
       if (data.data) {
@@ -40,7 +40,7 @@ export const useCreateTaxProductGroup = (
     },
 
     onError: (error) => {
-      const msg = error.message || "Failed to create tax product group";
+      const msg = error.message || 'Failed to create tax product group';
       toast.error(msg);
     },
 
@@ -67,7 +67,7 @@ export const useUpdateTaxProductGroup = (
     onSuccess: (data, variables) => {
       const { id } = variables;
 
-      toast.success("Tax product group updated successfully");
+      toast.success('Tax product group updated successfully');
 
       // Update cached detail
       if (data.data) {
@@ -75,11 +75,11 @@ export const useUpdateTaxProductGroup = (
       }
 
       // Refresh list
-      queryUtils.invalidateQueries(["tax-product-groups", "list"]);
+      queryUtils.invalidateQueries(['tax-product-groups', 'list']);
     },
 
     onError: (error) => {
-      const msg = error.message || "Failed to update tax product group";
+      const msg = error.message || 'Failed to update tax product group';
       toast.error(msg);
     },
 
@@ -99,17 +99,17 @@ export const useDeleteTaxProductGroup = (
     },
 
     onSuccess: (_, id) => {
-      toast.success("Tax product group deleted successfully");
+      toast.success('Tax product group deleted successfully');
 
       // Remove cached detail
       queryUtils.removeQueries(QUERY_KEYS.TAX_PRODUCT_GROUPS.DETAIL(id));
 
       // Refresh list
-      queryUtils.invalidateQueries(["tax-product-groups", "list"]);
+      queryUtils.invalidateQueries(['tax-product-groups', 'list']);
     },
 
     onError: (error) => {
-      const msg = error.message || "Failed to delete tax product group";
+      const msg = error.message || 'Failed to delete tax product group';
       toast.error(msg);
     },
 

@@ -78,13 +78,13 @@ export function KitchenDepartmentFormContent({
           <RHFSelect
             form={form}
             name="restaurantId"
-            label={t('kitchen.form.restaurantLabel')}
+            label={t('common.restaurantLabel')}
             placeholder={
               isLoadingRestaurants
                 ? t('common.loading')
                 : restaurantOptions.length === 0
-                  ? t('table.form.noRestaurantsAvailable')
-                  : t('kitchen.form.restaurantPlaceholder')
+                  ? t('common.noRestaurantAvailable')
+                  : t('common.restaurantPlaceholder')
             }
             options={restaurantOptions}
             disabled={isLoadingRestaurants}
@@ -93,7 +93,7 @@ export function KitchenDepartmentFormContent({
           <RHFSelect
             form={form}
             name="brandId"
-            label={t('kitchen.form.brandLabel')}
+            label={t('common.brandLabel')}
             placeholder={
               isLoadingBrands
                 ? t('common.loading')

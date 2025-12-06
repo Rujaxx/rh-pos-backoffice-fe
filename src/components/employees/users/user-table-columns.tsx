@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
+} from '@/components/ui/dropdown-menu';
+import Image from 'next/image';
 import {
   Edit,
   Trash2,
@@ -21,27 +21,27 @@ import {
   Calendar,
   UserCheck,
   UserX,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { getFallbackAvatarUrl } from "@/lib/upload-utils";
-import { useIntl } from "react-intl";
-import { User } from "@/types/user.type";
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { useIntl } from 'react-intl';
+import { User } from '@/types/user.type';
 
 // Column definitions for the users table
 export const createUserColumns = (
   onEdit: (user: User) => void,
   onDelete: (user: User) => void,
-  t: ReturnType<typeof useTranslation>["t"],
-  locale: "en" | "ar"
+  t: ReturnType<typeof useTranslation>['t'],
+  locale: 'en' | 'ar',
 ): ColumnDef<User>[] => [
   {
-    accessorKey: "name",
-    id: "name",
-    header: t("users.table.user"),
+    accessorKey: 'name',
+    id: 'name',
+    header: t('users.table.user'),
     sortingFn: (rowA, rowB) => {
       // Sorting still uses 'en' for consistency
-      const aValue = (rowA.original.name ?? "").toLowerCase();
-      const bValue = (rowB.original.name ?? "").toLowerCase();
+      const aValue = (rowA.original.name ?? '').toLowerCase();
+      const bValue = (rowB.original.name ?? '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -69,8 +69,8 @@ export const createUserColumns = (
     },
   },
   {
-    id: "contact",
-    header: t("users.table.contact"),
+    id: 'contact',
+    header: t('users.table.contact'),
     enableSorting: false,
     cell: ({ row }) => {
       const user = row.original;
@@ -91,13 +91,13 @@ export const createUserColumns = (
     },
   },
   {
-    accessorKey: "role",
-    id: "role",
-    header: t("users.table.role"),
+    accessorKey: 'role',
+    id: 'role',
+    header: t('users.table.role'),
     sortingFn: (rowA, rowB) => {
       // Sort by role's English name
-      const aValue = (rowA.original.role?.name?.en ?? "").toLowerCase();
-      const bValue = (rowB.original.role?.name?.en ?? "").toLowerCase();
+      const aValue = (rowA.original.role?.name?.en ?? '').toLowerCase();
+      const bValue = (rowB.original.role?.name?.en ?? '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -105,28 +105,28 @@ export const createUserColumns = (
       return (
         <Badge variant="outline" className="flex items-center w-fit">
           <UserCheck className="mr-1 h-3 w-3" />
-          {user.role?.name?.[locale] ?? "N/A"}
+          {user.role?.name?.[locale] ?? 'N/A'}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "accountStatus",
-    id: "status",
-    header: t("users.table.status"),
+    accessorKey: 'accountStatus',
+    id: 'status',
+    header: t('users.table.status'),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const user = row.original;
 
-      const variant: "default" | "secondary" | "destructive" =
-        user.accountStatus === "ACTIVE"
-          ? "default"
-          : user.accountStatus === "SUSPENDED"
-            ? "destructive"
-            : "secondary"; // INACTIVE
+      const variant: 'default' | 'secondary' | 'destructive' =
+        user.accountStatus === 'ACTIVE'
+          ? 'default'
+          : user.accountStatus === 'SUSPENDED'
+            ? 'destructive'
+            : 'secondary'; // INACTIVE
 
-      const Icon = user.accountStatus === "ACTIVE" ? UserCheck : UserX;
+      const Icon = user.accountStatus === 'ACTIVE' ? UserCheck : UserX;
 
       return (
         <Badge variant={variant} className="flex items-center w-fit">
@@ -137,9 +137,9 @@ export const createUserColumns = (
     },
   },
   {
-    accessorKey: "createdAt",
-    id: "createdAt",
-    header: t("users.table.lastLogin"),
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: t('users.table.lastLogin'),
     enableSorting: true,
     size: 120,
     cell: ({ row }) => {
@@ -147,16 +147,14 @@ export const createUserColumns = (
       return (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
-          <span>
-            {new Date(user.lastLoginAt)?.toLocaleDateString() || "N/A"}
-          </span>
+          <span>{new Date(user.createdAt)?.toLocaleDateString() || 'N/A'}</span>
         </div>
       );
     },
   },
   {
-    id: "actions",
-    header: t("users.table.actions"),
+    id: 'actions',
+    header: t('users.table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -179,7 +177,7 @@ export const createUserColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("users.edit.title")}
+              {t('users.edit.title')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -188,10 +186,10 @@ export const createUserColumns = (
                 onDelete(user);
               }}
               className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={user.accountStatus === "ACTIVE"}
+              disabled={user.accountStatus === 'ACTIVE'}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("common.delete")}
+              {t('common.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -203,25 +201,25 @@ export const createUserColumns = (
 // Hook for using user columns with current translation
 export const useUserColumns = (
   onEdit: (user: User) => void,
-  onDelete: (user: User) => void
+  onDelete: (user: User) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useIntl();
-  return createUserColumns(onEdit, onDelete, t, locale as "en" | "ar");
+  return createUserColumns(onEdit, onDelete, t, locale as 'en' | 'ar');
 };
 
 // Helper function to get sortable field from TanStack sorting state
 export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const sort = sorting[0];
   const fieldMap: Record<string, string> = {
-    name: "name",
-    role: "role.name",
-    status: "accountStatus",
-    createdAt: "createdAt",
+    name: 'name',
+    role: 'role.name',
+    status: 'accountStatus',
+    createdAt: 'createdAt',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -229,8 +227,8 @@ export const getSortFieldForQuery = (
 
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
-): "asc" | "desc" | undefined => {
+  sorting: Array<{ id: string; desc: boolean }>,
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

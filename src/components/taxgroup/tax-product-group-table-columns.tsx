@@ -1,47 +1,89 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Edit, Trash2, MoreHorizontal } from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useI18n } from "@/providers/i18n-provider";
-import { TaxProductGroup } from "@/types/tax-product-group.type";
-import { MultilingualText } from "@/types";
+} from '@/components/ui/dropdown-menu';
+import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
+import { TaxProductGroup } from '@/types/tax-product-group.type';
+import { MultilingualText } from '@/types';
 
 export const createTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
   onDelete: (item: TaxProductGroup) => void,
-  t: ReturnType<typeof useTranslation>["t"],
-  locale: string
+  t: ReturnType<typeof useTranslation>['t'],
+  locale: string,
 ): ColumnDef<TaxProductGroup>[] => {
   return [
     {
-      accessorKey: "name",
-      id: "name",
-      header: t("taxGroups.title"),
+      accessorKey: 'name',
+      id: 'name',
+      header: t('taxGroups.title'),
       enableSorting: true,
       sortingFn: (rowA, rowB) => {
-        const a = (rowA.original.name?.en || "").toLowerCase();
-        const b = (rowB.original.name?.en || "").toLowerCase();
+        const a = (rowA.original.name?.en || '').toLowerCase();
+        const b = (rowB.original.name?.en || '').toLowerCase();
         return a.localeCompare(b);
       },
       cell: ({ row }) => {
         const item = row.original;
         const displayName =
-          item.name?.[locale as keyof MultilingualText] || "-";
-        return <div className="font-medium text-sm">{displayName}</div>;
+          item.name?.[locale as keyof MultilingualText] || item.name?.en || '-';
+
+        return (
+          <div className="space-y-1">
+            <div className="font-medium text-sm">{displayName}</div>
+            {item.name?.ar && (
+              <div className="text-xs text-muted-foreground" dir="rtl">
+                {item.name.ar}
+              </div>
+            )}
+          </div>
+        );
       },
     },
     {
-      header: t("taxGroups.table.brand"),
+      header: t('taxGroups.table.taxType'),
+      cell: ({ row }) => {
+        const type = row.original.taxType;
+        return (
+          <Badge variant="outline">
+            {type === 'Percentage'
+              ? t('taxGroups.type.percentage')
+              : t('taxGroups.fixed')}
+          </Badge>
+        );
+      },
+    },
+    {
+      header: t('taxGroups.table.taxValue'),
+      cell: ({ row }) => (
+        <span className="font-medium">{row.original.taxValue}</span>
+      ),
+    },
+    {
+      id: 'status',
+      header: t('common.status'),
+      cell: ({ row }) => {
+        const active = row.original.isActive;
+        return (
+          <Badge variant={active ? 'default' : 'secondary'}>
+            {active ? t('common.active') : t('common.inactive')}
+          </Badge>
+        );
+      },
+    },
+
+    {
+      header: t('taxGroups.table.brand'),
       enableSorting: false,
       cell: ({ row }) => (
         <span>
@@ -49,54 +91,10 @@ export const createTaxProductGroupColumns = (
         </span>
       ),
     },
-    {
-      header: t("taxGroups.table.taxType"),
-      cell: ({ row }) => {
-        const type = row.original.taxType;
-        return (
-          <Badge variant="outline">
-            {type === "Percentage"
-              ? t("taxGroups.type.percentage")
-              : t("taxGroups.fixed")}
-          </Badge>
-        );
-      },
-    },
-    {
-      header: t("taxGroups.table.taxValue"),
-      cell: ({ row }) => (
-        <span className="font-medium">{row.original.taxValue}</span>
-      ),
-    },
-    {
-      id: "status",
-      header: t("common.status"),
-      cell: ({ row }) => {
-        const active = row.original.isActive;
-        return (
-          <Badge variant={active ? "default" : "secondary"}>
-            {active ? t("common.active") : t("common.inactive")}
-          </Badge>
-        );
-      },
-    },
 
     {
-      id: "inclusive",
-      header: t("taxGroups.table.inclusive"),
-      cell: ({ row }) => {
-        const inclusive = row.original.isInclusive;
-        return (
-          <Badge variant={inclusive ? "default" : "secondary"}>
-            {inclusive ? t("common.yes") : t("common.no")}
-          </Badge>
-        );
-      },
-    },
-
-    {
-      id: "actions",
-      header: t("table.actions"),
+      id: 'actions',
+      header: t('table.actions'),
       enableSorting: false,
       size: 80,
       cell: ({ row }) => {
@@ -119,7 +117,7 @@ export const createTaxProductGroupColumns = (
                 className="cursor-pointer"
               >
                 <Edit className="mr-2 h-4 w-4" />
-                {t("common.edit")}
+                {t('common.edit')}
               </DropdownMenuItem>
 
               {/* Delete */}
@@ -131,7 +129,7 @@ export const createTaxProductGroupColumns = (
                 className="cursor-pointer text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                {t("common.delete")}
+                {t('common.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -143,7 +141,7 @@ export const createTaxProductGroupColumns = (
 
 export const useTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
-  onDelete: (item: TaxProductGroup) => void
+  onDelete: (item: TaxProductGroup) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -151,23 +149,23 @@ export const useTaxProductGroupColumns = (
 };
 
 export const getSortFieldForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined => {
   if (!sorting.length) return undefined;
 
   const fieldMap: Record<string, string> = {
-    name: "name.en",
-    productGroupName: "productGroupName",
-    taxType: "taxType",
-    taxValue: "taxValue",
-    status: "isActive",
-    inclusive: "isInclusive",
+    name: 'name.en',
+    productGroupName: 'productGroupName',
+    taxType: 'taxType',
+    taxValue: 'taxValue',
+    status: 'isActive',
+    inclusive: 'isInclusive',
   };
 
   return fieldMap[sorting[0].id] || sorting[0].id;
 };
 
 export const getSortOrderForTaxProductGroupQuery = (
-  sorting: Array<{ id: string; desc: boolean }>
-): "asc" | "desc" | undefined =>
-  sorting.length ? (sorting[0].desc ? "desc" : "asc") : undefined;
+  sorting: Array<{ id: string; desc: boolean }>,
+): 'asc' | 'desc' | undefined =>
+  sorting.length ? (sorting[0].desc ? 'desc' : 'asc') : undefined;

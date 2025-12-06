@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/hooks/useTranslation";
+import React from 'react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Props {
   children: React.ReactNode;
@@ -26,12 +26,12 @@ function ErrorBoundaryContent({
   return (
     <div className="flex items-center justify-center min-h-[400px] p-6">
       <Alert variant="destructive" className="max-w-lg">
-        <AlertTitle className="mb-2">{t("error.boundary.title")}</AlertTitle>
+        <AlertTitle className="mb-2">{t('error.boundary.title')}</AlertTitle>
         <AlertDescription className="mb-4">
-          {error?.message || t("error.boundary.description")}
+          {error?.message || t('error.boundary.description')}
         </AlertDescription>
         <Button variant="secondary" onClick={onReset}>
-          {t("error.boundary.tryAgain")}
+          {t('error.boundary.tryAgain')}
         </Button>
       </Alert>
     </div>
@@ -48,7 +48,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo);
+    console.error('Uncaught error:', error, errorInfo);
   }
 
   private handleReset = () => {

@@ -1,6 +1,6 @@
-import { QueryParams } from "./api";
-import { MultilingualText } from "./common/common.type";
-import { Permission } from "./permission.type";
+import { QueryParams } from './api';
+import { MultilingualText } from './common/common.type';
+import { Permission } from './permission.type';
 
 export interface Role extends Record<string, unknown> {
   _id: string;

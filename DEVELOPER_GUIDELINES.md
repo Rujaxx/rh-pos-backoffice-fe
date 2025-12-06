@@ -13,8 +13,8 @@
 - Import your module’s components (e.g., forms, tables).
 - Example:
   ```tsx
-  import { CategoryForm } from "@/components/categories/category-form";
-  import { DataTable } from "@/components/ui/data-table";
+  import { CategoryForm } from '@/components/categories/category-form';
+  import { DataTable } from '@/components/ui/data-table';
   // ...existing code...
   ```
 
@@ -64,7 +64,7 @@
 - Use the shared `DataTable` component from `@/components/ui/data-table`.
 - Example:
   ```tsx
-  import { DataTable } from "@/components/ui/data-table";
+  import { DataTable } from '@/components/ui/data-table';
   // Define columns and data
   <DataTable columns={columns} data={data} />;
   ```

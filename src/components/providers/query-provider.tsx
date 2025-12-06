@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
 /**
  * Query Provider Component
  * Client-side provider for TanStack Query to avoid SSR issues
  */
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ApiError } from "@/types/api";
-import { toast } from "sonner";
-import { restoreAuthFromStorage } from "@/stores/auth.store";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ApiError } from '@/types/api';
+import { toast } from 'sonner';
+import { restoreAuthFromStorage } from '@/stores/auth.store';
 
 interface QueryProviderProps {
   children: React.ReactNode;
@@ -29,9 +29,9 @@ const queryClient = new QueryClient({
       onError: (error: Error) => {
         // Check if it's an ApiError and handle accordingly
         if (error instanceof ApiError) {
-          toast.error(error.message || "An API error occurred");
+          toast.error(error.message || 'An API error occurred');
         } else {
-          toast.error(error.message || "An error occurred");
+          toast.error(error.message || 'An error occurred');
         }
       },
     },
@@ -48,7 +48,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
     <QueryClientProvider client={queryClient}>
       {children}
       {/* React Query DevTools temporarily disabled to prevent memory issues */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <ReactQueryDevtools initialIsOpen={false} />
       )}
     </QueryClientProvider>

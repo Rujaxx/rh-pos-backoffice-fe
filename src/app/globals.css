@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,7 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans), Inter, sans-serif;
   --font-arabic:
-    var(--font-arabic), "Noto Sans Arabic", "Cairo", "Amiri", sans-serif;
+    var(--font-arabic), 'Noto Sans Arabic', 'Cairo', 'Amiri', sans-serif;
   --font-mono: JetBrains Mono, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -202,53 +202,53 @@
 }
 
 /* RTL Support */
-[dir="rtl"] {
+[dir='rtl'] {
   font-family: var(--font-arabic);
 }
 
-[dir="ltr"] {
+[dir='ltr'] {
   font-family: var(--font-sans);
 }
 
 /* RTL-specific styles */
-[dir="rtl"] .text-left {
+[dir='rtl'] .text-left {
   text-align: right;
 }
 
-[dir="rtl"] .text-right {
+[dir='rtl'] .text-right {
   text-align: left;
 }
 
-[dir="rtl"] .ml-auto {
+[dir='rtl'] .ml-auto {
   margin-left: 0;
   margin-right: auto;
 }
 
-[dir="rtl"] .mr-auto {
+[dir='rtl'] .mr-auto {
   margin-right: 0;
   margin-left: auto;
 }
 
 /* Custom RTL utilities */
-.rtl\:pr-10:where([dir="rtl"], [dir="rtl"] *) {
+.rtl\:pr-10:where([dir='rtl'], [dir='rtl'] *) {
   padding-right: 2.5rem;
 }
 
-.rtl\:pl-10:where([dir="rtl"], [dir="rtl"] *) {
+.rtl\:pl-10:where([dir='rtl'], [dir='rtl'] *) {
   padding-left: 2.5rem;
 }
 
-.rtl\:left-3:where([dir="rtl"], [dir="rtl"] *) {
+.rtl\:left-3:where([dir='rtl'], [dir='rtl'] *) {
   left: 0.75rem;
 }
 
-.rtl\:right-3:where([dir="rtl"], [dir="rtl"] *) {
+.rtl\:right-3:where([dir='rtl'], [dir='rtl'] *) {
   right: 0.75rem;
 }
 
 /* Arabic number and text direction */
-[dir="rtl"] input[type="email"],
-[dir="rtl"] input[type="password"] {
+[dir='rtl'] input[type='email'],
+[dir='rtl'] input[type='password'] {
   direction: ltr;
   text-align: right;
 }

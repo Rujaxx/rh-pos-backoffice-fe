@@ -1,9 +1,9 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { BaseApiService } from "@/services/api/base/client";
-import { PaginatedResponse, SuccessResponse } from "@/types/api";
-import { API_ENDPOINTS, QUERY_KEYS } from "@/config/api";
-import { Role, RoleQueryParams } from "@/types/role.type";
-import { RoleFormData } from "@/lib/validations/role.validation";
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { BaseApiService } from '@/services/api/base/client';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import { Role, RoleQueryParams } from '@/types/role.type';
+import { RoleFormData } from '@/lib/validations/role.validation';
 
 class RoleService extends BaseApiService<Role, RoleFormData, RoleFormData> {
   constructor() {
@@ -28,7 +28,7 @@ export const useRoles = (
   params?: RoleQueryParams,
   options?: Omit<
     UseQueryOptions<PaginatedResponse<Role>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
@@ -43,7 +43,7 @@ export const useRole = (
   id: string,
   options?: Omit<
     UseQueryOptions<SuccessResponse<Role>>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({

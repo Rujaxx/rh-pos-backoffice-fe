@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogTitle,
@@ -12,21 +12,21 @@ import {
   DialogHeader,
   DialogContent,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   FormItem,
   FormLabel,
   FormField,
   FormControl,
-} from "@/components/ui/form";
-import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { Shield, X, Save } from "lucide-react";
+} from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { Shield, X, Save } from 'lucide-react';
 
-import { User } from "@/types/user.type";
-import { Permission } from "@/types/permission.type";
-import { usePermissions } from "@/services/api/roles/permission.queries";
+import { User } from '@/types/user.type';
+import { Permission } from '@/types/permission.type';
+import { usePermissions } from '@/services/api/roles/permission.queries';
 
 interface PermissionFormData {
   permissions: string[];
@@ -71,11 +71,11 @@ export function UserPermissionsModal({
     setIsSubmitting(true);
     try {
       await onPermissionsUpdate(user._id, data.permissions);
-      toast.success(t("users.permissions.success"));
+      toast.success(t('users.permissions.success'));
       handleClose();
     } catch (error) {
-      console.error("Update permissions error:", error);
-      toast.error(t("users.permissions.error"));
+      console.error('Update permissions error:', error);
+      toast.error(t('users.permissions.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -163,10 +163,10 @@ export function UserPermissionsModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5" />
-            {t("users.permissions.title")}
+            {t('users.permissions.title')}
           </DialogTitle>
           <DialogDescription>
-            {t("users.permissions.description", {
+            {t('users.permissions.description', {
               name: `${user.name}`,
             })}
           </DialogDescription>
@@ -198,11 +198,11 @@ export function UserPermissionsModal({
             {/* Permissions */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">
-                {t("users.permissions.availablePermissions")}
+                {t('users.permissions.availablePermissions')}
               </h3>
 
               {isPermissionsLoading ? (
-                <p>{t("common.loading")}</p>
+                <p>{t('common.loading')}</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {permissionModules.map((group) =>
@@ -225,19 +225,19 @@ export function UserPermissionsModal({
                 disabled={isSubmitting || loading}
               >
                 <X className="w-4 h-4 mr-2" />
-                {t("common.cancel")}
+                {t('common.cancel')}
               </Button>
 
               <Button type="submit" disabled={isSubmitting || loading}>
                 {isSubmitting || loading ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                    {t("common.saving")}
+                    {t('common.saving')}
                   </div>
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    {t("common.save")}
+                    {t('common.save')}
                   </>
                 )}
               </Button>

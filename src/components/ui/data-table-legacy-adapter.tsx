@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import { ColumnDef, SortingState } from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { TanStackTable } from "./tanstack-table";
+import React, { useMemo } from 'react';
+import { ColumnDef, SortingState } from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { TanStackTable } from './tanstack-table';
 
 // Types for legacy column shape
 interface LegacyColumnBase<T> {
@@ -43,7 +43,7 @@ export function DataTableLegacyAdapter<T extends Record<string, unknown>>(
   const {
     data,
     columns,
-    searchValue = "",
+    searchValue = '',
     onSearchChange,
     pagination,
     onPaginationChange,
@@ -55,7 +55,7 @@ export function DataTableLegacyAdapter<T extends Record<string, unknown>>(
   } = props;
 
   function isLegacyColumn<T>(col: LegacyColumn<T>): col is LegacyColumnBase<T> {
-    return "accessorKey" in col || "header" in col || "title" in col;
+    return 'accessorKey' in col || 'header' in col || 'title' in col;
   }
 
   const mappedColumns = useMemo<ColumnDef<T>[]>(() => {
@@ -75,12 +75,12 @@ export function DataTableLegacyAdapter<T extends Record<string, unknown>>(
           col.header ??
           String(Math.random()),
         accessorKey: col.accessorKey as string,
-        header: col.header ?? col.title ?? "",
+        header: col.header ?? col.title ?? '',
         cell: (info) => {
           if (col.cell) {
             return col.cell({ row: info.row, getValue: info.getValue });
           }
-          return String(info.getValue() ?? "");
+          return String(info.getValue() ?? '');
         },
         enableSorting: col.enableSorting ?? true,
       } satisfies ColumnDef<T>;
@@ -106,7 +106,7 @@ export function DataTableLegacyAdapter<T extends Record<string, unknown>>(
       sorting={sorting}
       onSortingChange={onSortingChange}
       isLoading={isLoading}
-      emptyMessage={emptyMessage ?? t("table.noData")}
+      emptyMessage={emptyMessage ?? t('table.noData')}
     />
   );
 }

@@ -23,7 +23,6 @@ import {
 import { useTranslation } from '@/hooks/useTranslation';
 import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
-import { MultilingualText } from '@/types';
 
 // Column definitions for the brands table
 export const createBrandColumns = (
@@ -66,7 +65,7 @@ export const createBrandColumns = (
     id: 'name',
     header: t('brands.brandName'),
     enableSorting: true,
-    sortingFn: (rowA, rowB, columnId) => {
+    sortingFn: (rowA, rowB) => {
       const aValue = (rowA.original.name.en || '').toLowerCase();
       const bValue = (rowB.original.name.en || '').toLowerCase();
       return aValue.localeCompare(bValue);
