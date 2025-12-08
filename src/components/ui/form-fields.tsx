@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { MultilingualText } from "@/types/common/common.type";
-import { Languages, Globe } from "lucide-react";
-import { useI18n } from "@/providers/i18n-provider";
+} from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { MultilingualText } from '@/types/common/common.type';
+import { Languages, Globe } from 'lucide-react';
+import { useI18n } from '@/providers/i18n-provider';
 
 interface FormFieldProps {
   label: string;
@@ -35,7 +35,7 @@ export function FormField({
   className,
 }: FormFieldProps) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <Label className="text-sm font-medium">
         {label}
         {required && <span className="text-destructive ml-1">*</span>}
@@ -53,7 +53,7 @@ interface MultilingualInputProps {
   required?: boolean;
   error?: string;
   placeholder?: { [key: string]: string };
-  type?: "input" | "textarea";
+  type?: 'input' | 'textarea';
   languages?: Array<{ code: string; name: string }>;
 }
 
@@ -64,10 +64,10 @@ export function MultilingualInput({
   required = false,
   error,
   placeholder = {},
-  type = "input",
+  type = 'input',
   languages = [
-    { code: "en", name: "English" },
-    { code: "ar", name: "Arabic" },
+    { code: 'en', name: 'English' },
+    { code: 'ar', name: 'Arabic' },
   ],
 }: MultilingualInputProps) {
   const handleChange = (langCode: string, newValue: string) => {
@@ -77,7 +77,7 @@ export function MultilingualInput({
     });
   };
 
-  const Component = type === "textarea" ? Textarea : Input;
+  const Component = type === 'textarea' ? Textarea : Input;
 
   return (
     <FormField label={label} required={required} error={error}>
@@ -100,7 +100,7 @@ export function MultilingualInput({
               <Component
                 // TODO: cross check
                 value={
-                  (value as unknown as Record<string, string>)[lang.code] || ""
+                  (value as unknown as Record<string, string>)[lang.code] || ''
                 }
                 onChange={(e) => handleChange(lang.code, e.target.value)}
                 placeholder={
@@ -108,7 +108,7 @@ export function MultilingualInput({
                   `Enter ${label.toLowerCase()} in ${lang.name}`
                 }
                 className="w-full"
-                dir={lang.code === "ar" ? "rtl" : "ltr"}
+                dir={lang.code === 'ar' ? 'rtl' : 'ltr'}
               />
             </div>
           ))}
@@ -136,7 +136,7 @@ export function FormInput({
   required = false,
   error,
   placeholder,
-  type = "text",
+  type = 'text',
   className,
 }: FormInputProps) {
   return (
@@ -214,7 +214,7 @@ export function FormSelect({
   options,
   required = false,
   error,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
   className,
 }: FormSelectProps) {
   return (
@@ -260,7 +260,7 @@ export function FormSwitch({
   className,
 }: FormSwitchProps) {
   const { locale } = useI18n();
-  const isRTL = locale === "ar";
+  const isRTL = locale === 'ar';
 
   return (
     <FormField
@@ -270,12 +270,12 @@ export function FormSwitch({
       className={className}
     >
       <div
-        className={`flex items-center ${isRTL ? "space-x-reverse" : ""} space-x-2`}
+        className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}
       >
         <Switch
           checked={value}
           onCheckedChange={onChange}
-          id={`switch-${label.toLowerCase().replace(/\s+/g, "-")}`}
+          id={`switch-${label.toLowerCase().replace(/\s+/g, '-')}`}
           rtl={isRTL}
         />
         {description && (
@@ -332,15 +332,15 @@ export function AddressForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Street"
-            value={value.street || ""}
-            onChange={(val) => handleChange("street", val)}
+            value={value.street || ''}
+            onChange={(val) => handleChange('street', val)}
             error={errors.street}
             placeholder="Enter street address"
           />
           <FormInput
             label="City"
-            value={value.city || ""}
-            onChange={(val) => handleChange("city", val)}
+            value={value.city || ''}
+            onChange={(val) => handleChange('city', val)}
             error={errors.city}
             placeholder="Enter city"
           />
@@ -348,15 +348,15 @@ export function AddressForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="State"
-            value={value.state || ""}
-            onChange={(val) => handleChange("state", val)}
+            value={value.state || ''}
+            onChange={(val) => handleChange('state', val)}
             error={errors.state}
             placeholder="Enter state/province"
           />
           <FormInput
             label="Country"
-            value={value.country || ""}
-            onChange={(val) => handleChange("country", val)}
+            value={value.country || ''}
+            onChange={(val) => handleChange('country', val)}
             error={errors.country}
             placeholder="Enter country"
           />
@@ -364,16 +364,16 @@ export function AddressForm({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
             label="ZIP Code"
-            value={value.zipCode || ""}
-            onChange={(val) => handleChange("zipCode", val)}
+            value={value.zipCode || ''}
+            onChange={(val) => handleChange('zipCode', val)}
             error={errors.zipCode}
             placeholder="Enter ZIP code"
           />
           <FormInput
             label="Latitude"
-            value={value.latitude?.toString() || ""}
+            value={value.latitude?.toString() || ''}
             onChange={(val) =>
-              handleChange("latitude", val ? parseFloat(val) : undefined)
+              handleChange('latitude', val ? parseFloat(val) : undefined)
             }
             error={errors.latitude}
             placeholder="Enter latitude"
@@ -381,9 +381,9 @@ export function AddressForm({
           />
           <FormInput
             label="Longitude"
-            value={value.longitude?.toString() || ""}
+            value={value.longitude?.toString() || ''}
             onChange={(val) =>
-              handleChange("longitude", val ? parseFloat(val) : undefined)
+              handleChange('longitude', val ? parseFloat(val) : undefined)
             }
             error={errors.longitude}
             placeholder="Enter longitude"

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Restaurant } from "@/types/restaurant";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Restaurant } from '@/types/restaurant';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
+} from '@/components/ui/dropdown-menu';
+import Image from 'next/image';
 import {
   Edit,
   Trash2,
@@ -21,22 +21,22 @@ import {
   Calendar,
   Clock,
   Mail,
-} from "lucide-react";
-import { useTranslation } from "@/hooks/useTranslation";
-import { getS3UrlFromKey, getFallbackAvatarUrl } from "@/lib/upload-utils";
-import { useI18n } from "@/providers/i18n-provider";
-import { MultilingualText } from "@/types";
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { useI18n } from '@/providers/i18n-provider';
+import { MultilingualText } from '@/types';
 
 // Column definitions for the restaurants table
 export const createRestaurantColumns = (
   onEdit: (restaurant: Restaurant) => void,
   onDelete: (restaurant: Restaurant) => void,
-  t: ReturnType<typeof useTranslation>["t"],
+  t: ReturnType<typeof useTranslation>['t'],
   locale: string,
 ): ColumnDef<Restaurant>[] => [
   {
-    id: "logo",
-    header: t("restaurants.logo"),
+    id: 'logo',
+    header: t('restaurants.logo'),
     size: 80,
     enableSorting: false,
     cell: ({ row }) => {
@@ -47,15 +47,15 @@ export const createRestaurantColumns = (
             <Image
               src={
                 getS3UrlFromKey(restaurant.logo) ||
-                getFallbackAvatarUrl(restaurant.name?.en ?? "")
+                getFallbackAvatarUrl(restaurant.name?.en ?? '')
               }
-              alt={restaurant.name?.en ?? "Restaurant"}
+              alt={restaurant.name?.en ?? 'Restaurant'}
               width={40}
               height={40}
               className="rounded-md object-cover border"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = getFallbackAvatarUrl(restaurant.name?.en ?? "");
+                target.src = getFallbackAvatarUrl(restaurant.name?.en ?? '');
               }}
             />
           </div>
@@ -64,13 +64,13 @@ export const createRestaurantColumns = (
     },
   },
   {
-    accessorKey: "name",
-    id: "name",
-    header: t("restaurants.name"),
+    accessorKey: 'name',
+    id: 'name',
+    header: t('restaurants.name'),
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      const aValue = (rowA.original.name?.en ?? "").toLowerCase();
-      const bValue = (rowB.original.name?.en ?? "").toLowerCase();
+      const aValue = (rowA.original.name?.en ?? '').toLowerCase();
+      const bValue = (rowB.original.name?.en ?? '').toLowerCase();
       return aValue.localeCompare(bValue);
     },
     cell: ({ row }) => {
@@ -78,7 +78,7 @@ export const createRestaurantColumns = (
       return (
         <div className="space-y-1">
           <div className="font-medium text-sm">
-            {restaurant.name?.en ?? "—"}
+            {restaurant.name?.en ?? '—'}
           </div>
           {restaurant.name?.ar && (
             <div className="text-xs text-muted-foreground" dir="rtl">
@@ -90,9 +90,9 @@ export const createRestaurantColumns = (
     },
   },
   {
-    accessorKey: "brandName",
-    id: "brand",
-    header: t("restaurants.brand"),
+    accessorKey: 'brandName',
+    id: 'brand',
+    header: t('restaurants.brand'),
     enableSorting: true,
     cell: ({ row }) => {
       return (
@@ -103,38 +103,38 @@ export const createRestaurantColumns = (
     },
   },
   {
-    accessorKey: "restoCode",
-    id: "restoCode",
-    header: t("restaurants.restoCode"),
+    accessorKey: 'restoCode',
+    id: 'restoCode',
+    header: t('restaurants.restoCode'),
     enableSorting: true,
     size: 120,
     cell: ({ row }) => {
       const restaurant = row.original;
       return (
-        <div className="font-mono text-sm">{restaurant.restoCode || "N/A"}</div>
+        <div className="font-mono text-sm">{restaurant.restoCode || 'N/A'}</div>
       );
     },
   },
   {
-    accessorKey: "isActive",
-    id: "status",
-    header: t("restaurants.status"),
+    accessorKey: 'isActive',
+    id: 'status',
+    header: t('restaurants.status'),
     enableSorting: true,
     size: 100,
     cell: ({ row }) => {
       const restaurant = row.original;
       return (
-        <Badge variant={restaurant.isActive ? "default" : "secondary"}>
+        <Badge variant={restaurant.isActive ? 'default' : 'secondary'}>
           {restaurant.isActive
-            ? t("restaurants.active")
-            : t("restaurants.inactive")}
+            ? t('restaurants.active')
+            : t('restaurants.inactive')}
         </Badge>
       );
     },
   },
   {
-    id: "location",
-    header: t("restaurants.location"),
+    id: 'location',
+    header: t('restaurants.location'),
     enableSorting: false,
     cell: ({ row }) => {
       const restaurant = row.original;
@@ -157,8 +157,8 @@ export const createRestaurantColumns = (
     },
   },
   {
-    id: "contact",
-    header: t("restaurants.contact"),
+    id: 'contact',
+    header: t('restaurants.contact'),
     enableSorting: false,
     cell: ({ row }) => {
       const restaurant = row.original;
@@ -167,13 +167,13 @@ export const createRestaurantColumns = (
           <div className="flex items-center space-x-1">
             <Mail className="h-3 w-3 text-muted-foreground" />
             <span className="truncate max-w-[150px]">
-              {restaurant.contactEmail || "N/A"}
+              {restaurant.contactEmail || 'N/A'}
             </span>
           </div>
           <div className="flex items-center space-x-1">
             <Phone className="h-3 w-3 text-muted-foreground" />
             <span className="truncate max-w-[150px]">
-              {restaurant.phoneNumber || "N/A"}
+              {restaurant.phoneNumber || 'N/A'}
             </span>
           </div>
         </div>
@@ -181,8 +181,8 @@ export const createRestaurantColumns = (
     },
   },
   {
-    id: "resetBill",
-    header: t("restaurants.nextResetBill"),
+    id: 'resetBill',
+    header: t('restaurants.nextResetBill'),
     enableSorting: false,
     size: 120,
     cell: ({ row }) => {
@@ -197,9 +197,9 @@ export const createRestaurantColumns = (
     },
   },
   {
-    accessorKey: "createdAt",
-    id: "createdAt",
-    header: t("restaurants.created"),
+    accessorKey: 'createdAt',
+    id: 'createdAt',
+    header: t('restaurants.created'),
     enableSorting: true,
     size: 120,
     cell: ({ row }) => {
@@ -208,15 +208,15 @@ export const createRestaurantColumns = (
         <div className="flex items-center space-x-1 text-sm text-muted-foreground">
           <Calendar className="h-3 w-3" />
           <span>
-            {new Date(restaurant.createdAt)?.toLocaleDateString() || "N/A"}
+            {new Date(restaurant.createdAt)?.toLocaleDateString() || 'N/A'}
           </span>
         </div>
       );
     },
   },
   {
-    id: "actions",
-    header: t("table.actions"),
+    id: 'actions',
+    header: t('table.actions'),
     enableSorting: false,
     size: 80,
     cell: ({ row }) => {
@@ -239,7 +239,7 @@ export const createRestaurantColumns = (
               className="cursor-pointer"
             >
               <Edit className="mr-2 h-4 w-4" />
-              {t("restaurants.edit")}
+              {t('restaurants.edit')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
@@ -250,7 +250,7 @@ export const createRestaurantColumns = (
               disabled={restaurant.isActive ?? false} // Don't allow deleting active restaurants
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              {t("restaurants.delete")}
+              {t('restaurants.delete')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -278,11 +278,11 @@ export const getSortFieldForQuery = (
   const sort = sorting[0];
   // Map TanStack column IDs to backend field names
   const fieldMap: Record<string, string> = {
-    name: "name.en", // Sort by English name
-    brand: "brandName.en",
-    status: "isActive",
-    restoCode: "restoCode",
-    createdAt: "createdAt",
+    name: 'name.en', // Sort by English name
+    brand: 'brandName.en',
+    status: 'isActive',
+    restoCode: 'restoCode',
+    createdAt: 'createdAt',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -291,7 +291,7 @@ export const getSortFieldForQuery = (
 // Helper function to get sort order from TanStack sorting state
 export const getSortOrderForQuery = (
   sorting: Array<{ id: string; desc: boolean }>,
-): "asc" | "desc" | undefined => {
+): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
-  return sorting[0].desc ? "desc" : "asc";
+  return sorting[0].desc ? 'desc' : 'asc';
 };

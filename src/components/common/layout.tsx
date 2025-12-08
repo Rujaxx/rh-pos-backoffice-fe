@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
-import Sidebar from "./sidebar";
-import TopNav from "./top-nav";
-import { useEffect, useState } from "react";
-import { useI18n } from "@/providers/i18n-provider";
-import { SidebarProvider, useSidebar } from "@/providers/sidebar-provider";
+import type { ReactNode } from 'react';
+import Sidebar from './sidebar';
+import TopNav from './top-nav';
+import { useEffect, useState } from 'react';
+import { useI18n } from '@/providers/i18n-provider';
+import { SidebarProvider, useSidebar } from '@/providers/sidebar-provider';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ function LayoutContent({ children }: LayoutProps) {
   const { menuState, isHovered, isMobile } = useSidebar();
   const [mounted, setMounted] = useState(false);
 
-  const isRTL = locale === "ar";
+  const isRTL = locale === 'ar';
 
   useEffect(() => {
     setMounted(true);
@@ -29,28 +29,28 @@ function LayoutContent({ children }: LayoutProps) {
   // Calculate margin based on menu state, hover, and language direction - only for desktop
   const getSidebarMargin = () => {
     if (isMobile) {
-      return { marginLeft: "0", marginRight: "0" }; // No margin on mobile, sidebar is overlay
+      return { marginLeft: '0', marginRight: '0' }; // No margin on mobile, sidebar is overlay
     }
 
-    let marginValue = "0";
-    if (menuState === "hidden") {
-      marginValue = "0";
-    } else if (menuState === "collapsed" && isHovered) {
-      marginValue = "16rem"; // 256px - full width
-    } else if (menuState === "collapsed") {
-      marginValue = "4rem"; // 64px - collapsed width
+    let marginValue = '0';
+    if (menuState === 'hidden') {
+      marginValue = '0';
+    } else if (menuState === 'collapsed' && isHovered) {
+      marginValue = '16rem'; // 256px - full width
+    } else if (menuState === 'collapsed') {
+      marginValue = '4rem'; // 64px - collapsed width
     } else {
-      marginValue = "16rem"; // 256px - full width
+      marginValue = '16rem'; // 256px - full width
     }
 
     // Apply margin to the correct side based on language direction
     return isRTL
-      ? { marginLeft: "0", marginRight: marginValue }
-      : { marginLeft: marginValue, marginRight: "0" };
+      ? { marginLeft: '0', marginRight: marginValue }
+      : { marginLeft: marginValue, marginRight: '0' };
   };
 
   return (
-    <div className={`flex h-screen ${isRTL ? "flex-row-reverse" : ""}`}>
+    <div className={`flex h-screen ${isRTL ? 'flex-row-reverse' : ''}`}>
       <Sidebar />
       <div
         className="w-full flex flex-1 flex-col transition-all duration-300 ease-in-out min-w-0"

@@ -1,5 +1,5 @@
-import { MultilingualText, TableAction } from "./common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText, TableAction } from './common/common.type';
+import { QueryParams } from './api';
 
 export type { TableAction };
 
@@ -52,6 +52,6 @@ export interface KitchenDepartmentQueryParams extends QueryParams {
   restaurantId?: string;
   isActive?: string;
 
-  sortBy?: "name" | "createdAt" | "updatedAt" | "shortCode";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'shortCode';
+  sortOrder?: 'asc' | 'desc';
 }

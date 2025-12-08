@@ -1,51 +1,51 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+} from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
-import Layout from "@/components/common/layout";
-import { Plus, Building2, Filter } from "lucide-react";
+} from '@/components/ui/crud-modal';
+import Layout from '@/components/common/layout';
+import { Plus, Building2, Filter } from 'lucide-react';
 
 import {
   KitchenDepartment,
   KitchenDepartmentQueryParams,
-} from "@/types/kitchen-department.type";
+} from '@/types/kitchen-department.type';
 import {
   KitchenDepartmentFormData,
   kitchenDepartmentSchema,
-} from "@/lib/validations/kitchen-department.validation";
+} from '@/lib/validations/kitchen-department.validation';
 import {
   useKitchenDepartments,
   useKitchenDepartment,
-} from "@/services/api/kitchen-departments/kitchen-departments.queries";
+} from '@/services/api/kitchen-departments/kitchen-departments.queries';
 
 import {
   KitchenDepartmentFormContent,
   useKitchenDepartmentForm,
-} from "@/components/kitchen-department/kitchen-department-form";
+} from '@/components/kitchen-department/kitchen-department-form';
 import {
   getSortFieldForQuery,
   getSortOrderForQuery,
   useKitchenDepartmentColumns,
-} from "@/components/kitchen-department/kitchen-department-table-columns";
+} from '@/components/kitchen-department/kitchen-department-table-columns';
 import {
   useCreateKitchenDepartment,
   useDeleteKitchenDepartment,
   useUpdateKitchenDepartment,
-} from "@/services/api/kitchen-departments/kitchen-departments.mutation";
+} from '@/services/api/kitchen-departments/kitchen-departments.mutation';
 
 export default function KitchenDepartmentPage() {
   const { t } = useTranslation();
@@ -57,7 +57,7 @@ export default function KitchenDepartmentPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -67,7 +67,7 @@ export default function KitchenDepartmentPage() {
     const params: KitchenDepartmentQueryParams = {
       page: pagination.pageIndex + 1, // 1-based for backend
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (searchTerm.trim()) {
@@ -76,11 +76,11 @@ export default function KitchenDepartmentPage() {
 
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -125,7 +125,7 @@ export default function KitchenDepartmentPage() {
     data: individualKitchenDepartmentResponse,
     isLoading: isLoadingIndividualKitchenDepartment,
     isFetching: isFetchingIndividualKitchenDepartment,
-  } = useKitchenDepartment(kitchenDepartmentId || "", {
+  } = useKitchenDepartment(kitchenDepartmentId || '', {
     enabled: shouldFetchKitchenDepartment,
   });
 
@@ -166,19 +166,19 @@ export default function KitchenDepartmentPage() {
         try {
           await deleteKitchenDepartmentMutation.mutateAsync(dept._id);
         } catch (error) {
-          console.error("Failed to delete kitchen department:", error);
+          console.error('Failed to delete kitchen department:', error);
         }
       },
       {
-        title: t("kitchen.deleteConfirmationTitle"),
-        description: t("kitchen.deleteConfirmationDescription", {
+        title: t('kitchen.deleteConfirmationTitle'),
+        description: t('kitchen.deleteConfirmationDescription', {
           name:
-            typeof dept.name === "object"
+            typeof dept.name === 'object'
               ? dept.name.en
               : (dept.name as unknown as string),
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
       },
     );
   };
@@ -201,7 +201,7 @@ export default function KitchenDepartmentPage() {
 
         closeModal();
       } catch (error) {
-        console.error("Failed to save kitchen department:", error);
+        console.error('Failed to save kitchen department:', error);
       }
     },
     [
@@ -255,38 +255,38 @@ export default function KitchenDepartmentPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Building2 className="h-6 w-6" />
-              <span>{t("kitchen.title")}</span>
+              <span>{t('kitchen.title')}</span>
             </h2>
-            <p className="text-muted-foreground">{t("kitchen.subtitle")}</p>
+            <p className="text-muted-foreground">{t('kitchen.subtitle')}</p>
           </div>
 
           <div className="flex items-center space-x-2">
             {/* Status filter */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active",
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("common.active")
-                : statusFilter === "inactive"
-                  ? t("common.inactive")
-                  : t("restaurants.allStatus")}
+              {statusFilter === 'active'
+                ? t('common.active')
+                : statusFilter === 'inactive'
+                  ? t('common.inactive')
+                  : t('restaurants.allStatus')}
             </Button>
 
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t("kitchen.addNew")}
+              {t('kitchen.addNew')}
             </Button>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function KitchenDepartmentPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("kitchen.errorLoading")}: {error.message}
+                  {t('kitchen.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -307,7 +307,7 @@ export default function KitchenDepartmentPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("kitchen.searchPlaceholder")}
+                searchPlaceholder={t('kitchen.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -321,7 +321,7 @@ export default function KitchenDepartmentPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -334,8 +334,8 @@ export default function KitchenDepartmentPage() {
           onClose={closeModal}
           title={
             latestKitchenDepartmentData
-              ? t("kitchen.editTitle") || "Edit Kitchen Department"
-              : t("kitchen.addTitle") || "Add Kitchen Department"
+              ? t('kitchen.editTitle') || 'Edit Kitchen Department'
+              : t('kitchen.addTitle') || 'Add Kitchen Department'
           }
           size="lg"
           form={form}
@@ -343,8 +343,8 @@ export default function KitchenDepartmentPage() {
           loading={isFormLoading}
           submitButtonText={
             latestKitchenDepartmentData
-              ? t("common.update")
-              : t("common.create")
+              ? t('common.update')
+              : t('common.create')
           }
         >
           <KitchenDepartmentFormContent form={form} />

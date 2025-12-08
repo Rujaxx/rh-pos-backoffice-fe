@@ -1,5 +1,5 @@
-import { MultilingualText } from "@/types/common/common.type";
-import { QueryParams } from "./api";
+import { MultilingualText } from '@/types/common/common.type';
+import { QueryParams } from './api';
 
 export interface Menu extends Record<string, unknown> {
   _id: string;
@@ -50,12 +50,12 @@ export interface MenuQueryParams extends QueryParams {
 
   isActive?: string;
 
-  sortBy?: "name" | "createdAt" | "updatedAt" | "shortCode";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'name' | 'createdAt' | 'updatedAt' | 'shortCode';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface MenuTableColumn {
-  id: keyof Menu | "actions";
+  id: keyof Menu | 'actions';
   label: string;
   sortable?: boolean;
   filterable?: boolean;
@@ -66,6 +66,6 @@ export interface MenuTableAction<T> {
   icon?: React.ComponentType<{ className?: string }>;
   className?: string;
   onClick: (item: T) => void;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
   disabled?: (item: T) => boolean;
 }

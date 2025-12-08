@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type MenuState = "full" | "collapsed" | "hidden";
+type MenuState = 'full' | 'collapsed' | 'hidden';
 
 interface SidebarContextType {
   // Desktop menu state
@@ -23,25 +23,25 @@ interface SidebarContextType {
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [menuState, setMenuStateInternal] = useState<MenuState>("full");
+  const [menuState, setMenuStateInternal] = useState<MenuState>('full');
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [previousDesktopState, setPreviousDesktopState] =
-    useState<MenuState>("full");
+    useState<MenuState>('full');
 
   // Cycle through menu states: full -> collapsed -> hidden -> full
   const toggleMenuState = () => {
     setMenuStateInternal((prev) => {
       switch (prev) {
-        case "full":
-          return "collapsed";
-        case "collapsed":
-          return "hidden";
-        case "hidden":
-          return "full";
+        case 'full':
+          return 'collapsed';
+        case 'collapsed':
+          return 'hidden';
+        case 'hidden':
+          return 'full';
         default:
-          return "full";
+          return 'full';
       }
     });
   };
@@ -61,13 +61,13 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 
       if (!isDesktop) {
         // On mobile/tablet, save current desktop state and set to hidden
-        if (menuState !== "hidden") {
+        if (menuState !== 'hidden') {
           setPreviousDesktopState(menuState);
-          setMenuStateInternal("hidden");
+          setMenuStateInternal('hidden');
         }
       } else {
         // On desktop, restore previous state if coming from mobile
-        if (menuState === "hidden" && previousDesktopState !== "hidden") {
+        if (menuState === 'hidden' && previousDesktopState !== 'hidden') {
           setMenuStateInternal(previousDesktopState);
         }
       }
@@ -77,9 +77,9 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
     handleResize();
 
     // Add event listener
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [menuState, previousDesktopState]);
 
   const value = {
@@ -101,7 +101,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (context === undefined) {
-    throw new Error("useSidebar must be used within a SidebarProvider");
+    throw new Error('useSidebar must be used within a SidebarProvider');
   }
   return context;
 };
