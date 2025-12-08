@@ -1,9 +1,9 @@
 ---
 name: 🐛 Bug Report
 about: Create a bug report to help us improve the RH POS system
-title: "[BUG] "
-labels: ["bug", "needs triage"]
-assignees: ""
+title: '[BUG] '
+labels: ['bug', 'needs triage']
+assignees: ''
 ---
 
 ## 🐛 Bug Description

@@ -3,13 +3,13 @@
  * TanStack Query mutations for category operations
  */
 
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { Category, CategoryFormData } from "@/types/category.type";
-import { SuccessResponse } from "@/types/api";
-import { QUERY_KEYS } from "@/config/api";
-import { useQueryUtils } from "@/lib/query-client";
-import { categoryService } from "./categories.queries";
-import { toast } from "sonner";
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { Category, CategoryFormData } from '@/types/category.type';
+import { SuccessResponse } from '@/types/api';
+import { QUERY_KEYS } from '@/config/api';
+import { useQueryUtils } from '@/lib/query-client';
+import { categoryService } from './categories.queries';
+import { toast } from 'sonner';
 
 // Create category mutation
 export const useCreateCategory = (
@@ -28,10 +28,10 @@ export const useCreateCategory = (
     },
     onSuccess: (data) => {
       // Show success message
-      toast.success("Category created successfully");
+      toast.success('Category created successfully');
 
       // Invalidate and refetch categories list - use partial matching to catch all category list queries
-      queryUtils.invalidateQueries(["categories", "list"]);
+      queryUtils.invalidateQueries(['categories', 'list']);
 
       // Set the new category in cache
       if (data.data) {
@@ -43,7 +43,7 @@ export const useCreateCategory = (
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to create category";
+      const errorMessage = error.message || 'Failed to create category';
       toast.error(errorMessage);
     },
     ...options,
@@ -77,7 +77,7 @@ export const useUpdateCategory = (
       const { id } = variables;
 
       // Show success message
-      toast.success("Category updated successfully");
+      toast.success('Category updated successfully');
 
       // Update specific category cache
       if (data.data) {
@@ -85,11 +85,11 @@ export const useUpdateCategory = (
       }
 
       // Invalidate categories list to refresh the table - use partial matching
-      queryUtils.invalidateQueries(["categories", "list"]);
+      queryUtils.invalidateQueries(['categories', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to update category";
+      const errorMessage = error.message || 'Failed to update category';
       toast.error(errorMessage);
     },
     ...options,
@@ -106,17 +106,17 @@ export const useDeleteCategory = (
     mutationFn: (id: string) => categoryService.delete(id),
     onSuccess: (_, id) => {
       // Show success message
-      toast.success("Category deleted successfully");
+      toast.success('Category deleted successfully');
 
       // Remove from cache
       queryUtils.removeQueries(QUERY_KEYS.CATEGORIES.DETAIL(id));
 
       // Invalidate categories list - use partial matching
-      queryUtils.invalidateQueries(["categories", "list"]);
+      queryUtils.invalidateQueries(['categories', 'list']);
     },
     onError: (error) => {
       // Show error message
-      const errorMessage = error.message || "Failed to delete category";
+      const errorMessage = error.message || 'Failed to delete category';
       toast.error(errorMessage);
     },
     ...options,

@@ -18,7 +18,6 @@ import {
   Hash,
   Trash2,
   XCircle,
-  Percent,
   Calendar,
   CheckCircle2,
   AlertTriangle,
