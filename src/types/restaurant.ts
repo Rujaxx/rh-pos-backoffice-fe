@@ -1,6 +1,6 @@
-import { Address } from "./common/common.type";
-import { MultilingualText } from "./common/common.type";
-import { QueryParams } from "./api";
+import { Address } from './common/common.type';
+import { MultilingualText } from './common/common.type';
+import { QueryParams } from './api';
 
 // Restaurant-specific settings interfaces
 export interface SendReportsSettings {
@@ -21,8 +21,8 @@ export interface EBillSettings {
 }
 
 // Enums for better type safety
-export type ResetBillFrequency = "daily" | "weekly" | "monthly" | "yearly";
-export type SmsWhatsappSelection = "none" | "sms" | "whatsapp" | "both";
+export type ResetBillFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
+export type SmsWhatsappSelection = 'none' | 'sms' | 'whatsapp' | 'both';
 export type TimezoneType = string; // Could be expanded with specific timezone values
 
 export interface CustomQRCode {
@@ -122,5 +122,5 @@ export interface RestaurantQueryParams extends QueryParams {
   // From RestaurantQueryDto
   brandId?: string; // Filter by brand
   isActive?: string; // Filter by active/inactive status
-  sortOrder?: "asc" | "desc"; // Sort order
+  sortOrder?: 'asc' | 'desc'; // Sort order
 }

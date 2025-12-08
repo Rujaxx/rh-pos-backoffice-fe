@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, AlertTriangle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Package, AlertTriangle } from 'lucide-react';
 
 export function InventoryOverview() {
   const categories = [
-    { name: "Electronics", stock: 1247, lowStock: 23, trend: "+5%" },
-    { name: "Clothing", stock: 2891, lowStock: 45, trend: "+12%" },
-    { name: "Home & Garden", stock: 1634, lowStock: 18, trend: "-3%" },
-    { name: "Sports", stock: 892, lowStock: 12, trend: "+8%" },
-    { name: "Books", stock: 567, lowStock: 7, trend: "+2%" },
+    { name: 'Electronics', stock: 1247, lowStock: 23, trend: '+5%' },
+    { name: 'Clothing', stock: 2891, lowStock: 45, trend: '+12%' },
+    { name: 'Home & Garden', stock: 1634, lowStock: 18, trend: '-3%' },
+    { name: 'Sports', stock: 892, lowStock: 12, trend: '+8%' },
+    { name: 'Books', stock: 567, lowStock: 7, trend: '+2%' },
   ];
 
   return (

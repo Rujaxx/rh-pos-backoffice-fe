@@ -82,11 +82,11 @@ Replace imports like:
 
 ```typescript
 // Old
-import { User, LoginCredentials } from "@/types/entities";
+import { User, LoginCredentials } from '@/types/entities';
 
 // New
-import { LoginCredentials } from "@/types/auth";
-import { User } from "@/types/user";
+import { LoginCredentials } from '@/types/auth';
+import { User } from '@/types/user';
 ```
 
 ### **For New Code**
@@ -95,11 +95,11 @@ Use the modular imports or the convenience index:
 
 ```typescript
 // Specific modules (recommended)
-import { AuthUser } from "@/types/auth";
-import { User, Role } from "@/types/user";
+import { AuthUser } from '@/types/auth';
+import { User, Role } from '@/types/user';
 
 // Convenience index (for multiple types from different modules)
-import { AuthUser, User, Role } from "@/types";
+import { AuthUser, User, Role } from '@/types';
 ```
 
 ## File Structure

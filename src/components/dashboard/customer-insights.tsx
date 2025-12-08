@@ -1,37 +1,37 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, UserPlus, Star, TrendingDown } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, UserPlus, Star, TrendingDown } from 'lucide-react';
 
 export function CustomerInsights() {
   const metrics = [
     {
-      label: "New Customers",
-      value: "1,247",
-      change: "+23%",
+      label: 'New Customers',
+      value: '1,247',
+      change: '+23%',
       icon: UserPlus,
-      color: "text-green-600",
+      color: 'text-green-600',
     },
     {
-      label: "Returning Customers",
-      value: "8,392",
-      change: "+12%",
+      label: 'Returning Customers',
+      value: '8,392',
+      change: '+12%',
       icon: Users,
-      color: "text-blue-600",
+      color: 'text-blue-600',
     },
     {
-      label: "Avg. Rating",
-      value: "4.8",
-      change: "+0.2",
+      label: 'Avg. Rating',
+      value: '4.8',
+      change: '+0.2',
       icon: Star,
-      color: "text-yellow-600",
+      color: 'text-yellow-600',
     },
     {
-      label: "Churn Rate",
-      value: "2.1%",
-      change: "-0.5%",
+      label: 'Churn Rate',
+      value: '2.1%',
+      change: '-0.5%',
       icon: TrendingDown,
-      color: "text-red-600",
+      color: 'text-red-600',
     },
   ];
 
