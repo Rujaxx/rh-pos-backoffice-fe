@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   multilingualTextSchema,
   validateFormData,
@@ -6,13 +6,14 @@ import {
   validateFormSubmission,
   formatValidationErrors,
   getNestedFieldError,
-} from "./common/common.validation";
+} from './common/common.validation';
 
 // Table section validation schema matching backend CreateTablesectionDto
 export const tableSectionSchema = z.object({
   _id: z.string().optional(),
   name: multilingualTextSchema,
-  restaurantId: z.string().min(14, { message: "Restaurant is required" }),
+  restaurantId: z.string().min(14, { message: 'Restaurant is required' }),
+  taxProductGroupId: z.string().optional(),
   isActive: z.boolean().default(true),
 });
 
@@ -21,7 +22,7 @@ export const createTableSectionSchema = tableSectionSchema.omit({ _id: true });
 
 // Update schema with _id required for updates
 export const updateTableSectionSchema = tableSectionSchema.extend({
-  _id: z.string().min(1, { message: "ID is required for updates" }),
+  _id: z.string().min(1, { message: 'ID is required for updates' }),
 });
 
 export type TableSectionFormData = z.input<typeof tableSectionSchema>;

@@ -1,49 +1,49 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   PaginationState,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
+} from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 import {
   TableSectionFormContent,
   useTableSectionForm,
-} from "@/components/tablesections/table-sections-form";
+} from '@/components/tablesections/table-sections-form';
 import {
   getSortOrderForQuery,
   getSortFieldForQuery,
   useTableSectionColumns,
-} from "@/components/tablesections/table-sections-columns";
-import Layout from "@/components/common/layout";
-import { Plus, Layers, Filter } from "lucide-react";
+} from '@/components/tablesections/table-sections-columns';
+import Layout from '@/components/common/layout';
+import { Plus, Layers, Filter } from 'lucide-react';
 import {
   TableSection,
   TableSectionQueryParams,
-} from "@/types/table-section.type";
+} from '@/types/table-section.type';
 import {
   TableSectionFormData,
   tableSectionSchema,
-} from "@/lib/validations/table-section.validation";
+} from '@/lib/validations/table-section.validation';
 import {
   useGetTableSections,
   useGetTableSection,
-} from "@/services/api/tablesections/tablesections.queries";
+} from '@/services/api/tablesections/tablesections.queries';
 import {
   useCreateTableSection,
   useUpdateTableSection,
   useDeleteTableSection,
-} from "@/services/api/tablesections/tablesections.mutations";
+} from '@/services/api/tablesections/tablesections.mutations';
 
 export default function TableSectionsPage() {
   const { t } = useTranslation();
@@ -55,7 +55,7 @@ export default function TableSectionsPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -65,7 +65,7 @@ export default function TableSectionsPage() {
     const params: TableSectionQueryParams = {
       page: pagination.pageIndex + 1, // Backend expects 1-based page numbers
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc", // Default sort order
+      sortOrder: getSortOrderForQuery(sorting) || 'desc', // Default sort order
     };
 
     // Add search term
@@ -76,12 +76,12 @@ export default function TableSectionsPage() {
     // Add sorting
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     // Add status filter
     if (statusFilter !== undefined) {
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
     }
 
     return params;
@@ -125,7 +125,7 @@ export default function TableSectionsPage() {
     data: individualTableSectionResponse,
     isLoading: isLoadingIndividualTableSection,
     isFetching: isFetchingIndividualTableSection,
-  } = useGetTableSection(tableSectionId || "", {
+  } = useGetTableSection(tableSectionId || '', {
     enabled: shouldFetchTableSection,
   });
 
@@ -166,19 +166,19 @@ export default function TableSectionsPage() {
         try {
           await deleteTableSectionMutation.mutateAsync(tableSection._id);
         } catch (error) {
-          console.error("Failed to delete table section:", error);
+          console.error('Failed to delete table section:', error);
         }
       },
       {
-        title: t("tableSection.deleteConfirmationTitle"),
-        description: t("tableSection.deleteConfirmationDescription", {
+        title: t('tableSection.deleteConfirmationTitle'),
+        description: t('tableSection.deleteConfirmationDescription', {
           name:
-            typeof tableSection.name === "object"
+            typeof tableSection.name === 'object'
               ? tableSection.name.en
               : tableSection.name,
         }),
-        confirmButtonText: t("common.delete"),
-        variant: "destructive",
+        confirmButtonText: t('common.delete'),
+        variant: 'destructive',
       },
     );
   };
@@ -201,7 +201,7 @@ export default function TableSectionsPage() {
         }
         closeModal();
       } catch (error) {
-        console.error("Failed to save table section:", error);
+        console.error('Failed to save table section:', error);
       }
     },
     [
@@ -258,38 +258,38 @@ export default function TableSectionsPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Layers className="h-6 w-6" />
-              <span>{t("tableSection.title")}</span>
+              <span>{t('tableSection.title')}</span>
             </h2>
             <p className="text-muted-foreground">
-              {t("tableSection.subtitle")}
+              {t('tableSection.subtitle')}
             </p>
           </div>
           <div className="flex items-center space-x-2">
             {/* Add status filter button */}
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active",
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
               className="h-8"
             >
               <Filter className="h-4 w-4 mr-2" />
-              {statusFilter === "active"
-                ? t("common.active")
-                : statusFilter === "inactive"
-                  ? t("common.inactive")
-                  : t("restaurants.allStatus")}
+              {statusFilter === 'active'
+                ? t('common.active')
+                : statusFilter === 'inactive'
+                  ? t('common.inactive')
+                  : t('restaurants.allStatus')}
             </Button>
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
-              {t("tableSection.addNewTableSection")}
+              {t('tableSection.addNewTableSection')}
             </Button>
           </div>
         </div>
@@ -300,7 +300,7 @@ export default function TableSectionsPage() {
             {error ? (
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
-                  {t("restaurants.errorLoading")}: {error.message}
+                  {t('restaurants.errorLoading')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -310,7 +310,7 @@ export default function TableSectionsPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("tableSection.searchPlaceholder")}
+                searchPlaceholder={t('tableSection.searchPlaceholder')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -324,7 +324,7 @@ export default function TableSectionsPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -337,15 +337,15 @@ export default function TableSectionsPage() {
           onClose={closeModal}
           title={
             latestTableSectionData
-              ? t("tableSection.editTitle") || "Edit Table Section"
-              : t("tableSection.addTitle") || "Add Table Section"
+              ? t('tableSection.editTitle') || 'Edit Table Section'
+              : t('tableSection.addTitle') || 'Add Table Section'
           }
           size="lg"
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           submitButtonText={
-            latestTableSectionData ? t("common.update") : t("common.create")
+            latestTableSectionData ? t('common.update') : t('common.create')
           }
         >
           <TableSectionFormContent form={form} />
