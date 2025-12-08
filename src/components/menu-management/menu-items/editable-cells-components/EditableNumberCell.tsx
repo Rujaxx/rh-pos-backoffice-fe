@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 interface EditableNumberCellProps {
   value: number;
@@ -10,7 +10,7 @@ interface EditableNumberCellProps {
   min?: number;
   max?: number;
   step?: number;
-  format?: "currency" | "integer" | "decimal";
+  format?: 'currency' | 'integer' | 'decimal';
   isModified?: boolean;
   disabled?: boolean;
 }
@@ -21,7 +21,7 @@ export const EditableNumberCell: React.FC<EditableNumberCellProps> = ({
   min,
   max,
   step = 1,
-  format = "decimal",
+  format = 'decimal',
   isModified = false,
   disabled = false,
 }) => {
@@ -36,7 +36,7 @@ export const EditableNumberCell: React.FC<EditableNumberCellProps> = ({
     const numValue = parseFloat(localValue);
 
     if (isNaN(numValue)) {
-      setError("Invalid number");
+      setError('Invalid number');
       setLocalValue(value.toString());
       return;
     }
@@ -58,10 +58,10 @@ export const EditableNumberCell: React.FC<EditableNumberCellProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       (e.currentTarget as HTMLElement).blur();
     }
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       setLocalValue(value.toString());
       (e.currentTarget as HTMLElement).blur();
     }
@@ -81,9 +81,9 @@ export const EditableNumberCell: React.FC<EditableNumberCellProps> = ({
           step={step}
           disabled={disabled}
           className={cn(
-            "w-full",
-            isModified && "ring-2 ring-orange-400",
-            error && "border-red-500",
+            'w-full',
+            isModified && 'ring-2 ring-orange-400',
+            error && 'border-red-500',
           )}
         />
         {isModified && <span className="text-xs text-orange-600">●</span>}

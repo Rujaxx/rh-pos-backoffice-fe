@@ -22,7 +22,7 @@ export interface TableAction<T = Record<string, unknown>> {
   label: string;
   icon?: React.ComponentType<{ className?: string }>;
   onClick: (item: T) => void;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
   disabled?: (item: T) => boolean;
 }
 export interface DataTableProps<T = Record<string, unknown>> {
@@ -41,7 +41,7 @@ export interface DataTableProps<T = Record<string, unknown>> {
   searchPlaceholder?: string;
   pagination?: boolean;
   loading?: boolean;
-  onSort?: (column: string, direction: "asc" | "desc") => void;
+  onSort?: (column: string, direction: 'asc' | 'desc') => void;
   onFilter?: (filters: Record<string, string | number | boolean>) => void;
   onSearch?: (query: string) => void;
 }

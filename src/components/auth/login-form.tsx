@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,20 +12,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
-import Link from "next/link";
-import { Logo } from "../common/logo";
-import { LanguageSwitcher } from "../common/language-switcher";
-import { useTranslation } from "@/hooks/useTranslation";
-import { useLogin } from "@/services/api/auth/auth.mutations";
-import { useIsAuthenticated } from "@/stores/auth.store";
-import { useLoginForm } from "@/hooks/useLoginForm";
-import { LoginFormData } from "@/lib/validations/auth.validation";
-import { User, Lock } from "lucide-react";
-import { ThemeToggle } from "../common/theme-toggle";
+} from '@/components/ui/form';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
+import Link from 'next/link';
+import { Logo } from '../common/logo';
+import { LanguageSwitcher } from '../common/language-switcher';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useLogin } from '@/services/api/auth/auth.mutations';
+import { useIsAuthenticated } from '@/stores/auth.store';
+import { useLoginForm } from '@/hooks/useLoginForm';
+import { LoginFormData } from '@/lib/validations/auth.validation';
+import { User, Lock } from 'lucide-react';
+import { ThemeToggle } from '../common/theme-toggle';
 
 export function LoginForm() {
   const { t } = useTranslation();
@@ -39,19 +39,19 @@ export function LoginForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/dashboard");
+      router.push('/dashboard');
     }
   }, [isAuthenticated, router]);
 
   // Restore remembered username on component mount
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const rememberedUsername = localStorage.getItem(
-        "rh-pos-remember-username",
+        'rh-pos-remember-username',
       );
       if (rememberedUsername) {
-        form.setValue("username", rememberedUsername);
-        form.setValue("rememberMe", true);
+        form.setValue('username', rememberedUsername);
+        form.setValue('rememberMe', true);
       }
     }
   }, [form]);
@@ -62,34 +62,34 @@ export function LoginForm() {
     login(credentials, {
       onSuccess: () => {
         // Show success message
-        toast.success(t("auth.login.success") || "Login successful");
+        toast.success(t('auth.login.success') || 'Login successful');
 
         // Handle Remember Me functionality
         if (rememberMe) {
           // Store username for future logins
-          if (typeof window !== "undefined") {
+          if (typeof window !== 'undefined') {
             localStorage.setItem(
-              "rh-pos-remember-username",
+              'rh-pos-remember-username',
               credentials.username,
             );
           }
         } else {
           // Clear remembered username if not selected
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("rh-pos-remember-username");
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('rh-pos-remember-username');
           }
         }
 
         // Redirect to dashboard on successful login
-        router.push("/dashboard");
+        router.push('/dashboard');
       },
       onError: (error: unknown) => {
         // Handle login error with toast
-        let errorMessage = "Login failed. Please try again.";
+        let errorMessage = 'Login failed. Please try again.';
 
-        if (error && typeof error === "object" && "message" in error) {
+        if (error && typeof error === 'object' && 'message' in error) {
           errorMessage = (error as { message: string }).message;
-        } else if (typeof error === "string") {
+        } else if (typeof error === 'string') {
           errorMessage = error;
         }
 
@@ -118,10 +118,10 @@ export function LoginForm() {
             <Card className="w-full max-w-md mx-auto">
               <CardHeader className="space-y-1 pb-6">
                 <CardTitle className="text-2xl text-center">
-                  {t("auth.login.title")}
+                  {t('auth.login.title')}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground text-center">
-                  {t("auth.login.subtitle")}
+                  {t('auth.login.subtitle')}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -131,7 +131,7 @@ export function LoginForm() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("auth.login.usernameLabel")}</FormLabel>
+                      <FormLabel>{t('auth.login.usernameLabel')}</FormLabel>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                         <FormControl>
@@ -139,7 +139,7 @@ export function LoginForm() {
                             {...field}
                             type="text"
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 rtl:pl-3 rtl:pr-10"
-                            placeholder={t("auth.login.usernamePlaceholder")}
+                            placeholder={t('auth.login.usernamePlaceholder')}
                             autoComplete="username"
                             disabled={isPending}
                           />
@@ -156,15 +156,15 @@ export function LoginForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("auth.login.passwordLabel")}</FormLabel>
+                      <FormLabel>{t('auth.login.passwordLabel')}</FormLabel>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                         <FormControl>
                           <input
                             {...field}
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? 'text' : 'password'}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 rtl:pl-10 rtl:pr-10"
-                            placeholder={t("auth.login.passwordPlaceholder")}
+                            placeholder={t('auth.login.passwordPlaceholder')}
                             disabled={isPending}
                           />
                         </FormControl>
@@ -223,7 +223,7 @@ export function LoginForm() {
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between space-y-0">
                       <FormLabel className="text-sm font-normal">
-                        {t("auth.login.rememberMe")}
+                        {t('auth.login.rememberMe')}
                       </FormLabel>
                       <FormControl>
                         <Switch
@@ -237,17 +237,17 @@ export function LoginForm() {
                 />
 
                 {/* Test Credentials Helper (only in development) */}
-                {process.env.NODE_ENV === "development" && (
+                {process.env.NODE_ENV === 'development' && (
                   <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
                     <p className="text-xs text-blue-800 font-medium mb-1">
                       Test Credentials:
                     </p>
                     <p className="text-xs text-blue-600">
-                      Username:{" "}
+                      Username:{' '}
                       <code className="bg-blue-100 px-1 rounded">admin</code>
                     </p>
                     <p className="text-xs text-blue-600">
-                      Password:{" "}
+                      Password:{' '}
                       <code className="bg-blue-100 px-1 rounded">
                         Admin@123!
                       </code>
@@ -263,7 +263,7 @@ export function LoginForm() {
                 href="/forgot"
                 className="text-sm text-primary hover:text-primary/80 font-medium"
               >
-                {t("auth.login.forgotPassword")}
+                {t('auth.login.forgotPassword')}
               </Link>
             </div>
 
@@ -275,8 +275,8 @@ export function LoginForm() {
               disabled={isPending}
             >
               {isPending
-                ? t("auth.login.signingIn")
-                : t("auth.login.signInButton")}
+                ? t('auth.login.signingIn')
+                : t('auth.login.signInButton')}
             </Button>
           </form>
         </Form>

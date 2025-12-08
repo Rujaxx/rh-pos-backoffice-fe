@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Mail, ArrowLeft, CheckCircle, Clock, Shield } from "lucide-react";
-import { Logo } from "../common/logo";
-import { LanguageSwitcher } from "../common/language-switcher";
-import { useTranslation } from "@/hooks/useTranslation";
-import { ThemeToggle } from "../common/theme-toggle";
+import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Mail, ArrowLeft, CheckCircle, Clock, Shield } from 'lucide-react';
+import { Logo } from '../common/logo';
+import { LanguageSwitcher } from '../common/language-switcher';
+import { useTranslation } from '@/hooks/useTranslation';
+import { ThemeToggle } from '../common/theme-toggle';
 
 export function ForgotForm() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +53,10 @@ export function ForgotForm() {
 
             <div className="text-center">
               <h2 className="text-2xl font-semibold mb-1">
-                {t("auth.forgot.title")}
+                {t('auth.forgot.title')}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {t("auth.forgot.subtitle")}
+                {t('auth.forgot.subtitle')}
               </p>
             </div>
 
@@ -65,13 +65,13 @@ export function ForgotForm() {
               className="shadow-sm border rounded-lg p-6 space-y-4"
             >
               <div className="space-y-2">
-                <Label htmlFor="email">{t("auth.forgot.emailLabel")}</Label>
+                <Label htmlFor="email">{t('auth.forgot.emailLabel')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4 rtl:left-auto rtl:right-3" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder={t("auth.forgot.emailPlaceholder")}
+                    placeholder={t('auth.forgot.emailPlaceholder')}
                     className="pl-10 rtl:pl-3 rtl:pr-10"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -82,8 +82,8 @@ export function ForgotForm() {
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading
-                  ? t("auth.forgot.sendingLink")
-                  : t("auth.forgot.sendResetLink")}
+                  ? t('auth.forgot.sendingLink')
+                  : t('auth.forgot.sendResetLink')}
               </Button>
             </form>
 
@@ -93,7 +93,7 @@ export function ForgotForm() {
                 className="text-sm text-primary hover:text-primary/80 font-medium inline-flex items-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2 rtl:rotate-180" />
-                {t("auth.forgot.backToLogin")}
+                {t('auth.forgot.backToLogin')}
               </Link>
             </div>
           </div>
@@ -109,16 +109,16 @@ export function ForgotForm() {
 
             <div>
               <h2 className="text-2xl font-semibold mb-2">
-                {t("auth.forgot.successTitle") || "Check your email"}
+                {t('auth.forgot.successTitle') || 'Check your email'}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {t("auth.forgot.successMessage")} <strong>{email}</strong>
+                {t('auth.forgot.successMessage')} <strong>{email}</strong>
               </p>
             </div>
 
             <div className="bg-slate-50 border rounded-lg p-6 text-left shadow-sm">
               <h3 className="font-semibold text-slate-900 mb-4">
-                {t("auth.forgot.whatsNext") || "What's next?"}
+                {t('auth.forgot.whatsNext') || "What's next?"}
               </h3>
 
               <div className="space-y-3 text-sm text-slate-600">
@@ -126,20 +126,20 @@ export function ForgotForm() {
                   <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">
                     1
                   </span>
-                  {t("auth.forgot.step1") ||
-                    "Check your inbox (and spam folder)"}
+                  {t('auth.forgot.step1') ||
+                    'Check your inbox (and spam folder)'}
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">
                     2
                   </span>
-                  {t("auth.forgot.step2") || "Open the password reset link"}
+                  {t('auth.forgot.step2') || 'Open the password reset link'}
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-xs">
                     3
                   </span>
-                  {t("auth.forgot.step3") || "Create a new password"}
+                  {t('auth.forgot.step3') || 'Create a new password'}
                 </div>
               </div>
             </div>
@@ -153,8 +153,8 @@ export function ForgotForm() {
                 className="w-full"
               >
                 {isLoading
-                  ? t("auth.forgot.resending")
-                  : t("auth.forgot.resendEmail")}
+                  ? t('auth.forgot.resending')
+                  : t('auth.forgot.resendEmail')}
               </Button>
 
               <Link
@@ -162,7 +162,7 @@ export function ForgotForm() {
                 className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                {t("auth.forgot.backToLogin")}
+                {t('auth.forgot.backToLogin')}
               </Link>
             </div>
 
@@ -170,22 +170,22 @@ export function ForgotForm() {
               <div className="flex items-center justify-center gap-6">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
-                  <span>{t("auth.forgot.expires") || "Expires in 24h"}</span>
+                  <span>{t('auth.forgot.expires') || 'Expires in 24h'}</span>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4" />
-                  <span>{t("auth.forgot.secure") || "Secure"}</span>
+                  <span>{t('auth.forgot.secure') || 'Secure'}</span>
                 </div>
               </div>
 
               <p className="text-xs text-slate-400 mt-4">
-                {t("auth.forgot.needHelp")}{" "}
+                {t('auth.forgot.needHelp')}{' '}
                 <Link
                   href="/support"
                   className="text-slate-600 hover:text-slate-900"
                 >
-                  {t("auth.forgot.contactSupport")}
+                  {t('auth.forgot.contactSupport')}
                 </Link>
               </p>
             </div>
