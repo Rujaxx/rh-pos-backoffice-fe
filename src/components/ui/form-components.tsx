@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import {
   UseFormReturn,
   Controller,
@@ -36,8 +35,6 @@ import {
   timeStringToMinutes,
   minutesToTimeString,
 } from '@/lib/utils/time.utils';
-import { Languages, Globe, Upload } from 'lucide-react';
-
 interface FormFieldWrapperProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
   name: FieldPath<TFormValues>;

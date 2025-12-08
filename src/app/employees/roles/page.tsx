@@ -1,42 +1,42 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo, useCallback, useRef } from "react";
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
   SortingState,
   PaginationState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { TanStackTable } from "@/components/ui/tanstack-table";
-import Layout from "@/components/common/layout";
-import { Plus, Shield, Filter } from "lucide-react";
+} from '@tanstack/react-table';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import Layout from '@/components/common/layout';
+import { Plus, Shield, Filter } from 'lucide-react';
 import {
   useModal,
   CrudModal,
   ConfirmationModal,
   useConfirmationModal,
-} from "@/components/ui/crud-modal";
+} from '@/components/ui/crud-modal';
 import {
   useRoleForm,
   RoleFormContent,
-} from "@/components/employees/roles/role-form";
+} from '@/components/employees/roles/role-form';
 
-import { useRoles, useRole } from "@/services/api/roles/roles.queries";
+import { useRoles, useRole } from '@/services/api/roles/roles.queries';
 
-import { Role, RoleQueryParams } from "@/types/role.type";
-import { RoleFormData, roleSchema } from "@/lib/validations/role.validation";
+import { Role, RoleQueryParams } from '@/types/role.type';
+import { RoleFormData, roleSchema } from '@/lib/validations/role.validation';
 import {
   useRoleColumns,
   getSortOrderForQuery,
   getSortFieldForQuery,
-} from "@/components/employees/roles/roles-table-columns";
+} from '@/components/employees/roles/roles-table-columns';
 import {
   useCreateRole,
   useDeleteRole,
   useUpdateRole,
-} from "@/services/api/roles/roles.mutation";
+} from '@/services/api/roles/roles.mutation';
 
 export default function RolesPage() {
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ export default function RolesPage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
@@ -58,18 +58,18 @@ export default function RolesPage() {
     const params: RoleQueryParams = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      sortOrder: getSortOrderForQuery(sorting) || "desc",
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
 
     if (searchTerm.trim()) params.term = searchTerm.trim();
 
     const sortField = getSortFieldForQuery(sorting);
     if (sortField) {
-      params.sortOrder = getSortOrderForQuery(sorting) || "desc";
+      params.sortOrder = getSortOrderForQuery(sorting) || 'desc';
     }
 
     if (statusFilter !== undefined)
-      params.isActive = statusFilter === "active" ? "true" : "false";
+      params.isActive = statusFilter === 'active' ? 'true' : 'false';
 
     return params;
   }, [pagination, sorting, searchTerm, statusFilter]);
@@ -102,7 +102,7 @@ export default function RolesPage() {
   const roleId = editingRole?._id;
   const shouldFetchRole = isOpen && !!roleId;
   const { data: individualRoleResponse, isLoading: isLoadingRole } = useRole(
-    roleId || "",
+    roleId || '',
     { enabled: shouldFetchRole },
   );
   const latestRoleData = individualRoleResponse?.data || editingRole;
@@ -132,14 +132,14 @@ export default function RolesPage() {
         try {
           await deleteRole.mutateAsync(role._id);
         } catch (err) {
-          console.error("Failed to delete role:", err);
+          console.error('Failed to delete role:', err);
         }
       },
       {
-        title: t("roles.deleteRole"),
-        description: t("roles.deleteConfirmation", { name: role.name.en }),
-        confirmButtonText: t("roles.deleteRoleButton"),
-        variant: "destructive",
+        title: t('roles.deleteRole'),
+        description: t('roles.deleteConfirmation', { name: role.name.en }),
+        confirmButtonText: t('roles.deleteRoleButton'),
+        variant: 'destructive',
       },
     );
   };
@@ -158,7 +158,7 @@ export default function RolesPage() {
         }
         closeModal();
       } catch (err) {
-        console.error("Failed to save role:", err);
+        console.error('Failed to save role:', err);
       }
     },
     [latestRoleData, updateRole, createRole, closeModal],
@@ -194,25 +194,25 @@ export default function RolesPage() {
             <h2 className="text-2xl font-bold tracking-tight flex items-center space-x-2">
               <Shield className="h-6 w-6" />
               {/* No "roles.title" exists → using create title */}
-              <span>{t("roles.create.title")}</span>
+              <span>{t('roles.create.title')}</span>
             </h2>
 
             {/* No "roles.subtitle" exists → using create description */}
             <p className="text-muted-foreground">
-              {t("roles.create.description")}
+              {t('roles.create.description')}
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <Button
-              variant={statusFilter !== undefined ? "default" : "outline"}
+              variant={statusFilter !== undefined ? 'default' : 'outline'}
               onClick={() => {
                 setStatusFilter(
-                  statusFilter === "active"
-                    ? "inactive"
-                    : statusFilter === "inactive"
+                  statusFilter === 'active'
+                    ? 'inactive'
+                    : statusFilter === 'inactive'
                       ? undefined
-                      : "active",
+                      : 'active',
                 );
                 setPagination((prev) => ({ ...prev, pageIndex: 0 }));
               }}
@@ -220,17 +220,17 @@ export default function RolesPage() {
             >
               <Filter className="h-4 w-4 mr-2" />
               {/* No keys exist for active/inactive/allStatus → using generic placeholders */}
-              {statusFilter === "active"
-                ? t("common.active")
-                : statusFilter === "inactive"
-                  ? t("common.inactive")
-                  : t("common.filter.all")}
+              {statusFilter === 'active'
+                ? t('common.active')
+                : statusFilter === 'inactive'
+                  ? t('common.inactive')
+                  : t('common.filter.all')}
             </Button>
 
             <Button onClick={() => openModal()} className="h-8">
               <Plus className="h-4 w-4 mr-2" />
               {/* No "roles.addNewRole" exists → using create title */}
-              {t("roles.create.title")}
+              {t('roles.create.title')}
             </Button>
           </div>
         </div>
@@ -242,7 +242,7 @@ export default function RolesPage() {
               <div className="flex items-center justify-center h-64 text-destructive">
                 <p>
                   {/* No "roles.errorLoading" exists → using roles.create.error */}
-                  {t("roles.create.error")}: {error.message}
+                  {t('roles.create.error')}: {error.message}
                 </p>
               </div>
             ) : (
@@ -252,7 +252,7 @@ export default function RolesPage() {
                 totalCount={totalCount}
                 isLoading={isLoading}
                 searchValue={searchTerm}
-                searchPlaceholder={t("roles.table.name")}
+                searchPlaceholder={t('roles.table.name')}
                 onSearchChange={handleSearchChange}
                 pagination={pagination}
                 onPaginationChange={handlePaginationChange}
@@ -266,7 +266,7 @@ export default function RolesPage() {
                 showSearch
                 showPagination
                 showPageSizeSelector
-                emptyMessage={t("common.na")}
+                emptyMessage={t('common.na')}
                 enableMultiSort={false}
               />
             )}
@@ -278,13 +278,13 @@ export default function RolesPage() {
           isOpen={isOpen}
           onClose={closeModal}
           // Fix: these keys do not exist, using the ones you provided
-          title={latestRoleData ? t("common.edit") : t("common.create")}
+          title={latestRoleData ? t('common.edit') : t('common.create')}
           size="xl"
           form={form}
           onSubmit={handleSubmit}
           loading={isFormLoading}
           submitButtonText={
-            latestRoleData ? t("common.update") : t("common.create")
+            latestRoleData ? t('common.update') : t('common.create')
           }
         >
           <RoleFormContent form={form} />

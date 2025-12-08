@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   TrendingUp,
@@ -7,42 +7,42 @@ import {
   ShoppingCart,
   Users,
   Package,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function OverviewStats() {
   const stats = [
     {
-      title: "Total Revenue",
-      value: "$847,392",
-      change: "+12.5%",
-      trend: "up",
+      title: 'Total Revenue',
+      value: '$847,392',
+      change: '+12.5%',
+      trend: 'up',
       icon: DollarSign,
-      description: "vs last month",
+      description: 'vs last month',
     },
     {
-      title: "Total Orders",
-      value: "3,247",
-      change: "+8.2%",
-      trend: "up",
+      title: 'Total Orders',
+      value: '3,247',
+      change: '+8.2%',
+      trend: 'up',
       icon: ShoppingCart,
-      description: "across all channels",
+      description: 'across all channels',
     },
     {
-      title: "Active Customers",
-      value: "12,847",
-      change: "+23.1%",
-      trend: "up",
+      title: 'Active Customers',
+      value: '12,847',
+      change: '+23.1%',
+      trend: 'up',
       icon: Users,
-      description: "monthly active users",
+      description: 'monthly active users',
     },
     {
-      title: "Inventory Items",
-      value: "8,392",
-      change: "-2.1%",
-      trend: "down",
+      title: 'Inventory Items',
+      value: '8,392',
+      change: '-2.1%',
+      trend: 'down',
       icon: Package,
-      description: "total SKUs",
+      description: 'total SKUs',
     },
   ];
 
@@ -61,14 +61,14 @@ export function OverviewStats() {
               {stat.value}
             </div>
             <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-              {stat.trend === "up" ? (
+              {stat.trend === 'up' ? (
                 <TrendingUp className="mr-1 h-3 w-3 text-green-500" />
               ) : (
                 <TrendingDown className="mr-1 h-3 w-3 text-red-500" />
               )}
               <span
                 className={
-                  stat.trend === "up" ? "text-green-600" : "text-red-600"
+                  stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
                 }
               >
                 {stat.change}
