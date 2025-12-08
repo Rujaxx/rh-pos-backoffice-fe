@@ -329,6 +329,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     ],
   },
   {
+    id: 'crm',
+    label: t('navigation.crm'),
+    items: [
+      {
+        id: 'customers',
+        label: t('navigation.customers'),
+        href: '/customers',
+        icon: UserPlus,
+      },
+    ],
+  },
+  {
     id: 'image-library',
     label: t('navigation.imageLibrary'),
     items: [

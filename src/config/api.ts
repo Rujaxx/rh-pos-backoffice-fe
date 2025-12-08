@@ -128,6 +128,12 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/image-library/${id}`,
     GET: (id: string) => `/image-library/${id}`,
   },
+  CUSTOMERS: {
+    LIST: '/customers',
+    UPDATE: (id: string) => `/customers/${id}`,
+    DELETE: (id: string) => `/customers/${id}`,
+    GET: (id: string) => `/customers/${id}`,
+  },
 } as const;
 
 // Query keys for consistent caching
@@ -202,5 +208,10 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['image-library', 'list', params] as const,
     DETAIL: (id: string) => ['image-library', 'detail', id] as const,
+  },
+  CUSTOMERS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['customers', 'list', params] as const,
+    DETAIL: (id: string) => ['customers', 'detail', id] as const,
   },
 } as const;
