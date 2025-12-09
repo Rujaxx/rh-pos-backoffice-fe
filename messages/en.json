@@ -1286,5 +1286,6 @@
   "customer.form.loyaltyPointsPlaceholder": "Enter loyalty points",
   "customer.form.button.save": "Save Customer",
   "customer.form.button.update": "Update Customer",
-  "customer.form.button.cancel": "Cancel"
+  "customer.form.button.cancel": "Cancel",
+  "customer.dialCode": "Country Code"
 }

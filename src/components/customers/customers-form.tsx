@@ -45,6 +45,16 @@ export function CustomerFormContent({
             placeholder={t('customer.form.namePlaceholder')}
             required
           />
+          {/* Dial Code (Read Only) */}
+          <FormItem className="space-y-2">
+            <FormLabel>{t('customer.dialCode')}</FormLabel>
+            <FormControl>
+              <div className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm">
+                {editingCustomer?.dialCode ?? '--'}
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
           {/* Phone Number - Read Only */}
           <FormItem className="space-y-2">
@@ -95,6 +105,7 @@ export function useCustomerForm(editingCustomer?: Customer | null): {
     resolver: zodResolver(customerSchema),
     defaultValues: {
       name: '',
+      dialCode: '',
       phoneNumber: '',
       loyaltyPoints: 0,
       address: {
@@ -115,6 +126,7 @@ export function useCustomerForm(editingCustomer?: Customer | null): {
       form.reset({
         _id: editingCustomer._id,
         name: editingCustomer.name,
+        dialCode: editingCustomer.dialCode || '',
         phoneNumber: editingCustomer.phoneNumber || null,
         loyaltyPoints: editingCustomer.loyaltyPoints || 0,
         address: editingCustomer.address,
@@ -123,6 +135,7 @@ export function useCustomerForm(editingCustomer?: Customer | null): {
     } else {
       form.reset({
         name: '',
+        dialCode: '',
         phoneNumber: null,
         loyaltyPoints: 0,
         address: {

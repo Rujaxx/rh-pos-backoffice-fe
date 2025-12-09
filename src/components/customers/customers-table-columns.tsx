@@ -33,6 +33,13 @@ export const createCustomerColumns = (
       ),
     },
     {
+      accessorKey: 'dialCode',
+      id: 'dialCode',
+      header: t('customer.dialCode'),
+      enableSorting: false, // Make NOT sortable
+      cell: ({ row }) => <div className="text-sm">{row.original.dialCode}</div>,
+    },
+    {
       accessorKey: 'phoneNumber',
       id: 'phoneNumber',
       header: t('customer.phoneNumber'),
