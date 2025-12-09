@@ -1278,5 +1278,6 @@
   "customer.form.loyaltyPointsPlaceholder": "أدخل نقاط الولاء",
   "customer.form.button.save": "حفظ العميل",
   "customer.form.button.update": "تحديث العميل",
-  "customer.form.button.cancel": "إلغاء"
+  "customer.form.button.cancel": "إلغاء",
+  "customer.dialCode": "رمز البلد"
 }
