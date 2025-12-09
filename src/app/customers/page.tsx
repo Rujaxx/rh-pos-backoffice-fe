@@ -125,6 +125,7 @@ export default function CustomersPage() {
           id: editingCustomer._id,
           data: {
             ...data,
+            dialCode: editingCustomer.dialCode,
             phoneNumber: editingCustomer.phoneNumber,
           },
         });

@@ -8,6 +8,13 @@ export const customerSchema = z.object({
     .min(2, { message: 'Name must be at least 2 characters' })
     .max(100, { message: 'Name must be less than 100 characters' }),
 
+  dialCode: z
+    .string()
+    .min(2, { message: 'Invalid dial code' })
+    .max(4, { message: 'Invalid dial code length' })
+    .regex(/^[0-9]{1,4}$/, { message: 'Dial code must be numeric' })
+    .optional(),
+
   phoneNumber: z.string().nullable().optional(),
 
   loyaltyPoints: z
