@@ -6,7 +6,7 @@ import { QueryParams } from './api';
 export interface Customer {
   _id: string;
   name: string;
-  dialCode: string;
+  countryCode: string;
   phoneNumber: string;
   billId?: string;
   address?: Address;
@@ -20,7 +20,7 @@ export interface Customer {
 export interface CustomerFormData {
   _id?: string;
   name: string;
-  dialCode: string | null;
+  countryCode: string | null;
   phoneNumber: string | null;
   billId?: string;
   address?: Address;
