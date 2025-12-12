@@ -148,6 +148,12 @@ export const API_ENDPOINTS = {
     LIST: '/order-types',
     GET: (id: string) => `/order-types/${id}`,
   },
+  CUSTOMERS: {
+    LIST: '/customers',
+    UPDATE: (id: string) => `/customers/${id}`,
+    DELETE: (id: string) => `/customers/${id}`,
+    GET: (id: string) => `/customers/${id}`,
+  },
 } as const;
 
 // Query keys for consistent caching
@@ -236,5 +242,10 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['order-types', 'list', params] as const,
     DETAIL: (id: string) => ['order-types', 'detail', id] as const,
+  },
+  CUSTOMERS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['customers', 'list', params] as const,
+    DETAIL: (id: string) => ['customers', 'detail', id] as const,
   },
 } as const;
