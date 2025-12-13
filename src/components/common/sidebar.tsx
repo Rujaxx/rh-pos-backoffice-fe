@@ -32,11 +32,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import { useSidebar } from '@/providers/sidebar-provider';
+import { usePathname } from 'next/navigation';
 
 interface SubMenuItem {
   id: string;
@@ -66,59 +67,60 @@ interface MenuSection {
 
 // Function to generate POS menu data with translations
 const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
-  {
-    id: 'overview',
-    label: t('navigation.overview'),
-    items: [
-      {
-        id: 'dashboard',
-        label: t('navigation.dashboard'),
-        href: '/dashboard',
-        icon: Home,
-        children: [
-          {
-            id: 'analytics',
-            label: t('navigation.analytics'),
-            href: '/dashboard/analytics',
-            icon: BarChart2,
-          },
-          {
-            id: 'reports',
-            label: t('navigation.reports'),
-            href: '/dashboard/reports',
-            icon: FileText,
-            children: [
-              {
-                id: 'sales-reports',
-                label: t('navigation.salesReports'),
-                href: '/dashboard/reports/sales',
-                icon: TrendingUp,
-              },
-              {
-                id: 'staff-reports',
-                label: t('navigation.staffReports'),
-                href: '/dashboard/reports/staff',
-                icon: Users2,
-              },
-              {
-                id: 'financial-reports',
-                label: t('navigation.financialReports'),
-                href: '/dashboard/reports/financial',
-                icon: DollarSign,
-              },
-            ],
-          },
-          {
-            id: 'real-time',
-            label: t('navigation.realTime'),
-            href: '/dashboard/realtime',
-            icon: Activity,
-            isNew: true,
-          },
-        ],
-      },
-    ],
-  },
+  // OVERVIEW SECTION NOT IMPLEMENTED YET
+  // {
+  //   id: 'overview',
+  //   label: t('navigation.overview'),
+  //   items: [
+  //     {
+  //       id: 'dashboard',
+  //       label: t('navigation.dashboard'),
+  //       href: '/dashboard',
+  //       icon: Home,
+  //       children: [
+  //         {
+  //           id: 'analytics',
+  //           label: t('navigation.analytics'),
+  //           href: '/dashboard/analytics',
+  //           icon: BarChart2,
+  //         },
+  //         {
+  //           id: 'reports',
+  //           label: t('navigation.reports'),
+  //           href: '/dashboard/reports',
+  //           icon: FileText,
+  //           children: [
+  //             {
+  //               id: 'sales-reports',
+  //               label: t('navigation.salesReports'),
+  //               href: '/dashboard/reports/sales',
+  //               icon: TrendingUp,
+  //             },
+  //             {
+  //               id: 'staff-reports',
+  //               label: t('navigation.staffReports'),
+  //               href: '/dashboard/reports/staff',
+  //               icon: Users2,
+  //             },
+  //             {
+  //               id: 'financial-reports',
+  //               label: t('navigation.financialReports'),
+  //               href: '/dashboard/reports/financial',
+  //               icon: DollarSign,
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           id: 'real-time',
+  //           label: t('navigation.realTime'),
+  //           href: '/dashboard/realtime',
+  //           icon: Activity,
+  //           isNew: true,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: 'operations',
     label: t('navigation.operations'),
@@ -167,40 +169,41 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
           },
         ],
       },
-      {
-        id: 'orders',
-        label: t('navigation.orders'),
-        href: '/orders',
-        icon: ShoppingCart,
-        badge: '5',
-        children: [
-          {
-            id: 'active-orders',
-            label: t('navigation.activeOrders'),
-            href: '/orders/active',
-            icon: ShoppingCart,
-          },
-          {
-            id: 'pending',
-            label: t('navigation.pendingOrders'),
-            href: '/orders/pending',
-            icon: Clock,
-            badge: '3',
-          },
-          {
-            id: 'completed',
-            label: t('navigation.completedOrders'),
-            href: '/orders/completed',
-            icon: Receipt,
-          },
-          {
-            id: 'delivery',
-            label: t('navigation.deliveryOrders'),
-            href: '/orders/delivery',
-            icon: Truck,
-          },
-        ],
-      },
+      // ORDERS SECTION NOT IMPLEMENTED YET
+      // {
+      //   id: 'orders',
+      //   label: t('navigation.orders'),
+      //   href: '/orders',
+      //   icon: ShoppingCart,
+      //   badge: '5',
+      //   children: [
+      //     {
+      //       id: 'active-orders',
+      //       label: t('navigation.activeOrders'),
+      //       href: '/orders/active',
+      //       icon: ShoppingCart,
+      //     },
+      //     {
+      //       id: 'pending',
+      //       label: t('navigation.pendingOrders'),
+      //       href: '/orders/pending',
+      //       icon: Clock,
+      //       badge: '3',
+      //     },
+      //     {
+      //       id: 'completed',
+      //       label: t('navigation.completedOrders'),
+      //       href: '/orders/completed',
+      //       icon: Receipt,
+      //     },
+      //     {
+      //       id: 'delivery',
+      //       label: t('navigation.deliveryOrders'),
+      //       href: '/orders/delivery',
+      //       icon: Truck,
+      //     },
+      //   ],
+      // },
     ],
   },
   {
@@ -263,18 +266,19 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
             href: '/employees/roles',
             icon: UserPlus,
           },
-          {
-            id: 'schedules',
-            label: t('navigation.workSchedules'),
-            href: '/employees/schedules',
-            icon: Calendar,
-          },
-          {
-            id: 'payroll',
-            label: t('navigation.payroll'),
-            href: '/employees/payroll',
-            icon: DollarSign,
-          },
+          // SCHEDULES AND PLAYROLL NOT IMPLEMENTED YET
+          // {
+          //   id: 'schedules',
+          //   label: t('navigation.workSchedules'),
+          //   href: '/employees/schedules',
+          //   icon: Calendar,
+          // },
+          // {
+          //   id: 'payroll',
+          //   label: t('navigation.payroll'),
+          //   href: '/employees/payroll',
+          //   icon: DollarSign,
+          // },
         ],
       },
     ],
@@ -303,52 +307,53 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       },
     ],
   },
-  {
-    id: 'finance',
-    label: t('navigation.finance'),
-    items: [
-      {
-        id: 'sales',
-        label: t('navigation.sales'),
-        href: '/sales',
-        icon: TrendingUp,
-        children: [
-          {
-            id: 'daily-sales',
-            label: t('navigation.dailySales'),
-            href: '/sales/daily',
-            icon: Calendar,
-          },
-          {
-            id: 'monthly-sales',
-            label: t('navigation.monthlySales'),
-            href: '/sales/monthly',
-            icon: BarChart2,
-          },
-        ],
-      },
-      {
-        id: 'payments',
-        label: t('navigation.payments'),
-        href: '/payments',
-        icon: CreditCard,
-        children: [
-          {
-            id: 'payment-methods',
-            label: t('navigation.paymentMethods'),
-            href: '/payments/methods',
-            icon: CreditCard,
-          },
-          {
-            id: 'transactions',
-            label: t('navigation.transactions'),
-            href: '/payments/transactions',
-            icon: Receipt,
-          },
-        ],
-      },
-    ],
-  },
+  // FIANCE SECTION NOT IMPLEMENTED YET
+  // {
+  //   id: 'finance',
+  //   label: t('navigation.finance'),
+  //   items: [
+  //     {
+  //       id: 'sales',
+  //       label: t('navigation.sales'),
+  //       href: '/sales',
+  //       icon: TrendingUp,
+  //       children: [
+  //         {
+  //           id: 'daily-sales',
+  //           label: t('navigation.dailySales'),
+  //           href: '/sales/daily',
+  //           icon: Calendar,
+  //         },
+  //         {
+  //           id: 'monthly-sales',
+  //           label: t('navigation.monthlySales'),
+  //           href: '/sales/monthly',
+  //           icon: BarChart2,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       id: 'payments',
+  //       label: t('navigation.payments'),
+  //       href: '/payments',
+  //       icon: CreditCard,
+  //       children: [
+  //         {
+  //           id: 'payment-methods',
+  //           label: t('navigation.paymentMethods'),
+  //           href: '/payments/methods',
+  //           icon: CreditCard,
+  //         },
+  //         {
+  //           id: 'transactions',
+  //           label: t('navigation.transactions'),
+  //           href: '/payments/transactions',
+  //           icon: Receipt,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: 'crm',
     label: t('navigation.crm'),
@@ -389,10 +394,22 @@ export default function Sidebar() {
     setIsMobileMenuOpen,
     isMobile,
   } = useSidebar();
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  // const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    for (const section of menuData) {
+      for (const item of section.items) {
+        if (item.children?.some((child) => pathname.startsWith(child.href))) {
+          setExpandedItem(`${section.id}-${item.id}`);
+          return;
+        }
+      }
+    }
+  }, [pathname]);
 
   const isRTL = locale === 'ar';
-
   // Update menu data with translations
   menuData = getPOSMenuData(t);
 
@@ -402,16 +419,20 @@ export default function Sidebar() {
     }
   }
 
+  // const toggleExpanded = (itemId: string) => {
+  //   setExpandedItems((prev) => {
+  //     const newSet = new Set(prev);
+  //     if (newSet.has(itemId)) {
+  //       newSet.delete(itemId);
+  //     } else {
+  //       newSet.add(itemId);
+  //     }
+  //     return newSet;
+  //   });
+  // };
+
   const toggleExpanded = (itemId: string) => {
-    setExpandedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
-        newSet.delete(itemId);
-      } else {
-        newSet.add(itemId);
-      }
-      return newSet;
-    });
+    setExpandedItem((prev) => (prev === itemId ? null : itemId));
   };
 
   function NavItem({
@@ -424,7 +445,13 @@ export default function Sidebar() {
     parentId?: string;
   }) {
     const itemId = `${parentId}-${item.id}`;
-    const isExpanded = expandedItems.has(itemId);
+    // const isExpanded = expandedItems.has(itemId);
+    const isRouteActive =
+      item.children?.some((child) => pathname.startsWith(child.href)) ?? false;
+
+    // const isExpanded =
+    //   expandedItems.has(itemId) || isRouteActive
+    const isExpanded = expandedItem === itemId;
     const hasChildren = item.children && item.children.length > 0;
     const showText =
       menuState === 'full' ||
@@ -515,7 +542,13 @@ export default function Sidebar() {
     return (
       <div>
         {item.href && !hasChildren ? (
-          <Link href={item.href} onClick={handleNavigation}>
+          <Link
+            href={item.href}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNavigation();
+            }}
+          >
             {content}
           </Link>
         ) : (
