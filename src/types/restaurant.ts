@@ -30,6 +30,79 @@ export interface CustomQRCode {
   qrCodeLink: string;
 }
 
+export enum DigitalOrdersNotificationChannel {
+  ALL = 'All',
+  WHATSAPP = 'WhatsApp',
+  SMS = 'SMS',
+  NONE = 'None',
+}
+
+export type PaymentGatewayConfiguration = {
+  cash: boolean;
+  cod: boolean;
+  payLater: boolean;
+  razorPay: boolean;
+  upi: boolean;
+};
+
+export type DigitalOrderSettings = {
+  isDigitalOrderingEnabled: boolean;
+  sendDigitalOrdersNotificationOn: DigitalOrdersNotificationChannel;
+  reduceInventoryForDigitalOrderPlatform: boolean;
+  whatsAppNumber: string;
+  customizedMessageForWhatsapp: string;
+  showCategoryFirst: boolean;
+
+  // --- Item Level Settings ---
+  showDescriptionOnDigitalPlatform: boolean;
+  showPreparationTimeOnDigitalPlatform: boolean;
+  showNutritionInfo: boolean;
+
+  // --- Other Digital Order Settings ---
+  enableForDelivery: boolean;
+  autoAcceptOrder: boolean;
+  autoAcceptOrderOnCashPayment: boolean;
+  sendOtpVia: 'SMS' | 'WhatsApp'; // Maps to the `enum: ['SMS', 'WhatsApp']`
+  enableForPickup: boolean;
+  // NOTE: You removed 'loginWithTruecaller' from the Mongoose schema here.
+  // Assuming it was intentionally omitted:
+  // loginWithTruecaller: boolean;
+  enableForDineIn: boolean;
+  dineInTitle: string;
+  dineInTitlePlaceholder: string;
+  askForOrderTypeBeforePlacingOrder: boolean;
+  showWhatsappLinkOnDigitalPlatform: boolean;
+  showGridViewOnDigitalPlatform: boolean;
+  showListViewOnDigitalPlatform: boolean;
+  language: string;
+  skipOtpVerification: boolean;
+  enableForCategorySortingOnDigitalPlatform: boolean;
+  autoCompleteOrderAfterAccept: boolean;
+  sendEbillAfterComplete: boolean;
+
+  // --- Payment Gateway Settings (Nested) ---
+  paymentSettingsForDineIn: PaymentGatewayConfiguration;
+  paymentSettingsForPickUp: PaymentGatewayConfiguration;
+  paymentSettingsForDelivery: PaymentGatewayConfiguration;
+
+  // --- Social Media Settings ---
+  showContactNo: boolean;
+  contactNo: string;
+  whatsappLink: string;
+  showFacebookLink: boolean;
+  facebookLink: string;
+  showInstagramLink: boolean;
+  instagramLink: string;
+  showWebsiteLink: boolean;
+  websiteLink: string;
+  showPinterestLink: boolean;
+  pinterestLink: string;
+  showLinkedInLink: boolean;
+  linkedInLink: string;
+  showYouTubeLink: boolean;
+  youTubeLink: string;
+};
+
 // Main Restaurant interface following brand pattern
 export interface Restaurant extends Record<string, unknown> {
   _id: string;
@@ -75,6 +148,7 @@ export interface Restaurant extends Record<string, unknown> {
   eBillSettings: EBillSettings;
   billPrefix?: string;
   kotPrefix?: string;
+  digitalOrderSettings?: DigitalOrderSettings;
 }
 
 // Form data interface for creating/updating restaurants (matches CreateRestaurantDto)
@@ -107,6 +181,7 @@ export interface RestaurantFormData extends Record<string, unknown> {
   whatsAppChannel?: string;
   paymentLinkSettings: PaymentLinkSettings;
   eBillSettings: EBillSettings;
+  digitalOrderSettings?: DigitalOrderSettings;
 }
 
 // Query parameters for restaurant API matching backend RestaurantQueryDto
