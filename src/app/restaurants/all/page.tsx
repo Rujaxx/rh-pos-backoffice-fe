@@ -28,10 +28,8 @@ import {
 import Layout from '@/components/common/layout';
 import { Plus, Building2, Filter } from 'lucide-react';
 import { Restaurant, RestaurantQueryParams } from '@/types/restaurant';
-import {
-  RestaurantFormData,
-  restaurantSchema,
-} from '@/lib/validations/restaurant.validation';
+import { RestaurantFormData as RestaurantPayload } from '@/types/restaurant';
+import { RestaurantFormData } from '@/lib/validations/restaurant.validation';
 import {
   useRestaurants,
   useRestaurant,
@@ -182,16 +180,18 @@ export default function RestaurantsPage() {
   const handleSubmit = useCallback(
     async (data: RestaurantFormData) => {
       try {
-        // Parse and apply defaults using the schema to ensure all boolean fields have proper values
-        const validatedData = restaurantSchema.parse(data);
+        // Data from RHF with zodResolver is already validated and has defaults
+        // We cast it to the payload type expected by the mutation
+        const payload = data as unknown as RestaurantPayload;
+
         if (latestRestaurantData) {
           // Use the same data structure for update as create (no field removal)
           await updateRestaurantMutation.mutateAsync({
             id: latestRestaurantData._id,
-            data: validatedData,
+            data: payload,
           });
         } else {
-          await createRestaurantMutation.mutateAsync(validatedData);
+          await createRestaurantMutation.mutateAsync(payload);
         }
         closeModal();
       } catch (error) {

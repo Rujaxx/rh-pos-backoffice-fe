@@ -9,7 +9,69 @@ import {
   getNestedFieldError,
 } from './common/common.validation';
 
-// Validation schemas for restaurant settings
+export const PaymentGatewayConfigurationSchema = z.object({
+  cash: z.boolean().default(true),
+  cod: z.boolean().default(true),
+  payLater: z.boolean().default(false),
+  razorPay: z.boolean().default(false),
+  upi: z.boolean().default(false),
+});
+
+export const DigitalOrderSettingsSchema = z.object({
+  isDigitalOrderingEnabled: z.boolean().default(true),
+  sendDigitalOrdersNotificationOn: z
+    .enum(['All', 'WhatsApp', 'SMS', 'None'])
+    .default('All'),
+  reduceInventoryForDigitalOrderPlatform: z.boolean().default(false),
+  whatsAppNumber: z.string().optional(),
+  customizedMessageForWhatsapp: z.string().max(150).optional(),
+  showCategoryFirst: z.boolean().default(false),
+
+  // --- Item Level Settings ---
+  showDescriptionOnDigitalPlatform: z.boolean().default(true),
+  showPreparationTimeOnDigitalPlatform: z.boolean().default(true),
+  showNutritionInfo: z.boolean().default(true),
+
+  // --- Other Digital Order Settings ---
+  enableForDelivery: z.boolean().default(false),
+  autoAcceptOrder: z.boolean().default(false),
+  autoAcceptOrderOnCashPayment: z.boolean().default(false),
+  sendOtpVia: z.enum(['SMS', 'WhatsApp']).default('SMS'),
+  enableForPickup: z.boolean().default(false),
+  loginWithTruecaller: z.boolean().default(false),
+  enableForDineIn: z.boolean().default(false),
+  dineInTitle: z.string().optional(),
+  dineInTitlePlaceholder: z.string().optional(),
+  askForOrderTypeBeforePlacingOrder: z.boolean().default(true),
+  showWhatsappLinkOnDigitalPlatform: z.boolean().default(true),
+  showGridViewOnDigitalPlatform: z.boolean().default(false),
+  showListViewOnDigitalPlatform: z.boolean().default(true),
+  language: z.string().optional(),
+  skipOtpVerification: z.boolean().default(false),
+  enableForCategorySortingOnDigitalPlatform: z.boolean().default(false),
+  autoCompleteOrderAfterAccept: z.boolean().default(false),
+  sendEbillAfterComplete: z.boolean().default(false),
+
+  paymentSettingsForDineIn: PaymentGatewayConfigurationSchema.optional(),
+  paymentSettingsForPickUp: PaymentGatewayConfigurationSchema.optional(),
+  paymentSettingsForDelivery: PaymentGatewayConfigurationSchema.optional(),
+
+  showContactNo: z.boolean().default(false),
+  contactNo: z.string().optional(),
+  whatsappLink: z.string().optional(),
+  showFacebookLink: z.boolean().default(false),
+  facebookLink: z.string().optional(),
+  showInstagramLink: z.boolean().default(false),
+  instagramLink: z.string().optional(),
+  showWebsiteLink: z.boolean().default(false),
+  websiteLink: z.string().optional(),
+  showPinterestLink: z.boolean().default(false),
+  pinterestLink: z.string().optional(),
+  showLinkedInLink: z.boolean().default(false),
+  linkedInLink: z.string().optional(),
+  showYouTubeLink: z.boolean().default(false),
+  youTubeLink: z.string().optional(),
+});
 
 export const eBillSettingsSchema = z.object({
   onEmail: z.boolean().default(false),
@@ -28,7 +90,7 @@ export const sendReportsSchema = z.object({
   sms: z.boolean().default(false),
 });
 
-const customQRCodeSchema = z.object({
+export const customQRCodeSchema = z.object({
   qrCodeTitle: z.string().min(1, 'Title is required'),
   qrCodeLink: z.url('Invalid URL'),
 });
@@ -98,6 +160,7 @@ export const restaurantSchema = z.object({
 
   billPrefix: z.string().max(50).optional(),
   kotPrefix: z.string().max(50).optional(),
+  digitalOrderSettings: DigitalOrderSettingsSchema.optional(),
 });
 
 export type RestaurantFormData = z.input<typeof restaurantSchema>;

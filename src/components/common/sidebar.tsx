@@ -29,6 +29,7 @@ import {
   CookingPot,
   TicketPercent,
   Sofa,
+  Globe,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -169,41 +170,50 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
           },
         ],
       },
-      // ORDERS SECTION NOT IMPLEMENTED YET
-      // {
-      //   id: 'orders',
-      //   label: t('navigation.orders'),
-      //   href: '/orders',
-      //   icon: ShoppingCart,
-      //   badge: '5',
-      //   children: [
-      //     {
-      //       id: 'active-orders',
-      //       label: t('navigation.activeOrders'),
-      //       href: '/orders/active',
       //       icon: ShoppingCart,
-      //     },
-      //     {
-      //       id: 'pending',
-      //       label: t('navigation.pendingOrders'),
-      //       href: '/orders/pending',
-      //       icon: Clock,
-      //       badge: '3',
-      //     },
-      //     {
-      //       id: 'completed',
-      //       label: t('navigation.completedOrders'),
-      //       href: '/orders/completed',
-      //       icon: Receipt,
-      //     },
-      //     {
-      //       id: 'delivery',
-      //       label: t('navigation.deliveryOrders'),
-      //       href: '/orders/delivery',
-      //       icon: Truck,
+      //       badge: '5',
+      //       children: [
+      //         {
+      //           id: 'active-orders',
+      //           label: t('navigation.activeOrders'),
+      //           href: '/orders/active',
+      //           icon: ShoppingCart,
+      //         },
+      //         {
+      //           id: 'pending',
+      //           label: t('navigation.pendingOrders'),
+      //           href: '/orders/pending',
+      //           icon: Clock,
+      //           badge: '3',
+      //         },
+      //         {
+      //           id: 'completed',
+      //           label: t('navigation.completedOrders'),
+      //           href: '/orders/completed',
+      //           icon: Receipt,
+      //         },
+      //         {
+      //           id: 'delivery',
+      //           label: t('navigation.deliveryOrders'),
+      //           href: '/orders/delivery',
+      //           icon: Truck,
+      //         },
+      //       ],
       //     },
       //   ],
       // },
+    ],
+  },
+  {
+    id: 'online-orders',
+    label: t('navigation.onlineOrders') || 'Online Orders',
+    items: [
+      {
+        id: 'digital-order-settings',
+        label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
+        href: '/online-orders/digital-order-settings',
+        icon: Globe,
+      },
     ],
   },
   {
