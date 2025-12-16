@@ -32,6 +32,7 @@ export function KitchenDepartmentFormContent({
 
   const { data: brandsResponse, isLoading: isLoadingBrands } =
     useActiveBrands();
+
   const { data: restaurantsResponse, isLoading: isLoadingRestaurants } =
     useActiveRestaurants();
 

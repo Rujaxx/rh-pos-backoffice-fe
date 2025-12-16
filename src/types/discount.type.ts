@@ -1,6 +1,26 @@
 import { MultilingualText } from '@/types/common/common.type';
 import { QueryParams } from './api';
 
+interface DiscountCategory {
+  _id: string;
+}
+
+interface DiscountTaxProductGroup {
+  _id: string;
+}
+
+interface DiscountOrderType {
+  _id: string;
+}
+
+interface DiscountTableSection {
+  _id: string;
+}
+
+interface DiscountCategory {
+  _id: string;
+}
+
 export interface Discount extends Record<string, unknown> {
   _id?: string;
   name: MultilingualText;
@@ -10,10 +30,10 @@ export interface Discount extends Record<string, unknown> {
   brandId: string;
   brandName: MultilingualText;
   restaurantId?: string;
-  categoryIds: string[];
-  taxProductGroupIds: string[];
-  orderTypeIds: string[];
-  tableSectionIds: string[];
+  categoryIds: DiscountCategory[];
+  taxProductGroupIds: DiscountTaxProductGroup[];
+  orderTypeIds: DiscountOrderType[];
+  tableSectionIds: DiscountTableSection[];
   createdBy?: string;
   updatedBy?: string;
   deletedBy?: string;

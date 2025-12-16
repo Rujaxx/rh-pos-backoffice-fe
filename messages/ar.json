@@ -1388,5 +1388,7 @@
   "digitalOrders.digitalOrdering": "الترتيب الرقمي",
   "digitalOrders.managementTitle": "إعدادات الطلب الرقمي",
   "digitalOrders.orderTypeAvailabilityDesc": "اختر أنواع الطلبات لتفعيلها للطلب الرقمي.",
-  "digitalOrders.loadingOrderTypes": "جارٍ تحميل أنواع الطلبات..."
+  "digitalOrders.loadingOrderTypes": "جارٍ تحميل أنواع الطلبات...",
+  "customer.form.addressLabel": "العنوان",
+  "customer.form.addressPlaceholder": "أدخل العنوان"
 }
