@@ -82,14 +82,14 @@ export function CustomerFormContent({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">
-            {t('restaurants.form.addressLabel')}
+            {t('customer.form.addressLabel')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <RHFAddressForm
             form={form}
             name="address"
-            label={t('restaurants.form.addressLabel')}
+            label={t('customer.form.addressLabel')}
           />
         </CardContent>
       </Card>

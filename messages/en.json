@@ -1396,5 +1396,7 @@
   "digitalOrders.digitalOrdering": "Digital Ordering",
   "digitalOrders.managementTitle": "Digital Order Settings",
   "digitalOrders.orderTypeAvailabilityDesc": "Select order types to enable them for digital ordering.",
-  "digitalOrders.loadingOrderTypes": "Loading order types..."
+  "digitalOrders.loadingOrderTypes": "Loading order types...",
+  "customer.form.addressLabel": "Address",
+  "customer.form.addressPlaceholder": "Enter address"
 }

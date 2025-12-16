@@ -24,6 +24,8 @@ import { useActiveCategories } from '@/services/api/categories/categories.querie
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { useGetActiveTableSections } from '@/services/api/tablesections/tablesections.queries';
+import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart';
+import { Category } from '@/types';
 
 interface DiscountFormContentProps {
   form: ReturnType<typeof useForm<DiscountFormData>>;
@@ -303,10 +305,13 @@ export function useDiscountForm(editingDiscount?: Discount | null) {
         isActive: editingDiscount.isActive ?? true,
         brandId: editingDiscount.brandId,
         restaurantId: editingDiscount.restaurantId || '',
-        categoryIds: editingDiscount.categoryIds || [],
-        taxProductGroupIds: editingDiscount.taxProductGroupIds || [],
-        orderTypeIds: editingDiscount.orderTypeIds || [],
-        tableSectionIds: editingDiscount.tableSectionIds || [],
+        categoryIds: editingDiscount.categoryIds.map((cat) => cat._id) || [],
+        taxProductGroupIds:
+          editingDiscount.taxProductGroupIds.map((tax) => tax._id) || [],
+        orderTypeIds:
+          editingDiscount.orderTypeIds.map((order) => order._id) || [],
+        tableSectionIds:
+          editingDiscount.tableSectionIds.map((table) => table._id) || [],
       });
     } else {
       form.reset({

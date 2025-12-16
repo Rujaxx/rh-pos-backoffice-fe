@@ -29,44 +29,40 @@ export function TableFormContent({
   const { locale } = useI18n();
 
   // Get restaurants for dropdown
-  const { data: restaurantsData, isLoading: restaurantsLoading } =
+  const { data: restaurantsResponse, isLoading: isLoadingRestaurants } =
     useActiveRestaurants();
 
   // Watch selected restaurant to filter table sections
   const selectedRestaurantId = form.watch('restaurantId');
 
   // Fetch table sections for the selected restaurant
-  const { data: tableSectionsData, isLoading: tableSectionsLoading } =
-    useGetTableSectionsByRestaurant(selectedRestaurantId || '', undefined, {
-      enabled: !!selectedRestaurantId, // Only fetch when restaurant is selected
-    });
+  const { data: tableSectionsResponse, isLoading: isLoadingTableSections } =
+    useGetTableSectionsByRestaurant(selectedRestaurantId);
 
-  // Prepare table section options
-  const tableSectionOptions = React.useMemo(() => {
-    if (!tableSectionsData?.data) return [];
-
-    return tableSectionsData.data.map((section) => ({
-      value: section._id,
-      label: section.name[locale] || section.name.en,
+  const tableSectionOptions = (tableSectionsResponse?.data || [])
+    .filter((tableSection) => tableSection._id)
+    .map((tableSection) => ({
+      value: tableSection._id,
+      label: tableSection.name[locale] || tableSection.name.en,
     }));
-  }, [tableSectionsData?.data, locale]);
 
   // Prepare restaurant options
-  const restaurantOptions = React.useMemo(() => {
-    if (!restaurantsData?.data) return [];
-
-    return restaurantsData.data.map((restaurant) => ({
+  const restaurantOptions = (restaurantsResponse?.data || []).map(
+    (restaurant) => ({
       value: restaurant._id,
       label: restaurant.name[locale] || restaurant.name.en,
-    }));
-  }, [restaurantsData?.data, locale]);
+    }),
+  );
 
   const isBulk = form.watch('isBulk');
 
   // Clear table section when restaurant changes
   React.useEffect(() => {
-    form.setValue('tableSectionId', '');
-  }, [selectedRestaurantId, form]);
+    const isRestaurantDirty = form.getFieldState('restaurantId').isDirty;
+    if (isRestaurantDirty) {
+      form.setValue('tableSectionId', '');
+    }
+  }, [form]);
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -90,14 +86,14 @@ export function TableFormContent({
             name="restaurantId"
             label={t('table.form.restaurantLabel')}
             placeholder={
-              restaurantsLoading
+              isLoadingRestaurants
                 ? t('common.loading')
                 : restaurantOptions.length === 0
                   ? t('table.form.noRestaurantsAvailable')
                   : t('table.form.restaurantPlaceholder')
             }
             options={restaurantOptions}
-            disabled={restaurantsLoading}
+            disabled={isLoadingRestaurants}
           />
 
           <RHFSelect
@@ -107,14 +103,14 @@ export function TableFormContent({
             placeholder={
               !selectedRestaurantId
                 ? t('table.form.selectRestaurantFirst')
-                : tableSectionsLoading
+                : isLoadingTableSections
                   ? t('common.loading')
                   : tableSectionOptions.length === 0
                     ? t('table.form.noTableSectionsAvailable')
                     : t('table.form.sectionPlaceholder')
             }
             options={tableSectionOptions}
-            disabled={!selectedRestaurantId || tableSectionsLoading}
+            disabled={!selectedRestaurantId || isLoadingTableSections}
           />
 
           {/* Conditional fields based on bulk toggle */}
