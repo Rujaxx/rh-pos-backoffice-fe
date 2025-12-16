@@ -33,13 +33,12 @@ export const DigitalOrderSettingsSchema = z.object({
   showNutritionInfo: z.boolean().default(true),
 
   // --- Other Digital Order Settings ---
-  enableForDelivery: z.boolean().default(false),
+  orderTypes: z.array(z.string()).min(1),
+
   autoAcceptOrder: z.boolean().default(false),
   autoAcceptOrderOnCashPayment: z.boolean().default(false),
   sendOtpVia: z.enum(['SMS', 'WhatsApp']).default('SMS'),
-  enableForPickup: z.boolean().default(false),
   loginWithTruecaller: z.boolean().default(false),
-  enableForDineIn: z.boolean().default(false),
   dineInTitle: z.string().optional(),
   dineInTitlePlaceholder: z.string().optional(),
   askForOrderTypeBeforePlacingOrder: z.boolean().default(true),

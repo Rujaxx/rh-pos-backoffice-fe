@@ -114,6 +114,20 @@ export const createMenuColumns = (
       );
     },
   },
+
+  {
+    id: 'isDigitalMenu',
+    header: t('menus.table.digitalMenu'),
+    size: 140,
+    cell: ({ row }) => {
+      const menu = row.original;
+      return menu.isDigitalMenu ? (
+        <Badge variant="default">{t('menus.table.digitalMenu')}</Badge>
+      ) : (
+        <Badge variant="secondary">{t('common.no')}</Badge>
+      );
+    },
+  },
   {
     id: 'menuItemCount',
     header: t('menus.table.itemCount'),

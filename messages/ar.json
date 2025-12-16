@@ -991,6 +991,7 @@
   "menus.table.pos": "نقطة البيع",
   "menus.table.digitalDefault": "افتراضي رقمي",
   "menus.table.digital": "رقمي",
+  "menus.table.digitalMenu": "قائمة رقمية",
   "menus.table.itemCount": "عدد العناصر",
   "menus.table.created": "تاريخ الإنشاء",
   "menus.table.edit": "تعديل القائمة",
@@ -1385,5 +1386,7 @@
   "digitalOrders.paymentMethods.razorPay": "رازورباي",
   "digitalOrders.paymentMethods.upi": "UPI",
   "digitalOrders.digitalOrdering": "الترتيب الرقمي",
-  "digitalOrders.managementTitle": "إعدادات الطلب الرقمي"
+  "digitalOrders.managementTitle": "إعدادات الطلب الرقمي",
+  "digitalOrders.orderTypeAvailabilityDesc": "اختر أنواع الطلبات لتفعيلها للطلب الرقمي.",
+  "digitalOrders.loadingOrderTypes": "جارٍ تحميل أنواع الطلبات..."
 }

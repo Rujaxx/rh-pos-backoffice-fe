@@ -45,6 +45,10 @@ export type PaymentGatewayConfiguration = {
   upi: boolean;
 };
 
+export interface OrderType {
+  _id: string;
+  name: MultilingualText;
+}
 export type DigitalOrderSettings = {
   isDigitalOrderingEnabled: boolean;
   sendDigitalOrdersNotificationOn: DigitalOrdersNotificationChannel;
@@ -59,15 +63,12 @@ export type DigitalOrderSettings = {
   showNutritionInfo: boolean;
 
   // --- Other Digital Order Settings ---
-  enableForDelivery: boolean;
+  orderTypes: string[];
+
   autoAcceptOrder: boolean;
   autoAcceptOrderOnCashPayment: boolean;
   sendOtpVia: 'SMS' | 'WhatsApp'; // Maps to the `enum: ['SMS', 'WhatsApp']`
-  enableForPickup: boolean;
-  // NOTE: You removed 'loginWithTruecaller' from the Mongoose schema here.
-  // Assuming it was intentionally omitted:
-  // loginWithTruecaller: boolean;
-  enableForDineIn: boolean;
+
   dineInTitle: string;
   dineInTitlePlaceholder: string;
   askForOrderTypeBeforePlacingOrder: boolean;

@@ -33,6 +33,12 @@ import {
 } from '@/lib/utils/time.utils';
 import { getDefaultTimezone } from '@/lib/utils/timezone.utils';
 import { COUNTRY_CODES } from '@/mock/dropdown-constants';
+import { useActiveOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { MultilingualText } from '@/types';
+import { useI18n } from '@/providers/i18n-provider';
+import { OrderType } from '@/types/order-type.type';
 
 interface DigitalOrderSettingsFormContentProps {
   form: UseFormReturn<RestaurantFormData>;
@@ -44,6 +50,30 @@ export function DigitalOrderSettingsFormContent({
   editingRestaurant,
 }: DigitalOrderSettingsFormContentProps) {
   const { t } = useTranslation();
+  const { locale } = useI18n();
+
+  // Fetch available order types
+  const { data: orderTypesResponse, isLoading: isLoadingOrderTypes } =
+    useActiveOrderTypes();
+  const availableOrderTypes = orderTypesResponse?.data || [];
+
+  const currentOrderTypes = form.watch('digitalOrderSettings.orderTypes') || [];
+
+  const handleOrderTypeToggle = (orderTypeId: string, checked: boolean) => {
+    let newOrderTypes = [...currentOrderTypes];
+    if (checked) {
+      if (!newOrderTypes.includes(orderTypeId)) {
+        newOrderTypes.push(orderTypeId);
+      }
+    } else {
+      newOrderTypes = newOrderTypes.filter((id) => id !== orderTypeId);
+    }
+    form.setValue('digitalOrderSettings.orderTypes', newOrderTypes, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
 
   // DEBUG: Log form errors
   React.useEffect(() => {
@@ -200,23 +230,37 @@ export function DigitalOrderSettingsFormContent({
       <Card>
         <CardHeader>
           <CardTitle>{t('digitalOrders.orderTypeAvailability')}</CardTitle>
+          <CardDescription>
+            {t('digitalOrders.orderTypeAvailabilityDesc') ||
+              'Select available order types for this outlet.'}
+          </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <RHFSwitch
-            form={form}
-            name="digitalOrderSettings.enableForDelivery"
-            label={t('digitalOrders.enableDelivery')}
-          />
-          <RHFSwitch
-            form={form}
-            name="digitalOrderSettings.enableForPickup"
-            label={t('digitalOrders.enablePickup')}
-          />
-          <RHFSwitch
-            form={form}
-            name="digitalOrderSettings.enableForDineIn"
-            label={t('digitalOrders.enableDineIn')}
-          />
+          {isLoadingOrderTypes ? (
+            <div className="col-span-3 text-sm text-muted-foreground">
+              {t('digitalOrders.loadingOrderTypes')}
+            </div>
+          ) : (
+            availableOrderTypes.map((orderType) => (
+              <div
+                key={orderType._id}
+                className="flex flex-row items-center justify-between rounded-lg border p-4"
+              >
+                <div className="space-y-0.5">
+                  <Label className="text-base">
+                    {orderType.name[locale as keyof MultilingualText] ||
+                      'Unknown Order Type'}
+                  </Label>
+                </div>
+                <Switch
+                  checked={currentOrderTypes.includes(orderType._id)}
+                  onCheckedChange={(checked) =>
+                    handleOrderTypeToggle(orderType._id, checked)
+                  }
+                />
+              </div>
+            ))
+          )}
         </CardContent>
       </Card>
 
@@ -580,12 +624,11 @@ const DIGITAL_ORDER_SETTINGS_DEFAULTS: DigitalOrderSettings = {
   showDescriptionOnDigitalPlatform: true,
   showPreparationTimeOnDigitalPlatform: true,
   showNutritionInfo: true,
-  enableForDelivery: false,
+  orderTypes: [], // Defaults to empty array
   autoAcceptOrder: false,
   autoAcceptOrderOnCashPayment: false,
   sendOtpVia: 'SMS',
-  enableForPickup: false,
-  enableForDineIn: false,
+
   dineInTitle: 'dinein',
   dineInTitlePlaceholder: '',
   askForOrderTypeBeforePlacingOrder: true,
@@ -646,6 +689,15 @@ export function useDigitalOrderSettingsForm(
       const digitalOrderSettingsValues = {
         ...DIGITAL_ORDER_SETTINGS_DEFAULTS,
         ...(editingRestaurant.digitalOrderSettings || {}),
+        orderTypes:
+          (
+            (editingRestaurant.digitalOrderSettings?.orderTypes as unknown as (
+              | string
+              | OrderType
+            )[]) || []
+          ).map((orderType) =>
+            typeof orderType === 'string' ? orderType : orderType._id,
+          ) || [],
         paymentSettingsForDineIn: {
           ...PAYMENT_GATEWAY_DEFAULTS,
           ...(editingRestaurant.digitalOrderSettings
@@ -829,12 +881,6 @@ export function useDigitalOrderSettingsForm(
       });
     }
   }, [editingRestaurant, form]);
-
-  // DEBUG: Log incoming data to troubleshoot persistence issues
-  console.log('DigitalSettingsForm Resetting with:', {
-    editingRestaurant,
-    digitalSettings: editingRestaurant?.digitalOrderSettings,
-  });
 
   return { form };
 }

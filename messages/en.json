@@ -1000,6 +1000,7 @@
   "menus.table.pos": "POS",
   "menus.table.digitalDefault": "Digital Default",
   "menus.table.digital": "Digital",
+  "menus.table.digitalMenu": "Digital Menu",
   "menus.table.itemCount": "Items",
   "menus.table.created": "Created On",
   "menus.table.edit": "Edit Menu",
@@ -1393,5 +1394,7 @@
   "digitalOrders.paymentMethods.razorPay": "Razorpay",
   "digitalOrders.paymentMethods.upi": "UPI",
   "digitalOrders.digitalOrdering": "Digital Ordering",
-  "digitalOrders.managementTitle": "Digital Order Settings"
+  "digitalOrders.managementTitle": "Digital Order Settings",
+  "digitalOrders.orderTypeAvailabilityDesc": "Select order types to enable them for digital ordering.",
+  "digitalOrders.loadingOrderTypes": "Loading order types..."
 }
