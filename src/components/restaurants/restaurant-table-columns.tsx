@@ -21,11 +21,53 @@ import {
   Calendar,
   Clock,
   Mail,
+  QrCode,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
 import { MultilingualText } from '@/types';
+import { WhatsAppQRCode } from './qr-code';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+const QRCodeCell = ({
+  phoneNumber,
+  restaurantName,
+}: {
+  phoneNumber: string;
+  restaurantName: string;
+}) => {
+  if (!phoneNumber) return null;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="gap-2">
+          <QrCode className="h-4 w-4" />
+          <span className="sr-only">Show QR</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-sm max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>WhatsApp QR Code</DialogTitle>
+        </DialogHeader>
+        <div className="flex justify-center p-4">
+          <WhatsAppQRCode
+            phoneNumber={phoneNumber}
+            restaurantName={restaurantName}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 // Column definitions for the restaurants table
 export const createRestaurantColumns = (
@@ -59,6 +101,22 @@ export const createRestaurantColumns = (
               }}
             />
           </div>
+        </div>
+      );
+    },
+  },
+  {
+    id: 'qrCode',
+    header: t('restaurants.qrcode'),
+    cell: ({ row }) => {
+      const restaurant = row.original;
+      if (!restaurant.phoneNumber) return t('restaurants.noQrCode');
+      return (
+        <div className="flex items-center">
+          <QRCodeCell
+            phoneNumber={restaurant.phoneNumber}
+            restaurantName={restaurant.name?.en ?? ''}
+          />
         </div>
       );
     },

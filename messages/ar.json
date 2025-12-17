@@ -1390,5 +1390,7 @@
   "digitalOrders.orderTypeAvailabilityDesc": "اختر أنواع الطلبات لتفعيلها للطلب الرقمي.",
   "digitalOrders.loadingOrderTypes": "جارٍ تحميل أنواع الطلبات...",
   "customer.form.addressLabel": "العنوان",
-  "customer.form.addressPlaceholder": "أدخل العنوان"
+  "customer.form.addressPlaceholder": "أدخل العنوان",
+  "restaurants.qrcode": "كود QR",
+  "restaurants.noQrCode": "لا يوجد كود QR"
 }
