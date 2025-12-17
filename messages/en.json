@@ -286,6 +286,8 @@
   "restaurants.name": "Restaurant Name",
   "restaurants.brand": "Brand",
   "restaurants.restoCode": "Restaurant Code",
+  "restaurants.qrcode": "QR Code",
+  "restaurants.whatsappQR": "WhatsApp QR Code",
   "restaurants.nextResetBill": "Reset Bill",
   "restaurants.address": "Address",
   "restaurants.location": "Location",
@@ -1398,5 +1400,6 @@
   "digitalOrders.orderTypeAvailabilityDesc": "Select order types to enable them for digital ordering.",
   "digitalOrders.loadingOrderTypes": "Loading order types...",
   "customer.form.addressLabel": "Address",
-  "customer.form.addressPlaceholder": "Enter address"
+  "customer.form.addressPlaceholder": "Enter address",
+  "restaurants.noQrCode": "No QR Code"
 }
