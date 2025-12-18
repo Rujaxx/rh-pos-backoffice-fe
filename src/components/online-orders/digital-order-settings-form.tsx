@@ -75,13 +75,6 @@ export function DigitalOrderSettingsFormContent({
     });
   };
 
-  // DEBUG: Log form errors
-  React.useEffect(() => {
-    if (Object.keys(form.formState.errors).length > 0) {
-      console.error('DigitalOrderSettingsForm Errors:', form.formState.errors);
-    }
-  }, [form.formState.errors]);
-
   const notificationChannels = [
     {
       value: DigitalOrdersNotificationChannel.ALL,
@@ -111,7 +104,7 @@ export function DigitalOrderSettingsFormContent({
     <div className="space-y-4">
       <div className="bg-muted/30 p-4 rounded-lg border mb-4">
         <h3 className="font-semibold text-lg flex items-center">
-          {editingRestaurant?.name?.en}
+          {editingRestaurant?.name[locale] || editingRestaurant?.name.en}
           {editingRestaurant?.restoCode && (
             <span className="ml-2 text-sm text-muted-foreground font-mono bg-muted px-2 py-0.5 rounded">
               {editingRestaurant.restoCode}
