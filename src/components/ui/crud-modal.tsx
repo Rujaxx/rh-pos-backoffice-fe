@@ -49,7 +49,7 @@ export interface CrudModalProps<
   footer?: React.ReactNode;
 }
 
-const sizeClasses = {
+export const sizeClasses = {
   sm: 'max-w-md',
   md: 'max-w-lg',
   lg: 'max-w-2xl',
