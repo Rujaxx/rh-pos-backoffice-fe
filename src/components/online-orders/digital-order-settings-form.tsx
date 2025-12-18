@@ -33,7 +33,7 @@ import {
 } from '@/lib/utils/time.utils';
 import { getDefaultTimezone } from '@/lib/utils/timezone.utils';
 import { COUNTRY_CODES } from '@/mock/dropdown-constants';
-import { useActiveOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { MultilingualText } from '@/types';
@@ -54,7 +54,7 @@ export function DigitalOrderSettingsFormContent({
 
   // Fetch available order types
   const { data: orderTypesResponse, isLoading: isLoadingOrderTypes } =
-    useActiveOrderTypes();
+    useOrderTypes();
   const availableOrderTypes = orderTypesResponse?.data || [];
 
   const currentOrderTypes = form.watch('digitalOrderSettings.orderTypes') || [];
