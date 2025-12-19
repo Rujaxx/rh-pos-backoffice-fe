@@ -49,6 +49,11 @@ export interface OrderType {
   _id: string;
   name: MultilingualText;
 }
+export interface OrderTypeSettings {
+  orderTypeId: string;
+  allowedPaymentMethods: string[];
+}
+
 export type DigitalOrderSettings = {
   isDigitalOrderingEnabled: boolean;
   sendDigitalOrdersNotificationOn: DigitalOrdersNotificationChannel;
@@ -63,7 +68,7 @@ export type DigitalOrderSettings = {
   showNutritionInfo: boolean;
 
   // --- Other Digital Order Settings ---
-  orderTypes: string[];
+  orderTypes: OrderTypeSettings[];
 
   autoAcceptOrder: boolean;
   autoAcceptOrderOnCashPayment: boolean;
@@ -82,9 +87,7 @@ export type DigitalOrderSettings = {
   sendEbillAfterComplete: boolean;
 
   // --- Payment Gateway Settings (Nested) ---
-  paymentSettingsForDineIn: PaymentGatewayConfiguration;
-  paymentSettingsForPickUp: PaymentGatewayConfiguration;
-  paymentSettingsForDelivery: PaymentGatewayConfiguration;
+  // REMOVED legacy payment settings
 
   // --- Social Media Settings ---
   showContactNo: boolean;

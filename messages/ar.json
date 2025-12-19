@@ -119,7 +119,7 @@
   "navigation.crm": "إدارة العملاء",
   "navigation.customers": "جميع العملاء",
   "navigation.digitalOrderSettings": "إعدادات الطلبات الرقمية",
-  "navigation.onlineOrders": "الطلبات الرقمية",
+  "navigation.digitalOrders": "الطلبات الرقمية",
   "pos.takeOrder": "أخذ طلب",
   "pos.splitBill": "تقسيم الفاتورة",
   "pos.applyDiscount": "تطبيق خصم",
@@ -1392,5 +1392,6 @@
   "customer.form.addressLabel": "العنوان",
   "customer.form.addressPlaceholder": "أدخل العنوان",
   "restaurants.qrcode": "كود QR",
-  "restaurants.noQrCode": "لا يوجد كود QR"
+  "restaurants.noQrCode": "لا يوجد كود QR",
+  "digitalOrders.allowedPaymentMethods": "الدفع المسموح به"
 }
