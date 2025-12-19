@@ -24,7 +24,7 @@ import {
   DigitalOrdersNotificationChannel,
   Restaurant,
   DigitalOrderSettings,
-  PaymentGatewayConfiguration,
+  OrderTypeSettings,
 } from '@/types/restaurant';
 import {
   backendTimeToMinutes,
@@ -62,11 +62,13 @@ export function DigitalOrderSettingsFormContent({
   const handleOrderTypeToggle = (orderTypeId: string, checked: boolean) => {
     let newOrderTypes = [...currentOrderTypes];
     if (checked) {
-      if (!newOrderTypes.includes(orderTypeId)) {
-        newOrderTypes.push(orderTypeId);
+      if (!newOrderTypes.find((ot) => ot.orderTypeId === orderTypeId)) {
+        newOrderTypes.push({ orderTypeId, allowedPaymentMethods: [] });
       }
     } else {
-      newOrderTypes = newOrderTypes.filter((id) => id !== orderTypeId);
+      newOrderTypes = newOrderTypes.filter(
+        (ot) => ot.orderTypeId !== orderTypeId,
+      );
     }
     form.setValue('digitalOrderSettings.orderTypes', newOrderTypes, {
       shouldDirty: true,
@@ -74,6 +76,47 @@ export function DigitalOrderSettingsFormContent({
       shouldValidate: true,
     });
   };
+
+  const handlePaymentMethodToggle = (
+    orderTypeId: string,
+    paymentMethod: string,
+    checked: boolean,
+  ) => {
+    const newOrderTypes = [...currentOrderTypes];
+    const orderTypeIndex = newOrderTypes.findIndex(
+      (ot) => ot.orderTypeId === orderTypeId,
+    );
+
+    if (orderTypeIndex !== -1) {
+      const orderTypeSettings = { ...newOrderTypes[orderTypeIndex] };
+      let allowedMethods = [...(orderTypeSettings.allowedPaymentMethods || [])];
+
+      if (checked) {
+        if (!allowedMethods.includes(paymentMethod)) {
+          allowedMethods.push(paymentMethod);
+        }
+      } else {
+        allowedMethods = allowedMethods.filter((m) => m !== paymentMethod);
+      }
+
+      orderTypeSettings.allowedPaymentMethods = allowedMethods;
+      newOrderTypes[orderTypeIndex] = orderTypeSettings;
+
+      form.setValue('digitalOrderSettings.orderTypes', newOrderTypes, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  };
+
+  const paymentMethods = [
+    { value: 'CASH', label: t('digitalOrders.paymentMethods.cash') },
+    { value: 'COD', label: t('digitalOrders.paymentMethods.cod') },
+    { value: 'PAYLATER', label: t('digitalOrders.paymentMethods.payLater') },
+    { value: 'RAZORPAY', label: t('digitalOrders.paymentMethods.razorPay') },
+    { value: 'UPI', label: t('digitalOrders.paymentMethods.upi') },
+  ];
 
   const notificationChannels = [
     {
@@ -228,31 +271,79 @@ export function DigitalOrderSettingsFormContent({
               'Select available order types for this outlet.'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <CardContent className="grid grid-cols-1 gap-6">
           {isLoadingOrderTypes ? (
             <div className="col-span-3 text-sm text-muted-foreground">
               {t('digitalOrders.loadingOrderTypes')}
             </div>
           ) : (
-            availableOrderTypes.map((orderType) => (
-              <div
-                key={orderType._id}
-                className="flex flex-row items-center justify-between rounded-lg border p-4"
-              >
-                <div className="space-y-0.5">
-                  <Label className="text-base">
-                    {orderType.name[locale as keyof MultilingualText] ||
-                      'Unknown Order Type'}
-                  </Label>
+            availableOrderTypes.map((orderType) => {
+              const isSelected = currentOrderTypes.some(
+                (ot) => ot.orderTypeId === orderType._id,
+              );
+              const currentSettings = currentOrderTypes.find(
+                (ot) => ot.orderTypeId === orderType._id,
+              );
+
+              return (
+                <div
+                  key={orderType._id}
+                  className="flex flex-col gap-4 rounded-lg border p-4"
+                >
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-base">
+                        {orderType.name[locale as keyof MultilingualText] ||
+                          'Unknown Order Type'}
+                      </Label>
+                    </div>
+                    <Switch
+                      checked={isSelected}
+                      onCheckedChange={(checked) =>
+                        handleOrderTypeToggle(orderType._id, checked)
+                      }
+                    />
+                  </div>
+
+                  {isSelected && (
+                    <div className="pt-2 mt-2 border-t space-y-4">
+                      <Label className="text-sm font-medium text-muted-foreground block mb-2">
+                        {t('digitalOrders.allowedPaymentMethods') ||
+                          'Allowed Payment Methods'}
+                      </Label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {paymentMethods.map((method) => (
+                          <div
+                            key={method.value}
+                            className="flex items-center space-x-3 p-2 rounded-md border bg-muted/20 hover:bg-muted/40 transition-colors"
+                          >
+                            <Switch
+                              id={`${orderType._id}-${method.value}`}
+                              checked={currentSettings?.allowedPaymentMethods?.includes(
+                                method.value,
+                              )}
+                              onCheckedChange={(checked) =>
+                                handlePaymentMethodToggle(
+                                  orderType._id,
+                                  method.value,
+                                  checked,
+                                )
+                              }
+                            />
+                            <Label
+                              htmlFor={`${orderType._id}-${method.value}`}
+                              className="text-sm font-normal cursor-pointer flex-1"
+                            >
+                              {method.label}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <Switch
-                  checked={currentOrderTypes.includes(orderType._id)}
-                  onCheckedChange={(checked) =>
-                    handleOrderTypeToggle(orderType._id, checked)
-                  }
-                />
-              </div>
-            ))
+              );
+            })
           )}
         </CardContent>
       </Card>
@@ -332,125 +423,7 @@ export function DigitalOrderSettingsFormContent({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('digitalOrders.paymentConfiguration')}</CardTitle>
-          <CardDescription>
-            {t('digitalOrders.paymentConfigurationDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <div className="p-4 border rounded bg-muted/20">
-              <h4 className="font-medium mb-4">
-                {t('digitalOrders.dineInPaymentSettings')}
-              </h4>
-              <p className="text-xs text-muted-foreground mb-4">
-                {t('digitalOrders.dineInPaymentSettingsDescription2')}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDineIn.cash"
-                  label={t('digitalOrders.paymentMethods.cash')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDineIn.cod"
-                  label={t('digitalOrders.paymentMethods.cod')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDineIn.payLater"
-                  label={t('digitalOrders.paymentMethods.payLater')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDineIn.razorPay"
-                  label={t('digitalOrders.paymentMethods.razorPay')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDineIn.upi"
-                  label={t('digitalOrders.paymentMethods.upi')}
-                />
-              </div>
-            </div>
-
-            <div className="p-4 border rounded bg-muted/20">
-              <h4 className="font-medium mb-4">
-                {t('digitalOrders.pickupPaymentSettings')}
-              </h4>
-              <p className="text-xs text-muted-foreground mb-4">
-                {t('digitalOrders.pickupPaymentSettingsDescription')}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForPickUp.cash"
-                  label={t('digitalOrders.paymentMethods.cash')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForPickUp.cod"
-                  label={t('digitalOrders.paymentMethods.cod')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForPickUp.payLater"
-                  label={t('digitalOrders.paymentMethods.payLater')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForPickUp.razorPay"
-                  label={t('digitalOrders.paymentMethods.razorPay')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForPickUp.upi"
-                  label={t('digitalOrders.paymentMethods.upi')}
-                />
-              </div>
-            </div>
-
-            <div className="p-4 border rounded bg-muted/20">
-              <h4 className="font-medium mb-4">
-                {t('digitalOrders.deliveryPaymentSettings')}
-              </h4>
-              <p className="text-xs text-muted-foreground mb-4">
-                {t('digitalOrders.deliveryPaymentSettingsDescription')}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDelivery.cash"
-                  label={t('digitalOrders.paymentMethods.cash')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDelivery.cod"
-                  label={t('digitalOrders.paymentMethods.cod')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDelivery.payLater"
-                  label={t('digitalOrders.paymentMethods.payLater')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDelivery.razorPay"
-                  label={t('digitalOrders.paymentMethods.razorPay')}
-                />
-                <RHFSwitch
-                  form={form}
-                  name="digitalOrderSettings.paymentSettingsForDelivery.upi"
-                  label={t('digitalOrders.paymentMethods.upi')}
-                />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Payment Configuration Card Removed - Legacy Settings */}
 
       <Card>
         <CardHeader>
@@ -599,13 +572,7 @@ export function DigitalOrderSettingsFormContent({
   );
 }
 
-const PAYMENT_GATEWAY_DEFAULTS: PaymentGatewayConfiguration = {
-  cash: true,
-  cod: true,
-  payLater: false,
-  razorPay: false,
-  upi: false, // Include UPI as per the latest schema update
-};
+// REMOVED legacy PAYMENT_GATEWAY_DEFAULTS
 
 const DIGITAL_ORDER_SETTINGS_DEFAULTS: DigitalOrderSettings = {
   isDigitalOrderingEnabled: true,
@@ -633,10 +600,7 @@ const DIGITAL_ORDER_SETTINGS_DEFAULTS: DigitalOrderSettings = {
   enableForCategorySortingOnDigitalPlatform: false,
   autoCompleteOrderAfterAccept: false,
   sendEbillAfterComplete: false,
-  // Using explicit defaults for nested payment objects
-  paymentSettingsForDineIn: PAYMENT_GATEWAY_DEFAULTS,
-  paymentSettingsForPickUp: PAYMENT_GATEWAY_DEFAULTS,
-  paymentSettingsForDelivery: PAYMENT_GATEWAY_DEFAULTS,
+  // REMOVED legacy payment settings defaults
   showContactNo: false,
   contactNo: '',
   whatsappLink: '',
@@ -682,30 +646,21 @@ export function useDigitalOrderSettingsForm(
       const digitalOrderSettingsValues = {
         ...DIGITAL_ORDER_SETTINGS_DEFAULTS,
         ...(editingRestaurant.digitalOrderSettings || {}),
-        orderTypes:
-          (
-            (editingRestaurant.digitalOrderSettings?.orderTypes as unknown as (
-              | string
-              | OrderType
-            )[]) || []
-          ).map((orderType) =>
-            typeof orderType === 'string' ? orderType : orderType._id,
-          ) || [],
-        paymentSettingsForDineIn: {
-          ...PAYMENT_GATEWAY_DEFAULTS,
-          ...(editingRestaurant.digitalOrderSettings
-            ?.paymentSettingsForDineIn || {}),
-        },
-        paymentSettingsForPickUp: {
-          ...PAYMENT_GATEWAY_DEFAULTS,
-          ...(editingRestaurant.digitalOrderSettings
-            ?.paymentSettingsForPickUp || {}),
-        },
-        paymentSettingsForDelivery: {
-          ...PAYMENT_GATEWAY_DEFAULTS,
-          ...(editingRestaurant.digitalOrderSettings
-            ?.paymentSettingsForDelivery || {}),
-        },
+        orderTypes: (
+          (editingRestaurant.digitalOrderSettings
+            ?.orderTypes as OrderTypeSettings[]) || []
+        )
+          .map((orderType) => {
+            return {
+              orderTypeId: orderType.orderTypeId,
+              allowedPaymentMethods: Array.isArray(
+                orderType.allowedPaymentMethods,
+              )
+                ? orderType.allowedPaymentMethods
+                : [],
+            };
+          })
+          .filter((ot) => ot.orderTypeId),
         showContactNo:
           editingRestaurant.digitalOrderSettings?.showContactNo ??
           DIGITAL_ORDER_SETTINGS_DEFAULTS.showContactNo,

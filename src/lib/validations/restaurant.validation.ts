@@ -33,7 +33,14 @@ export const DigitalOrderSettingsSchema = z.object({
   showNutritionInfo: z.boolean().default(true),
 
   // --- Other Digital Order Settings ---
-  orderTypes: z.array(z.string()).min(1),
+  orderTypes: z
+    .array(
+      z.object({
+        orderTypeId: z.string().min(1, 'Order Type is required'),
+        allowedPaymentMethods: z.array(z.string()).default([]),
+      }),
+    )
+    .default([]),
 
   autoAcceptOrder: z.boolean().default(false),
   autoAcceptOrderOnCashPayment: z.boolean().default(false),
@@ -51,9 +58,7 @@ export const DigitalOrderSettingsSchema = z.object({
   autoCompleteOrderAfterAccept: z.boolean().default(false),
   sendEbillAfterComplete: z.boolean().default(false),
 
-  paymentSettingsForDineIn: PaymentGatewayConfigurationSchema.optional(),
-  paymentSettingsForPickUp: PaymentGatewayConfigurationSchema.optional(),
-  paymentSettingsForDelivery: PaymentGatewayConfigurationSchema.optional(),
+  // REMOVED legacy payment settings
 
   showContactNo: z.boolean().default(false),
   contactNo: z.string().optional(),
