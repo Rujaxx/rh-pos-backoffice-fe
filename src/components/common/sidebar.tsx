@@ -420,6 +420,7 @@ export default function Sidebar() {
   }, [pathname]);
 
   const isRTL = locale === 'ar';
+
   // Update menu data with translations
   menuData = getPOSMenuData(t);
 
