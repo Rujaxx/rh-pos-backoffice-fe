@@ -11,10 +11,18 @@ import {
 
 export const PaymentGatewayConfigurationSchema = z.object({
   cash: z.boolean().default(true),
+  card: z.boolean().default(false),
   cod: z.boolean().default(true),
   payLater: z.boolean().default(false),
   razorPay: z.boolean().default(false),
   upi: z.boolean().default(false),
+  paytm: z.boolean().default(false),
+  phonePe: z.boolean().default(false),
+  googlePay: z.boolean().default(false),
+  stripe: z.boolean().default(false),
+  applePay: z.boolean().default(false),
+  careemPay: z.boolean().default(false),
+  wallet: z.boolean().default(false),
 });
 
 export const DigitalOrderSettingsSchema = z.object({
@@ -36,8 +44,8 @@ export const DigitalOrderSettingsSchema = z.object({
   orderTypes: z
     .array(
       z.object({
-        orderTypeId: z.string().min(1, 'Order Type is required'),
-        allowedPaymentMethods: z.array(z.string()).default([]),
+        orderTypeId: z.string().min(1),
+        allowedPaymentMethods: z.array(z.string()),
       }),
     )
     .default([]),
@@ -57,8 +65,6 @@ export const DigitalOrderSettingsSchema = z.object({
   enableForCategorySortingOnDigitalPlatform: z.boolean().default(false),
   autoCompleteOrderAfterAccept: z.boolean().default(false),
   sendEbillAfterComplete: z.boolean().default(false),
-
-  // REMOVED legacy payment settings
 
   showContactNo: z.boolean().default(false),
   contactNo: z.string().optional(),

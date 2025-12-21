@@ -39,17 +39,26 @@ export enum DigitalOrdersNotificationChannel {
 
 export type PaymentGatewayConfiguration = {
   cash: boolean;
+  card: boolean;
   cod: boolean;
   payLater: boolean;
   razorPay: boolean;
   upi: boolean;
+  paytm: boolean;
+  phonePe: boolean;
+  googlePay: boolean;
+  stripe: boolean;
+  applePay: boolean;
+  careemPay: boolean;
+  wallet: boolean;
 };
 
 export interface OrderType {
   _id: string;
   name: MultilingualText;
 }
-export interface OrderTypeSettings {
+
+export interface OrderTypesWithPayments {
   orderTypeId: string;
   allowedPaymentMethods: string[];
 }
@@ -68,7 +77,7 @@ export type DigitalOrderSettings = {
   showNutritionInfo: boolean;
 
   // --- Other Digital Order Settings ---
-  orderTypes: OrderTypeSettings[];
+  orderTypes: OrderTypesWithPayments[];
 
   autoAcceptOrder: boolean;
   autoAcceptOrderOnCashPayment: boolean;
@@ -85,9 +94,6 @@ export type DigitalOrderSettings = {
   enableForCategorySortingOnDigitalPlatform: boolean;
   autoCompleteOrderAfterAccept: boolean;
   sendEbillAfterComplete: boolean;
-
-  // --- Payment Gateway Settings (Nested) ---
-  // REMOVED legacy payment settings
 
   // --- Social Media Settings ---
   showContactNo: boolean;
