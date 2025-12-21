@@ -11,10 +11,18 @@ import {
 
 export const PaymentGatewayConfigurationSchema = z.object({
   cash: z.boolean().default(true),
+  card: z.boolean().default(false),
   cod: z.boolean().default(true),
   payLater: z.boolean().default(false),
   razorPay: z.boolean().default(false),
   upi: z.boolean().default(false),
+  paytm: z.boolean().default(false),
+  phonePe: z.boolean().default(false),
+  googlePay: z.boolean().default(false),
+  stripe: z.boolean().default(false),
+  applePay: z.boolean().default(false),
+  careemPay: z.boolean().default(false),
+  wallet: z.boolean().default(false),
 });
 
 export const DigitalOrderSettingsSchema = z.object({
@@ -33,7 +41,14 @@ export const DigitalOrderSettingsSchema = z.object({
   showNutritionInfo: z.boolean().default(true),
 
   // --- Other Digital Order Settings ---
-  orderTypes: z.array(z.string()).min(1),
+  orderTypes: z
+    .array(
+      z.object({
+        orderTypeId: z.string().min(1),
+        allowedPaymentMethods: z.array(z.string()),
+      }),
+    )
+    .default([]),
 
   autoAcceptOrder: z.boolean().default(false),
   autoAcceptOrderOnCashPayment: z.boolean().default(false),
@@ -50,10 +65,6 @@ export const DigitalOrderSettingsSchema = z.object({
   enableForCategorySortingOnDigitalPlatform: z.boolean().default(false),
   autoCompleteOrderAfterAccept: z.boolean().default(false),
   sendEbillAfterComplete: z.boolean().default(false),
-
-  paymentSettingsForDineIn: PaymentGatewayConfigurationSchema.optional(),
-  paymentSettingsForPickUp: PaymentGatewayConfigurationSchema.optional(),
-  paymentSettingsForDelivery: PaymentGatewayConfigurationSchema.optional(),
 
   showContactNo: z.boolean().default(false),
   contactNo: z.string().optional(),
