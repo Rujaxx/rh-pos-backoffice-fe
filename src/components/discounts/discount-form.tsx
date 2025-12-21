@@ -24,8 +24,6 @@ import { useActiveCategories } from '@/services/api/categories/categories.querie
 import { useActiveTaxProductGroups } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
 import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { useGetActiveTableSections } from '@/services/api/tablesections/tablesections.queries';
-import { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart';
-import { Category } from '@/types';
 
 interface DiscountFormContentProps {
   form: ReturnType<typeof useForm<DiscountFormData>>;

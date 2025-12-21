@@ -1402,5 +1402,15 @@
   "customer.form.addressLabel": "Address",
   "customer.form.addressPlaceholder": "Enter address",
   "restaurants.noQrCode": "No QR Code",
-  "digitalOrders.allowedPaymentMethods": "Allowed Payment Methods"
+  "digitalOrders.allowedPaymentMethods": "Allowed Payment Methods",
+
+  "digitalOrders.paymentMethods.card": "Card",
+  "digitalOrders.paymentMethods.paytm": "Paytm",
+  "digitalOrders.paymentMethods.phonePe": "PhonePe",
+  "digitalOrders.paymentMethods.googlePay": "Google Pay",
+  "digitalOrders.paymentMethods.stripe": "Stripe",
+  "digitalOrders.paymentMethods.applePay": "Apple Pay",
+  "digitalOrders.paymentMethods.careemPay": "Careem Pay",
+  "digitalOrders.paymentMethods.wallet": "Wallet",
+  "digitalOrders.paymentMethods.title": "Payment Methods"
 }

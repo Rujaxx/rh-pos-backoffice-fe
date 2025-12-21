@@ -1393,5 +1393,15 @@
   "customer.form.addressPlaceholder": "أدخل العنوان",
   "restaurants.qrcode": "كود QR",
   "restaurants.noQrCode": "لا يوجد كود QR",
-  "digitalOrders.allowedPaymentMethods": "الدفع المسموح به"
+  "digitalOrders.allowedPaymentMethods": "الدفع المسموح به",
+
+  "digitalOrders.paymentMethods.card": "بطاقة",
+  "digitalOrders.paymentMethods.paytm": "Paytm",
+  "digitalOrders.paymentMethods.phonePe": "PhonePe",
+  "digitalOrders.paymentMethods.googlePay": "Google Pay",
+  "digitalOrders.paymentMethods.stripe": "Stripe",
+  "digitalOrders.paymentMethods.applePay": "Apple Pay",
+  "digitalOrders.paymentMethods.careemPay": "Careem Pay",
+  "digitalOrders.paymentMethods.wallet": "المحفظة",
+  "digitalOrders.paymentMethods.title": "طرق الدفع"
 }
