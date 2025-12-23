@@ -1264,6 +1264,8 @@
   "bill.status.ACTIVE": "Active",
   "bill.status.COMPLETED": "Completed",
   "bill.status.CANCELLED": "Cancelled",
+  "bill.orderStatus": "Order Status",
+  "bill.paymentStatus": "Payment Status",
   "common.selectOrderTypes": "Select Order Types",
   "common.selectMenus": "Select Menu",
   "orderTypes.title": "Order Types",
