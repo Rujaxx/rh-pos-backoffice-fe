@@ -119,7 +119,7 @@
   "navigation.crm": "Customer Management",
   "navigation.customers": "All Customers",
   "navigation.digitalOrderSettings": "Digital Order Settings",
-  "navigation.onlineOrders": "Online Orders",
+  "navigation.digitalOrders": "Online Orders",
   "pos.takeOrder": "Take Order",
   "pos.splitBill": "Split Bill",
   "pos.applyDiscount": "Apply Discount",
@@ -1402,6 +1402,8 @@
   "customer.form.addressLabel": "Address",
   "customer.form.addressPlaceholder": "Enter address",
   "restaurants.noQrCode": "No QR Code",
+  "digitalOrders.allowedPaymentMethods": "Allowed Payment Methods",
+
   "digitalOrders.paymentMethods.card": "Card",
   "digitalOrders.paymentMethods.paytm": "Paytm",
   "digitalOrders.paymentMethods.phonePe": "PhonePe",

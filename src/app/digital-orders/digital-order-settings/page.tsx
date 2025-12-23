@@ -5,14 +5,14 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useRestaurants } from '@/services/api/restaurants/restaurants.queries';
 import { useUpdateRestaurant } from '@/services/api/restaurants/restaurants.mutations';
 import { Restaurant } from '@/types/restaurant';
-import { useDigitalOrderSettingsColumns } from '@/components/online-orders/digital-order-settings-columns';
+import { useDigitalOrderSettingsColumns } from '@/components/digital-orders/digital-order-settings-columns';
 import { RestaurantFormData as RestaurantPayload } from '@/types/restaurant';
 import { RestaurantFormData } from '@/lib/validations/restaurant.validation';
 
 import {
   DigitalOrderSettingsFormContent,
   useDigitalOrderSettingsForm,
-} from '@/components/online-orders/digital-order-settings-form';
+} from '@/components/digital-orders/digital-order-settings-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/select';
 import { useActiveBrands } from '@/services/api/brands/brands.queries';
 import { CrudModal, useModal } from '@/components/ui/crud-modal';
-import { toast } from 'sonner';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import Layout from '@/components/common/layout';
 
@@ -34,7 +33,7 @@ export default function DigitalOrderSettingsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [brandFilter, setBrandFilter] = useState<string>('all');
 
-  const { data: restaurantsResponse, isLoading } = useRestaurants();
+  const { data: restaurantsResponse } = useRestaurants();
 
   const { data: brandsResponse } = useActiveBrands();
   const brands = brandsResponse?.data || [];
