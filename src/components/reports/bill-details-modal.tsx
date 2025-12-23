@@ -194,6 +194,24 @@ export function BillDetailsModal({
     setEditedPayments(bill.payments || []);
     setIsEditing(false);
   };
+  const getStatusClasses = (status: string) => {
+    switch (status) {
+      case 'ACTIVE':
+        return 'bg-blue-100 text-blue-700 border-blue-300';
+      case 'COMPLETED':
+        return 'bg-green-100 text-green-700 border-green-300';
+      case 'CANCELLED':
+        return 'bg-red-100 text-red-700 border-red-300';
+      case 'PAID':
+        return 'bg-green-100 text-green-700 border-green-300';
+      case 'UNPAID':
+        return 'bg-red-100 text-red-700 border-red-300';
+      case 'PARTIALLY_PAID':
+        return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+      default:
+        return 'bg-gray-100 text-gray-700 border-gray-300';
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -220,13 +238,36 @@ export function BillDetailsModal({
 
         <div className="space-y-6">
           {/* Status Badges */}
-          <div className="flex gap-2">
-            <Badge className={getStatusColor(bill.status)}>
-              {t(`bill.status.${bill.status}`)}
-            </Badge>
-            <Badge className={getStatusColor(bill.paymentStatus)}>
-              {bill.paymentStatus}
-            </Badge>
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            {/* Order Status */}
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground font-medium">
+                {t('bill.orderStatus') || 'Order Status'}
+              </span>
+              <span className="text-muted-foreground">|</span>
+              <Badge
+                variant="outline"
+                className={getStatusClasses(bill.status)}
+                title="Order status"
+              >
+                {t(`bill.status.${bill.status}`)}
+              </Badge>
+            </div>
+
+            {/* Payment Status */}
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground font-medium">
+                {t('bill.paymentStatus') || 'Payment Status'}
+              </span>
+              <span className="text-muted-foreground">|</span>
+              <Badge
+                variant="outline"
+                className={getStatusClasses(bill.paymentStatus)}
+                title="Payment status"
+              >
+                {bill.paymentStatus}
+              </Badge>
+            </div>
           </div>
 
           {/* Customer & Waiter Information */}
@@ -328,14 +369,15 @@ export function BillDetailsModal({
                         {item.quantity}
                       </TableCell>
                       <TableCell className="text-right">
-                        {formatCurrency(item.price)}
+                        {formatCurrency(item.price || 0)}
                       </TableCell>
                       <TableCell className="text-right">
-                        {formatCurrency(item.taxAmount)}
+                        {formatCurrency(item.taxAmount || 0)}
                       </TableCell>
                       <TableCell className="text-right font-medium">
                         {formatCurrency(
-                          item.price * item.quantity + item.taxAmount,
+                          (item.price || 0) * item.quantity +
+                            (item.taxAmount || 0),
                         )}
                       </TableCell>
                     </TableRow>

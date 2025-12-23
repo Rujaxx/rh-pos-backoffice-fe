@@ -164,45 +164,45 @@ export default function SalesReportsPage() {
         {reportData?.summary && (
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.totalRevenue')}
                     </p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {formatCurrency(reportData.summary.totalRevenue)}
                     </p>
                   </div>
-                  <DollarSign className="h-8 w-8 text-green-500" />
+                  <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 shrink-0" />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.totalTax')}
                     </p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {formatCurrency(reportData.summary.totalTax)}
                     </p>
                   </div>
-                  <Receipt className="h-8 w-8 text-blue-500" />
+                  <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 shrink-0" />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.totalBills')}
                     </p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {reportData.summary.totalBills}
                     </p>
                   </div>
@@ -212,13 +212,13 @@ export default function SalesReportsPage() {
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.totalDiscount')}
                     </p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {formatCurrency(reportData.summary.totalDiscount)}
                     </p>
                   </div>
@@ -228,13 +228,13 @@ export default function SalesReportsPage() {
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.cancelledBills')}
                     </p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {reportData.summary.cancelledBills}
                     </p>
                   </div>
@@ -244,13 +244,13 @@ export default function SalesReportsPage() {
             </Card>
 
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex-1">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">
                       {t('reports.summary.duePayment') || 'Due Payment'}
                     </p>
-                    <p className="text-2xl font-bold text-yellow-600">
+                    <p className="text-xl sm:text-2xl font-bold break-all">
                       {formatCurrency(reportData.summary.duePayment || 0)}
                     </p>
                   </div>
