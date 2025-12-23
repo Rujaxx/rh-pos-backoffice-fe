@@ -24,10 +24,16 @@ export const useLogin = (
 
   return useMutation({
     mutationFn: async (credentials): Promise<SuccessResponse<AuthUser>> => {
-      return api.post<SuccessResponse<AuthUser>>(
+      const response = await api.post<SuccessResponse<AuthUser>>(
         API_ENDPOINTS.AUTH.LOGIN,
         credentials,
       );
+
+      if (response.data.user.webAccess === false) {
+        throw new Error('Web access is denied');
+      }
+
+      return response;
     },
 
     onSuccess: (data) => {
