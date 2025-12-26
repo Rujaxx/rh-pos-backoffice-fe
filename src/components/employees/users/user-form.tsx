@@ -397,6 +397,7 @@ export function useUserForm(editingUser?: User | null) {
       macAddress: '',
       language: 'en',
       timeZone: getDefaultTimezone(),
+      effectivePermissions: [],
     },
   });
 
