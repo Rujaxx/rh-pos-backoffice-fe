@@ -21,3 +21,10 @@ export const COUNTRY_CODES = [
   { label: '🇺🇸 +1', value: 'US' },
   { label: '🇬🇧 +44', value: 'GB' },
 ];
+
+export const CURRENCY = [
+  { label: 'USD', value: 'USD' },
+  { label: 'EUR', value: 'EUR' },
+  { label: 'GBP', value: 'GBP' },
+  { label: 'INR', value: 'INR' },
+];
