@@ -138,15 +138,11 @@ export function UserPermissionsModal({
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
                     <Checkbox
-                      checked={
-                        field.value.includes(permission.name)
-                        // field.value.includes(permission._id) ||
-                        // existingPermissions.includes(permission._id)
-                      }
+                      checked={field.value.includes(permission.name)}
                       onCheckedChange={(checked) => {
                         const updated = checked
-                          ? [...field.value, permission._id]
-                          : field.value.filter((p) => p !== permission._id);
+                          ? [...field.value, permission.name]
+                          : field.value.filter((p) => p !== permission.name);
 
                         field.onChange(updated);
                       }}

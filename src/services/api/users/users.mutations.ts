@@ -122,7 +122,6 @@ export const useUpdateUserPermissions = (
       } as UserFormData);
     },
     onSuccess: (data, variables) => {
-      toast.success('Permissions updated successfully');
       queryUtils.invalidateQueries(QUERY_KEYS.USERS.DETAIL(variables.id));
       queryUtils.invalidateQueries(QUERY_KEYS.USERS.LIST());
     },
