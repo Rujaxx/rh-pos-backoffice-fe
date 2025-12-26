@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -57,6 +57,18 @@ export function UserPermissionsModal({
       permissions: [],
     },
   });
+
+  useEffect(() => {
+    if (user && isOpen) {
+      // User has effectivePermissions as string[]
+      const userPermissions = Array.isArray(user.effectivePermissions)
+        ? user.effectivePermissions
+        : [];
+      form.reset({
+        permissions: userPermissions,
+      });
+    }
+  }, [user, isOpen, form]);
 
   const handleClose = () => {
     if (!isSubmitting && !loading) {
@@ -127,8 +139,9 @@ export function UserPermissionsModal({
                   <FormControl>
                     <Checkbox
                       checked={
-                        field.value.includes(permission._id) ||
-                        existingPermissions.includes(permission._id)
+                        field.value.includes(permission.name)
+                        // field.value.includes(permission._id) ||
+                        // existingPermissions.includes(permission._id)
                       }
                       onCheckedChange={(checked) => {
                         const updated = checked
