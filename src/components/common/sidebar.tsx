@@ -205,13 +205,13 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     ],
   },
   {
-    id: 'online-orders',
-    label: t('navigation.onlineOrders') || 'Online Orders',
+    id: 'digital-orders',
+    label: t('navigation.digitalOrders') || 'Online Orders',
     items: [
       {
         id: 'digital-order-settings',
         label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
-        href: '/online-orders/digital-order-settings',
+        href: '/digital-orders/digital-order-settings',
         icon: Globe,
       },
     ],
