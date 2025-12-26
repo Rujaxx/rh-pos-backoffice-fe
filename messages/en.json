@@ -1414,5 +1414,7 @@
   "digitalOrders.paymentMethods.applePay": "Apple Pay",
   "digitalOrders.paymentMethods.careemPay": "Careem Pay",
   "digitalOrders.paymentMethods.wallet": "Wallet",
-  "digitalOrders.paymentMethods.title": "Payment Methods"
+  "digitalOrders.paymentMethods.title": "Payment Methods",
+  "restaurants.form.currencyLabel": "Currency",
+  "restaurants.form.currencyPlaceholder": "Select currency"
 }

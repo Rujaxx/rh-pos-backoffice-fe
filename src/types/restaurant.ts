@@ -159,6 +159,7 @@ export interface Restaurant extends Record<string, unknown> {
   billPrefix?: string;
   kotPrefix?: string;
   digitalOrderSettings?: DigitalOrderSettings;
+  currency: string;
 }
 
 // Form data interface for creating/updating restaurants (matches CreateRestaurantDto)
@@ -192,6 +193,7 @@ export interface RestaurantFormData extends Record<string, unknown> {
   paymentLinkSettings: PaymentLinkSettings;
   eBillSettings: EBillSettings;
   digitalOrderSettings?: DigitalOrderSettings;
+  currency: string;
 }
 
 // Query parameters for restaurant API matching backend RestaurantQueryDto
