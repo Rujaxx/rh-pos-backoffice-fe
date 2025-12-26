@@ -39,7 +39,7 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Button } from '../ui/button';
-import { COUNTRY_CODES } from '@/mock/dropdown-constants';
+import { COUNTRY_CODES, CURRENCY } from '@/mock/dropdown-constants';
 
 interface RestaurantFormContentProps {
   form: UseFormReturn<RestaurantFormData>;
@@ -152,6 +152,14 @@ export function RestaurantFormContent({
               name="isActive"
               label={t('restaurants.form.activeStatusLabel')}
               description={t('restaurants.form.activeStatusDescription')}
+            />
+
+            <RHFSelect
+              form={form}
+              name="currency"
+              label={t('restaurants.form.currencyLabel')}
+              placeholder={t('restaurants.form.currencyPlaceholder')}
+              options={CURRENCY}
             />
           </CardContent>
         </Card>
@@ -686,8 +694,9 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         onWhatsapp: false, // Backend default: false
         onSms: false, // Backend default: false
       },
-      billPrefix: '',
-      kotPrefix: '',
+      billPrefix: 'BILL-',
+      kotPrefix: 'KOT-',
+      currency: '',
     },
   });
 
@@ -756,6 +765,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         },
         billPrefix: editingRestaurant.billPrefix,
         kotPrefix: editingRestaurant.kotPrefix,
+        currency: editingRestaurant.currency,
       });
     } else {
       form.reset({
@@ -812,8 +822,9 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
           onWhatsapp: false,
           onSms: false,
         },
-        billPrefix: '',
-        kotPrefix: '',
+        billPrefix: 'BILL-',
+        kotPrefix: 'KOT-',
+        currency: '',
       });
     }
   }, [editingRestaurant, form]);

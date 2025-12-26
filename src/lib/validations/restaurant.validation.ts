@@ -168,9 +168,10 @@ export const restaurantSchema = z.object({
     onSms: false,
   }),
 
-  billPrefix: z.string().max(50).optional(),
-  kotPrefix: z.string().max(50).optional(),
+  billPrefix: z.string().max(10).optional(),
+  kotPrefix: z.string().max(10).optional(),
   digitalOrderSettings: DigitalOrderSettingsSchema.optional(),
+  currency: z.string().optional(),
 });
 
 export type RestaurantFormData = z.input<typeof restaurantSchema>;
