@@ -17,7 +17,7 @@ export const userSchema = z.object({
   address: z.string().optional().or(z.literal('')),
   designation: z.string().max(100).optional().or(z.literal('')),
 
-  role: z.string().min(1),
+  role: z.string().optional(),
 
   restaurantIds: z.array(z.string()).min(1),
   brandIds: z.array(z.string()).min(1),
@@ -32,6 +32,8 @@ export const userSchema = z.object({
   macAddress: z.string().optional().or(z.literal('')),
   language: z.string(),
   timeZone: z.string(),
+
+  effectivePermissions: z.array(z.string()).optional(),
 });
 
 export type UserFormData = z.infer<typeof userSchema>;

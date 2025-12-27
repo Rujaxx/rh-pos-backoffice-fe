@@ -21,6 +21,7 @@ import {
   Calendar,
   UserCheck,
   UserX,
+  Shield,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getFallbackAvatarUrl } from '@/lib/upload-utils';
@@ -33,6 +34,7 @@ export const createUserColumns = (
   onDelete: (user: User) => void,
   t: ReturnType<typeof useTranslation>['t'],
   locale: 'en' | 'ar',
+  onPermissions: (user: User) => void,
 ): ColumnDef<User>[] => [
   {
     accessorKey: 'name',
@@ -179,6 +181,19 @@ export const createUserColumns = (
               <Edit className="mr-2 h-4 w-4" />
               {t('users.edit.title')}
             </DropdownMenuItem>
+
+            {/* PERMISSIONS */}
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onPermissions(user);
+              }}
+              className="cursor-pointer"
+            >
+              <Shield className="mr-2 h-4 w-4" />
+              {t('users.permissions.title') || 'Permissions'}
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={(e) => {
@@ -202,10 +217,17 @@ export const createUserColumns = (
 export const useUserColumns = (
   onEdit: (user: User) => void,
   onDelete: (user: User) => void,
+  onPermissions: (user: User) => void,
 ) => {
   const { t } = useTranslation();
   const { locale } = useIntl();
-  return createUserColumns(onEdit, onDelete, t, locale as 'en' | 'ar');
+  return createUserColumns(
+    onEdit,
+    onDelete,
+    t,
+    locale as 'en' | 'ar',
+    onPermissions,
+  );
 };
 
 // Helper function to get sortable field from TanStack sorting state
