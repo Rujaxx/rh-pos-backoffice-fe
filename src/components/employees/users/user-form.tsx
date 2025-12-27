@@ -46,7 +46,10 @@ export function UserFormContent({ form }: UserFormContentProps) {
   const [showPassword, setShowPassword] = useState(false);
   const { data: restaurantsResponse } = useRestaurants();
   const { data: brandsResponse } = useBrands();
-  const { data: rolesResponse } = useRoles();
+  const { data: rolesResponse } = useRoles({
+    allowedOnly: true,
+    isSystemRole: false,
+  });
   const restaurants = restaurantsResponse?.data || [];
   const brands = brandsResponse?.data || [];
   const roles = rolesResponse?.data || [];
@@ -394,6 +397,7 @@ export function useUserForm(editingUser?: User | null) {
       macAddress: '',
       language: 'en',
       timeZone: getDefaultTimezone(),
+      effectivePermissions: [],
     },
   });
 
