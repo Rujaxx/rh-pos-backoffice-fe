@@ -82,10 +82,10 @@ export const countryCodeSchema = z
   .length(COUNTRY_CODE_VALIDATION.LENGTH, {
     message: 'Country code must be exactly 2 characters',
   })
-  .regex(COUNTRY_CODE_VALIDATION.REGEX, {
+  .transform(cleanCountryCode)
+  .refine((val) => COUNTRY_CODE_VALIDATION.REGEX.test(val), {
     message: COUNTRY_CODE_VALIDATION.MESSAGE,
-  })
-  .transform(cleanCountryCode);
+  });
 
 /**
  * Standard Phone Number Schema (Required)
@@ -142,10 +142,10 @@ export const countryCodeSchemaOptional = z
   .length(COUNTRY_CODE_VALIDATION.LENGTH, {
     message: 'Country code must be exactly 2 characters',
   })
-  .regex(COUNTRY_CODE_VALIDATION.REGEX, {
+  .transform(cleanCountryCode)
+  .refine((val) => COUNTRY_CODE_VALIDATION.REGEX.test(val), {
     message: COUNTRY_CODE_VALIDATION.MESSAGE,
   })
-  .transform(cleanCountryCode)
   .nullable()
   .optional();
 

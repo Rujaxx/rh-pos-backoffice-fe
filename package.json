@@ -13,7 +13,9 @@
     "format:check": "prettier --check .",
     "prepare": "husky",
     "commit": "git-cz",
-    "verify-setup": "node scripts/verify-setup.js"
+    "verify-setup": "node scripts/verify-setup.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -56,12 +58,17 @@
     "@commitlint/cz-commitlint": "^19.8.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
