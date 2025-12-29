@@ -84,15 +84,38 @@ export function LoginForm() {
         router.push('/dashboard');
       },
       onError: (error: unknown) => {
-        // Handle login error with toast
+        // Handle login error with single toast
         let errorMessage = 'Login failed. Please try again.';
 
-        if (error && typeof error === 'object' && 'message' in error) {
-          errorMessage = (error as { message: string }).message;
+        // Check if it's an ApiError instance
+        if (error && typeof error === 'object' && 'response' in error) {
+          const apiError = error as {
+            response: {
+              message?: string;
+              errorCode?: string;
+              validationErrors?: string[];
+            };
+          };
+
+          // Handle validation errors first
+          if (
+            apiError.response.validationErrors &&
+            apiError.response.validationErrors.length > 0
+          ) {
+            errorMessage = apiError.response.validationErrors[0];
+          } else {
+            errorMessage =
+              apiError.response.message ||
+              apiError.response.errorCode ||
+              errorMessage;
+          }
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
         } else if (typeof error === 'string') {
           errorMessage = error;
         }
 
+        // Show only ONE toast
         toast.error(errorMessage);
       },
     });

@@ -109,7 +109,19 @@ api.interceptors.response.use(
     if (errorData.statusCode === 401 && !originalRequest._retry) {
       // Skip refresh for auth endpoints to prevent infinite loops
       const isAuthEndpoint = originalRequest.url?.includes('/auth/');
+
+      // Don't logout/redirect for login and register endpoints - let component handle the error
+      const isLoginOrRegister =
+        originalRequest.url?.includes('/auth/login') ||
+        originalRequest.url?.includes('/auth/register');
+
       if (isAuthEndpoint) {
+        // For login/register, just throw the error without logout/redirect
+        if (isLoginOrRegister) {
+          throw new ApiError(errorData);
+        }
+
+        // For other auth endpoints (e.g., profile), logout and redirect
         const { logout } = useAuthStore.getState();
         logout();
 

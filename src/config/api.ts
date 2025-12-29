@@ -30,9 +30,12 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     REFRESH: '/auth/refresh',
     ME: '/auth/me',
+    FORGOT_PASSWORD: '/auth/password-reset/request',
+    RESET_PASSWORD: '/auth/password-reset/confirm',
   },
   USERS: {
     LIST: '/users',

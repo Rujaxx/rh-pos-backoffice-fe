@@ -11,6 +11,10 @@ import { User } from '@/types/user';
 import { SuccessResponse, MutationResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 import { useQueryUtils } from '@/lib/query-client';
+import {
+  RegisterFormData,
+  ForgotPasswordFormData,
+} from '@/lib/validations/auth.validation';
 
 // Login mutation
 export const useLogin = (
@@ -42,6 +46,56 @@ export const useLogin = (
     },
 
     // Don't handle loading in the mutation - let the component handle it
+    ...options,
+  });
+};
+
+// Register mutation
+export const useRegister = (
+  options?: UseMutationOptions<
+    SuccessResponse<AuthUser>,
+    Error,
+    RegisterFormData
+  >,
+) => {
+  const { login } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async (registerData): Promise<SuccessResponse<AuthUser>> => {
+      const response = await api.post<SuccessResponse<AuthUser>>(
+        API_ENDPOINTS.AUTH.REGISTER,
+        registerData,
+      );
+
+      if (response.data.user.webAccess === false) {
+        throw new Error('Web access is denied');
+      }
+
+      return response;
+    },
+
+    onSuccess: (data) => {
+      const { accessToken, refreshToken, user } = data.data;
+      login({ accessToken, refreshToken, user });
+    },
+
+    ...options,
+  });
+};
+
+// Forgot password mutation
+export const useForgotPassword = (
+  options?: UseMutationOptions<
+    SuccessResponse<{ message: string }>,
+    Error,
+    ForgotPasswordFormData
+  >,
+) => {
+  return useMutation({
+    mutationFn: async (data): MutationResponse<{ message: string }> => {
+      return api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, data);
+    },
+
     ...options,
   });
 };
