@@ -1,6 +1,7 @@
 import { useQueryUtils } from '@/lib/query-client';
 import { SuccessResponse } from '@/types/api';
-import { User, UserFormData } from '@/types/user.type';
+import { User } from '@/types/user.type';
+import { UserFormData } from '@/lib/validations/user.validation';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { userService } from './users.queries';
 import { toast } from 'sonner';
@@ -10,6 +11,10 @@ function transformToBackendFormat(
   data: UserFormData,
   excludeId: boolean = false,
 ) {
+  const effectivePermissions = Array.isArray(data.effectivePermissions)
+    ? data.effectivePermissions
+    : [];
+
   const transformed = {
     ...data,
     name: data.name ?? '',
@@ -17,7 +22,6 @@ function transformToBackendFormat(
     role: data.role,
     email: data.email,
     phoneNumber: data.phoneNumber ?? '',
-    password: data.password ?? '',
     address: data.address ?? '',
     designation: data.designation ?? '',
     webAccess: data.webAccess ?? false,
@@ -30,6 +34,7 @@ function transformToBackendFormat(
     language: data.language ?? 'en',
     timeZone: data.timeZone ?? 'Asia/Karachi',
     agreeToTerms: data.agreeToTerms ?? false,
+    effectivePermissions,
   };
 
   if (excludeId && '_id' in transformed) {
@@ -95,6 +100,32 @@ export const useUpdateUser = (
     },
     onError: (err) => {
       toast.error(err.message || 'Failed to update user');
+    },
+    ...options,
+  });
+};
+
+export const useUpdateUserPermissions = (
+  options?: UseMutationOptions<
+    SuccessResponse<User>,
+    Error,
+    { id: string; effectivePermissions: string[] }
+  >,
+) => {
+  const queryUtils = useQueryUtils();
+
+  return useMutation({
+    mutationFn: async ({ id, effectivePermissions }) => {
+      return await userService.update(id, {
+        effectivePermissions,
+      } as UserFormData);
+    },
+    onSuccess: (data, variables) => {
+      queryUtils.invalidateQueries(QUERY_KEYS.USERS.DETAIL(variables.id));
+      queryUtils.invalidateQueries(QUERY_KEYS.USERS.LIST());
+    },
+    onError: (err) => {
+      toast.error(err.message || 'Failed to update permissions');
     },
     ...options,
   });
