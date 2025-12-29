@@ -19,6 +19,8 @@ export const addressSchema = z.object({
   state: z.string().optional(),
   country: z.string().optional(),
   pincode: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  countryCode: z.string().optional(),
 });
 
 // Common validation utilities

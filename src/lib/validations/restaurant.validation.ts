@@ -8,6 +8,13 @@ import {
   formatValidationErrors,
   getNestedFieldError,
 } from './common/common.validation';
+import {
+  countryCodeSchemaOptional,
+  phoneNumberSchemaOptional,
+  phoneNumberArraySchema,
+  validatePhoneForCountry,
+  PHONE_VALIDATION,
+} from './common/phone.validation';
 
 export const PaymentGatewayConfigurationSchema = z.object({
   cash: z.boolean().default(true),
@@ -106,73 +113,87 @@ export const customQRCodeSchema = z.object({
 });
 
 // Restaurant validation schema matching backend CreateRestaurantDto
-export const restaurantSchema = z.object({
-  _id: z.string().optional(),
-  name: multilingualTextSchema,
-  description: multilingualTextSchema.optional(),
-  brandId: z.string().min(1, 'Brand is required'),
-  logo: z.string().optional(),
-  address: addressSchema.optional(),
-  timezone: z.string().min(1, 'Timezone is required'),
+export const restaurantSchema = z
+  .object({
+    _id: z.string().optional(),
+    name: multilingualTextSchema,
+    description: multilingualTextSchema.optional(),
+    brandId: z.string().min(1, 'Brand is required'),
+    logo: z.string().optional(),
+    address: addressSchema.optional(),
+    timezone: z.string().min(1, 'Timezone is required'),
 
-  startDayTime: z
-    .number()
-    .min(0, 'Start day time must be between 0 and 1439 minutes')
-    .max(1439, 'Start day time must be between 0 and 1439 minutes'),
+    startDayTime: z
+      .number()
+      .min(0, 'Start day time must be between 0 and 1439 minutes')
+      .max(1439, 'Start day time must be between 0 and 1439 minutes'),
 
-  endDayTime: z
-    .number()
-    .min(0, 'End day time must be between 0 and 1439 minutes')
-    .max(1439, 'End day time must be between 0 and 1439 minutes'),
+    endDayTime: z
+      .number()
+      .min(0, 'End day time must be between 0 and 1439 minutes')
+      .max(1439, 'End day time must be between 0 and 1439 minutes'),
 
-  nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
-  nextResetBillDate: z.string().optional(),
-  nextResetKotFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
-  notificationPhone: z.array(z.string()).default([]),
-  notificationEmails: z.array(z.email('Invalid email format')).default([]),
-  phoneNumber: z.string().nullable().optional(),
-  contactEmail: z.email('Invalid email format').nullable().optional(),
-  countryCode: z.string().optional(),
-  isActive: z.boolean().default(true),
-  restoCode: z
-    .string()
-    .max(6, 'Resto code must be at most 6 characters')
-    .optional(),
-  posLogoutOnClose: z.boolean().default(true),
-  isFeedBackActive: z.boolean().default(false),
-  trnOrGstNo: z.string().max(50).optional(),
-  customQRcode: z.array(customQRCodeSchema).default([]),
-  inventoryWarehouse: z.string().optional(),
-  deductFromInventory: z.boolean().default(true),
-  multiplePriceSetting: z.boolean().default(false),
-  tableReservation: z.boolean().default(false),
-  autoUpdatePos: z.boolean().default(true),
-  allowMultipleTax: z.boolean().default(false),
-  generateOrderTypeWiseOrderNo: z.boolean().default(false),
-  smsAndWhatsappSelection: z
-    .enum(['none', 'sms', 'whatsapp', 'both'])
-    .default('none'),
-  whatsAppChannel: z.string().optional(),
-  sendReports: sendReportsSchema.default({
-    email: false,
-    whatsapp: false,
-    sms: false,
-  }),
-  paymentLinkSettings: paymentLinkSettingsSchema.default({
-    onWhatsapp: false,
-    onSms: false,
-  }),
-  eBillSettings: eBillSettingsSchema.default({
-    onEmail: false,
-    onWhatsapp: false,
-    onSms: false,
-  }),
+    nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
+    nextResetBillDate: z.string().optional(),
+    nextResetKotFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
+    notificationPhone: phoneNumberArraySchema,
+    notificationEmails: z.array(z.email('Invalid email format')).default([]),
+    phoneNumber: phoneNumberSchemaOptional,
+    contactEmail: z.email('Invalid email format').nullable().optional(),
+    countryCode: countryCodeSchemaOptional,
+    isActive: z.boolean().default(true),
+    restoCode: z
+      .string()
+      .max(6, 'Resto code must be at most 6 characters')
+      .optional(),
+    posLogoutOnClose: z.boolean().default(true),
+    isFeedBackActive: z.boolean().default(false),
+    trnOrGstNo: z.string().max(50).optional(),
+    customQRcode: z.array(customQRCodeSchema).default([]),
+    inventoryWarehouse: z.string().optional(),
+    deductFromInventory: z.boolean().default(true),
+    multiplePriceSetting: z.boolean().default(false),
+    tableReservation: z.boolean().default(false),
+    autoUpdatePos: z.boolean().default(true),
+    allowMultipleTax: z.boolean().default(false),
+    generateOrderTypeWiseOrderNo: z.boolean().default(false),
+    smsAndWhatsappSelection: z
+      .enum(['none', 'sms', 'whatsapp', 'both'])
+      .default('none'),
+    whatsAppChannel: z.string().optional(),
+    sendReports: sendReportsSchema.default({
+      email: false,
+      whatsapp: false,
+      sms: false,
+    }),
+    paymentLinkSettings: paymentLinkSettingsSchema.default({
+      onWhatsapp: false,
+      onSms: false,
+    }),
+    eBillSettings: eBillSettingsSchema.default({
+      onEmail: false,
+      onWhatsapp: false,
+      onSms: false,
+    }),
 
-  billPrefix: z.string().max(10).optional(),
-  kotPrefix: z.string().max(10).optional(),
-  digitalOrderSettings: DigitalOrderSettingsSchema.optional(),
-  currency: z.string().optional(),
-});
+    billPrefix: z.string().max(10).optional(),
+    kotPrefix: z.string().max(10).optional(),
+    digitalOrderSettings: DigitalOrderSettingsSchema.optional(),
+    currency: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      // If phone is provided, country code must be provided
+      if (data.phoneNumber && !data.countryCode) {
+        return false;
+      }
+      return validatePhoneForCountry(data.phoneNumber, data.countryCode);
+    },
+    {
+      message: PHONE_VALIDATION.COUNTRY_MESSAGE,
+      path: ['phoneNumber'],
+    },
+  );
 
 export type RestaurantFormData = z.input<typeof restaurantSchema>;
 

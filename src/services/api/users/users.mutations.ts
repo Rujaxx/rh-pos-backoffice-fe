@@ -22,7 +22,6 @@ function transformToBackendFormat(
     role: data.role,
     email: data.email,
     phoneNumber: data.phoneNumber ?? '',
-    password: data.password ?? '',
     address: data.address ?? '',
     designation: data.designation ?? '',
     webAccess: data.webAccess ?? false,
