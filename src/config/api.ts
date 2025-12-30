@@ -133,8 +133,7 @@ export const API_ENDPOINTS = {
   },
   REPORTS: {
     LIST_SALES: '/reports/sales',
-    LIST_ORDERTYPE: '/reports/order-type',
-    LIST_MENU: '/reports/menu',
+    LIST_DSR: '/reports/dsr',
   },
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
