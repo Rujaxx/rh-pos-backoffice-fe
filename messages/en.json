@@ -1539,5 +1539,6 @@
   "common.errors.tryAgainLater": "Please try again later.",
   "common.id": "ID:",
   "common.from": "From",
-  "common.to": "To"
+  "common.to": "To",
+  "navigation.todaysReport": "Today's Sales Report"
 }

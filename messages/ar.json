@@ -1555,5 +1555,6 @@
   "common.errors.tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً.",
   "common.id": "الرقم التعريفي:",
   "common.from": "من",
-  "common.to": "إلى"
+  "common.to": "إلى",
+  "navigation.todaysReport": "تقرير اليوم"
 }

@@ -11,21 +11,21 @@ import { FilterX } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { useActiveBrands } from '@/services/api/brands/brands.queries';
 import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
-import { useActiveMenus } from '@/services/api/menus/menus.queries';
 import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { useI18n } from '@/providers/i18n-provider';
-import { BillStatus, PaymentMethods } from '@/types/bill.type';
 
-interface ReportFiltersProps {
+export interface ReportFiltersProps {
   filters: ReportQueryParams;
   onFilterChange: (filters: ReportQueryParams) => void;
   onClearFilters: () => void;
+  children?: React.ReactNode;
 }
 
 export function ReportFilters({
   filters,
   onFilterChange,
   onClearFilters,
+  children,
 }: ReportFiltersProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -33,12 +33,10 @@ export function ReportFilters({
   // Fetch active brands, restaurants, menus, and order types
   const { data: brandsData } = useActiveBrands();
   const { data: restaurantsData } = useActiveRestaurants();
-  const { data: menusData } = useActiveMenus();
   const { data: orderTypesData } = useOrderTypes();
 
   const brands = brandsData?.data || [];
   const restaurants = restaurantsData?.data || [];
-  const menus = menusData?.data || [];
   const orderTypes = orderTypesData?.data || [];
 
   // Options for dropdowns
@@ -52,29 +50,40 @@ export function ReportFilters({
     value: restaurant._id!,
   }));
 
-  const menuOptions = menus.map((menu) => ({
-    label: menu.name[locale] || menu.name.en,
-    value: menu._id!,
-  }));
-
   const orderTypeOptions = orderTypes.map((orderType) => ({
     label: orderType.name[locale] || orderType.name.en,
     value: orderType._id!,
   }));
 
-  const paymentModeOptions = Object.values(PaymentMethods).map((mode) => ({
-    label: t(`paymentMethods.${mode.label}`),
-    value: mode.value,
-  }));
+  // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:mm)
+  const isoToLocalDateTime = (isoString?: string): string => {
+    if (!isoString) return '';
+    try {
+      const date = new Date(isoString);
+      // Get local datetime string and remove seconds/milliseconds
+      const localString = date.toISOString().slice(0, 16);
+      return localString;
+    } catch {
+      return '';
+    }
+  };
 
-  const billStatusOptions = Object.values(BillStatus).map((status) => ({
-    label: status,
-    value: status,
-  }));
+  // Convert datetime-local string to ISO string
+  const localDateTimeToISO = (localString: string): string => {
+    if (!localString) return '';
+    try {
+      // Add seconds and timezone
+      const date = new Date(localString);
+      return date.toISOString();
+    } catch {
+      return '';
+    }
+  };
 
   // Handlers
-  const handleDateChange = (field: 'from' | 'to', value: string) => {
-    onFilterChange({ ...filters, [field]: value });
+  const handleDateTimeChange = (field: 'from' | 'to', value: string) => {
+    const isoValue = localDateTimeToISO(value);
+    onFilterChange({ ...filters, [field]: isoValue });
   };
 
   const handleMultiSelectChange = (
@@ -88,24 +97,29 @@ export function ReportFilters({
     <Card className="mb-6">
       <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Date Range */}
-          <div className="space-y-2">
-            <Label>{t('common.dateRange') || 'Date Range'}</Label>
-            <div className="flex gap-2">
-              <Input
-                type="date"
-                value={filters.from || ''}
-                onChange={(e) => handleDateChange('from', e.target.value)}
-                placeholder="From"
-                className="w-full"
-              />
-              <Input
-                type="date"
-                value={filters.to || ''}
-                onChange={(e) => handleDateChange('to', e.target.value)}
-                placeholder="To"
-                className="w-full"
-              />
+          {/* Date Time Range */}
+          <div className="space-y-2 lg:col-span-2">
+            <Label>{t('common.dateRange') || 'Date & Time Range'}</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* From Date & Time */}
+              <div className="space-y-2">
+                <Input
+                  type="datetime-local"
+                  value={isoToLocalDateTime(filters.from)}
+                  onChange={(e) => handleDateTimeChange('from', e.target.value)}
+                  className="w-full"
+                />
+              </div>
+
+              {/* To Date & Time */}
+              <div className="space-y-2">
+                <Input
+                  type="datetime-local"
+                  value={isoToLocalDateTime(filters.to)}
+                  onChange={(e) => handleDateTimeChange('to', e.target.value)}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 
@@ -134,18 +148,9 @@ export function ReportFilters({
               }
             />
           </div>
+        </div>
 
-          {/* Menus */}
-          <div className="space-y-2">
-            <Label>{t('menus.title') || 'Menus'}</Label>
-            <MultiSelectDropdown
-              options={menuOptions}
-              value={filters.menuIds || []}
-              onChange={(value) => handleMultiSelectChange('menuIds', value)}
-              placeholder={t('common.selectMenus') || 'Select Menus'}
-            />
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {/* Order Types */}
           <div className="space-y-2">
             <Label>{t('orderTypes.title') || 'Order Types'}</Label>
@@ -158,36 +163,9 @@ export function ReportFilters({
               placeholder={t('common.selectOrderTypes') || 'Select Order Types'}
             />
           </div>
-
-          {/* Payment Modes */}
-          <div className="space-y-2">
-            <Label>
-              {t('reports.filters.paymentModes') || 'Payment Modes'}
-            </Label>
-            <MultiSelectDropdown
-              options={paymentModeOptions}
-              value={filters.paymentMethods || []}
-              onChange={(value) =>
-                handleMultiSelectChange('paymentMethods', value)
-              }
-              placeholder={
-                t('reports.filters.selectPaymentModes') || 'Select Modes'
-              }
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>{t('reports.filters.billStatus') || 'Bill Status'}</Label>
-            <MultiSelectDropdown
-              options={billStatusOptions}
-              value={filters.billStatus || []}
-              onChange={(value) => handleMultiSelectChange('billStatus', value)}
-              placeholder={
-                t('reports.filters.selectBillStatus') || 'Select Bill Status'
-              }
-            />
-          </div>
         </div>
+
+        {children}
 
         <div className="flex justify-end mt-4">
           <Button

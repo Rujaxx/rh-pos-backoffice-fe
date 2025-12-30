@@ -317,8 +317,14 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       },
       {
         id: 'daily-sales-reports',
-        label: t('navigation.dailySalesReport') || "Today's Sales Report",
+        label: t('navigation.dailySalesReport') || 'Daily Sales Report',
         href: '/reports/daily-sales-reports',
+        icon: Calendar,
+      },
+      {
+        id: 'todays-reports',
+        label: t('navigation.todaysReport') || "Today's Sales Report",
+        href: '/reports/todays-reports',
         icon: Calendar,
       },
     ],

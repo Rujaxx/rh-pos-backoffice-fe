@@ -28,6 +28,7 @@ import {
 } from '@tanstack/react-table';
 import { Bill } from '@/types/bill.type';
 import { toast } from 'sonner';
+import { SalesReportFilters } from '@/components/reports/report-filters/sales-report-filter';
 
 export default function SalesReportsPage() {
   const { t } = useTranslation();
@@ -158,7 +159,13 @@ export default function SalesReportsPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-        />
+        >
+          <SalesReportFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+          />
+        </ReportFilters>
 
         {/* Summary Cards */}
         {reportData?.summary && (
