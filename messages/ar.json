@@ -1429,5 +1429,47 @@
   "users.form.macAddressPlaceholder": "AA:BB:CC:DD:EE:FF",
   "users.form.shiftStartLabel": "بداية الوردية (بالدقائق)",
   "users.form.shiftEndLabel": "نهاية الوردية (بالدقائق)",
-  "users.form.contactInfo": "اتصال و العنوان"
+  "users.form.contactInfo": "اتصال و العنوان",
+
+  "dashboard.paymentStatistics": "إحصائيات الدفع",
+  "dashboard.paymentStatisticsDescription": "إحصائيات الدفع",
+  "dashboard.manageTaxGroup": "إدارة مجموعة الضرائب",
+
+  "dashboard.salesSummary": "ملخص المبيعات",
+  "dashboard.orderTypeAnalysis": "تحليل نوع الطلب",
+  "dashboard.taxSummary": "ملخص الضرائب",
+
+  "dashboard.totalSales": "إجمالي المبيعات",
+  "dashboard.totalSalesDescription": "إجمالي الإيرادات الناتجة عن جميع الطلبات المكتملة.",
+
+  "dashboard.netSales": "صافي المبيعات",
+  "dashboard.netSalesDescription": "إجمالي المبيعات بعد الخصومات والاسترجاعات والتعديلات.",
+
+  "dashboard.offlineSales": "المبيعات غير المتصلة",
+  "dashboard.offlineSalesDescription": "المبيعات الناتجة عن الطلبات داخل المطعم أو عبر نظام نقاط البيع.",
+
+  "dashboard.onlineSales": "المبيعات عبر الإنترنت",
+  "dashboard.onlineSalesDescription": "المبيعات الناتجة عن الطلبات الإلكترونية والطلبات الرقمية.",
+
+  "dashboard.dineInOrders": "طلبات داخل المطعم",
+  "dashboard.dineInOrdersDescription": "إجمالي عدد الطلبات المقدمة داخل المطعم.",
+
+  "dashboard.digitalOrders": "الطلبات الرقمية",
+  "dashboard.digitalOrdersDescription": "إجمالي عدد الطلبات المقدمة عبر المنصات الرقمية.",
+
+  "dashboard.takeawayOrders": "طلبات الاستلام",
+  "dashboard.takeawayOrdersDescription": "إجمالي عدد طلبات الاستلام أو التيك أواي.",
+
+  "dashboard.deliveryOrders": "طلبات التوصيل",
+  "dashboard.deliveryOrdersDescription": "إجمالي عدد الطلبات التي تم توصيلها للعملاء.",
+
+  "dashboard.totalTax": "إجمالي الضريبة",
+  "dashboard.totalTaxDescription": "إجمالي الضريبة المحصلة من جميع الطلبات.",
+
+  "dashboard.onlineOrdersTax": "ضريبة الطلبات عبر الإنترنت",
+  "dashboard.onlineOrdersTaxDescription": "إجمالي الضريبة المحصلة من الطلبات الإلكترونية.",
+
+  "dashboard.offlineOrdersTax": "ضريبة الطلبات داخل المطعم",
+  "dashboard.offlineOrdersTaxDescription": "إجمالي الضريبة المحصلة من الطلبات غير الإلكترونية.",
+  "dashboard.revenueShare": "حصّة الإيرادات"
 }

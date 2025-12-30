@@ -1416,5 +1416,46 @@
   "digitalOrders.paymentMethods.wallet": "Wallet",
   "digitalOrders.paymentMethods.title": "Payment Methods",
   "restaurants.form.currencyLabel": "Currency",
-  "restaurants.form.currencyPlaceholder": "Select currency"
+  "restaurants.form.currencyPlaceholder": "Select currency",
+
+  "dashboard.salesSummary": "Sales Summary",
+  "dashboard.orderTypeSummary": "Order Type Summary",
+  "dashboard.taxSummary": "Tax Summary",
+
+  "dashboard.paymentStatistics": "Payment Statistics",
+  "dashboard.paymentStatisticsDescription": "Payment Statistics Description",
+  "dashboard.manageTaxGroup": "Manage Tax Group",
+  "navigation.liveOrderTracking": "Live Order Tracking",
+  "dashboard.salesStatistics": "Sales Statistics",
+  "dashboard.lastOrderSync": "Last Order Sync",
+  "dashboard.totalSales": "Total Sales",
+  "dashboard.netSales": "Net Sales",
+  "dashboard.offlineSales": "Offline Sales",
+  "dashboard.onlineSales": "Online Sales",
+  "dashboard.totalSalesDescription": "Total Sales Description",
+  "dashboard.netSalesDescription": "Net Sales Description",
+  "dashboard.offlineSalesDescription": "Offline Sales Description",
+  "dashboard.onlineSalesDescription": "Online Sales Description",
+
+  "dashboard.dineInOrders": "Dine-In Orders",
+  "dashboard.dineInOrdersDescription": "Total number of orders placed for dine-in service.",
+
+  "dashboard.digitalOrders": "Digital Orders",
+  "dashboard.digitalOrdersDescription": "Total number of orders placed through digital platforms.",
+
+  "dashboard.takeawayOrders": "Takeaway Orders",
+  "dashboard.takeawayOrdersDescription": "Total number of takeaway or pickup orders.",
+
+  "dashboard.deliveryOrders": "Delivery Orders",
+  "dashboard.deliveryOrdersDescription": "Total number of orders delivered to customers.",
+
+  "dashboard.totalTax": "Total Tax",
+  "dashboard.totalTaxDescription": "Total tax collected from all orders.",
+
+  "dashboard.onlineOrdersTax": "Online Orders Tax",
+  "dashboard.onlineOrdersTaxDescription": "Total tax collected from online orders.",
+
+  "dashboard.offlineOrdersTax": "Offline Orders Tax",
+  "dashboard.offlineOrdersTaxDescription": "Total tax collected from offline or POS orders.",
+  "dashboard.revenueShare": "Revenue Share"
 }
