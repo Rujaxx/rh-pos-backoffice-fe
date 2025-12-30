@@ -1,4 +1,3 @@
-// src/app/reports/todays-report/types.ts
 import { ReportQueryParams } from './report.type';
 
 export type PaperSize = 'A4' | '80MM' | '58MM';
@@ -88,5 +87,61 @@ export interface CategorySummaryData {
 export interface SoldItemsSummaryData {
   itemName: string;
   quantity: number;
+  amount: number;
+}
+
+export interface DiscountSummaryData {
+  billDiscount: number;
+  itemDiscount: number;
+  totalDiscount: number;
+}
+
+export interface ExpenseSummaryData {
+  category: string;
+  amount: number;
+}
+
+export interface DeliveryBoySummaryData {
+  name: string;
+  deliveries: number;
+  amount: number;
+}
+
+export interface WaiterSummaryData {
+  name: string;
+  tables: number;
+  amount: number;
+}
+
+export interface CancelItemsSummaryData {
+  itemName: string;
+  quantity: number;
+  amount: number;
+}
+
+export interface WalletSummaryData {
+  transactions: number;
+  totalAmount: number;
+}
+
+export interface DuePaymentSummaryData {
+  amount: number;
+  count: number;
+}
+
+export interface PaymentVarianceData {
+  method: string;
+  variance: number;
+}
+
+export interface CurrencyDenominationData {
+  denomination: string;
+  count: number;
+  amount: number;
+}
+
+export interface OrderSourceData {
+  source: string;
+  orders: number;
   amount: number;
 }

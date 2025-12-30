@@ -9,6 +9,16 @@ import {
   KitchenDepartmentSummaryData,
   CategorySummaryData,
   SoldItemsSummaryData,
+  DiscountSummaryData,
+  ExpenseSummaryData,
+  DeliveryBoySummaryData,
+  WaiterSummaryData,
+  CancelItemsSummaryData,
+  WalletSummaryData,
+  DuePaymentSummaryData,
+  PaymentVarianceData,
+  CurrencyDenominationData,
+  OrderSourceData,
 } from '@/types/todays-report.type';
 
 export const sampleSalesSummary: SalesSummaryData = {
@@ -137,62 +147,6 @@ export const sampleSoldItemsSummary: SoldItemsSummaryData[] = [
 ];
 
 // Mock data for other sections not in your types yet
-interface DiscountSummaryData {
-  billDiscount: number;
-  itemDiscount: number;
-  totalDiscount: number;
-}
-
-interface ExpenseSummaryData {
-  category: string;
-  amount: number;
-}
-
-interface DeliveryBoySummaryData {
-  name: string;
-  deliveries: number;
-  amount: number;
-}
-
-interface WaiterSummaryData {
-  name: string;
-  tables: number;
-  amount: number;
-}
-
-interface CancelItemsSummaryData {
-  itemName: string;
-  quantity: number;
-  amount: number;
-}
-
-interface WalletSummaryData {
-  transactions: number;
-  totalAmount: number;
-}
-
-interface DuePaymentSummaryData {
-  amount: number;
-  count: number;
-}
-
-interface PaymentVarianceData {
-  method: string;
-  variance: number;
-}
-
-interface CurrencyDenominationData {
-  denomination: string;
-  count: number;
-  amount: number;
-}
-
-interface OrderSourceData {
-  source: string;
-  orders: number;
-  amount: number;
-}
-
 export const sampleDiscountSummary: DiscountSummaryData = {
   billDiscount: 4500,
   itemDiscount: 3000,
@@ -255,10 +209,10 @@ export const sampleCurrencyDenominationsSummary: CurrencyDenominationData[] = [
 ];
 
 export const sampleOrderSourceSummary: OrderSourceData[] = [
-  { source: 'Walk-in', orders: 65, amount: 85000 },
-  { source: 'Zomato', orders: 25, amount: 32000 },
-  { source: 'Swiggy', orders: 18, amount: 24000 },
-  { source: 'Phone', orders: 12, amount: 15000 },
+  { source: 'Quick-Bill', orders: 65, amount: 85000 },
+  { source: 'Dine-in', orders: 25, amount: 32000 },
+  { source: 'Takeaway', orders: 18, amount: 24000 },
+  { source: 'Delivery', orders: 12, amount: 15000 },
 ];
 
 export const sampleReportData = {
