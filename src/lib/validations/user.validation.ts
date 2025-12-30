@@ -39,6 +39,8 @@ export const userSchema = z
     macAddress: z.string().optional().or(z.literal('')),
     language: z.string(),
     timeZone: z.string(),
+
+    effectivePermissions: z.array(z.string()).optional(),
   })
   .refine(
     (data) => {

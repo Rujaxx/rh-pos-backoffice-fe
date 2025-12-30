@@ -8,8 +8,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ApiError } from '@/types/api';
-import { toast } from 'sonner';
 import { restoreAuthFromStorage } from '@/stores/auth.store';
 
 interface QueryProviderProps {
@@ -26,14 +24,8 @@ const queryClient = new QueryClient({
     },
     mutations: {
       retry: false,
-      onError: (error: Error) => {
-        // Check if it's an ApiError and handle accordingly
-        if (error instanceof ApiError) {
-          toast.error(error.message || 'An API error occurred');
-        } else {
-          toast.error(error.message || 'An error occurred');
-        }
-      },
+      // Removed global onError handler to prevent duplicate toasts
+      // Error handling is done at component level for better control
     },
   },
 });

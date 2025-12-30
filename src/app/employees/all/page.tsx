@@ -34,8 +34,13 @@ import {
   useCreateUser,
   useDeleteUser,
   useUpdateUser,
+  useUpdateUserPermissions,
 } from '@/services/api/users/users.mutations';
 import { User, UserQueryParams } from '@/types/user.type';
+import {
+  UserPermissionsModal,
+  usePermissionsModal,
+} from '@/components/employees/users/user-permissions-modal';
 
 export default function UsersPage() {
   const { t } = useTranslation();
@@ -51,6 +56,13 @@ export default function UsersPage() {
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
+
+  const {
+    isPermissionsModalOpen,
+    selectedUser,
+    openPermissionsModal,
+    closePermissionsModal,
+  } = usePermissionsModal();
 
   const queryParams = useMemo<UserQueryParams>(() => {
     const params: UserQueryParams = {
@@ -79,6 +91,7 @@ export default function UsersPage() {
   const createUserMutation = useCreateUser();
   const updateUserMutation = useUpdateUser();
   const deleteUserMutation = useDeleteUser();
+  const updateUserPermissionsMutation = useUpdateUserPermissions();
 
   // Extract data from response
   const users = usersResponse?.data || [];
@@ -118,6 +131,7 @@ export default function UsersPage() {
 
   const editHandlerRef = useRef<((user: User) => void) | null>(null);
   const deleteHandlerRef = useRef<((user: User) => void) | null>(null);
+  const permissionsHandlerRef = useRef<((user: User) => void) | null>(null);
 
   const editHandler = useCallback((user: User) => {
     editHandlerRef.current?.(user);
@@ -127,7 +141,15 @@ export default function UsersPage() {
     deleteHandlerRef.current?.(user);
   }, []);
 
-  const stableColumns = useUserColumns(editHandler, deleteHandler);
+  const permissionsHandler = useCallback((user: User) => {
+    permissionsHandlerRef.current?.(user);
+  }, []);
+
+  const stableColumns = useUserColumns(
+    editHandler,
+    deleteHandler,
+    permissionsHandler,
+  );
 
   // Update refs on each render
   editHandlerRef.current = (user: User) => {
@@ -154,19 +176,82 @@ export default function UsersPage() {
     );
   };
 
+  permissionsHandlerRef.current = (user: User) => {
+    openPermissionsModal(user);
+  };
+
+  const handlePermissionsUpdate = useCallback(
+    async (userId: string, permissions: string[]) => {
+      try {
+        await updateUserPermissionsMutation.mutateAsync({
+          id: userId,
+          effectivePermissions: permissions,
+        });
+      } catch (error) {
+        console.error('Failed to update permissions:', error);
+        throw error;
+      }
+    },
+    [updateUserPermissionsMutation],
+  );
+
   // Form submit handler
+  // const handleSubmit = useCallback(
+  //   async (data: UserFormData) => {
+  //     try {
+  //       const validatedData = userSchema.parse(data);
+
+  //       if (latestUserData) {
+  //         await updateUserMutation.mutateAsync({
+  //           id: latestUserData._id,
+  //           data: validatedData,
+  //         });
+  //       } else {
+  //         await createUserMutation.mutateAsync(validatedData);
+  //       }
+  //       closeModal();
+  //     } catch (error) {
+  //       console.error('Failed to save user:', error);
+  //     }
+  //   },
+  //   [latestUserData, updateUserMutation, createUserMutation, closeModal],
+  // );
+
   const handleSubmit = useCallback(
     async (data: UserFormData) => {
       try {
-        const validatedData = userSchema.parse(data);
+        // Create full user data object
+        const userData: UserFormData = {
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          role: data.role,
+          restaurantIds: data.restaurantIds,
+          brandIds: data.brandIds,
+          isActive: data.isActive,
+          agreeToTerms: data.agreeToTerms,
+          shiftStart: data.shiftStart,
+          shiftEnd: data.shiftEnd,
+          webAccess: data.webAccess,
+          language: data.language,
+          timeZone: data.timeZone,
+          // Optional fields
+          phoneNumber: data.phoneNumber,
+          countryCode: data.countryCode,
+          address: data.address,
+          designation: data.designation,
+          macAddress: data.macAddress,
+          password: data.password,
+          effectivePermissions: data.effectivePermissions || [],
+        };
 
         if (latestUserData) {
           await updateUserMutation.mutateAsync({
             id: latestUserData._id,
-            data: validatedData,
+            data: userData,
           });
         } else {
-          await createUserMutation.mutateAsync(validatedData);
+          await createUserMutation.mutateAsync(userData);
         }
         closeModal();
       } catch (error) {
@@ -206,6 +291,7 @@ export default function UsersPage() {
     updateUserMutation.isPending ||
     isLoadingIndividualUser ||
     isFetchingIndividualUser;
+
   return (
     <Layout>
       <div className="flex flex-1 flex-col space-y-8 p-8">
@@ -301,9 +387,9 @@ export default function UsersPage() {
               ? t('users.edit.title') || 'Edit User'
               : t('users.addUser') || 'Add User'
           }
-          size="xl" // Good size for a user form
-          form={form} // Pass the form object
-          onSubmit={handleSubmit} // Pass the submit handler
+          size="xl"
+          form={form}
+          onSubmit={handleSubmit}
           loading={isFormLoading}
           submitButtonText={
             latestUserData
@@ -313,6 +399,15 @@ export default function UsersPage() {
         >
           <UserFormContent form={form} />
         </CrudModal>
+
+        {/* Permissions Modal */}
+        <UserPermissionsModal
+          isOpen={isPermissionsModalOpen}
+          onClose={closePermissionsModal}
+          user={selectedUser}
+          onPermissionsUpdate={handlePermissionsUpdate}
+          loading={updateUserPermissionsMutation.isPending}
+        />
 
         {/* Delete Confirmation Modal */}
         <ConfirmationModal

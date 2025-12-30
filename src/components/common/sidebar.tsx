@@ -226,39 +226,39 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     id: 'staff',
     label: t('navigation.staffManagement'),
     items: [
+      // {
+      //   id: 'employees',
+      //   label: t('navigation.employees'),
+      //   href: '/employees',
+      //   icon: Users,
+      //   children: [
       {
-        id: 'employees',
-        label: t('navigation.employees'),
-        href: '/employees',
+        id: 'all-employees',
+        label: t('navigation.allEmployees'),
+        href: '/employees/all',
         icon: Users,
-        children: [
-          {
-            id: 'all-employees',
-            label: t('navigation.allEmployees'),
-            href: '/employees/all',
-            icon: Users,
-          },
-          {
-            id: 'roles',
-            label: t('navigation.roles'),
-            href: '/employees/roles',
-            icon: UserPlus,
-          },
-          // SCHEDULES AND PLAYROLL NOT IMPLEMENTED YET
-          // {
-          //   id: 'schedules',
-          //   label: t('navigation.workSchedules'),
-          //   href: '/employees/schedules',
-          //   icon: Calendar,
-          // },
-          // {
-          //   id: 'payroll',
-          //   label: t('navigation.payroll'),
-          //   href: '/employees/payroll',
-          //   icon: DollarSign,
-          // },
-        ],
       },
+      // {
+      //   id: 'roles',
+      //   label: t('navigation.roles'),
+      //   href: '/employees/roles',
+      //   icon: UserPlus,
+      // },
+      // SCHEDULES AND PLAYROLL NOT IMPLEMENTED YET
+      // {
+      //   id: 'schedules',
+      //   label: t('navigation.workSchedules'),
+      //   href: '/employees/schedules',
+      //   icon: Calendar,
+      // },
+      // {
+      //   id: 'payroll',
+      //   label: t('navigation.payroll'),
+      //   href: '/employees/payroll',
+      //   icon: DollarSign,
+      // },
+      //   ],
+      // },
     ],
   },
   {

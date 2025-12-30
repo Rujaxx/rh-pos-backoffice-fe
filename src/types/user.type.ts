@@ -35,6 +35,7 @@ export interface User extends Record<string, unknown> {
   macAddress?: string;
   language?: string;
   timeZone?: string;
+  effectivePermissions?: string[];
   createdBy?: string;
   updatedBy?: string;
   lastLoginAt: Date;
@@ -91,6 +92,7 @@ export interface UserFormData extends Record<string, unknown> {
   brandIds?: string[];
   restaurantIds?: string[];
   isActive?: boolean;
+  effectivePermissions?: string[];
 }
 
 export interface UserQueryParams extends QueryParams {
