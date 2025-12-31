@@ -67,4 +67,16 @@ export const useDailySalesReports = createReportHook(
   'daily-sales-reports',
 );
 
+// Todays Sales Report hook
+export const useTodaysSalesReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'todays-sales-reports',
+);
+
+// Meal-Time Sales Report hook
+export const useMealTimeReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'meal-time-reports',
+);
+
 export { reportService };
