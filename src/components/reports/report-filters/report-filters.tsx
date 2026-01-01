@@ -18,6 +18,7 @@ export interface ReportFiltersProps {
   filters: ReportQueryParams;
   onFilterChange: (filters: ReportQueryParams) => void;
   onClearFilters: () => void;
+  onSubmit?: () => void;
   children?: React.ReactNode;
 }
 
@@ -25,9 +26,26 @@ export function ReportFilters({
   filters,
   onFilterChange,
   onClearFilters,
+  onSubmit,
   children,
 }: ReportFiltersProps) {
   const { t } = useTranslation();
+  // ... (inside the return statement, actions div)
+  <div className="flex justify-end gap-2 mt-4 ml-auto">
+    {onSubmit && (
+      <Button onClick={onSubmit} className="flex items-center gap-2">
+        {t('common.generateReport') || 'Generate Report'}
+      </Button>
+    )}
+    <Button
+      variant="outline"
+      onClick={onClearFilters}
+      className="flex items-center gap-2"
+    >
+      <FilterX className="h-4 w-4" />
+      {t('common.clearFilters') || 'Clear Filters'}
+    </Button>
+  </div>;
   const { locale } = useI18n();
 
   // Fetch active brands, restaurants, menus, and order types
@@ -167,7 +185,12 @@ export function ReportFilters({
 
         {children}
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end gap-2 mt-4">
+          {onSubmit && (
+            <Button onClick={onSubmit} className="flex items-center gap-2">
+              {t('reports.generate') || 'Generate Report'}
+            </Button>
+          )}
           <Button
             variant="outline"
             onClick={onClearFilters}

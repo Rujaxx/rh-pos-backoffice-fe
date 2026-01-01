@@ -69,7 +69,6 @@ export interface GeneratedReport {
 // Base Query Parameters
 export interface ReportQueryParams extends QueryParams {
   // Date filters
-  date?: string; // ISO date string (YYYY-MM-DD)
   from?: string; // ISO date string
   to?: string; // ISO date string
 
@@ -100,6 +99,9 @@ export interface ReportQueryParams extends QueryParams {
   // DSR specific filters
   b2bInvoices?: boolean;
   liquorExemptedSales?: boolean;
+
+  page?: number;
+  limit?: number;
 }
 
 // API Response for Generated Reports

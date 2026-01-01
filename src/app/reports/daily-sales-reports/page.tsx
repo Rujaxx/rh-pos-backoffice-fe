@@ -376,11 +376,11 @@ export default function DailySalesReportPage() {
         </div>
 
         {/* Filters */}
-        <ReportFilters
+        {/* <ReportFilters
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-        />
+        /> */}
 
         {/* Report Type Selection */}
         <Card>

@@ -1,9 +1,7 @@
-import { ReportQueryParams } from './report.type';
-
-export type PaperSize = 'A4' | '80MM' | '58MM';
+import { QueryParams } from './api';
+import { ReportGenerationStatus, ReportQueryParams } from './report.type';
 
 export interface TodaysReportFilterState extends ReportQueryParams {
-  // Section toggles
   showSalesSummary: boolean;
   showZReportSummary: boolean;
   showOrderTypeSummary: boolean;
@@ -24,7 +22,14 @@ export interface TodaysReportFilterState extends ReportQueryParams {
   showPaymentVarianceSummary: boolean;
   showCurrencyDenominationsSummary: boolean;
   showOrderSourceSummary: boolean;
+  from: string;
+  to: string;
+  brandIds: string[];
+  restaurantIds: string[];
+  orderTypeIds: string[];
 }
+
+export type PaperSize = 'A4' | '80MM' | '58MM';
 
 // Sample data interfaces
 export interface SalesSummaryData {
@@ -67,7 +72,7 @@ export interface BillSummaryData {
 }
 
 export interface ProductGroupSummaryData {
-  productGroup: string;
+  taxProductGroup: string;
   amount: number;
   discount: number;
 }
@@ -144,4 +149,83 @@ export interface OrderSourceData {
   source: string;
   orders: number;
   amount: number;
+}
+
+export interface TodaysReportResponseData {
+  salesSummary?: SalesSummaryData;
+  orderTypeSummary?: OrderTypeSummaryData[];
+  paymentTypeSummary?: PaymentTypeSummaryData[];
+  billSummary?: BillSummaryData[];
+  productGroupSummary?: ProductGroupSummaryData[];
+  kitchenDepartmentSummary?: KitchenDepartmentSummaryData[];
+  categorySummary?: CategorySummaryData[];
+  soldItemsSummary?: SoldItemsSummaryData[];
+  discountSummary?: DiscountSummaryData;
+  expenseSummary?: ExpenseSummaryData[];
+  deliveryBoySummary?: DeliveryBoySummaryData[];
+  waiterSummary?: WaiterSummaryData[];
+  cancelItemsSummary?: CancelItemsSummaryData[];
+  walletSummary?: WalletSummaryData;
+  duePaymentReceivedSummary?: DuePaymentSummaryData;
+  duePaymentReceivableSummary?: DuePaymentSummaryData;
+  paymentVarianceSummary?: PaymentVarianceData[];
+  currencyDenominationsSummary?: CurrencyDenominationData[];
+  orderSourceSummary?: OrderSourceData[];
+}
+
+export interface GeneratedTimeFrame {
+  from: string;
+  to: string;
+}
+export interface TodaysSalesReport extends Record<string, unknown> {
+  _id: string;
+  generatedTimeFrame: GeneratedTimeFrame;
+  generatedByName: string;
+  generationStatus: ReportGenerationStatus;
+  data: TodaysReportResponseData;
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface TDSReportFilter extends Record<string, unknown> {
+  // Filters
+  brandIds?: string[];
+  restaurantIds?: string[];
+  orderTypeId?: string[];
+  from: string; // ISO date string
+  to: string; // ISO date string
+
+  // Toggles
+  sales?: boolean;
+  z_report?: boolean;
+  order_type?: boolean;
+  payment_type?: boolean;
+  discount?: boolean;
+  expense?: boolean;
+  bill?: boolean;
+  delivery_boy?: boolean;
+  waiter?: boolean;
+  tax_product_group?: boolean;
+  kitchen_department?: boolean;
+  category?: boolean;
+  sold_items?: boolean;
+  cancel_items?: boolean;
+  wallet?: boolean;
+  due_payment_received?: boolean;
+  due_payment_receivable?: boolean;
+  payment_variance?: boolean;
+  currency_denominations?: boolean;
+  order_source?: boolean;
+}
+
+export interface TDSReportQueryParams extends QueryParams {
+  from?: string; // ISO date string
+  to?: string; // ISO date string
+
+  // Location filters
+  restaurantIds?: string[];
+  brandIds?: string[];
+
+  // Menu filters
+  reports?: string[];
 }

@@ -1,9 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  GeneratedReport,
-  ReportGenerationStatus,
-  DailyReportType,
-} from '@/types/report.type';
+import { GeneratedReport, ReportGenerationStatus } from '@/types/report.type';
 import { Badge } from '@/components/ui/badge';
 import { REPORT_TYPE_LABELS } from './constants';
 

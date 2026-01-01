@@ -1,37 +1,26 @@
 'use client';
 
 import React from 'react';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from '@/hooks/useTranslation';
+import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { FilterX, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ReportQueryParams } from '@/types/report.type';
+import { useActiveBrands } from '@/services/api/brands/brands.queries';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
+import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { useI18n } from '@/providers/i18n-provider';
+import { Checkbox } from '@/components/ui/checkbox';
+import { TodaysReportFilterState } from '@/types/todays-report.type';
 
 export interface TodaysReportFiltersProps {
-  filters: ReportQueryParams & {
-    showSalesSummary: boolean;
-    showZReportSummary: boolean;
-    showOrderTypeSummary: boolean;
-    showPaymentTypeSummary: boolean;
-    showDiscountSummary: boolean;
-    showExpenseSummary: boolean;
-    showBillSummary: boolean;
-    showDeliveryBoySummary: boolean;
-    showWaiterSummary: boolean;
-    showProductGroupSummary: boolean;
-    showKitchenDepartmentSummary: boolean;
-    showCategorySummary: boolean;
-    showSoldItemsSummary: boolean;
-    showCancelItemsSummary: boolean;
-    showWalletSummary: boolean;
-    showDuePaymentReceivedSummary: boolean;
-    showDuePaymentReceivableSummary: boolean;
-    showPaymentVarianceSummary: boolean;
-    showCurrencyDenominationsSummary: boolean;
-    showOrderSourceSummary: boolean;
-  };
+  filters: TodaysReportFilterState;
+  onFilterChange: (filters: TodaysReportFilterState) => void;
+  onClearFilters: () => void;
+  onSubmit?: () => void;
   expandedSections: boolean;
   onToggleExpandedSections: () => void;
   onToggleSection: (sectionKey: string) => void;
@@ -40,14 +29,82 @@ export interface TodaysReportFiltersProps {
 
 export function TodaysReportFilters({
   filters,
+  onFilterChange,
+  onClearFilters,
+  onSubmit,
   expandedSections,
   onToggleExpandedSections,
   onToggleSection,
   onToggleAllSections,
 }: TodaysReportFiltersProps) {
+  const { t } = useTranslation();
+  const { locale } = useI18n();
+
+  // Fetch active brands, restaurants, menus, and order types
+  const { data: brandsData } = useActiveBrands();
+  const { data: restaurantsData } = useActiveRestaurants();
+  const { data: orderTypesData } = useOrderTypes();
+
+  const brands = brandsData?.data || [];
+  const restaurants = restaurantsData?.data || [];
+  const orderTypes = orderTypesData?.data || [];
+
+  // Options for dropdowns
+  const brandOptions = brands.map((brand) => ({
+    label: brand.name[locale] || brand.name.en,
+    value: brand._id!,
+  }));
+
+  const restaurantOptions = restaurants.map((restaurant) => ({
+    label: restaurant.name[locale] || restaurant.name.en,
+    value: restaurant._id!,
+  }));
+
+  const orderTypeOptions = orderTypes.map((orderType) => ({
+    label: orderType.name[locale] || orderType.name.en,
+    value: orderType._id!,
+  }));
+
+  // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:mm)
+  const isoToLocalDateTime = (isoString?: string): string => {
+    if (!isoString) return '';
+    try {
+      const date = new Date(isoString);
+      // Get local datetime string and remove seconds/milliseconds
+      const localString = date.toISOString().slice(0, 16);
+      return localString;
+    } catch {
+      return '';
+    }
+  };
+
+  // Convert datetime-local string to ISO string
+  const localDateTimeToISO = (localString: string): string => {
+    if (!localString) return '';
+    try {
+      // Add seconds and timezone
+      const date = new Date(localString);
+      return date.toISOString();
+    } catch {
+      return '';
+    }
+  };
+
+  // Handlers
+  const handleDateTimeChange = (field: 'from' | 'to', value: string) => {
+    const isoValue = localDateTimeToISO(value);
+    onFilterChange({ ...filters, [field]: isoValue });
+  };
+
+  const handleMultiSelectChange = (
+    field: keyof TodaysReportFilterState,
+    value: string[],
+  ) => {
+    onFilterChange({ ...filters, [field]: value });
+  };
+
   const sectionToggles = [
     { key: 'showSalesSummary', label: 'Sales Summary / Z Report Summary' },
-    { key: 'showZReportSummary', label: 'Z Report Summary' },
     { key: 'showOrderTypeSummary', label: 'Order Type Summary' },
     { key: 'showPaymentTypeSummary', label: 'Payment Type Summary' },
     { key: 'showDiscountSummary', label: 'Discount Summary' },
@@ -86,6 +143,99 @@ export function TodaysReportFilters({
 
   return (
     <>
+      <Card className="mb-6">
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Date Time Range */}
+            <div className="space-y-2 lg:col-span-2">
+              <Label>{t('common.dateRange') || 'Date & Time Range'}</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* From Date & Time */}
+                <div className="space-y-2">
+                  <Input
+                    type="datetime-local"
+                    value={isoToLocalDateTime(filters.from)}
+                    onChange={(e) =>
+                      handleDateTimeChange('from', e.target.value)
+                    }
+                    className="w-full"
+                  />
+                </div>
+
+                {/* To Date & Time */}
+                <div className="space-y-2">
+                  <Input
+                    type="datetime-local"
+                    value={isoToLocalDateTime(filters.to)}
+                    onChange={(e) => handleDateTimeChange('to', e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Brands */}
+            <div className="space-y-2">
+              <Label>{t('brands.title') || 'Brands'}</Label>
+              <MultiSelectDropdown
+                options={brandOptions}
+                value={filters.brandIds || []}
+                onChange={(value) => handleMultiSelectChange('brandIds', value)}
+                placeholder={t('common.selectBrands') || 'Select Brands'}
+              />
+            </div>
+
+            {/* Restaurants */}
+            <div className="space-y-2">
+              <Label>{t('restaurants.title') || 'Restaurants'}</Label>
+              <MultiSelectDropdown
+                options={restaurantOptions}
+                value={filters.restaurantIds || []}
+                onChange={(value) =>
+                  handleMultiSelectChange('restaurantIds', value)
+                }
+                placeholder={
+                  t('common.selectRestaurants') || 'Select Restaurants'
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            {/* Order Types */}
+            <div className="space-y-2">
+              <Label>{t('orderTypes.title') || 'Order Types'}</Label>
+              <MultiSelectDropdown
+                options={orderTypeOptions}
+                value={filters.orderTypeIds || []}
+                onChange={(value) =>
+                  handleMultiSelectChange('orderTypeIds', value)
+                }
+                placeholder={
+                  t('common.selectOrderTypes') || 'Select Order Types'
+                }
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 mt-4">
+            {onSubmit && (
+              <Button onClick={onSubmit} className="flex items-center gap-2">
+                {t('reports.generate') || 'Generate Report'}
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              onClick={onClearFilters}
+              className="flex items-center gap-2"
+            >
+              <FilterX className="h-4 w-4" />
+              {t('common.clearFilters') || 'Clear Filters'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Section Toggles Card */}
       <Card className="mt-6">
         <CardContent className="p-4">

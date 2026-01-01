@@ -133,7 +133,8 @@ export const API_ENDPOINTS = {
   },
   REPORTS: {
     LIST_SALES: '/reports/sales',
-    LIST_DSR: '/reports/dsr',
+    LIST_TDS: '/reports/tds-reports',
+    GENERATE_TDS: '/reports/generate/tds-report',
   },
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
@@ -234,6 +235,10 @@ export const QUERY_KEYS = {
   REPORTS: {
     LIST: (params?: Record<string, unknown>) =>
       ['reports', 'list', params] as const,
+    LIST_TDS: (params?: Record<string, unknown>) =>
+      ['reports', 'tds-report', params] as const,
+    GENERATE_TDS: (params?: Record<string, unknown>) =>
+      ['reports', 'generate/tds-report', params] as const,
   },
   DISCOUNTS: {
     LIST: (params?: Record<string, unknown>) =>
