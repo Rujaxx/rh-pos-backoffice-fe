@@ -327,6 +327,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         href: '/reports/todays-reports',
         icon: Calendar,
       },
+      {
+        id: 'meal-time-reports',
+        label: t('navigation.mealTimeReports') || 'Meal Time Reports',
+        href: '/reports/meal-time-reports',
+        icon: Clock,
+      },
     ],
   },
   // FIANCE SECTION NOT IMPLEMENTED YET
