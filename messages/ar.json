@@ -654,7 +654,7 @@
   "table.form.updateButton": "تحديث الطاولة",
   "table.form.createButton": "إنشاء الطاولة",
   "navigation.taxes": "الضرايح",
-  "navigation.productGroup": "مجموعات المنتجات",
+  "navigation.taxProductGroup": "مجموعات المنتجات",
   "navigation.taxGroup": "تكوين الضرايح",
   "categories.title": "الفئات",
   "categories.subtitle": "إدارة فئات المنتجات لعلامتك التجارية.",

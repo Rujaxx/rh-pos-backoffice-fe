@@ -2,10 +2,10 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { ReportData, ReportQueryParams } from '@/types/report.type';
 import { SuccessResponse } from '@/types/api';
-import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import { API_ENDPOINTS } from '@/config/api';
 
 // Reports service - custom implementation since ReportData has unique structure
-class ReportService {
+class BaseReportService {
   async getReports(
     endpoint: string,
     params?: ReportQueryParams,
@@ -36,7 +36,7 @@ class ReportService {
   }
 }
 
-const reportService = new ReportService();
+const reportService = new BaseReportService();
 
 // Generic query hook factory
 const createReportHook = (endpoint: string, queryKeyPrefix: string) => {

@@ -2,18 +2,32 @@
 
 import React, { useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { PaperSize, TodaysReportFilterState } from '@/types/todays-report.type';
+import {
+  PaperSize,
+  TodaysReportFilterState,
+  TodaysReportResponseData,
+} from '@/types/todays-report.type';
 import { ReportHeader } from './report-header';
-import { sampleReportData } from './sampleData';
 
 interface ReportLayoutProps {
   paperSize: PaperSize;
   filters: TodaysReportFilterState;
+  data?: TodaysReportResponseData;
 }
 
-export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
+export function ReportLayout({ paperSize, filters, data }: ReportLayoutProps) {
   const isThermal = paperSize === '80MM' || paperSize === '58MM';
-  const isNarrow = paperSize === '58MM';
+  // const isNarrow = paperSize === '58MM';
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center p-8 text-muted-foreground text-sm">
+        No report generated yet. Click Generate Report to view data.
+      </div>
+    );
+  }
+
+  const reportData = data;
 
   // Format currency for display
   const formatCurrency = (amount: number) => {
@@ -24,45 +38,6 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
-  // Apply print styles dynamically
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-            @media print {
-                @page {
-                    size: ${paperSize === 'A4' ? 'A4' : paperSize === '80MM' ? '80mm' : '58mm'};
-                    margin: 0;
-                }
-                
-                body {
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    -webkit-print-color-adjust: exact;
-                }
-                
-                .print-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                }
-                
-                .print-content {
-                    width: 100% !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    color: black !important;
-                    background: white !important;
-                }
-            }
-        `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, [paperSize]);
 
   const containerClasses = cn(
     'print-container',
@@ -75,44 +50,63 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
 
   const contentClasses = cn(
     'print-content',
-    paperSize === 'A4' && 'text-sm leading-tight p-4 dark:text-gray-100',
+    paperSize === 'A4' && 'text-sm leading-relaxed dark:text-gray-100',
     paperSize === '80MM' && 'text-xs leading-tight p-3 dark:text-gray-100',
     paperSize === '58MM' && 'text-[11px] leading-tight p-2 dark:text-gray-100',
     isThermal && 'font-mono',
   );
 
-  const lineClasses = cn('border-t border-gray-300 dark:border-gray-700 my-1');
+  const lineClasses = cn('border-t border-gray-700 dark:border-gray-700 my-4');
 
   const sectionTitleClasses = cn(
-    'font-bold text-center my-1 text-black dark:text-white',
-    paperSize === 'A4' && 'text-sm',
-    paperSize === '80MM' && 'text-xs',
-    paperSize === '58MM' && 'text-[11px]',
+    'font-bold text-center text-foreground uppercase tracking-widest',
+    paperSize === 'A4' && 'text-lg my-4 pb-2 border-b border-gray-700',
+    paperSize === '80MM' && 'text-xs my-1',
+    paperSize === '58MM' && 'text-[11px] my-1',
   );
 
   const sectionContentClasses = cn(
-    'text-gray-800 dark:text-gray-200',
-    paperSize === 'A4' && 'text-sm',
-    paperSize === '80MM' && 'text-xs',
-    paperSize === '58MM' && 'text-[11px]',
+    'text-foreground',
+    paperSize === 'A4' && 'text-base space-y-2',
+    paperSize === '80MM' && 'text-xs space-y-0.5',
+    paperSize === '58MM' && 'text-[11px] space-y-0.5',
+  );
+
+  // Helper for row items to ensure alignment and styling
+  const RowItem = ({
+    label,
+    value,
+    bold = false,
+  }: {
+    label: string;
+    value: React.ReactNode;
+    bold?: boolean;
+  }) => (
+    <div
+      className={cn(
+        'flex justify-between items-center py-1',
+        bold && 'font-bold text-lg',
+      )}
+    >
+      <span className={cn('text-muted-foreground', bold && 'text-foreground')}>
+        {label}
+      </span>
+      <span className={cn('font-medium', bold && 'text-foreground')}>
+        {value}
+      </span>
+    </div>
   );
 
   // Calculate totals for Bill Summary
+  const billSummary = reportData.billSummary || [];
   const billSummaryTotals = {
-    totalBills: sampleReportData.billSummary.length,
-    completedBills: sampleReportData.billSummary.filter(
-      (bill) => bill.status === 'Paid',
-    ).length,
-    pendingBills: sampleReportData.billSummary.filter(
-      (bill) => bill.status === 'Pending',
-    ).length,
-    cancelledBills: sampleReportData.billSummary.filter(
-      (bill) => bill.status === 'Cancelled',
-    ).length,
-    totalAmount: sampleReportData.billSummary.reduce(
-      (sum, bill) => sum + bill.amount,
-      0,
-    ),
+    totalBills: billSummary.length,
+    completedBills: billSummary.filter((bill) => bill.status === 'Paid').length,
+    pendingBills: billSummary.filter((bill) => bill.status === 'Pending')
+      .length,
+    cancelledBills: billSummary.filter((bill) => bill.status === 'Cancelled')
+      .length,
+    totalAmount: billSummary.reduce((sum, bill) => sum + bill.amount, 0),
   };
 
   return (
@@ -131,145 +125,103 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         <div className={lineClasses}></div>
 
         {/* Sales Summary */}
-        {filters.showSalesSummary && (
-          <div className="mb-2">
+        {filters.showSalesSummary && reportData.salesSummary && (
+          <div className="mb-6 page-break-inside-avoid">
             <div className={sectionTitleClasses}>SALES SUMMARY</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Net Sale:</span>
-                <span>
-                  {formatCurrency(sampleReportData.salesSummary.netSale)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Total Tax:</span>
-                <span>
-                  {formatCurrency(sampleReportData.salesSummary.totalTax)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>VAT:</span>
-                <span>{formatCurrency(sampleReportData.salesSummary.vat)}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Total Sales:</span>
-                <span>
-                  {formatCurrency(sampleReportData.salesSummary.totalSales)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Discount:</span>
-                <span>
-                  {formatCurrency(sampleReportData.salesSummary.discount)}
-                </span>
-              </div>
+            <div className={sectionContentClasses}>
+              <RowItem
+                label="Net Sale:"
+                value={formatCurrency(reportData.salesSummary.netSale)}
+              />
+              <RowItem
+                label="Total Tax:"
+                value={formatCurrency(reportData.salesSummary.totalTax)}
+              />
+              <RowItem
+                label="VAT:"
+                value={formatCurrency(reportData.salesSummary.vat)}
+              />
+              <RowItem
+                label="Total Sales:"
+                value={formatCurrency(reportData.salesSummary.totalSales)}
+                bold
+              />
+              <RowItem
+                label="Discount:"
+                value={formatCurrency(reportData.salesSummary.discount)}
+              />
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
-
-        {/* Z Report Summary */}
-        {filters.showZReportSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>Z REPORT SUMMARY</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Opening:</span>
-                <span>{formatCurrency(5000)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Closing:</span>
-                <span>{formatCurrency(85000)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Cash Deposit:</span>
-                <span>{formatCurrency(80000)}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Difference:</span>
-                <span>{formatCurrency(5000)}</span>
-              </div>
-            </div>
-            <div className={lineClasses}></div>
+            {/* <div className={lineClasses}></div> */}
           </div>
         )}
 
         {/* Order Type Summary */}
-        {filters.showOrderTypeSummary && (
-          <div className="mb-2">
+        {filters.showOrderTypeSummary && reportData.orderTypeSummary && (
+          <div className="mb-6 page-break-inside-avoid">
             <div className={sectionTitleClasses}>ORDER TYPE SUMMARY</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.orderTypeSummary.map((orderType, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>{orderType.type}:</span>
-                  <span>
-                    {orderType.orders} - {formatCurrency(orderType.netSale)}
-                  </span>
-                </div>
+            <div className={sectionContentClasses}>
+              {reportData.orderTypeSummary.map((orderType, index) => (
+                <RowItem
+                  key={index}
+                  label={orderType.type + ':'}
+                  value={`${orderType.orders} - ${formatCurrency(orderType.netSale)}`}
+                />
               ))}
             </div>
-            <div className={lineClasses}></div>
           </div>
         )}
 
         {/* Payment Type Summary */}
-        {filters.showPaymentTypeSummary && (
-          <div className="mb-2">
+        {filters.showPaymentTypeSummary && reportData.paymentTypeSummary && (
+          <div className="mb-6 page-break-inside-avoid">
             <div className={sectionTitleClasses}>PAYMENT TYPE SUMMARY</div>
             <div
-              className={`${sectionContentClasses} grid grid-cols-2 gap-x-2`}
+              className={cn(
+                sectionContentClasses,
+                'grid grid-cols-1 md:grid-cols-2 gap-x-8',
+              )}
             >
-              {sampleReportData.paymentTypeSummary.map((paymentType, index) => (
-                <div key={index} className="flex justify-between">
-                  <span>{paymentType.method}:</span>
-                  <span>{formatCurrency(paymentType.amount)}</span>
-                </div>
+              {reportData.paymentTypeSummary.map((paymentType, index) => (
+                <RowItem
+                  key={index}
+                  label={paymentType.method + ':'}
+                  value={formatCurrency(paymentType.amount)}
+                />
               ))}
             </div>
-            <div className={lineClasses}></div>
+            {/* <div className={lineClasses}></div> */}
           </div>
         )}
 
         {/* Discount Summary */}
-        {filters.showDiscountSummary && (
-          <div className="mb-2">
+        {filters.showDiscountSummary && reportData.discountSummary && (
+          <div className="mb-6 page-break-inside-avoid">
             <div className={sectionTitleClasses}>DISCOUNT SUMMARY</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Bill Discount:</span>
-                <span>
-                  {formatCurrency(
-                    sampleReportData.discountSummary.billDiscount,
-                  )}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Item Discount:</span>
-                <span>
-                  {formatCurrency(
-                    sampleReportData.discountSummary.itemDiscount,
-                  )}
-                </span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Total Discount:</span>
-                <span>
-                  {formatCurrency(
-                    sampleReportData.discountSummary.totalDiscount,
-                  )}
-                </span>
-              </div>
+            <div className={sectionContentClasses}>
+              <RowItem
+                label="Bill Discount:"
+                value={formatCurrency(reportData.discountSummary.billDiscount)}
+              />
+              <RowItem
+                label="Item Discount:"
+                value={formatCurrency(reportData.discountSummary.itemDiscount)}
+              />
+              <RowItem
+                label="Total Discount:"
+                value={formatCurrency(reportData.discountSummary.totalDiscount)}
+                bold
+              />
             </div>
-            <div className={lineClasses}></div>
+            {/* <div className={lineClasses}></div> */}
           </div>
         )}
 
         {/* Expense Summary */}
-        {filters.showExpenseSummary && (
+        {filters.showExpenseSummary && reportData.expenseSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>EXPENSE SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.expenseSummary.map((expense, index) => (
+              {reportData.expenseSummary.map((expense, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{expense.category}:</span>
                   <span>{formatCurrency(expense.amount)}</span>
@@ -282,36 +234,41 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
 
         {/* Bill Summary */}
         {filters.showBillSummary && (
-          <div className="mb-2">
+          <div className="mb-6 page-break-inside-avoid">
             <div className={sectionTitleClasses}>BILL SUMMARY</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Total Bills:</span>
-                <span>{billSummaryTotals.totalBills}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Completed:</span>
-                <span>{billSummaryTotals.completedBills}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Pending:</span>
-                <span>{billSummaryTotals.pendingBills}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Total Amount:</span>
-                <span>{formatCurrency(billSummaryTotals.totalAmount)}</span>
-              </div>
+            <div className={sectionContentClasses}>
+              <RowItem
+                label="Total Bills:"
+                value={billSummaryTotals.totalBills}
+              />
+              <RowItem
+                label="Completed:"
+                value={billSummaryTotals.completedBills}
+              />
+              <RowItem
+                label="Pending:"
+                value={billSummaryTotals.pendingBills}
+              />
+              <RowItem
+                label="Cancelled:"
+                value={billSummaryTotals.cancelledBills}
+              />
+              <RowItem
+                label="Total Amount:"
+                value={formatCurrency(billSummaryTotals.totalAmount)}
+                bold
+              />
             </div>
-            <div className={lineClasses}></div>
+            {/* <div className={lineClasses}></div> */}
           </div>
         )}
 
         {/* Delivery Boy Summary */}
-        {filters.showDeliveryBoySummary && (
+        {filters.showDeliveryBoySummary && reportData.deliveryBoySummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>DELIVERY BOY SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.deliveryBoySummary.map((deliveryBoy, index) => (
+              {reportData.deliveryBoySummary.map((deliveryBoy, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{deliveryBoy.name}:</span>
                   <span>
@@ -326,11 +283,11 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Waiter Summary */}
-        {filters.showWaiterSummary && (
+        {filters.showWaiterSummary && reportData.waiterSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>WAITER SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.waiterSummary.map((waiter, index) => (
+              {reportData.waiterSummary.map((waiter, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{waiter.name}:</span>
                   <span>
@@ -344,13 +301,13 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Product Group Summary */}
-        {filters.showProductGroupSummary && (
+        {filters.showProductGroupSummary && reportData.productGroupSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>PRODUCT GROUP SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.productGroupSummary.map((group, index) => (
+              {reportData.productGroupSummary.map((group, index) => (
                 <div key={index} className="flex justify-between">
-                  <span>{group.productGroup}:</span>
+                  <span>{group.taxProductGroup}:</span>
                   <span>{formatCurrency(group.amount)}</span>
                 </div>
               ))}
@@ -360,33 +317,32 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Kitchen Department Summary */}
-        {filters.showKitchenDepartmentSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>
-              KITCHEN DEPARTMENT SUMMARY
-            </div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.kitchenDepartmentSummary.map(
-                (kitchen, index) => (
+        {filters.showKitchenDepartmentSummary &&
+          reportData.kitchenDepartmentSummary && (
+            <div className="mb-2">
+              <div className={sectionTitleClasses}>
+                KITCHEN DEPARTMENT SUMMARY
+              </div>
+              <div className={`${sectionContentClasses} space-y-0.5`}>
+                {reportData.kitchenDepartmentSummary.map((kitchen, index) => (
                   <div key={index} className="flex justify-between">
                     <span>{kitchen.kitchen}:</span>
                     <span>
                       {kitchen.soldItems} - {formatCurrency(kitchen.amount)}
                     </span>
                   </div>
-                ),
-              )}
+                ))}
+              </div>
+              <div className={lineClasses}></div>
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
+          )}
 
         {/* Category Summary */}
-        {filters.showCategorySummary && (
+        {filters.showCategorySummary && reportData.categorySummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>CATEGORY SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.categorySummary.map((category, index) => (
+              {reportData.categorySummary.map((category, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{category.category}:</span>
                   <span>
@@ -400,11 +356,11 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Sold Items Summary */}
-        {filters.showSoldItemsSummary && (
+        {filters.showSoldItemsSummary && reportData.soldItemsSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>SOLD ITEMS SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.soldItemsSummary.map((item, index) => (
+              {reportData.soldItemsSummary.map((item, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{item.itemName}:</span>
                   <span>
@@ -419,11 +375,11 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Cancel Items Summary */}
-        {filters.showCancelItemsSummary && (
+        {filters.showCancelItemsSummary && reportData.cancelItemsSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>CANCEL ITEMS SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.cancelItemsSummary.map((item, index) => (
+              {reportData.cancelItemsSummary.map((item, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{item.itemName}:</span>
                   <span>
@@ -437,18 +393,18 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Wallet Summary */}
-        {filters.showWalletSummary && (
+        {filters.showWalletSummary && reportData.walletSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>WALLET SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
               <div className="flex justify-between">
                 <span>Transactions:</span>
-                <span>{sampleReportData.walletSummary.transactions}</span>
+                <span>{reportData.walletSummary.transactions}</span>
               </div>
               <div className="flex justify-between">
                 <span>Total Amount:</span>
                 <span>
-                  {formatCurrency(sampleReportData.walletSummary.totalAmount)}
+                  {formatCurrency(reportData.walletSummary.totalAmount)}
                 </span>
               </div>
             </div>
@@ -457,95 +413,95 @@ export function ReportLayout({ paperSize, filters }: ReportLayoutProps) {
         )}
 
         {/* Due Payment Received Summary */}
-        {filters.showDuePaymentReceivedSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>DUE PAYMENT RECEIVED</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Amount:</span>
-                <span>
-                  {formatCurrency(
-                    sampleReportData.duePaymentReceivedSummary.amount,
-                  )}
-                </span>
+        {filters.showDuePaymentReceivedSummary &&
+          reportData.duePaymentReceivedSummary && (
+            <div className="mb-2">
+              <div className={sectionTitleClasses}>DUE PAYMENT RECEIVED</div>
+              <div className={`${sectionContentClasses} space-y-0.5`}>
+                <div className="flex justify-between">
+                  <span>Amount:</span>
+                  <span>
+                    {formatCurrency(
+                      reportData.duePaymentReceivedSummary.amount,
+                    )}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Transactions:</span>
+                  <span>{reportData.duePaymentReceivedSummary.count}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Transactions:</span>
-                <span>{sampleReportData.duePaymentReceivedSummary.count}</span>
-              </div>
+              <div className={lineClasses}></div>
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
+          )}
 
         {/* Due Payment Receivable Summary */}
-        {filters.showDuePaymentReceivableSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>DUE PAYMENT RECEIVABLE</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              <div className="flex justify-between">
-                <span>Amount:</span>
-                <span>
-                  {formatCurrency(
-                    sampleReportData.duePaymentReceivableSummary.amount,
-                  )}
-                </span>
+        {filters.showDuePaymentReceivableSummary &&
+          reportData.duePaymentReceivableSummary && (
+            <div className="mb-2">
+              <div className={sectionTitleClasses}>DUE PAYMENT RECEIVABLE</div>
+              <div className={`${sectionContentClasses} space-y-0.5`}>
+                <div className="flex justify-between">
+                  <span>Amount:</span>
+                  <span>
+                    {formatCurrency(
+                      reportData.duePaymentReceivableSummary.amount,
+                    )}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Transactions:</span>
+                  <span>{reportData.duePaymentReceivableSummary.count}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Transactions:</span>
-                <span>
-                  {sampleReportData.duePaymentReceivableSummary.count}
-                </span>
-              </div>
+              <div className={lineClasses}></div>
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
+          )}
 
         {/* Payment Variance Summary */}
-        {filters.showPaymentVarianceSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>PAYMENT VARIANCE</div>
-            <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.paymentVarianceSummary.map(
-                (variance, index) => (
+        {filters.showPaymentVarianceSummary &&
+          reportData.paymentVarianceSummary && (
+            <div className="mb-2">
+              <div className={sectionTitleClasses}>PAYMENT VARIANCE</div>
+              <div className={`${sectionContentClasses} space-y-0.5`}>
+                {reportData.paymentVarianceSummary.map((variance, index) => (
                   <div key={index} className="flex justify-between">
                     <span>{variance.method}:</span>
                     <span>{formatCurrency(variance.variance)}</span>
                   </div>
-                ),
-              )}
+                ))}
+              </div>
+              <div className={lineClasses}></div>
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
+          )}
 
         {/* Currency Denominations Summary */}
-        {filters.showCurrencyDenominationsSummary && (
-          <div className="mb-2">
-            <div className={sectionTitleClasses}>CURRENCY DENOMINATIONS</div>
-            <div
-              className={`${sectionContentClasses} grid grid-cols-2 gap-x-2`}
-            >
-              {sampleReportData.currencyDenominationsSummary.map(
-                (denomination, index) => (
-                  <div key={index} className="flex justify-between">
-                    <span>{denomination.denomination}:</span>
-                    <span>{denomination.count}</span>
-                  </div>
-                ),
-              )}
+        {filters.showCurrencyDenominationsSummary &&
+          reportData.currencyDenominationsSummary && (
+            <div className="mb-2">
+              <div className={sectionTitleClasses}>CURRENCY DENOMINATIONS</div>
+              <div
+                className={`${sectionContentClasses} grid grid-cols-2 gap-x-2`}
+              >
+                {reportData.currencyDenominationsSummary.map(
+                  (denomination, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span>{denomination.denomination}:</span>
+                      <span>{denomination.count}</span>
+                    </div>
+                  ),
+                )}
+              </div>
+              <div className={lineClasses}></div>
             </div>
-            <div className={lineClasses}></div>
-          </div>
-        )}
+          )}
 
         {/* Order Source Summary */}
-        {filters.showOrderSourceSummary && (
+        {filters.showOrderSourceSummary && reportData.orderSourceSummary && (
           <div className="mb-2">
             <div className={sectionTitleClasses}>ORDER SOURCE SUMMARY</div>
             <div className={`${sectionContentClasses} space-y-0.5`}>
-              {sampleReportData.orderSourceSummary.map((source, index) => (
+              {reportData.orderSourceSummary.map((source, index) => (
                 <div key={index} className="flex justify-between">
                   <span>{source.source}:</span>
                   <span>

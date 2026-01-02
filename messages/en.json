@@ -636,7 +636,7 @@
   "employees.roles.addRole": "Add Role",
   "employees.roles.searchPlaceholder": "Search roles...",
   "navigation.taxes": "Taxes",
-  "navigation.productGroup": "Tax Product Groups",
+  "navigation.taxProductGroup": "Tax Product Groups",
   "navigation.taxGroup": "Tax Groups",
   "taxGroups.title": "Tax Groups",
   "taxGroups.subtitle": "Manage all tax groups and their configurations",

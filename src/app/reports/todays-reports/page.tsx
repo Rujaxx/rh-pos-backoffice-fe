@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import Layout from '@/components/common/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,24 +8,23 @@ import { PaperSizeButtons } from '@/components/reports/todays-reports/paper-size
 import { ReportLayout } from '@/components/reports/todays-reports/report-layout';
 import { TodaysReportFilters } from '@/components/reports/report-filters/todays-report-filter';
 import { useTranslation } from '@/hooks/useTranslation';
-import { ReportQueryParams } from '@/types/report.type';
-import { PaperSize, TodaysReportFilterState } from '@/types/todays-report.type';
+import {
+  PaperSize,
+  TDSReportFilter,
+  TodaysReportFilterState,
+} from '@/types/todays-report.type';
 import { Printer, Maximize2, Minimize2, Loader2 } from 'lucide-react';
-import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { toast } from 'sonner';
-import { useDebounce } from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
+import { ReportQueryParams } from '@/types/report.type';
+import { PaginationState } from '@tanstack/react-table';
+import { useGenerateTdsReprot } from '@/services/api/reports/todays-report/tds-report.mutation';
 
 // Initialize with today's date
 const today = new Date().toISOString().split('T')[0];
 
 // Default filters
 const defaultFilters: TodaysReportFilterState = {
-  from: today,
-  to: today,
-  brandIds: [],
-  restaurantIds: [],
-  orderTypeIds: [],
   showSalesSummary: true,
   showZReportSummary: true,
   showOrderTypeSummary: true,
@@ -46,51 +45,74 @@ const defaultFilters: TodaysReportFilterState = {
   showPaymentVarianceSummary: true,
   showCurrencyDenominationsSummary: true,
   showOrderSourceSummary: true,
+  from: today,
+  to: today,
+  brandIds: [],
+  restaurantIds: [],
+  orderTypeIds: [],
 };
 
 export default function TodaysReportPage() {
   const { t } = useTranslation();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const [paperSize, setPaperSize] = useState<PaperSize>('A4');
   const [expandedSections, setExpandedSections] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
   const [isFullPreview, setIsFullPreview] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const createTdsMutation = useGenerateTdsReprot();
+  const isLoading = createTdsMutation.isPending;
+  const reportData = createTdsMutation.data?.data?.data;
 
   // Initialize filters
   const [filters, setFilters] =
     useState<TodaysReportFilterState>(defaultFilters);
 
-  // Debounced filters for API calls (300ms delay)
-  const debouncedFilters = useDebounce(filters, 300);
+  const handleGenerateReport = async () => {
+    try {
+      const body: TDSReportFilter = {
+        sales: filters.showSalesSummary,
+        z_report: filters.showZReportSummary,
+        order_type: filters.showOrderTypeSummary,
+        payment_type: filters.showPaymentTypeSummary,
+        discount: filters.showDiscountSummary,
+        expense: filters.showExpenseSummary,
+        bill: filters.showBillSummary,
+        delivery_boy: filters.showDeliveryBoySummary,
+        waiter: filters.showWaiterSummary,
+        tax_product_group: filters.showProductGroupSummary,
+        kitchen_department: filters.showKitchenDepartmentSummary,
+        category: filters.showCategorySummary,
+        sold_items: filters.showSoldItemsSummary,
+        cancel_items: filters.showCancelItemsSummary,
+        wallet: filters.showWalletSummary,
+        due_payment_received: filters.showDuePaymentReceivedSummary,
+        due_payment_receivable: filters.showDuePaymentReceivableSummary,
+        payment_variance: filters.showPaymentVarianceSummary,
+        currency_denominations: filters.showCurrencyDenominationsSummary,
+        order_source: filters.showOrderSourceSummary,
+        from: new Date(filters.from || today).toISOString(),
+        to: (() => {
+          const toDate = new Date(filters.to || today);
+          toDate.setUTCHours(23, 59, 59, 999);
+          return toDate.toISOString();
+        })(),
+        brandIds: filters.brandIds,
+        restaurantIds: filters.restaurantIds,
+        orderTypeIds: filters.orderTypeIds,
+      };
 
-  // This effect simulates API call when filters change
-  useEffect(() => {
-    // Skip initial render
-    if (JSON.stringify(filters) === JSON.stringify(defaultFilters)) return;
-
-    const fetchReportData = async () => {
-      setIsLoading(true);
-      try {
-        // TODO: Replace with actual API call
-        // const response = await fetchTodayReport(debouncedFilters);
-        // setReportData(response.data);
-
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        console.log('Fetching report with filters:', debouncedFilters);
-        // In real implementation, you would update state with API data here
-      } catch (error) {
-        toast.error('Failed to load report data');
-        console.error('API Error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchReportData();
-  }, [debouncedFilters]); // Only fetch when debounced filters change
+      await createTdsMutation.mutateAsync({
+        body,
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+    }
+  };
 
   const handleBaseFilterChange = useCallback(
     (newFilters: ReportQueryParams) => {
@@ -167,7 +189,7 @@ export default function TodaysReportPage() {
           <title>Today's Report - ${new Date().toLocaleDateString()}</title>
           <style>
             ${getPrintStyles(paperSize)}
-            body { 
+            body {
               font-family: ${paperSize === 'A4' ? 'system-ui' : 'monospace'};
               margin: 0;
               padding: 0;
@@ -233,29 +255,18 @@ export default function TodaysReportPage() {
         </div>
 
         {/* FILTERS SECTION */}
-        <ReportFilters
-          filters={{
-            from: filters.from,
-            to: filters.to,
-            brandIds: filters.brandIds,
-            restaurantIds: filters.restaurantIds,
-            orderTypeIds: filters.orderTypeIds,
-            billStatus: filters.billStatus,
-          }}
+        <TodaysReportFilters
+          filters={filters}
           onFilterChange={handleBaseFilterChange}
           onClearFilters={handleClearFilters}
-        >
-          <TodaysReportFilters
-            filters={filters}
-            onFilterChange={handleBaseFilterChange}
-            expandedSections={expandedSections}
-            onToggleExpandedSections={() =>
-              setExpandedSections(!expandedSections)
-            }
-            onToggleSection={toggleSection}
-            onToggleAllSections={toggleAllSections}
-          />
-        </ReportFilters>
+          onSubmit={handleGenerateReport}
+          expandedSections={expandedSections}
+          onToggleExpandedSections={() =>
+            setExpandedSections(!expandedSections)
+          }
+          onToggleSection={toggleSection}
+          onToggleAllSections={toggleAllSections}
+        />
 
         {/* PAPER SIZE SELECTION + REPORT PREVIEW */}
         <div
@@ -375,7 +386,8 @@ export default function TodaysReportPage() {
                 >
                   <ReportLayout
                     paperSize={paperSize}
-                    filters={debouncedFilters}
+                    filters={filters}
+                    data={reportData}
                   />
                 </div>
               </div>
@@ -386,28 +398,68 @@ export default function TodaysReportPage() {
 
       {/* Print-only view */}
       <div className="hidden print:block">
-        <ReportLayout paperSize={paperSize} filters={filters} />
+        <ReportLayout
+          paperSize={paperSize}
+          filters={filters}
+          data={reportData}
+        />
       </div>
     </Layout>
   );
 }
 
 function getPrintStyles(paperSize: PaperSize): string {
+  const isThermal = paperSize === '80MM' || paperSize === '58MM';
+
   const baseStyles = `
     @media print {
-      @page { 
-        margin: 0; 
-        size: ${paperSize === 'A4' ? 'A4 landscape' : paperSize === '80MM' ? '80mm' : '58mm'};
+      @page {
+        margin: ${isThermal ? '0' : '5mm'};
+        size: ${paperSize === 'A4' ? 'A4 portrait' : 'auto'};
       }
-      * { 
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+      html, body {
+        height: auto;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
       }
-      body { 
+      body {
         background: white !important;
         color: black !important;
+        font-family: ${paperSize === 'A4' ? 'system-ui, -apple-system, sans-serif' : 'monospace'} !important;
         font-size: ${paperSize === '58MM' ? '10px' : paperSize === '80MM' ? '11px' : '12px'} !important;
+        ${isThermal ? 'overflow: visible !important;' : ''}
       }
+      /* Override any max-width from tailwind classes during print */
+      .print-container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .print-content {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        ${isThermal ? 'height: auto !important;' : ''}
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box !important;
+        ${isThermal ? 'page-break-inside: avoid !important;' : ''}
+        ${isThermal ? 'break-inside: avoid !important;' : ''}
+      }
+    }
+    /* Specific width enforcement for thermal in the print window body */
+    ${
+      isThermal
+        ? `
+      body {
+        width: ${paperSize === '80MM' ? '80mm' : '58mm'} !important;
+      }
+    `
+        : ''
     }
   `;
 
