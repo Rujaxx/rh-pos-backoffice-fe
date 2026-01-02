@@ -33,11 +33,11 @@ export function ReportFilters({
   // Fetch active brands, restaurants, menus, and order types
   const { data: brandsData } = useActiveBrands();
   const { data: restaurantsData } = useActiveRestaurants();
-  const { data: orderTypesData } = useOrderTypes();
+  // const { data: orderTypesData } = useOrderTypes();
 
   const brands = brandsData?.data || [];
   const restaurants = restaurantsData?.data || [];
-  const orderTypes = orderTypesData?.data || [];
+  // const orderTypes = orderTypesData?.data || [];
 
   // Options for dropdowns
   const brandOptions = brands.map((brand) => ({
@@ -50,10 +50,10 @@ export function ReportFilters({
     value: restaurant._id!,
   }));
 
-  const orderTypeOptions = orderTypes.map((orderType) => ({
-    label: orderType.name[locale] || orderType.name.en,
-    value: orderType._id!,
-  }));
+  // const orderTypeOptions = orderTypes.map((orderType) => ({
+  //   label: orderType.name[locale] || orderType.name.en,
+  //   value: orderType._id!,
+  // }));
 
   // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:mm)
   const isoToLocalDateTime = (isoString?: string): string => {
@@ -150,9 +150,9 @@ export function ReportFilters({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {/* Order Types */}
-          <div className="space-y-2">
+        {/* <div className="space-y-2">
             <Label>{t('orderTypes.title') || 'Order Types'}</Label>
             <MultiSelectDropdown
               options={orderTypeOptions}
@@ -163,7 +163,7 @@ export function ReportFilters({
               placeholder={t('common.selectOrderTypes') || 'Select Order Types'}
             />
           </div>
-        </div>
+        </div>  */}
 
         {children}
 

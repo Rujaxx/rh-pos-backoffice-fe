@@ -247,6 +247,7 @@ export default function TodaysReportPage() {
         >
           <TodaysReportFilters
             filters={filters}
+            onFilterChange={handleBaseFilterChange}
             expandedSections={expandedSections}
             onToggleExpandedSections={() =>
               setExpandedSections(!expandedSections)

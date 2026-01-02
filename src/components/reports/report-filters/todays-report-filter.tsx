@@ -8,6 +8,10 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReportQueryParams } from '@/types/report.type';
+import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useI18n } from '@/providers/i18n-provider';
+import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
 
 export interface TodaysReportFiltersProps {
   filters: ReportQueryParams & {
@@ -33,6 +37,7 @@ export interface TodaysReportFiltersProps {
     showOrderSourceSummary: boolean;
   };
   expandedSections: boolean;
+  onFilterChange: (filters: ReportQueryParams) => void;
   onToggleExpandedSections: () => void;
   onToggleSection: (sectionKey: string) => void;
   onToggleAllSections: (enabled: boolean) => void;
@@ -40,6 +45,7 @@ export interface TodaysReportFiltersProps {
 
 export function TodaysReportFilters({
   filters,
+  onFilterChange,
   expandedSections,
   onToggleExpandedSections,
   onToggleSection,
@@ -79,6 +85,21 @@ export function TodaysReportFilters({
     },
     { key: 'showOrderSourceSummary', label: 'Order Source Summary' },
   ];
+  const { t } = useTranslation();
+  const { locale } = useI18n();
+  const { data: orderTypesData } = useOrderTypes();
+  const orderTypes = orderTypesData?.data || [];
+  const orderTypeOptions = orderTypes.map((orderType) => ({
+    label: orderType.name[locale] || orderType.name.en,
+    value: orderType._id!,
+  }));
+
+  const handleMultiSelectChange = (
+    field: keyof ReportQueryParams,
+    value: string[],
+  ) => {
+    onFilterChange({ ...filters, [field]: value });
+  };
 
   const enabledSectionsCount = sectionToggles.filter(
     (section) => filters[section.key as keyof typeof filters] as boolean,
@@ -86,6 +107,18 @@ export function TodaysReportFilters({
 
   return (
     <>
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Order Types */}
+        <div className="space-y-2">
+          <Label>{t('orderTypes.title') || 'Order Types'}</Label>
+          <MultiSelectDropdown
+            options={orderTypeOptions}
+            value={filters.orderTypeIds || []}
+            onChange={(value) => handleMultiSelectChange('orderTypeIds', value)}
+            placeholder={t('common.selectOrderTypes') || 'Select Order Types'}
+          />
+        </div>
+      </div>
       {/* Section Toggles Card */}
       <Card className="mt-6">
         <CardContent className="p-4">

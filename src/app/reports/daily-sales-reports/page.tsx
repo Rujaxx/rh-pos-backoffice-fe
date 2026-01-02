@@ -27,7 +27,7 @@ import {
   REPORT_TYPE_BUTTONS,
   REPORT_TYPE_LABELS,
 } from '@/components/reports/daily-sales-reports/constants';
-
+import { DailySalesReportFilters } from '@/components/reports/report-filters/daily-sales-filter';
 // Report Status Colors
 const REPORT_STATUS_CONFIGS: Record<
   ReportGenerationStatus,
@@ -380,7 +380,13 @@ export default function DailySalesReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-        />
+        >
+          <DailySalesReportFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+          />
+        </ReportFilters>
 
         {/* Report Type Selection */}
         <Card>
