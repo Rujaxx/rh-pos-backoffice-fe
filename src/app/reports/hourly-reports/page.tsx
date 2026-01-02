@@ -429,6 +429,7 @@ export default function HourlyReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onSubmit={() => {}}
         />
 
         {/* Report Type Selection */}

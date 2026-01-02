@@ -159,6 +159,7 @@ export default function SalesReportsPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onSubmit={() => {}}
         >
           <SalesReportFilters
             filters={filters}

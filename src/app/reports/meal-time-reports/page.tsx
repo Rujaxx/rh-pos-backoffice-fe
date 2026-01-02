@@ -249,6 +249,7 @@ export default function MealTimeReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onSubmit={() => {}}
         >
           <MealTimeReportFilters
             filters={filters}
@@ -288,7 +289,15 @@ export default function MealTimeReportPage() {
             </div>
           </CardHeader>
 
-          {!isGeneratedReportsCollapsed && (
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out
+    ${
+      isGeneratedReportsCollapsed
+        ? 'max-h-0 opacity-0 translate-y-[-4px]'
+        : 'max-h-[1000px] opacity-100 translate-y-0'
+    }
+  `}
+          >
             <CardContent className="p-4 pt-0">
               {generatedReports.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
@@ -302,7 +311,7 @@ export default function MealTimeReportPage() {
                 />
               )}
             </CardContent>
-          )}
+          </div>
         </Card>
 
         {/* Meal Time Data Table */}

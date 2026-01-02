@@ -104,14 +104,6 @@ export function MealTimeReportDetailsModal({
               <FileText className="h-5 w-5" />
               {t('reports.mealTime.details.title')}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
 

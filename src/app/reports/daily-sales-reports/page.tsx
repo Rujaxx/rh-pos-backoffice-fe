@@ -380,6 +380,7 @@ export default function DailySalesReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onSubmit={() => {}}
         >
           <DailySalesReportFilters
             filters={filters}
