@@ -236,18 +236,6 @@ export function TodaysReportFilters({
         </CardContent>
       </Card>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Order Types */}
-        <div className="space-y-2">
-          <Label>{t('orderTypes.title') || 'Order Types'}</Label>
-          <MultiSelectDropdown
-            options={orderTypeOptions}
-            value={filters.orderTypeIds || []}
-            onChange={(value) => handleMultiSelectChange('orderTypeIds', value)}
-            placeholder={t('common.selectOrderTypes') || 'Select Order Types'}
-          />
-        </div>
-      </div>
       {/* Section Toggles Card */}
       <Card className="mt-6">
         <CardContent className="p-4">
