@@ -50,6 +50,13 @@ export enum DailyReportType {
   MONTH_WISE_SALES = 'MONTH_WISE_SALES',
 }
 
+// Hourly Report Types
+export enum HourlyReportType {
+  DAY_WISE = 'DSR_BILL_WISE',
+  DAY_WISE_SUMMARY = 'DSR_DAY_WISE_SUMMARY',
+  MONTH_WISE = 'MONTH_WISE_SALES',
+}
+
 // Generated Report (for DSR Page table)
 export interface GeneratedReport {
   _id: string;
