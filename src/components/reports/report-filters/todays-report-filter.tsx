@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { MultiSelectDropdown } from '@/components/ui/multi-select-dropdown';
 import { Input } from '@/components/ui/input';
@@ -41,6 +41,8 @@ export function TodaysReportFilters({
   const { locale } = useI18n();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const sectionsContentRef = useRef<HTMLDivElement>(null);
+  const [sectionsHeight, setSectionsHeight] = useState<number | 'auto'>('auto');
 
   // Fetch active brands, restaurants, menus, and order types
   const { data: brandsData } = useActiveBrands();
@@ -66,6 +68,15 @@ export function TodaysReportFilters({
     label: orderType.name[locale] || orderType.name.en,
     value: orderType._id!,
   }));
+
+  // Update sections height when expanded
+  useEffect(() => {
+    if (expandedSections && sectionsContentRef.current) {
+      setSectionsHeight(sectionsContentRef.current.scrollHeight);
+    } else {
+      setSectionsHeight(0);
+    }
+  }, [expandedSections]);
 
   // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:mm)
   const isoToLocalDateTime = (isoString?: string): string => {
@@ -148,7 +159,7 @@ export function TodaysReportFilters({
       <Card className="mb-6">
         {/* Header with Collapse Button */}
         <CardHeader
-          className="flex justify-between items-center  cursor-pointer"
+          className="flex justify-between items-center cursor-pointer"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           <CardTitle className="text-lg">
@@ -306,53 +317,60 @@ export function TodaysReportFilters({
             </div>
           </div>
 
-          {/* Show sections when expanded */}
-          {expandedSections && (
-            <div
-              className={cn(
-                'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3',
-              )}
-            >
-              {sectionToggles.map((section) => {
-                const isEnabled = filters[
-                  section.key as keyof typeof filters
-                ] as boolean;
+          {/* Sections Container with Dynamic Height */}
+          <div
+            ref={sectionsContentRef}
+            className={cn(
+              'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3',
+              'overflow-hidden transition-all duration-300 ease-in-out',
+            )}
+            style={{
+              maxHeight: expandedSections ? sectionsHeight : 0,
+              opacity: expandedSections ? 1 : 0,
+              transform: expandedSections
+                ? 'translateY(0)'
+                : 'translateY(-4px)',
+            }}
+          >
+            {sectionToggles.map((section) => {
+              const isEnabled = filters[
+                section.key as keyof typeof filters
+              ] as boolean;
 
-                return (
-                  <div
-                    key={section.key}
+              return (
+                <div
+                  key={section.key}
+                  className={cn(
+                    'flex items-center space-x-2 p-2 rounded-lg border transition-colors',
+                    'bg-white dark:bg-gray-800',
+                    isEnabled
+                      ? 'border-primary bg-primary/5'
+                      : 'border-muted hover:bg-muted/30',
+                  )}
+                >
+                  <Checkbox
+                    id={section.key}
+                    checked={isEnabled}
+                    onCheckedChange={() => onToggleSection(section.key)}
                     className={cn(
-                      'flex items-center space-x-2 p-2 rounded-lg border transition-colors',
-                      'bg-white dark:bg-gray-800',
+                      isEnabled && 'border-primary bg-primary text-white',
+                    )}
+                  />
+                  <Label
+                    htmlFor={section.key}
+                    className={cn(
+                      'text-sm cursor-pointer flex-1 truncate',
                       isEnabled
-                        ? 'border-primary bg-primary/5'
-                        : 'border-muted hover:bg-muted/30',
+                        ? 'text-primary font-medium'
+                        : 'text-foreground',
                     )}
                   >
-                    <Checkbox
-                      id={section.key}
-                      checked={isEnabled}
-                      onCheckedChange={() => onToggleSection(section.key)}
-                      className={cn(
-                        isEnabled && 'border-primary bg-primary text-white',
-                      )}
-                    />
-                    <Label
-                      htmlFor={section.key}
-                      className={cn(
-                        'text-sm cursor-pointer flex-1 truncate',
-                        isEnabled
-                          ? 'text-primary font-medium'
-                          : 'text-foreground',
-                      )}
-                    >
-                      {section.label}
-                    </Label>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                    {section.label}
+                  </Label>
+                </div>
+              );
+            })}
+          </div>
 
           {/* Show message when collapsed and sections are enabled */}
           {!expandedSections && enabledSectionsCount > 0 && (
