@@ -1703,5 +1703,7 @@
   "reports.filters.liquorExempted": "مبيعات الخمور المعفاة",
   "reports.filters.paymentMethods": "طرق الدفع",
   "reports.filters.orderTypes": "أنواع الطلبات",
-  "reports.filters.restaurants": "المطاعم"
+  "reports.filters.restaurants": "المطاعم",
+  "common.filters": "الفلاتر",
+  "reports.generate": "إرسال"
 }

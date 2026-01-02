@@ -1604,6 +1604,8 @@
   "reports.mealTime.columns.averageBillValue": "Avg. Bill Value",
 
   "common.reset": "Reset",
+  "common.filters": "Filters",
+  "reports.generate": "Submit",
   "common.selectCategories": "Select Categories",
   "reports.mealTime.generatedReports": " Report Generation Status",
   "navigation.mealTimeReport": "Meal Time Based Sales Report",
