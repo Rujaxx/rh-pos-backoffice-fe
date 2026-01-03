@@ -52,9 +52,14 @@ export enum DailyReportType {
 
 // Hourly Report Types
 export enum HourlyReportType {
-  DAY_WISE = 'DSR_BILL_WISE',
-  DAY_WISE_SUMMARY = 'DSR_DAY_WISE_SUMMARY',
-  MONTH_WISE = 'MONTH_WISE_SALES',
+  DAY_WISE = 'DAY_WISE_HOURLY',
+  DAY_WISE_SUMMARY = 'DAY_WISE_SUMMARY_HOURLY',
+  MONTH_WISE = 'MONTH_WISE_HOURLY_SALES',
+}
+
+export enum PaymentReportType {
+  PAYMENT_ORDER_DETAILS = 'PAYMENT_ORDER_DETAILS',
+  PAYMENT_SUMMARY = 'PAYMENT_SUMMARY',
 }
 
 // Generated Report (for DSR Page table)
@@ -64,7 +69,7 @@ export interface GeneratedReport {
   reportCompleteTime?: string;
   generatedBy: string;
   generatedByName?: string;
-  reportType: DailyReportType;
+  reportType: DailyReportType | PaymentReportType | HourlyReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -151,3 +156,5 @@ export interface StatusData {
   pending?: number;
   other?: number;
 }
+
+export { PaymentMethodsEnum };

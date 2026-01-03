@@ -339,6 +339,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         href: '/reports/hourly-reports',
         icon: Clock,
       },
+      {
+        id: 'payment-reports',
+        label: t('navigation.paymentReports') || 'Payment Reports',
+        href: '/reports/payment-reports',
+        icon: DollarSign,
+      },
     ],
   },
   // FIANCE SECTION NOT IMPLEMENTED YET

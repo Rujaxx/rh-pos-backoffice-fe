@@ -279,12 +279,15 @@ export default function DailySalesReportPage() {
       accessorKey: 'reportType',
       header: t('reports.dailySales.columns.reportType'),
       enableSorting: false,
-      cell: ({ row }) => (
-        <div className="max-w-[200px]">
-          {t(REPORT_TYPE_LABELS[row.original.reportType]) ||
-            row.original.reportType}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const reportType = row.original.reportType;
+        const label =
+          reportType in REPORT_TYPE_LABELS
+            ? t(REPORT_TYPE_LABELS[reportType as DailyReportType])
+            : reportType;
+
+        return <div className="max-w-[200px]">{label}</div>;
+      },
     },
     {
       accessorKey: 'generationStatus',

@@ -14,8 +14,17 @@ import {
   ReportGenerationStatus,
   DailyReportType,
   HourlyReportType,
+  PaymentReportType,
 } from '@/types/report.type';
-import { Calendar, Clock, Mail, User, Building2 } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  Mail,
+  User,
+  Building2,
+  CreditCard,
+  DollarSign,
+} from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface ReportDetailsModalProps {
@@ -24,10 +33,9 @@ interface ReportDetailsModalProps {
   onClose: () => void;
 }
 
-// Unified mapping for all report types - handles both daily and hourly reports
-// Using string type for keys to avoid duplicate enum value conflicts
+// Unified mapping for ALL report types
 const REPORT_TYPE_DISPLAY_NAMES: Record<string, string> = {
-  // Daily Reports - full mapping
+  // Daily Reports
   [DailyReportType.DSR_BILL_WISE]: 'DSR Bill Wise Report',
   [DailyReportType.BILL_WISE_LIQUOR_SALE]: 'Bill Wise Liquor Sale Report',
   [DailyReportType.B2B_SALES]: 'B2B Sales Report',
@@ -43,16 +51,49 @@ const REPORT_TYPE_DISPLAY_NAMES: Record<string, string> = {
   [DailyReportType.ORDER_TYPE_DAY_WISE]: 'Order Type Day Wise Report',
   [DailyReportType.MONTH_WISE_SALES]: 'Month Wise Sales Report',
 
-  // Note: HourlyReportType values that overlap with DailyReportType
-  // will use the daily display names unless explicitly overridden
-};
+  // Payment Reports
+  [PaymentReportType.PAYMENT_ORDER_DETAILS]:
+    'Payment Report with Order Details',
+  [PaymentReportType.PAYMENT_SUMMARY]: 'Payment Summary Report',
 
-// Override mapping for hourly reports (when we want different display names)
-const HOURLY_REPORT_OVERRIDES: Record<string, string> = {
-  // These override the daily display names for hourly reports
+  // Hourly Reports - use same values as DailyReportType but show as Hourly
   [HourlyReportType.DAY_WISE]: 'Hourly Day Wise Report',
   [HourlyReportType.DAY_WISE_SUMMARY]: 'Hourly Day Wise Summary Report',
   [HourlyReportType.MONTH_WISE]: 'Hourly Month Wise Sales Report',
+};
+
+// Determine report category based on report type
+const getReportCategory = (
+  reportType: string,
+): 'DAILY' | 'HOURLY' | 'PAYMENT' => {
+  // Check if it's a PaymentReportType
+  if (
+    Object.values(PaymentReportType).includes(reportType as PaymentReportType)
+  ) {
+    return 'PAYMENT';
+  }
+
+  // Check if it's an HourlyReportType (use string comparison since values are same as DailyReportType)
+  const hourlyTypes = Object.values(HourlyReportType);
+  if (hourlyTypes.includes(reportType as HourlyReportType)) {
+    return 'HOURLY';
+  }
+
+  // Otherwise it's a DailyReportType
+  return 'DAILY';
+};
+
+// Get appropriate icon based on report category
+const getReportIcon = (category: string) => {
+  switch (category) {
+    case 'PAYMENT':
+      return <CreditCard className="h-5 w-5 text-blue-500" />;
+    case 'HOURLY':
+      return <Clock className="h-5 w-5 text-purple-500" />;
+    case 'DAILY':
+    default:
+      return <DollarSign className="h-5 w-5 text-green-500" />;
+  }
 };
 
 // Report status configurations
@@ -117,12 +158,6 @@ const formatDateTime = (dateString?: string): string => {
   }
 };
 
-// Type guard to check if a string is a valid HourlyReportType
-const isHourlyReportType = (value: string): boolean => {
-  const hourlyValues = Object.values(HourlyReportType) as string[];
-  return hourlyValues.includes(value);
-};
-
 export function ReportDetailsModal({
   report,
   isOpen,
@@ -133,15 +168,15 @@ export function ReportDetailsModal({
   const modalData = useMemo(() => {
     if (!report) return null;
 
-    // Determine if it's an hourly report by checking the string value
-    const isHourlyReport = isHourlyReportType(report.reportType);
+    // Determine report category
+    const category = getReportCategory(report.reportType);
 
-    // Get report type display name with hourly overrides
-    const reportTypeDisplay = isHourlyReport
-      ? HOURLY_REPORT_OVERRIDES[report.reportType] ||
-        REPORT_TYPE_DISPLAY_NAMES[report.reportType] ||
-        report.reportType
-      : REPORT_TYPE_DISPLAY_NAMES[report.reportType] || report.reportType;
+    // Get report type display name
+    const reportTypeDisplay =
+      REPORT_TYPE_DISPLAY_NAMES[report.reportType] || report.reportType;
+
+    // Get report icon
+    const reportIcon = getReportIcon(category);
 
     // Extract date range from filters
     const fromDate = report.filters?.from;
@@ -159,8 +194,9 @@ export function ReportDetailsModal({
       report.filters?.restaurantIds?.map((id) => `Restaurant ${id}`) || [];
 
     return {
-      isHourlyReport,
+      category,
       reportTypeDisplay,
+      reportIcon,
       dateRange,
       userEmail,
       restaurants,
@@ -171,8 +207,9 @@ export function ReportDetailsModal({
   if (!report || !modalData) return null;
 
   const {
-    isHourlyReport,
+    category,
     reportTypeDisplay,
+    reportIcon,
     dateRange,
     userEmail,
     restaurants,
@@ -188,26 +225,43 @@ export function ReportDetailsModal({
     );
   };
 
-  const modalTitle = isHourlyReport
-    ? t('reports.hourly.reportDetails')
-    : t('reports.dailySales.reportDetails');
-
-  const reportTypeLabel = isHourlyReport
-    ? t('reports.hourly.reportType')
-    : t('reports.dailySales.reportType');
+  // Get appropriate modal title based on category
+  const getModalTitle = () => {
+    switch (category) {
+      case 'PAYMENT':
+        return t('reports.payment.reportDetails') || 'Payment Report Details';
+      case 'HOURLY':
+        return t('reports.hourly.reportDetails') || 'Hourly Report Details';
+      case 'DAILY':
+      default:
+        return t('reports.dailySales.reportDetails') || 'Report Details';
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">{modalTitle}</DialogTitle>
+          <div className="flex items-center gap-3">
+            {reportIcon}
+            <DialogTitle className="text-xl font-bold">
+              {getModalTitle()}
+            </DialogTitle>
+          </div>
+
+          {/* Report category badge */}
+          <div className="mt-2">
+            <Badge variant="outline" className="capitalize">
+              {category} Report
+            </Badge>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
           {/* Report Type */}
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-2">
-              {reportTypeLabel}
+              {t('reports.details.reportType') || 'Report Type'}
             </h3>
             <p className="text-base font-semibold" data-testid="report-type">
               {reportTypeDisplay}
@@ -362,15 +416,22 @@ export function ReportDetailsModal({
                       </Badge>
                     </div>
                   )}
+
+                  {/* Payment Methods - Show for Payment Reports */}
                   {currentReport.filters.paymentMethods &&
                     currentReport.filters.paymentMethods.length > 0 && (
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge
+                          variant="outline"
+                          className="text-xs flex items-center gap-1"
+                        >
+                          <CreditCard className="h-3 w-3" />
                           {t('reports.filters.paymentMethods')}:{' '}
                           {currentReport.filters.paymentMethods.length}
                         </Badge>
                       </div>
                     )}
+
                   {currentReport.filters.orderTypeIds &&
                     currentReport.filters.orderTypeIds.length > 0 && (
                       <div className="flex items-center gap-2">
