@@ -64,7 +64,11 @@ export default function MealTimeReportPage() {
   }, [submittedFilters]);
 
   // Fetch only when submittedFilters is set (and has required dates)
-  const { data: reportData, isLoading } = useMealTimeReport(queryParams, {
+  const {
+    data: reportData,
+    isLoading,
+    refetch,
+  } = useMealTimeReport(queryParams, {
     enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
   });
 
@@ -79,8 +83,12 @@ export default function MealTimeReportPage() {
   }, []);
 
   const handleApplyFilters = useCallback(() => {
-    setSubmittedFilters(filters);
-  }, [filters]);
+    if (JSON.stringify(filters) === JSON.stringify(submittedFilters)) {
+      refetch();
+    } else {
+      setSubmittedFilters(filters);
+    }
+  }, [filters, submittedFilters, refetch]);
 
   const handleCloseDetailsModal = useCallback(() => {
     setIsDetailsModalOpen(false);
