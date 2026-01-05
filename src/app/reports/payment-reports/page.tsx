@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
-import { TanStackTable } from '@/components/ui/tanstack-table';
 import { Button } from '@/components/ui/button';
 import {
   Download,
@@ -14,14 +13,7 @@ import {
   FileText,
   BarChart,
   DollarSign,
-  CreditCard,
 } from 'lucide-react';
-import {
-  PaginationState,
-  SortingState,
-  ColumnFiltersState,
-  ColumnDef,
-} from '@tanstack/react-table';
 import {
   ReportQueryParams,
   GeneratedReport,
@@ -31,11 +23,12 @@ import {
 } from '@/types/report.type';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 import { PaymentReportChart } from '@/components/reports/payment-reports/payment-graph';
 import { PaymentReportFilters } from '@/components/reports/report-filters/payment-report-filter';
+import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 
-// Report Type Buttons - Use PaymentReportType directly
+// Report Type Buttons
 const PAYMENT_REPORT_TYPE_BUTTONS = [
   {
     type: PaymentReportType.PAYMENT_ORDER_DETAILS,
@@ -49,111 +42,8 @@ const PAYMENT_REPORT_TYPE_BUTTONS = [
   },
 ] as const;
 
-// Report Type Labels for Payment Reports
-const PAYMENT_REPORT_TYPE_LABELS: Record<PaymentReportType, string> = {
-  [PaymentReportType.PAYMENT_ORDER_DETAILS]:
-    'reports.payment.reportTypes.orderDetails',
-  [PaymentReportType.PAYMENT_SUMMARY]: 'reports.payment.reportTypes.summary',
-};
-
-// Report Status Colors
-const REPORT_STATUS_CONFIGS: Record<
-  ReportGenerationStatus,
-  {
-    variant: 'default' | 'secondary' | 'destructive' | 'outline';
-    className: string;
-    translationKey: string;
-  }
-> = {
-  [ReportGenerationStatus.COMPLETED]: {
-    variant: 'default',
-    className: 'bg-green-500 hover:bg-green-600 text-white',
-    translationKey: 'reports.status.completed',
-  },
-  [ReportGenerationStatus.FAILED]: {
-    variant: 'destructive',
-    className: 'bg-red-500 hover:bg-red-600 text-white',
-    translationKey: 'reports.status.failed',
-  },
-  [ReportGenerationStatus.PROCESSING]: {
-    variant: 'secondary',
-    className: 'bg-blue-500 hover:bg-blue-600 text-white',
-    translationKey: 'reports.status.processing',
-  },
-  [ReportGenerationStatus.PENDING]: {
-    variant: 'outline',
-    className: 'bg-yellow-500 hover:bg-yellow-600 text-white',
-    translationKey: 'reports.status.pending',
-  },
-};
-
-// Payment Summary Interface
-interface PaymentSummary {
-  totalCollection: number;
-  totalOrders: number;
-  cashAmount: number;
-  cardAmount: number;
-  upiAmount: number;
-  walletAmount: number;
-  netBankingAmount: number;
-  otherAmount: number;
-  averageOrderValue: number;
-}
-
-// Payment Report Data Interface
-interface PaymentReportData {
-  paymentMethod: PaymentMethodsEnum;
-  amount: number;
-  orderCount: number;
-  percentage: number;
-  averageValue: number;
-}
-
-// Mock data - Store PaymentReportType directly
-const MOCK_GENERATED_PAYMENT_REPORTS: GeneratedReport[] = [
-  {
-    _id: '1',
-    generateDate: '2025-12-29T10:30:00Z',
-    reportCompleteTime: '2025-12-29T10:32:15Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: PaymentReportType.PAYMENT_ORDER_DETAILS,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-29T23:59:59Z',
-      restaurantIds: ['rest1', 'rest2'],
-      paymentMethods: [
-        PaymentMethodsEnum.CASH,
-        PaymentMethodsEnum.CARD,
-        PaymentMethodsEnum.UPI,
-      ],
-    },
-    createdAt: '2025-12-29T10:30:00Z',
-    updatedAt: '2025-12-29T10:32:15Z',
-  },
-  {
-    _id: '2',
-    generateDate: '2025-12-29T09:15:00Z',
-    reportCompleteTime: '2025-12-29T09:16:45Z',
-    generatedBy: 'user456',
-    generatedByName: 'Jane Smith',
-    reportType: PaymentReportType.PAYMENT_SUMMARY,
-    generationStatus: ReportGenerationStatus.PROCESSING,
-    downloadUrl: '',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-28T23:59:59Z',
-      restaurantIds: ['rest1'],
-    },
-    createdAt: '2025-12-29T09:15:00Z',
-    updatedAt: '2025-12-29T09:16:45Z',
-  },
-];
-
 // Mock payment summary data
-const MOCK_PAYMENT_SUMMARY: PaymentSummary = {
+const MOCK_PAYMENT_SUMMARY = {
   totalCollection: 152500,
   totalOrders: 245,
   cashAmount: 45000,
@@ -166,7 +56,7 @@ const MOCK_PAYMENT_SUMMARY: PaymentSummary = {
 };
 
 // Mock payment report data for chart
-const MOCK_PAYMENT_REPORT_DATA: PaymentReportData[] = [
+const MOCK_PAYMENT_REPORT_DATA = [
   {
     paymentMethod: PaymentMethodsEnum.CASH,
     amount: 45000,
@@ -190,23 +80,6 @@ const MOCK_PAYMENT_REPORT_DATA: PaymentReportData[] = [
   },
 ];
 
-// Helper function
-const formatDateTime = (dateString: string): string => {
-  if (!dateString) return '-';
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '-';
-  }
-};
-
 // Helper function for formatting currency
 const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-IN', {
@@ -215,15 +88,6 @@ const formatCurrency = (amount: number): string => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-};
-
-// Type guard to check if report type is PaymentReportType
-const isPaymentReportType = (
-  reportType: string,
-): reportType is PaymentReportType => {
-  return Object.values(PaymentReportType).includes(
-    reportType as PaymentReportType,
-  );
 };
 
 export default function PaymentReportPage() {
@@ -237,29 +101,16 @@ export default function PaymentReportPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Table state
-  const [searchTerm, setSearchTerm] = useState('');
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  // Mock data - replace with actual API call in production
-  const generatedReports = MOCK_GENERATED_PAYMENT_REPORTS;
-  const totalCount = generatedReports.length;
-  const isLoading = false;
+  // Fetch all generated reports from the system
+  const { data: generatedReports = [], isLoading } = useGeneratedReports();
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, []);
 
   const handleGenerateReport = useCallback(
@@ -281,13 +132,7 @@ export default function PaymentReportPage() {
 
       try {
         // TODO: Replace with actual API call
-        // Send paymentType directly to API
-        // const response = await generatePaymentReportAPI({
-        //     reportType: paymentType, // Send PaymentReportType directly
-        //     filters
-        // });
         await new Promise((resolve) => setTimeout(resolve, 2000));
-
         toast.success(t('reports.payment.generationSuccess'));
       } catch (error) {
         console.error('Report generation failed:', error);
@@ -349,122 +194,6 @@ export default function PaymentReportPage() {
     // TODO: Add API refetch here
   }, [t]);
 
-  // Memoized columns
-  const generatedReportsColumns = useMemo<ColumnDef<GeneratedReport>[]>(
-    () => [
-      {
-        accessorKey: 'generateDate',
-        header: t('reports.payment.columns.generateDate'),
-        enableSorting: true,
-        cell: ({ row }) => (
-          <div className="whitespace-nowrap" title={row.original.generateDate}>
-            {formatDateTime(row.original.generateDate)}
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'reportCompleteTime',
-        header: t('reports.payment.columns.completeTime'),
-        enableSorting: false,
-        cell: ({ row }) => (
-          <div className="whitespace-nowrap">
-            {row.original.reportCompleteTime
-              ? formatDateTime(row.original.reportCompleteTime)
-              : '-'}
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'generatedByName',
-        header: t('reports.payment.columns.generatedBy'),
-        enableSorting: false,
-        cell: ({ row }) => (
-          <div className="font-medium">
-            {row.original.generatedByName || row.original.generatedBy}
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'reportType',
-        header: t('reports.payment.columns.reportType'),
-        enableSorting: false,
-        cell: ({ row }) => {
-          const reportType = row.original.reportType;
-
-          // Check if it's a PaymentReportType
-          if (isPaymentReportType(reportType)) {
-            return (
-              <div className="max-w-[200px]">
-                {t(PAYMENT_REPORT_TYPE_LABELS[reportType])}
-              </div>
-            );
-          }
-
-          return <div className="max-w-[200px]">{reportType}</div>;
-        },
-      },
-      {
-        accessorKey: 'generationStatus',
-        header: t('reports.payment.columns.status'),
-        enableSorting: true,
-        cell: ({ row }) => {
-          const status = row.original.generationStatus;
-          const statusConfig = REPORT_STATUS_CONFIGS[status];
-
-          return (
-            <Badge
-              variant={statusConfig.variant}
-              className={statusConfig.className}
-            >
-              {t(statusConfig.translationKey)}
-            </Badge>
-          );
-        },
-      },
-      {
-        id: 'details',
-        header: t('reports.payment.columns.details'),
-        cell: ({ row }) => (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleShowDetails(row.original)}
-            className="flex items-center gap-1"
-          >
-            <Eye className="h-4 w-4" />
-            {t('reports.payment.showDetails')}
-          </Button>
-        ),
-      },
-      {
-        id: 'actions',
-        header: t('common.actions'),
-        cell: ({ row }) => {
-          const report = row.original;
-          const isCompleted =
-            report.generationStatus === ReportGenerationStatus.COMPLETED;
-
-          return (
-            <div className="flex items-center gap-2">
-              {isCompleted && report.downloadUrl && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDownloadReport(report)}
-                  className="flex items-center gap-1"
-                  title={t('reports.payment.downloadReport')}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-          );
-        },
-      },
-    ],
-    [t, handleShowDetails, handleDownloadReport],
-  );
-
   return (
     <Layout>
       <div className="flex flex-1 flex-col space-y-8 p-8">
@@ -504,7 +233,7 @@ export default function PaymentReportPage() {
           />
         </ReportFilters>
 
-        {/* Summary Cards Section - 3 Cards Total */}
+        {/* Summary Cards Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Total Collection Card */}
           <Card>
@@ -543,7 +272,7 @@ export default function PaymentReportPage() {
             </CardContent>
           </Card>
 
-          {/* Payment Report with Order Details Card - Button 1 */}
+          {/* Payment Report with Order Details Card */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -579,7 +308,7 @@ export default function PaymentReportPage() {
             </CardContent>
           </Card>
 
-          {/* Payment Report Card - Button 2 */}
+          {/* Payment Report Card */}
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -612,42 +341,17 @@ export default function PaymentReportPage() {
           </Card>
         </div>
 
-        {/* Generated Reports Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {t('reports.payment.generatedReports')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            {isLoading ? (
-              <div className="text-center py-8">{t('common.loading')}</div>
-            ) : generatedReports.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                {t('reports.payment.noGeneratedReports')}
-              </div>
-            ) : (
-              <TanStackTable<GeneratedReport>
-                data={generatedReports}
-                columns={generatedReportsColumns}
-                totalCount={totalCount}
-                pagination={pagination}
-                onPaginationChange={setPagination}
-                sorting={sorting}
-                onSortingChange={setSorting}
-                columnFilters={columnFilters}
-                onColumnFiltersChange={setColumnFilters}
-                searchValue={searchTerm}
-                onSearchChange={setSearchTerm}
-                manualPagination={false}
-                showPagination={true}
-                showSearch={true}
-                searchPlaceholder={t('reports.payment.searchPlaceholder')}
-                isLoading={isLoading}
-              />
-            )}
-          </CardContent>
-        </Card>
+        {/* Generated Reports Table using generic component */}
+        <GeneratedReportsTable
+          title="reports.payment.generatedReports"
+          data={generatedReports}
+          isLoading={isLoading}
+          onShowDetails={handleShowDetails}
+          onDownload={handleDownloadReport}
+          defaultCollapsed={false}
+          searchPlaceholder="reports.payment.searchPlaceholder"
+          emptyMessage="reports.payment.noGeneratedReports"
+        />
 
         {/* Payment Graph Section */}
         <Card>

@@ -1,5 +1,6 @@
 import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
+import { MealTimeReportType } from './meal-time-report.type';
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -69,7 +70,11 @@ export interface GeneratedReport {
   reportCompleteTime?: string;
   generatedBy: string;
   generatedByName?: string;
-  reportType: DailyReportType | PaymentReportType | HourlyReportType;
+  reportType:
+    | DailyReportType
+    | PaymentReportType
+    | HourlyReportType
+    | MealTimeReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;

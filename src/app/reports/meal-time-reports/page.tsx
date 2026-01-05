@@ -7,14 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { MealTimeReportFilters } from '@/components/reports/report-filters/meal-time-filter';
 import { Button } from '@/components/ui/button';
-import {
-  FileText,
-  Eye,
-  RefreshCw,
-  Settings,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+import { FileText, Eye, RefreshCw, Settings } from 'lucide-react';
 import { ReportQueryParams, ReportGenerationStatus } from '@/types/report.type';
 import { MealTimeReportDetailsModal } from '@/components/reports/meal-time-reports/meal-time-modal';
 import { MealTimeConfigModal } from '@/components/reports/meal-time-reports/meal-time-report-config';
@@ -25,8 +18,8 @@ import {
   MealTimeReportData,
 } from '@/types/meal-time-report.type';
 import { toast } from 'sonner';
-import { GeneratedReportsTable } from '@/components/reports/meal-time-reports/generate-meal-report-table';
 import { MealTimeDataTable } from '@/components/reports/meal-time-reports/meal-time-data-table';
+import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 
 // Mock data for generated reports table
 const MOCK_GENERATED_REPORTS: GeneratedMealTimeReport[] = [
@@ -100,7 +93,6 @@ const MOCK_MEAL_TIME_DATA: MealTimeReportData[] = [
       },
     ],
   },
-  // ... other meal time data
 ];
 
 export default function MealTimeReportPage() {
@@ -114,8 +106,6 @@ export default function MealTimeReportPage() {
   const [generatedReports, setGeneratedReports] = useState<
     GeneratedMealTimeReport[]
   >(MOCK_GENERATED_REPORTS);
-  const [isGeneratedReportsCollapsed, setIsGeneratedReportsCollapsed] =
-    useState(false);
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -258,61 +248,16 @@ export default function MealTimeReportPage() {
           />
         </ReportFilters>
 
-        {/* Generated Reports Table - Collapsible */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between p-4">
-            <div>
-              <CardTitle className="text-lg">
-                {t('reports.mealTime.generatedReports')}
-              </CardTitle>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <span className="px-2 py-1 bg-muted rounded">
-                  {generatedReports.length} {t('reports.mealTime.report')}
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() =>
-                  setIsGeneratedReportsCollapsed(!isGeneratedReportsCollapsed)
-                }
-              >
-                {isGeneratedReportsCollapsed ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronUp className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </CardHeader>
-
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out
-    ${
-      isGeneratedReportsCollapsed
-        ? 'max-h-0 opacity-0 translate-y-[-4px]'
-        : 'max-h-[1000px] opacity-100 translate-y-0'
-    }
-  `}
-          >
-            <CardContent className="p-4 pt-0">
-              {generatedReports.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  {t('reports.mealTime.noGeneratedReports')}
-                </div>
-              ) : (
-                <GeneratedReportsTable
-                  data={generatedReports}
-                  onShowDetails={handleShowDetails}
-                  onDownload={handleDownloadReport}
-                />
-              )}
-            </CardContent>
-          </div>
-        </Card>
+        {/* Generated Reports Table using generic component */}
+        <GeneratedReportsTable
+          title="reports.mealTime.generatedReports"
+          data={generatedReports}
+          onShowDetails={handleShowDetails}
+          onDownload={handleDownloadReport}
+          defaultCollapsed={false} // Or true if you want it collapsed by default
+          searchPlaceholder="reports.mealTime.searchPlaceholder"
+          emptyMessage="reports.mealTime.noGeneratedReports"
+        />
 
         {/* Meal Time Data Table */}
         <Card>

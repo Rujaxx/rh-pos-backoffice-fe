@@ -1523,7 +1523,7 @@
   "reports.dailySales.title": "Daily Sales Reports",
   "reports.dailySales.description": "Generate and download various sales reports with customizable filters",
   "reports.dailySales.selectReportType": "Select Report Type to Generate",
-  "reports.dailySales.generatedReports": "Generated Reports",
+  "reports.dailySales.generatedReports": "Report Generation Status",
   "reports.dailySales.searchPlaceholder": "Search reports...",
   "reports.dailySales.noGeneratedReports": "No generated reports found",
   "reports.dailySales.generatingReport": "Generating {reportName}...",
@@ -1756,7 +1756,7 @@
   "reports.payment.showDetails": "Show Details",
   "reports.payment.downloadReport": "Download Report",
 
-  "reports.payment.generatedReports": "Generated Reports",
+  "reports.payment.generatedReports": "Report Generation Status",
   "reports.payment.noGeneratedReports": "No reports generated yet",
   "reports.payment.searchPlaceholder": "Search reports...",
   "reports.payment.report": "report",
