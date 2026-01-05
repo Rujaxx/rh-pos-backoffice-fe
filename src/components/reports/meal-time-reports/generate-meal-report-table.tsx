@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { TanStackTable } from '@/components/ui/tanstack-table';
-import { GeneratedMealTimeReport } from '@/types/meal-time-report.type';
+import { MealTimeReport } from '@/types/meal-time-report.type';
 import { GeneratedReportsColumns } from './meal-time-report-column';
 
 interface GeneratedReportsTableProps {
-  data: GeneratedMealTimeReport[];
-  onShowDetails: (report: GeneratedMealTimeReport) => void;
-  onDownload: (report: GeneratedMealTimeReport) => void;
+  data: MealTimeReport[];
+  onShowDetails: (report: MealTimeReport) => void;
+  onDownload: (report: MealTimeReport) => void;
   isLoading?: boolean;
 }
 
@@ -21,7 +21,7 @@ export function GeneratedReportsTable({
   const columns = GeneratedReportsColumns({ onShowDetails, onDownload });
 
   return (
-    <TanStackTable<GeneratedMealTimeReport>
+    <TanStackTable<MealTimeReport>
       data={data}
       columns={columns}
       totalCount={data.length}

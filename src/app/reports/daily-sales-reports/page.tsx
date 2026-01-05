@@ -1,19 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
-import { TanStackTable } from '@/components/ui/tanstack-table';
 import { Button } from '@/components/ui/button';
 import { Download, Eye, RefreshCw } from 'lucide-react';
-import {
-  PaginationState,
-  SortingState,
-  ColumnFiltersState,
-  ColumnDef,
-} from '@tanstack/react-table';
 import {
   ReportQueryParams,
   GeneratedReport,
@@ -22,111 +15,10 @@ import {
 } from '@/types/report.type';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
-import {
-  REPORT_TYPE_BUTTONS,
-  REPORT_TYPE_LABELS,
-} from '@/components/reports/daily-sales-reports/constants';
+import { REPORT_TYPE_BUTTONS } from '@/components/reports/daily-sales-reports/constants';
 import { DailySalesReportFilters } from '@/components/reports/report-filters/daily-sales-filter';
-// Report Status Colors
-const REPORT_STATUS_CONFIGS: Record<
-  ReportGenerationStatus,
-  {
-    variant: 'default' | 'secondary' | 'destructive' | 'outline';
-    className: string;
-    translationKey: string;
-  }
-> = {
-  [ReportGenerationStatus.COMPLETED]: {
-    variant: 'default',
-    className: 'bg-green-500 hover:bg-green-600 text-white',
-    translationKey: 'reports.status.completed',
-  },
-  [ReportGenerationStatus.FAILED]: {
-    variant: 'destructive',
-    className: 'bg-red-500 hover:bg-red-600 text-white',
-    translationKey: 'reports.status.failed',
-  },
-  [ReportGenerationStatus.PROCESSING]: {
-    variant: 'secondary',
-    className: 'bg-blue-500 hover:bg-blue-600 text-white',
-    translationKey: 'reports.status.processing',
-  },
-  [ReportGenerationStatus.PENDING]: {
-    variant: 'outline',
-    className: 'bg-yellow-500 hover:bg-yellow-600 text-white',
-    translationKey: 'reports.status.pending',
-  },
-};
-
-// Mock data for generated reports
-const MOCK_GENERATED_REPORTS: GeneratedReport[] = [
-  {
-    _id: '1',
-    generateDate: '2025-12-29T10:30:00Z',
-    reportCompleteTime: '2025-12-29T10:32:15Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: DailyReportType.DSR_BILL_WISE,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-29T23:59:59Z',
-      restaurantIds: ['rest1', 'rest2'],
-      b2bInvoices: true,
-      liquorExemptedSales: false,
-    },
-    createdAt: '2025-12-29T10:30:00Z',
-    updatedAt: '2025-12-29T10:32:15Z',
-  },
-  {
-    _id: '2',
-    generateDate: '2025-12-29T09:15:00Z',
-    reportCompleteTime: '2025-12-29T09:16:45Z',
-    generatedBy: 'user456',
-    generatedByName: 'Jane Smith',
-    reportType: DailyReportType.BILL_WISE_LIQUOR_SALE,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-28T23:59:59Z',
-      restaurantIds: ['rest1'],
-    },
-    createdAt: '2025-12-29T09:15:00Z',
-    updatedAt: '2025-12-29T09:16:45Z',
-  },
-  {
-    _id: '3',
-    generateDate: '2025-12-28T16:45:00Z',
-    reportCompleteTime: '2025-12-28T16:45:30Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: DailyReportType.DSR_ITEM_WISE,
-    generationStatus: ReportGenerationStatus.FAILED,
-    errorMessage: 'Database connection timeout',
-    filters: {
-      from: '2025-12-27T00:00:00Z',
-      to: '2025-12-27T23:59:59Z',
-    },
-    createdAt: '2025-12-28T16:45:00Z',
-    updatedAt: '2025-12-28T16:45:30Z',
-  },
-];
-
-// Helper functions
-const formatDateTime = (dateString: string) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  return date.toLocaleString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
+import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 
 export default function DailySalesReportPage() {
   const { t } = useTranslation();
@@ -139,217 +31,97 @@ export default function DailySalesReportPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Table state
-  const [searchTerm, setSearchTerm] = useState('');
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  // Mock data - replace with actual API call
-  const generatedReports = MOCK_GENERATED_REPORTS;
-  const totalCount = generatedReports.length;
-  const isLoading = false;
+  // Fetch all generated reports from the system
+  const { data: generatedReports = [], isLoading } = useGeneratedReports();
 
   // Filter handlers
-  const handleFilterChange = (newFilters: ReportQueryParams) => {
+  const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
-    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-  };
+  }, []);
 
-  const handleClearFilters = () => {
+  const handleClearFilters = useCallback(() => {
     setFilters({});
-    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
-  };
+  }, []);
 
-  const handleGenerateReport = async (reportType: DailyReportType) => {
-    setSelectedReportType(reportType);
-    setIsGenerating(true);
+  const handleGenerateReport = useCallback(
+    async (reportType: DailyReportType) => {
+      setSelectedReportType(reportType);
+      setIsGenerating(true);
 
-    const reportTranslationKey =
-      REPORT_TYPE_BUTTONS.find((btn) => btn.type === reportType)
-        ?.translationKey || '';
-    const reportLabel = t(reportTranslationKey) || reportType;
+      const reportTranslationKey =
+        REPORT_TYPE_BUTTONS.find((btn) => btn.type === reportType)
+          ?.translationKey || '';
+      const reportLabel = t(reportTranslationKey) || reportType;
 
-    toast.success(
-      t('reports.dailySales.generatingReport', { reportName: reportLabel }),
-      {
-        description: t('reports.dailySales.generatingDescription'),
-      },
-    );
+      toast.success(
+        t('reports.dailySales.generatingReport', { reportName: reportLabel }),
+        {
+          description: t('reports.dailySales.generatingDescription'),
+        },
+      );
 
-    try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
+      try {
+        // TODO: Replace with actual API call
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Simulate adding new report to list
-      const newReport: GeneratedReport = {
-        _id: Date.now().toString(),
-        generateDate: new Date().toISOString(),
-        generatedBy: 'current-user',
-        generatedByName: 'Current User',
-        reportType,
-        generationStatus: ReportGenerationStatus.PROCESSING,
-        filters,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+        // Simulate adding new report to list
+        const newReport: GeneratedReport = {
+          _id: Date.now().toString(),
+          generateDate: new Date().toISOString(),
+          generatedBy: 'current-user',
+          generatedByName: 'Current User',
+          reportType,
+          generationStatus: ReportGenerationStatus.PROCESSING,
+          filters,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
 
-      // In real app, this would come from API response
-      console.log('Generated report data:', newReport);
-    } catch (error) {
-      toast.error(t('reports.dailySales.generationFailed'), {
-        description: t('common.errors.tryAgainLater'),
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+        console.log('Generated report data:', newReport);
+      } catch (error) {
+        toast.error(t('reports.dailySales.generationFailed'), {
+          description: t('common.errors.tryAgainLater'),
+        });
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [filters, t],
+  );
 
-  const handleShowDetails = (report: GeneratedReport) => {
+  const handleShowDetails = useCallback((report: GeneratedReport) => {
     setSelectedReport(report);
     setIsDetailsModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseDetailsModal = () => {
+  const handleCloseDetailsModal = useCallback(() => {
     setIsDetailsModalOpen(false);
     setSelectedReport(null);
-  };
+  }, []);
 
-  const handleDownloadReport = (report: GeneratedReport) => {
-    if (!report.downloadUrl) {
-      toast.error(t('reports.dailySales.downloadUrlNotAvailable'));
-      return;
-    }
+  const handleDownloadReport = useCallback(
+    (report: GeneratedReport) => {
+      if (!report.downloadUrl) {
+        toast.error(t('reports.dailySales.downloadUrlNotAvailable'));
+        return;
+      }
 
-    // Create a temporary link for download
-    const link = document.createElement('a');
-    link.href = report.downloadUrl;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const link = document.createElement('a');
+      link.href = report.downloadUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    toast.success(t('reports.dailySales.downloadStarted'));
-  };
+      toast.success(t('reports.dailySales.downloadStarted'));
+    },
+    [t],
+  );
 
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     toast.info(t('reports.dailySales.refreshingReports'));
-    // TODO: Add API refetch here
-  };
-
-  // Define columns with translations
-  const generatedReportsColumns: ColumnDef<GeneratedReport>[] = [
-    {
-      accessorKey: 'generateDate',
-      header: t('reports.dailySales.columns.generateDate'),
-      enableSorting: true,
-      cell: ({ row }) => (
-        <div className="whitespace-nowrap">
-          {formatDateTime(row.original.generateDate)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'reportCompleteTime',
-      header: t('reports.dailySales.columns.completeTime'),
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="whitespace-nowrap">
-          {row.original.reportCompleteTime
-            ? formatDateTime(row.original.reportCompleteTime)
-            : '-'}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'generatedByName',
-      header: t('reports.dailySales.columns.generatedBy'),
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="font-medium">
-          {row.original.generatedByName || row.original.generatedBy}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'reportType',
-      header: t('reports.dailySales.columns.reportType'),
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="max-w-[200px]">
-          {t(REPORT_TYPE_LABELS[row.original.reportType]) ||
-            row.original.reportType}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'generationStatus',
-      header: t('reports.dailySales.columns.status'),
-      enableSorting: true,
-      cell: ({ row }) => {
-        const status = row.original.generationStatus;
-        const statusConfig = REPORT_STATUS_CONFIGS[status];
-
-        return (
-          <Badge
-            variant={statusConfig.variant}
-            className={statusConfig.className}
-          >
-            {t(statusConfig.translationKey)}
-          </Badge>
-        );
-      },
-    },
-    {
-      id: 'reportStatus',
-      header: t('reports.dailySales.columns.reportStatus'),
-      size: 150,
-      cell: ({ row }) => {
-        const report = row.original;
-
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleShowDetails(report)}
-            className="flex items-center gap-1"
-          >
-            <Eye className="h-4 w-4" />
-            {t('reports.dailySales.showDetails')}
-          </Button>
-        );
-      },
-    },
-    {
-      id: 'actions',
-      header: t('common.actions'),
-      cell: ({ row }) => {
-        const report = row.original;
-        const isCompleted =
-          report.generationStatus === ReportGenerationStatus.COMPLETED;
-
-        return (
-          <div className="flex items-center gap-2">
-            {isCompleted && report.downloadUrl && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleDownloadReport(report)}
-                className="flex items-center gap-1"
-                title={t('reports.dailySales.downloadReport')}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        );
-      },
-    },
-  ];
+  }, [t]);
 
   return (
     <Layout>
@@ -432,42 +204,17 @@ export default function DailySalesReportPage() {
           </CardContent>
         </Card>
 
-        {/* Generated Reports Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {t('reports.dailySales.generatedReports')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            {isLoading ? (
-              <div className="text-center py-8">{t('common.loading')}</div>
-            ) : generatedReports.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                {t('reports.dailySales.noGeneratedReports')}
-              </div>
-            ) : (
-              <TanStackTable<GeneratedReport>
-                data={generatedReports}
-                columns={generatedReportsColumns}
-                totalCount={totalCount}
-                pagination={pagination}
-                onPaginationChange={setPagination}
-                sorting={sorting}
-                onSortingChange={setSorting}
-                columnFilters={columnFilters}
-                onColumnFiltersChange={setColumnFilters}
-                searchValue={searchTerm}
-                onSearchChange={setSearchTerm}
-                manualPagination={false}
-                showPagination={true}
-                showSearch={true}
-                searchPlaceholder={t('reports.dailySales.searchPlaceholder')}
-                isLoading={isLoading}
-              />
-            )}
-          </CardContent>
-        </Card>
+        {/* Generated Reports Table using generic component */}
+        <GeneratedReportsTable
+          title="reports.dailySales.generatedReports"
+          data={generatedReports}
+          isLoading={isLoading}
+          onShowDetails={handleShowDetails}
+          onDownload={handleDownloadReport}
+          defaultCollapsed={false}
+          searchPlaceholder="reports.dailySales.searchPlaceholder"
+          emptyMessage="reports.dailySales.noGeneratedReports"
+        />
       </div>
 
       {/* Report Details Modal */}

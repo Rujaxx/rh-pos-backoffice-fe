@@ -7,23 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { MealTimeReportFilters } from '@/components/reports/report-filters/meal-time-filter';
 import { Button } from '@/components/ui/button';
-import {
-  FileText,
-  RefreshCw,
-  Settings,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
-import { ReportQueryParams, ReportGenerationStatus } from '@/types/report.type';
+import { RefreshCw, Settings } from 'lucide-react';
+import { ReportQueryParams } from '@/types/report.type';
 import { MealTimeReportDetailsModal } from '@/components/reports/meal-time-reports/meal-time-modal';
 import { MealTimeConfigModal } from '@/components/reports/meal-time-reports/meal-time-report-config';
 import {
   MealTimeReport,
-  MealTimeReportType,
   MealTimeReportQueryParams,
 } from '@/types/meal-time-report.type';
 import { toast } from 'sonner';
-import { GeneratedReportsTable } from '@/components/reports/meal-time-reports/generate-meal-report-table';
 import { MealTimeDataTable } from '@/components/reports/meal-time-reports/meal-time-data-table';
 import { useMealTimeReport } from '@/services/api/reports/meal-time-frame/meal-time-report.query';
 

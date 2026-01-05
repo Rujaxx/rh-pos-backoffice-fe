@@ -40,6 +40,15 @@ interface GeneratedReportsColumnsProps {
   onDownload?: (report: GeneratedReport) => void;
 }
 
+// Helper function to get report label safely
+const getReportTypeLabel = (reportType: string): string => {
+  // Type assertion to handle different report types
+  return (
+    REPORT_TYPE_LABELS[reportType as keyof typeof REPORT_TYPE_LABELS] ||
+    reportType
+  );
+};
+
 // Create columns function that accepts handlers
 export const createGeneratedReportsColumns = (
   props?: GeneratedReportsColumnsProps,
@@ -127,7 +136,7 @@ export const createGeneratedReportsColumns = (
       size: 200,
       cell: ({ row }) => {
         const reportType = row.original.reportType;
-        const label = REPORT_TYPE_LABELS[reportType] || reportType;
+        const label = getReportTypeLabel(reportType);
 
         return (
           <div className="max-w-[200px]">
