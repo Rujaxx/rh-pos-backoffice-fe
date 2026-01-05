@@ -1806,5 +1806,17 @@
   "orderStatus.pending": "قيد الانتظار",
   "orderStatus.completed": "مكتمل",
   "orderStatus.cancelled": "ملغي",
-  "common.all": "الكل"
+  "common.all": "الكل",
+
+  "navigation.orderTypeReports": "تقرير أنواع الطلبات",
+  "reports.orderType.description": "عرض إحصائيات وتحليل أنواع الطلبات",
+  "reports.orderType.orderTypeReport": "تحليل أنواع الطلبات",
+  "reports.orderType.refreshingReport": "جاري تحديث بيانات التقرير",
+  "reports.orderType.searchPlaceholder": "البحث في أنواع الطلبات...",
+  "reports.orderType.noData": "لا توجد بيانات طلبات متاحة",
+
+  "reports.orderType.columns.orderFrom": "الطلبات من",
+  "reports.orderType.columns.orderCount": "العدد",
+  "reports.orderType.columns.totalAmount": "المبلغ",
+  "reports.orderType.columns.status": "الحالة"
 }

@@ -23,6 +23,7 @@ import {
   Calendar,
   Clock,
   DollarSign,
+  ShoppingBag,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -310,11 +311,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         href: '/reports/hourly-reports',
         icon: Clock,
       },
+
       {
-        id: 'payment-reports',
-        label: t('navigation.paymentReports') || 'Payment Reports',
-        href: '/reports/payment-reports',
-        icon: DollarSign,
+        id: 'orderType-reports',
+        label: t('navigation.orderTypeReports') || 'Order Type Reports',
+        href: '/reports/order-type-reports',
+        icon: ShoppingBag,
       },
     ],
   },

@@ -8,7 +8,6 @@ import { ReportFilters } from '@/components/reports/report-filters/report-filter
 import { Button } from '@/components/ui/button';
 import {
   Download,
-  Eye,
   RefreshCw,
   FileText,
   BarChart,
@@ -17,7 +16,6 @@ import {
 import {
   ReportQueryParams,
   GeneratedReport,
-  ReportGenerationStatus,
   PaymentMethodsEnum,
   PaymentReportType,
 } from '@/types/report.type';

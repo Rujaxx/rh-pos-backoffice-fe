@@ -1787,5 +1787,16 @@
   "orderStatus.pending": "Pending",
   "orderStatus.completed": "Completed",
   "orderStatus.cancelled": "Cancelled",
-  "common.all": "All"
+  "common.all": "All",
+
+  "reports.orderType.description": "View order type statistics and analysis",
+  "reports.orderType.orderTypeReport": "Order Type Analysis",
+  "reports.orderType.refreshingReport": "Refreshing report data",
+  "reports.orderType.searchPlaceholder": "Search order types...",
+  "reports.orderType.noData": "No order data available",
+
+  "reports.orderType.columns.orderFrom": "Order From",
+  "reports.orderType.columns.orderCount": "Count",
+  "reports.orderType.columns.totalAmount": "Amount",
+  "reports.orderType.columns.status": "Status"
 }
