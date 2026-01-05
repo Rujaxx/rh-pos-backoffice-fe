@@ -20,6 +20,9 @@ import {
   TicketPercent,
   Sofa,
   Globe,
+  Calendar,
+  Clock,
+  DollarSign,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
