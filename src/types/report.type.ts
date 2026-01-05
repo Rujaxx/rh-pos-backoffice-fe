@@ -82,7 +82,9 @@ export interface ReportQueryParams extends QueryParams {
   // Location filters
   restaurantIds?: string[];
   brandIds?: string[];
-  outletIds?: string[];
+
+  // Category filters
+  categoryIds?: string[];
 
   // Menu filters
   menuIds?: string[];

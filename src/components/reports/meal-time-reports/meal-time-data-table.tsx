@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { TanStackTable } from '@/components/ui/tanstack-table';
-import { MealTimeReportData } from '@/types/meal-time-report.type';
+import { MealTimeReportItem } from '@/types/meal-time-report.type';
 import {
   PaginationState,
   SortingState,
@@ -12,7 +12,7 @@ import { MealTimeDataColumns } from './meal-time-column';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface MealTimeDataTableProps {
-  data: MealTimeReportData[];
+  data: MealTimeReportItem[];
   isLoading?: boolean;
 }
 
@@ -20,6 +20,7 @@ export function MealTimeDataTable({
   data,
   isLoading = false,
 }: MealTimeDataTableProps) {
+  console.log('data table: ', data);
   const { t } = useTranslation();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -51,7 +52,7 @@ export function MealTimeDataTable({
   );
 
   return (
-    <TanStackTable<MealTimeReportData>
+    <TanStackTable<MealTimeReportItem>
       data={data}
       columns={columns}
       totalCount={data.length}

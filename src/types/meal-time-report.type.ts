@@ -4,6 +4,25 @@ export interface MealTimeReportQueryParams extends ReportQueryParams {
   // Meal time specific filters
   mealTimeIds?: string[];
   categoryIds?: string[];
+  brandId?: string;
+  restaurantId?: string;
+  menuId?: string;
+  categoryId?: string;
+}
+
+export interface MealTimeReportItem {
+  name: string;
+  slot: string;
+  totalRevenue: number;
+  totalOrders: number;
+  avgOrderValue: number;
+  topSellingItem: string;
+}
+
+export interface MealTimeReportResponseData {
+  report: MealTimeReportItem[];
+  generatedBy: string;
+  generatedAt: string;
 }
 
 // Meal Time Report Type
@@ -13,7 +32,7 @@ export enum MealTimeReportType {
 }
 
 // Generated Meal Time Report
-export interface GeneratedMealTimeReport {
+export interface MealTimeReport {
   _id: string;
   generateDate: string;
   reportCompleteTime?: string;
@@ -33,37 +52,10 @@ export interface GeneratedMealTimeReport {
 export interface MealTimeConfig {
   _id: string;
   name: string;
-  startTime: string;
-  endTime: string;
+  from: string;
+  to: string;
   isActive: boolean;
-  mealSlotNames?: string[];
-  brandId?: string;
   restaurantId?: string;
   createdAt?: string;
   updatedAt?: string;
-}
-
-// Meal Time Report Data (actual report data)
-export interface MealTimeReportData {
-  mealTimeId: string;
-  mealTimeName: string;
-  startTime: string;
-  endTime: string;
-  totalBills: number;
-  totalRevenue: number;
-  totalTax: number;
-  totalDiscount: number;
-  averageBillValue: number;
-  bills: MealTimeBillDetail[];
-}
-
-export interface MealTimeBillDetail {
-  billId: string;
-  billNo: string;
-  billTime: string;
-  revenue: number;
-  tax: number;
-  discount: number;
-  paymentMethod: string;
-  status: string;
 }

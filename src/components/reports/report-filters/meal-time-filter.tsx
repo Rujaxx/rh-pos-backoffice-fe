@@ -9,18 +9,11 @@ import { useCategories } from '@/services/api/categories/categories.queries';
 import { useI18n } from '@/providers/i18n-provider';
 import { ReportFiltersProps } from '@/components/reports/report-filters/report-filters';
 import { ReportQueryParams } from '@/types/report.type';
-import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react';
-
-interface MealTimeReportFiltersProps extends ReportFiltersProps {
-  onConfigureMealTimes?: () => void;
-}
 
 export function MealTimeReportFilters({
   filters,
   onFilterChange,
-  onConfigureMealTimes,
-}: MealTimeReportFiltersProps) {
+}: ReportFiltersProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
 

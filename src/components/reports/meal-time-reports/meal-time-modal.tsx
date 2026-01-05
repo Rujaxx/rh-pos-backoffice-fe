@@ -7,24 +7,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Download,
-  X,
-  Calendar,
-  Filter,
-  Clock,
-  User,
-  FileText,
-} from 'lucide-react';
+import { Calendar, Filter, Clock, User, FileText } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { GeneratedMealTimeReport } from '@/types/meal-time-report.type';
+import { MealTimeReport } from '@/types/meal-time-report.type';
 import { ReportGenerationStatus } from '@/types/report.type';
 import { format } from 'date-fns';
 
 interface MealTimeReportDetailsModalProps {
-  report: GeneratedMealTimeReport | null;
+  report: MealTimeReport | null;
   isOpen: boolean;
   onClose: () => void;
 }

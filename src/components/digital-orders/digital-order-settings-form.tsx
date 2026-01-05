@@ -24,7 +24,6 @@ import {
   DigitalOrdersNotificationChannel,
   Restaurant,
   DigitalOrderSettings,
-  PaymentGatewayConfiguration,
   OrderTypesWithPayments,
 } from '@/types/restaurant';
 import {
@@ -39,7 +38,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { MultilingualText } from '@/types';
 import { useI18n } from '@/providers/i18n-provider';
-import { OrderType } from '@/types/order-type.type';
 
 interface DigitalOrderSettingsFormContentProps {
   form: UseFormReturn<RestaurantFormData>;

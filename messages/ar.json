@@ -1623,7 +1623,6 @@
   "reports.mealTime.columns.averageBillValue": "متوسط قيمة الفاتورة",
   "common.selectCategories": "اختر الفئات",
   "reports.mealTime.generatedReports": "التقارير المُنشأة",
-  "navigation.mealTimeReport": "تقرير المبيعات بناءً على أوقات الوجبات",
 
   "reports.mealTime.columns.totalBills": "إجمالي الفواتير",
   "reports.mealTime.columns.generateDate": "تاريخ الإنشاء",

@@ -4,14 +4,11 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useIntl } from 'react-intl';
-import {
-  GeneratedMealTimeReport,
-  MealTimeReportType,
-} from '@/types/meal-time-report.type';
 import { ReportGenerationStatus } from '@/types/report.type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download, Eye } from 'lucide-react';
+import { MealTimeReport } from '@/types/meal-time-report.type';
 
 const REPORT_STATUS_CONFIGS: Record<
   ReportGenerationStatus,
@@ -39,13 +36,13 @@ const REPORT_STATUS_CONFIGS: Record<
 };
 
 interface GeneratedReportsColumnsProps {
-  onShowDetails?: (report: GeneratedMealTimeReport) => void;
-  onDownload?: (report: GeneratedMealTimeReport) => void;
+  onShowDetails?: (report: MealTimeReport) => void;
+  onDownload?: (report: MealTimeReport) => void;
 }
 
 export const GeneratedReportsColumns = (
   props?: GeneratedReportsColumnsProps,
-): ColumnDef<GeneratedMealTimeReport>[] => {
+): ColumnDef<MealTimeReport>[] => {
   const { t } = useTranslation();
   const intl = useIntl();
 
@@ -55,7 +52,7 @@ export const GeneratedReportsColumns = (
   };
   const localeCode = localeMap[intl.locale] || 'en-GB';
 
-  const columns: ColumnDef<GeneratedMealTimeReport>[] = [
+  const columns: ColumnDef<MealTimeReport>[] = [
     {
       accessorKey: 'generateDate',
       header: t('reports.mealTime.columns.generateDate'),

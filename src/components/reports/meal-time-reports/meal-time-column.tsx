@@ -4,12 +4,9 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useIntl } from 'react-intl';
-import { MealTimeReportData } from '@/types/meal-time-report.type';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Eye, ChevronRight } from 'lucide-react';
+import { MealTimeReportItem } from '@/types/meal-time-report.type';
 
-export const MealTimeDataColumns = (): ColumnDef<MealTimeReportData>[] => {
+export const MealTimeDataColumns = (): ColumnDef<MealTimeReportItem>[] => {
   const { t } = useTranslation();
   const intl = useIntl();
 
@@ -19,9 +16,9 @@ export const MealTimeDataColumns = (): ColumnDef<MealTimeReportData>[] => {
   };
   const localeCode = localeMap[intl.locale] || 'en-GB';
 
-  const columns: ColumnDef<MealTimeReportData>[] = [
+  const columns: ColumnDef<MealTimeReportItem>[] = [
     {
-      accessorKey: 'mealTimeName',
+      accessorKey: 'name',
       header: t('reports.mealTime.columns.mealTime'),
       enableSorting: true,
       size: 200,
@@ -29,21 +26,27 @@ export const MealTimeDataColumns = (): ColumnDef<MealTimeReportData>[] => {
         const mealTime = row.original;
         return (
           <div className="space-y-1">
-            <div className="font-medium">{mealTime.mealTimeName}</div>
-            <div className="text-sm text-muted-foreground">
-              {mealTime.startTime} - {mealTime.endTime}
-            </div>
+            <div className="font-medium">{mealTime.name}</div>
           </div>
         );
       },
     },
     {
-      accessorKey: 'totalBills',
-      header: t('reports.mealTime.columns.totalBills'),
+      accessorKey: 'slot',
+      header: t('reports.mealTime.columns.timeSlot'),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        return <div className="text-sm font-medium">{row.original.slot}</div>;
+      },
+    },
+    {
+      accessorKey: 'totalOrders',
+      header: t('reports.mealTime.columns.totalOrders'),
       enableSorting: true,
       size: 120,
       cell: ({ row }) => {
-        const value = row.original.totalBills;
+        const value = row.original.totalOrders;
         return (
           <div className="font-medium">{value.toLocaleString(localeCode)}</div>
         );
@@ -62,39 +65,24 @@ export const MealTimeDataColumns = (): ColumnDef<MealTimeReportData>[] => {
       },
     },
     {
-      accessorKey: 'totalTax',
-      header: t('reports.mealTime.columns.totalTax'),
+      accessorKey: 'avgOrderValue',
+      header: t('reports.mealTime.columns.avgOrderValue'),
       enableSorting: true,
       size: 150,
       cell: ({ row }) => {
-        const value = row.original.totalTax;
+        const value = row.original.avgOrderValue;
         return (
           <div className="font-medium">₹{value.toLocaleString(localeCode)}</div>
         );
       },
     },
     {
-      accessorKey: 'totalDiscount',
-      header: t('reports.mealTime.columns.totalDiscount'),
+      accessorKey: 'topSellingItem',
+      header: t('reports.mealTime.columns.topSellingItem'),
       enableSorting: true,
-      size: 150,
+      size: 200,
       cell: ({ row }) => {
-        const value = row.original.totalDiscount;
-        return (
-          <div className="font-medium">₹{value.toLocaleString(localeCode)}</div>
-        );
-      },
-    },
-    {
-      accessorKey: 'averageBillValue',
-      header: t('reports.mealTime.columns.averageBillValue'),
-      enableSorting: true,
-      size: 150,
-      cell: ({ row }) => {
-        const value = row.original.averageBillValue;
-        return (
-          <div className="font-medium">₹{value.toLocaleString(localeCode)}</div>
-        );
+        return <div className="font-medium">{row.original.topSellingItem}</div>;
       },
     },
   ];

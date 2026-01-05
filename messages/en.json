@@ -1608,7 +1608,6 @@
   "reports.generate": "Submit",
   "common.selectCategories": "Select Categories",
   "reports.mealTime.generatedReports": " Report Generation Status",
-  "navigation.mealTimeReport": "Meal Time Based Sales Report",
 
   "reports.mealTime.columns.totalBills": "Total Bills",
   "reports.mealTime.columns.generateDate": "Generate Date",

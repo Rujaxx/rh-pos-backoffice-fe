@@ -1,5 +1,5 @@
 import { MealTimeReportType } from '@/types/meal-time-report.type';
-import { FileText, BarChart, PieChart } from 'lucide-react';
+import { FileText, BarChart } from 'lucide-react';
 
 export const MEAL_TIME_REPORT_TYPE_LABELS: Record<MealTimeReportType, string> =
   {

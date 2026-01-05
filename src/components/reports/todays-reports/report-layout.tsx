@@ -115,7 +115,7 @@ export function ReportLayout({ paperSize, filters, data }: ReportLayoutProps) {
         {/* Report Header */}
         <ReportHeader
           paperSize={paperSize}
-          companyName="Restaurant Hub POS"
+          companyName="POS"
           address="123 Main Street, Downtown, City - 123456"
           printedDateTime={new Date().toISOString()}
           dateRange={{ from: filters.from || '', to: filters.to || '' }}
@@ -147,8 +147,32 @@ export function ReportLayout({ paperSize, filters, data }: ReportLayoutProps) {
                 bold
               />
               <RowItem
+                label="Round Off:"
+                value={formatCurrency(reportData.salesSummary.roundOff)}
+              />
+              <RowItem
                 label="Discount:"
                 value={formatCurrency(reportData.salesSummary.discount)}
+              />
+              <RowItem
+                label="Charges:"
+                value={formatCurrency(reportData.salesSummary.charges)}
+              />
+              <RowItem
+                label="Cancelled Orders:"
+                value={reportData.salesSummary.cancelledOrders}
+              />
+              <RowItem
+                label="Pending Orders:"
+                value={reportData.salesSummary.pendingOrders}
+              />
+              <RowItem
+                label="Deleted Orders:"
+                value={reportData.salesSummary.deletedOrders}
+              />
+              <RowItem
+                label="Due Payments:"
+                value={formatCurrency(reportData.salesSummary.duePayments)}
               />
             </div>
             {/* <div className={lineClasses}></div> */}
