@@ -211,7 +211,7 @@ function Page() {
       },
     });
     return {
-      key: result.data.key,
+      id: result.data.id,
       url: result.data.url,
     };
   };

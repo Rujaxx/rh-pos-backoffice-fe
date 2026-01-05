@@ -23,16 +23,16 @@ export const useCreateBrand = (
       // First create the brand
       const result = await brandService.create(data);
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
+      // Then confirm uploads if there are any upload IDs
+      const uploadIds: string[] = [];
       if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
+        // If logo is an ID (not a URL), add it to confirm list
+        uploadIds.push(data.logo);
       }
 
-      if (uploadKeys.length > 0) {
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but brand was created:',
@@ -81,16 +81,16 @@ export const useUpdateBrand = (
       const { _id, ...dataWithoutId } = data;
       const result = await brandService.update(id, dataWithoutId);
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
+      // Then confirm uploads if there are any upload IDs
+      const uploadIds: string[] = [];
       if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
+        // If logo is an ID (not a URL), add it to confirm list
+        uploadIds.push(data.logo);
       }
 
-      if (uploadKeys.length > 0) {
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but brand was updated:',

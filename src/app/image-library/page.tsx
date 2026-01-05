@@ -183,7 +183,7 @@ export default function ImageLibraryPage() {
       });
 
       setUploadedImageUrl(result.data.url);
-      setValue('url', result.data.key, { shouldValidate: true });
+      setValue('url', result.data.id, { shouldValidate: true });
     } catch (error) {
       console.error('Upload failed:', error);
     }

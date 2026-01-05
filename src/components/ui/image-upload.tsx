@@ -43,7 +43,7 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   // required = false,
 }: ImageUploadProps<TFormValues>) {
   const [preview, setPreview] = useState<string>('');
-  const [currentUploadKey, setCurrentUploadKey] = useState<string>('');
+  const [currentUploadId, setCurrentUploadId] = useState<string>('');
   const [dragOver, setDragOver] = useState(false);
 
   const uploadMutation = useUploadImage();
@@ -104,12 +104,12 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
         });
         console.log(result.data);
         if (result.data) {
-          // Store the upload key in the form (this will be sent to backend on form submission)
+          // Store the upload ID in the form (this will be sent to backend on form submission)
           form.setValue(
             name,
-            result.data.key as PathValue<TFormValues, typeof name>,
+            result.data.id as PathValue<TFormValues, typeof name>,
           );
-          setCurrentUploadKey(result.data.key);
+          setCurrentUploadId(result.data.id);
 
           // Update preview with the full S3 URL
           setPreview(getS3UrlFromKey(result.data.url));
@@ -172,9 +172,9 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   // Remove uploaded image
   const handleRemove = useCallback(async () => {
     // Delete from API if there's a current upload
-    if (currentUploadKey) {
+    if (currentUploadId) {
       try {
-        await deleteUploadMutation.mutateAsync(currentUploadKey);
+        await deleteUploadMutation.mutateAsync(currentUploadId);
       } catch (error) {
         console.error('Failed to delete temporary upload:', error);
       }
@@ -183,8 +183,8 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
     // Clear form value and preview
     form.setValue(name, '' as PathValue<TFormValues, typeof name>);
     setPreview('');
-    setCurrentUploadKey('');
-  }, [form, name, currentUploadKey, deleteUploadMutation]);
+    setCurrentUploadId('');
+  }, [form, name, currentUploadId, deleteUploadMutation]);
 
   // Initialize preview from current form value
   React.useEffect(() => {

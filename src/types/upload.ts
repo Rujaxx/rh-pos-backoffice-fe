@@ -29,7 +29,7 @@ export interface UploadOptions {
 }
 
 export interface ConfirmUploadsRequest {
-  keys: string[];
+  ids: string[];
 }
 
 export interface UploadConfirmResponse {

@@ -4,7 +4,13 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   outputFileTracingRoot: __dirname,
   images: {
-    unoptimized: process.env.NODE_ENV === 'development',
+    domains: [
+      'rhposs-uploads.s3.us-east-1.amazonaws.com',
+      'ui-avatars.com',
+      'images.unsplash.com',
+      'via.placehold.co',
+      's3.us-east-1.amazonaws.com',
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,12 +25,37 @@ const nextConfig: NextConfig = {
         hostname: 'via.placehold.co',
       },
       {
+        // Primary S3 bucket - exact match
         protocol: 'https',
-        hostname: 'rhpos-uploads-dev.s3.me-central-1.amazonaws.com',
+        hostname: 'rhposs-uploads.s3.us-east-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+        search: '',
       },
       {
+        // Alternative S3 URL format (s3.region.amazonaws.com/bucket-name/...)
         protocol: 'https',
-        hostname: 'rhpos-uploads-production.s3.me-central-1.amazonaws.com',
+        hostname: 's3.us-east-1.amazonaws.com',
+        port: '',
+        pathname: '/rhposs-uploads/**',
+        search: '',
+      },
+      {
+        // Wildcard for any S3 subdomain (**.s3.amazonaws.com)
+        // This catches: bucket.s3.region.amazonaws.com
+        protocol: 'https',
+        hostname: '**.s3.amazonaws.com',
+        port: '',
+        search: '',
+      },
+      {
+        // Wildcard for S3 with region (**.amazonaws.com)
+        // This catches: bucket.s3.us-east-1.amazonaws.com
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+        port: '',
+        pathname: '/**',
+        search: '',
       },
     ],
   },

@@ -27,16 +27,16 @@ export const useCreateImageLibraryItem = (
       // First create the image library item
       const result = await imageLibraryService.create(data);
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
+      // Then confirm uploads if there are any upload IDs
+      const uploadIds: string[] = [];
       if (data.url && !data.url.startsWith('http')) {
-        // If url is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.url);
+        // If url is an ID (not a URL), add it to confirm list
+        uploadIds.push(data.url);
       }
 
-      if (uploadKeys.length > 0) {
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but image library item was created:',
@@ -93,16 +93,16 @@ export const useUpdateImageLibraryItem = (
       // Update the image library item
       const result = await imageLibraryService.update(id, data);
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
+      // Then confirm uploads if there are any upload IDs
+      const uploadIds: string[] = [];
       if (data.url && !data.url.startsWith('http')) {
-        // If url is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.url);
+        // If url is an ID (not a URL), add it to confirm list
+        uploadIds.push(data.url);
       }
 
-      if (uploadKeys.length > 0) {
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but image library item was updated:',
