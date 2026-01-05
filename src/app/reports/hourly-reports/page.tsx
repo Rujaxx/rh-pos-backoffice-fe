@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 
-// Report Type Buttons - Use HourlyReportType directly
+// Report Type Buttons
 const REPORT_TYPE_BUTTONS = [
   {
     type: HourlyReportType.DAY_WISE,
@@ -39,7 +39,21 @@ const REPORT_TYPE_BUTTONS = [
 
 export default function HourlyReportPage() {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<ReportQueryParams>({});
+
+  // Initialize filters with today's date
+  const [filters, setFilters] = useState<ReportQueryParams>(() => {
+    const today = new Date();
+
+    return {
+      from: today.toISOString(),
+      to: today.toISOString(),
+    };
+  });
+
+  // State for the filters that are actually applied (submitted)
+  const [submittedFilters, setSubmittedFilters] =
+    useState<ReportQueryParams | null>(null);
+
   const [selectedReportType, setSelectedReportType] =
     useState<HourlyReportType | null>(null);
   const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
@@ -49,7 +63,11 @@ export default function HourlyReportPage() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Fetch all generated reports from the system
-  const { data: generatedReports = [], isLoading } = useGeneratedReports();
+  const {
+    data: generatedReports = [],
+    isLoading,
+    refetch,
+  } = useGeneratedReports();
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -58,7 +76,13 @@ export default function HourlyReportPage() {
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
+    setSubmittedFilters(null);
   }, []);
+
+  // Apply filters handler
+  const handleApplyFilters = useCallback(() => {
+    setSubmittedFilters(filters);
+  }, [filters]);
 
   const handleGenerateReport = useCallback(
     async (hourlyType: HourlyReportType) => {
@@ -82,6 +106,7 @@ export default function HourlyReportPage() {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         toast.success(t('reports.hourly.generationSuccess'));
+        refetch(); // Refresh the reports list after generating
       } catch (error) {
         console.error('Report generation failed:', error);
         toast.error(t('reports.hourly.generationFailed'), {
@@ -91,7 +116,7 @@ export default function HourlyReportPage() {
         setIsGenerating(false);
       }
     },
-    [filters, t],
+    [t, refetch],
   );
 
   const handleShowDetails = useCallback((report: GeneratedReport) => {
@@ -108,17 +133,6 @@ export default function HourlyReportPage() {
     (report: GeneratedReport) => {
       if (!report.downloadUrl) {
         toast.error(t('reports.hourly.downloadUrlNotAvailable'));
-        return;
-      }
-
-      // Validate URL for security
-      try {
-        const url = new URL(report.downloadUrl);
-        if (!['http:', 'https:'].includes(url.protocol)) {
-          throw new Error('Invalid protocol');
-        }
-      } catch {
-        toast.error(t('reports.hourly.invalidDownloadUrl'));
         return;
       }
 
@@ -171,7 +185,7 @@ export default function HourlyReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onSubmit={() => {}}
+          onSubmit={handleApplyFilters}
         />
 
         {/* Report Type Selection */}

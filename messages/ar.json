@@ -1817,5 +1817,6 @@
   "reports.orderType.columns.orderFrom": "الطلبات من",
   "reports.orderType.columns.orderCount": "العدد",
   "reports.orderType.columns.totalAmount": "المبلغ",
-  "reports.orderType.columns.status": "الحالة"
+  "reports.orderType.columns.status": "الحالة",
+  "reports.sales.salesReport": "تقرير المبيعات"
 }

@@ -1797,5 +1797,6 @@
   "reports.orderType.columns.orderFrom": "Order From",
   "reports.orderType.columns.orderCount": "Count",
   "reports.orderType.columns.totalAmount": "Amount",
-  "reports.orderType.columns.status": "Status"
+  "reports.orderType.columns.status": "Status",
+  "reports.sales.salesReport": "Sales Report"
 }
