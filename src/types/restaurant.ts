@@ -123,8 +123,8 @@ export interface Restaurant extends Record<string, unknown> {
   logo?: string;
   address?: Address;
   timezone: TimezoneType;
-  startDayTime: number; // Time format: 0-2359
-  endDayTime: number; // Time format: 0-2359
+  startDayTime: number; // Minutes since midnight (0-1439). Example: 360 = 6:00 AM
+  endDayTime: number; // Minutes since midnight (0-1439). Example: 1380 = 11:00 PM
   nextResetBillFreq: ResetBillFrequency;
   nextResetBillDate?: Date;
   phoneNumber?: string;

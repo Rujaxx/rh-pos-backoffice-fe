@@ -10,13 +10,17 @@ export const userSchema = z
   .object({
     _id: z.string().optional(),
 
-    name: z.string().min(3),
+    name: z
+      .string()
+      .min(3)
+      .transform((val) => val.trim()),
     username: z
       .string()
       .min(3)
       .max(30)
-      .regex(/^[a-zA-Z0-9_-]+$/),
-    email: z.email(),
+      .regex(/^[a-zA-Z0-9_-]+$/)
+      .transform((val) => val.toLowerCase().trim()),
+    email: z.email().transform((val) => val.toLowerCase().trim()),
     password: z.string().min(4).max(30).optional(),
 
     countryCode: countryCodeSchemaOptional,
@@ -33,8 +37,14 @@ export const userSchema = z
     agreeToTerms: z.boolean(),
     webAccess: z.boolean(),
 
-    shiftStart: z.number().min(0).max(1439),
-    shiftEnd: z.number().min(0).max(1439),
+    shiftStart: z
+      .number()
+      .transform((val) => Math.max(0, Math.min(1439, val))) // Clamp to 0-1439 FIRST
+      .pipe(z.number().min(0).max(1439)),
+    shiftEnd: z
+      .number()
+      .transform((val) => Math.max(0, Math.min(1439, val))) // Clamp to 0-1439 FIRST
+      .pipe(z.number().min(0).max(1439)),
 
     macAddress: z.string().optional().or(z.literal('')),
     language: z.string(),

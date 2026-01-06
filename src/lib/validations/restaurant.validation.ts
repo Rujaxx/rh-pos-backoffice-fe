@@ -125,13 +125,23 @@ export const restaurantSchema = z
 
     startDayTime: z
       .number()
-      .min(0, 'Start day time must be between 0 and 1439 minutes')
-      .max(1439, 'Start day time must be between 0 and 1439 minutes'),
+      .transform((val) => Math.max(0, Math.min(1439, val))) // Clamp to 0-1439 FIRST
+      .pipe(
+        z
+          .number()
+          .min(0, 'Start day time must be between 0 and 1439 minutes')
+          .max(1439, 'Start day time must be between 0 and 1439 minutes'),
+      ),
 
     endDayTime: z
       .number()
-      .min(0, 'End day time must be between 0 and 1439 minutes')
-      .max(1439, 'End day time must be between 0 and 1439 minutes'),
+      .transform((val) => Math.max(0, Math.min(1439, val))) // Clamp to 0-1439 FIRST
+      .pipe(
+        z
+          .number()
+          .min(0, 'End day time must be between 0 and 1439 minutes')
+          .max(1439, 'End day time must be between 0 and 1439 minutes'),
+      ),
 
     nextResetBillFreq: z.enum(['daily', 'weekly', 'monthly', 'yearly']),
     nextResetBillDate: z.string().optional(),
