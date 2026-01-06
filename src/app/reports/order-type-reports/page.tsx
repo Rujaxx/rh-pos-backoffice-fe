@@ -51,8 +51,22 @@ const formatCurrency = (amount: number): string => {
 
 export default function OrderTypeReportPage() {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<ReportQueryParams>({});
+
+  // Initialize filters
+  const [filters, setFilters] = useState<ReportQueryParams>(() => {
+    const today = new Date();
+    return {
+      from: today.toISOString(),
+      to: today.toISOString(),
+    };
+  });
+
+  // State for the filters that are actually applied (submitted)
+  const [submittedFilters, setSubmittedFilters] =
+    useState<ReportQueryParams | null>(null);
+
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // <-- Added loading state
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -61,11 +75,38 @@ export default function OrderTypeReportPage() {
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
+    setSubmittedFilters(null); // Clear submitted filters
   }, []);
 
+  // Apply filters handler
+  const handleApplyFilters = useCallback(() => {
+    if (!filters.from || !filters.to) {
+      toast.error('Please select date range');
+      return;
+    }
+
+    setIsLoading(true);
+
+    // Simulate API call like Meal Time
+    setTimeout(() => {
+      setSubmittedFilters(filters);
+      setIsLoading(false);
+      toast.success('Filters applied successfully');
+    }, 1000); // 1 second delay like API call
+  }, [filters]);
+
   const handleRefresh = useCallback(() => {
-    toast.info(t('common.refresh') || 'Refreshing...');
-  }, [t]);
+    if (!submittedFilters) {
+      toast.info('Please apply filters first');
+      return;
+    }
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success(t('common.refreshSuccess') || 'Data refreshed');
+    }, 1000);
+  }, [submittedFilters, t]);
 
   // Define columns for the main order type table
   const orderTypeColumns: ColumnDef<OrderTypeData>[] = [
@@ -135,19 +176,22 @@ export default function OrderTypeReportPage() {
               variant="outline"
               onClick={handleRefresh}
               className="flex items-center gap-2"
+              disabled={isLoading || !submittedFilters}
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw
+                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+              />
               {t('common.refresh')}
             </Button>
           </div>
         </div>
 
-        {/* Filters - Simple version */}
+        {/* Filters - Now with onSubmit prop */}
         <ReportFilters
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onSubmit={() => {}}
+          onSubmit={handleApplyFilters}
         />
 
         {/* Main Order Type Report Table */}
@@ -157,10 +201,21 @@ export default function OrderTypeReportPage() {
               <CardTitle className="text-lg">
                 {t('reports.orderType.orderTypeReport')}
               </CardTitle>
+              {submittedFilters && (
+                <p className="text-sm text-muted-foreground">
+                  Showing order type data for selected date range
+                </p>
+              )}
             </div>
           </CardHeader>
           <CardContent className="p-6 pt-0">
-            {MOCK_ORDER_TYPE_DATA.length === 0 ? (
+            {/* Show message based on filter state */}
+            {isLoading ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <RefreshCw className="h-8 w-8 mx-auto mb-4 animate-spin" />
+                <p>Loading...</p>
+              </div>
+            ) : MOCK_ORDER_TYPE_DATA.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 {t('reports.orderType.noData')}
               </div>
@@ -185,7 +240,7 @@ export default function OrderTypeReportPage() {
                     t('reports.orderType.searchPlaceholder') ||
                     'Search order types...'
                   }
-                  isLoading={false}
+                  isLoading={isLoading}
                 />
               </div>
             )}

@@ -22,7 +22,20 @@ import { GeneratedReportsTable } from '@/components/reports/generated-report-tab
 
 export default function DailySalesReportPage() {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<ReportQueryParams>({});
+
+  // Initialize filters
+  const [filters, setFilters] = useState<ReportQueryParams>(() => {
+    const today = new Date();
+    return {
+      from: today.toISOString(),
+      to: today.toISOString(),
+    };
+  });
+
+  // State for the filters that are actually applied (submitted)
+  const [submittedFilters, setSubmittedFilters] =
+    useState<ReportQueryParams | null>(null);
+
   const [selectedReportType, setSelectedReportType] =
     useState<DailyReportType | null>(null);
   const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
@@ -31,17 +44,35 @@ export default function DailySalesReportPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Fetch all generated reports from the system
-  const { data: generatedReports = [], isLoading } = useGeneratedReports();
+  // Local state to store generated reports (in addition to API data)
+  const [localGeneratedReports, setLocalGeneratedReports] = useState<
+    GeneratedReport[]
+  >([]);
 
-  // Filter handlers
+  // Fetch all generated reports from the system
+  const {
+    data: generatedReports = [],
+    isLoading,
+    refetch,
+  } = useGeneratedReports();
+
+  // Combine API data with locally generated reports
+  const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
+
+  // Filter handlers - SAME PATTERN
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
   }, []);
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
+    setSubmittedFilters(null); // Clear submitted filters
   }, []);
+
+  // Apply filters handler
+  const handleApplyFilters = useCallback(() => {
+    setSubmittedFilters(filters);
+  }, [filters]);
 
   const handleGenerateReport = useCallback(
     async (reportType: DailyReportType) => {
@@ -61,23 +92,33 @@ export default function DailySalesReportPage() {
       );
 
       try {
-        // TODO: Replace with actual API call
+        // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        // Simulate adding new report to list
+        // Create a new report object
         const newReport: GeneratedReport = {
-          _id: Date.now().toString(),
+          _id: `daily_${Date.now()}`,
           generateDate: new Date().toISOString(),
           generatedBy: 'current-user',
           generatedByName: 'Current User',
           reportType,
-          generationStatus: ReportGenerationStatus.PROCESSING,
-          filters,
+          generationStatus: ReportGenerationStatus.COMPLETED,
+          filters: submittedFilters || {},
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          downloadUrl: `https://example.com/reports/daily-${Date.now()}.csv`,
+          // Add report-specific data
         };
 
-        console.log('Generated report data:', newReport);
+        // Add the new report to local state
+        setLocalGeneratedReports((prev) => [newReport, ...prev]);
+
+        toast.success(t('reports.dailySales.generationSuccess'), {
+          description: `${reportLabel} report has been generated and added to the table.`,
+        });
+
+        // Also refetch from API if needed
+        refetch();
       } catch (error) {
         toast.error(t('reports.dailySales.generationFailed'), {
           description: t('common.errors.tryAgainLater'),
@@ -86,7 +127,7 @@ export default function DailySalesReportPage() {
         setIsGenerating(false);
       }
     },
-    [filters, t],
+    [t, refetch, submittedFilters],
   );
 
   const handleShowDetails = useCallback((report: GeneratedReport) => {
@@ -105,11 +146,11 @@ export default function DailySalesReportPage() {
         toast.error(t('reports.dailySales.downloadUrlNotAvailable'));
         return;
       }
-
       const link = document.createElement('a');
       link.href = report.downloadUrl;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
+      link.download = `report-${report._id}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -120,8 +161,9 @@ export default function DailySalesReportPage() {
   );
 
   const handleRefresh = useCallback(() => {
-    toast.info(t('reports.dailySales.refreshingReports'));
-  }, [t]);
+    refetch(); // Refresh from API
+    toast.success(t('common.refreshSuccess') || 'Reports refreshed');
+  }, [refetch, t]);
 
   return (
     <Layout>
@@ -142,7 +184,9 @@ export default function DailySalesReportPage() {
             onClick={handleRefresh}
             className="flex items-center gap-2"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw
+              className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+            />
             {t('common.refresh')}
           </Button>
         </div>
@@ -152,7 +196,7 @@ export default function DailySalesReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onSubmit={() => {}}
+          onSubmit={handleApplyFilters}
         >
           <DailySalesReportFilters
             filters={filters}
@@ -207,7 +251,7 @@ export default function DailySalesReportPage() {
         {/* Generated Reports Table using generic component */}
         <GeneratedReportsTable
           title="reports.dailySales.generatedReports"
-          data={generatedReports}
+          data={allGeneratedReports}
           isLoading={isLoading}
           onShowDetails={handleShowDetails}
           onDownload={handleDownloadReport}
