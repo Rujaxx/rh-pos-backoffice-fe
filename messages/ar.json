@@ -1817,5 +1817,10 @@
   "reports.orderType.columns.orderFrom": "الطلبات من",
   "reports.orderType.columns.orderCount": "العدد",
   "reports.orderType.columns.totalAmount": "المبلغ",
-  "reports.orderType.columns.status": "الحالة"
+  "reports.orderType.columns.status": "الحالة",
+
+  "reports.mealTime.columns.timeSlot": "الفترة الزمنية",
+  "reports.mealTime.columns.totalOrders": "إجمالي الطلبات",
+  "reports.mealTime.columns.avgOrderValue": "متوسط قيمة الطلب",
+  "reports.mealTime.columns.topSellingItem": "العنصر الأكثر مبيعًا"
 }

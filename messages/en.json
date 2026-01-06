@@ -1797,5 +1797,10 @@
   "reports.orderType.columns.orderFrom": "Order From",
   "reports.orderType.columns.orderCount": "Count",
   "reports.orderType.columns.totalAmount": "Amount",
-  "reports.orderType.columns.status": "Status"
+  "reports.orderType.columns.status": "Status",
+
+  "reports.mealTime.columns.timeSlot": "Time Slot",
+  "reports.mealTime.columns.totalOrders": "Total Orders",
+  "reports.mealTime.columns.avgOrderValue": "Average Order Value",
+  "reports.mealTime.columns.topSellingItem": "Top Selling Item"
 }
