@@ -10,8 +10,6 @@ import { RefreshCw } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { TanStackTable } from '@/components/ui/tanstack-table';
-import { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/components/ui/badge';
 import {
   PaginationState,
   SortingState,
@@ -19,26 +17,11 @@ import {
 } from '@tanstack/react-table';
 import { useOrderTypeReports } from '@/services/api/reports';
 import { OrderTypeReportItem } from '@/types/report.type';
-
-// Helper function to format currency
-const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
-
-// Format date
-const formatDate = (dateString?: string): string => {
-  if (!dateString) return '-';
-  return new Date(dateString).toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
-};
+import {
+  useOrderTypeColumns,
+  getSortFieldForQuery,
+  getSortOrderForQuery,
+} from '@/components/reports/order-type-reports/order-type-table-column';
 
 export default function OrderTypeReportPage() {
   const { t } = useTranslation();
@@ -73,8 +56,8 @@ export default function OrderTypeReportPage() {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
       term: searchTerm || undefined,
-      sortBy: sorting[0]?.id,
-      sortOrder: sorting[0]?.desc ? 'desc' : 'asc',
+      sortBy: getSortFieldForQuery(sorting),
+      sortOrder: getSortOrderForQuery(sorting) || 'desc',
     };
   }, [submittedFilters, pagination, searchTerm, sorting]);
 
@@ -87,10 +70,12 @@ export default function OrderTypeReportPage() {
     enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
   });
 
-  // Extract data from API response
-  const reportResponse = reportsData?.data;
-  const orderTypeData: OrderTypeReportItem[] = reportResponse?.data || [];
-  const totalCount = reportResponse?.meta?.total || 0;
+  const orderTypeData: OrderTypeReportItem[] = reportsData?.data ?? [];
+
+  const totalCount = reportsData?.meta?.total ?? orderTypeData.length;
+
+  // Get columns using hook (like brands example)
+  const orderTypeColumns = useOrderTypeColumns();
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -121,53 +106,6 @@ export default function OrderTypeReportPage() {
     refetch();
     toast.success(t('common.refreshSuccess') || 'Data refreshed');
   }, [submittedFilters, refetch, t]);
-
-  // Define columns
-  const orderTypeColumns: ColumnDef<OrderTypeReportItem>[] = [
-    {
-      accessorKey: 'orderType',
-      header: t('reports.orderType.columns.orderFrom') || 'Order Type',
-      cell: ({ row }) => (
-        <div className="font-medium">{row.original.orderType}</div>
-      ),
-    },
-    {
-      accessorKey: 'itemCount',
-      header: t('reports.orderType.columns.orderCount') || 'Items',
-      cell: ({ row }) => (
-        <div className="font-medium text-center">{row.original.itemCount}</div>
-      ),
-      meta: {
-        className: 'text-center',
-      },
-    },
-    {
-      accessorKey: 'amount',
-      header: t('reports.orderType.columns.totalAmount') || 'Amount',
-      cell: ({ row }) => (
-        <div className="font-medium">{formatCurrency(row.original.amount)}</div>
-      ),
-    },
-    {
-      accessorKey: 'status',
-      header: t('reports.orderType.columns.status') || 'Status',
-      cell: ({ row }) => {
-        const status = row.original.status;
-        const statusColors: Record<string, string> = {
-          COMPLETED: 'bg-green-500 text-white',
-          ACTIVE: 'bg-blue-500 text-white',
-          CANCELLED: 'bg-red-500 text-white',
-          PENDING: 'bg-yellow-500 text-white',
-        };
-
-        return (
-          <Badge className={statusColors[status] || 'bg-gray-500 text-white'}>
-            {status}
-          </Badge>
-        );
-      },
-    },
-  ];
 
   return (
     <Layout>

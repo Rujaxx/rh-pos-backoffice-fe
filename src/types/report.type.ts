@@ -166,23 +166,12 @@ export interface StatusData {
 
 // Define the structure that backend returns for order-type endpoint
 export interface OrderTypeReportItem {
-  orderType: string; // This is the NAME from backend
+  orderType: string | { en?: string; ar?: string };
   itemCount: number;
   amount: number;
   status: string;
   billNumber?: string;
   createdAt?: string;
-}
-
-export interface OrderTypeReportResponse {
-  data: OrderTypeReportItem[];
-  meta?: {
-    total: number;
-    page: number;
-    limit: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
 }
 
 export { PaymentMethodsEnum };

@@ -1,11 +1,11 @@
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import {
-  OrderTypeReportResponse,
+  OrderTypeReportItem,
   ReportData,
   ReportQueryParams,
 } from '@/types/report.type';
-import { SuccessResponse } from '@/types/api';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
 
 // Reports service - custom implementation since ReportData has unique structure
@@ -42,7 +42,7 @@ class BaseReportService {
   // Separate method for order type reports
   async getOrderTypeReports(
     params?: ReportQueryParams,
-  ): Promise<SuccessResponse<OrderTypeReportResponse>> {
+  ): Promise<PaginatedResponse<OrderTypeReportItem>> {
     const searchParams = new URLSearchParams();
 
     if (params) {
@@ -110,11 +110,11 @@ export const useMealTimeReports = createReportHook(
   'meal-time-reports',
 );
 
-// Order Type Report hook - uses OrderTypeReportResponse
+// Order Type Report hook
 export const useOrderTypeReports = (
   params?: ReportQueryParams,
   options?: Omit<
-    UseQueryOptions<SuccessResponse<OrderTypeReportResponse>>,
+    UseQueryOptions<PaginatedResponse<OrderTypeReportItem>>,
     'queryKey' | 'queryFn'
   >,
 ) => {
