@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,32 +12,13 @@ import { toast } from 'sonner';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { OrderTypeData } from '@/types/order-report.type';
-
-// Mock data for order type report table
-const MOCK_ORDER_TYPE_DATA: OrderTypeData[] = [
-  {
-    id: '1',
-    orderFrom: 'POS Terminal',
-    orderCount: 156,
-    totalAmount: 523400,
-    status: 'Active',
-  },
-  {
-    id: '2',
-    orderFrom: 'Online Website',
-    orderCount: 89,
-    totalAmount: 267000,
-    status: 'Inactive',
-  },
-  {
-    id: '3',
-    orderFrom: 'Delivery',
-    orderCount: 67,
-    totalAmount: 201000,
-    status: 'Active',
-  },
-];
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
+import { useOrderTypeReports } from '@/services/api/reports';
+import { OrderTypeReportItem } from '@/types/report.type';
 
 // Helper function to format currency
 const formatCurrency = (amount: number): string => {
@@ -49,10 +30,20 @@ const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+// Format date
+const formatDate = (dateString?: string): string => {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
 export default function OrderTypeReportPage() {
   const { t } = useTranslation();
 
-  // Initialize filters
+  // Initialize filters with today's date
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
     return {
@@ -61,12 +52,45 @@ export default function OrderTypeReportPage() {
     };
   });
 
-  // State for the filters that are actually applied (submitted)
+  // State for the filters that are actually applied
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
 
+  // Table state
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // <-- Added loading state
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // Build query params
+  const queryParams: ReportQueryParams = useMemo(() => {
+    const activeFilters = submittedFilters || {};
+    return {
+      ...activeFilters,
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
+      term: searchTerm || undefined,
+      sortBy: sorting[0]?.id,
+      sortOrder: sorting[0]?.desc ? 'desc' : 'asc',
+    };
+  }, [submittedFilters, pagination, searchTerm, sorting]);
+
+  // Fetch reports
+  const {
+    data: reportsData,
+    isLoading,
+    refetch,
+  } = useOrderTypeReports(queryParams, {
+    enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
+  });
+
+  // Extract data from API response
+  const reportResponse = reportsData?.data;
+  const orderTypeData: OrderTypeReportItem[] = reportResponse?.data || [];
+  const totalCount = reportResponse?.meta?.total || 0;
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -75,25 +99,18 @@ export default function OrderTypeReportPage() {
 
   const handleClearFilters = useCallback(() => {
     setFilters({});
-    setSubmittedFilters(null); // Clear submitted filters
-  }, []);
+    setSubmittedFilters(null);
+    setPagination({ pageIndex: 0, pageSize: pagination.pageSize });
+  }, [pagination.pageSize]);
 
   // Apply filters handler
   const handleApplyFilters = useCallback(() => {
-    if (!filters.from || !filters.to) {
-      toast.error('Please select date range');
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Simulate API call like Meal Time
-    setTimeout(() => {
+    if (JSON.stringify(filters) === JSON.stringify(submittedFilters)) {
+      refetch();
+    } else {
       setSubmittedFilters(filters);
-      setIsLoading(false);
-      toast.success('Filters applied successfully');
-    }, 1000); // 1 second delay like API call
-  }, [filters]);
+    }
+  }, [filters, submittedFilters, refetch]);
 
   const handleRefresh = useCallback(() => {
     if (!submittedFilters) {
@@ -101,39 +118,34 @@ export default function OrderTypeReportPage() {
       return;
     }
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success(t('common.refreshSuccess') || 'Data refreshed');
-    }, 1000);
-  }, [submittedFilters, t]);
+    refetch();
+    toast.success(t('common.refreshSuccess') || 'Data refreshed');
+  }, [submittedFilters, refetch, t]);
 
-  // Define columns for the main order type table
-  const orderTypeColumns: ColumnDef<OrderTypeData>[] = [
+  // Define columns
+  const orderTypeColumns: ColumnDef<OrderTypeReportItem>[] = [
     {
-      accessorKey: 'orderFrom',
-      header: t('reports.orderType.columns.orderFrom') || 'Order From',
+      accessorKey: 'orderType',
+      header: t('reports.orderType.columns.orderFrom') || 'Order Type',
       cell: ({ row }) => (
-        <div className="font-medium">{row.original.orderFrom}</div>
+        <div className="font-medium">{row.original.orderType}</div>
       ),
     },
     {
-      accessorKey: 'orderCount',
-      header: t('reports.orderType.columns.orderCount') || 'Count',
+      accessorKey: 'itemCount',
+      header: t('reports.orderType.columns.orderCount') || 'Items',
       cell: ({ row }) => (
-        <div className="font-medium">{row.original.orderCount}</div>
+        <div className="font-medium text-center">{row.original.itemCount}</div>
       ),
       meta: {
         className: 'text-center',
       },
     },
     {
-      accessorKey: 'totalAmount',
+      accessorKey: 'amount',
       header: t('reports.orderType.columns.totalAmount') || 'Amount',
       cell: ({ row }) => (
-        <div className="font-medium">
-          {formatCurrency(row.original.totalAmount)}
-        </div>
+        <div className="font-medium">{formatCurrency(row.original.amount)}</div>
       ),
     },
     {
@@ -142,9 +154,10 @@ export default function OrderTypeReportPage() {
       cell: ({ row }) => {
         const status = row.original.status;
         const statusColors: Record<string, string> = {
-          Active: 'bg-green-500 text-white',
-          Inactive: 'bg-gray-500 text-white',
-          Pending: 'bg-yellow-500 text-white',
+          COMPLETED: 'bg-green-500 text-white',
+          ACTIVE: 'bg-blue-500 text-white',
+          CANCELLED: 'bg-red-500 text-white',
+          PENDING: 'bg-yellow-500 text-white',
         };
 
         return (
@@ -176,17 +189,15 @@ export default function OrderTypeReportPage() {
               variant="outline"
               onClick={handleRefresh}
               className="flex items-center gap-2"
-              disabled={isLoading || !submittedFilters}
+              disabled={!submittedFilters}
             >
-              <RefreshCw
-                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-              />
+              <RefreshCw className="h-4 w-4" />
               {t('common.refresh')}
             </Button>
           </div>
         </div>
 
-        {/* Filters - Now with onSubmit prop */}
+        {/* Filters */}
         <ReportFilters
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -201,46 +212,45 @@ export default function OrderTypeReportPage() {
               <CardTitle className="text-lg">
                 {t('reports.orderType.orderTypeReport')}
               </CardTitle>
-              {submittedFilters && (
-                <p className="text-sm text-muted-foreground">
-                  Showing order type data for selected date range
-                </p>
-              )}
             </div>
           </CardHeader>
           <CardContent className="p-6 pt-0">
-            {/* Show message based on filter state */}
             {isLoading ? (
               <div className="text-center py-12 text-muted-foreground">
-                <RefreshCw className="h-8 w-8 mx-auto mb-4 animate-spin" />
-                <p>Loading...</p>
+                Loading...
               </div>
-            ) : MOCK_ORDER_TYPE_DATA.length === 0 ? (
+            ) : orderTypeData.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                {t('reports.orderType.noData')}
+                {t('reports.orderType.noData') ||
+                  'No order type data found for the selected date range'}
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <TanStackTable
-                  data={MOCK_ORDER_TYPE_DATA}
+                  data={orderTypeData}
                   columns={orderTypeColumns}
-                  totalCount={MOCK_ORDER_TYPE_DATA.length}
-                  pagination={{ pageIndex: 0, pageSize: 10 }}
-                  onPaginationChange={() => {}}
-                  sorting={[]}
-                  onSortingChange={() => {}}
-                  columnFilters={[]}
-                  onColumnFiltersChange={() => {}}
+                  totalCount={totalCount}
+                  isLoading={isLoading}
                   searchValue={searchTerm}
-                  onSearchChange={setSearchTerm}
-                  manualPagination={false}
-                  showPagination={true}
-                  showSearch={true}
                   searchPlaceholder={
                     t('reports.orderType.searchPlaceholder') ||
                     'Search order types...'
                   }
-                  isLoading={isLoading}
+                  onSearchChange={setSearchTerm}
+                  pagination={pagination}
+                  onPaginationChange={setPagination}
+                  sorting={sorting}
+                  onSortingChange={setSorting}
+                  columnFilters={columnFilters}
+                  onColumnFiltersChange={setColumnFilters}
+                  manualPagination={true}
+                  manualSorting={true}
+                  manualFiltering={true}
+                  showSearch={true}
+                  showPagination={true}
+                  showPageSizeSelector={true}
+                  emptyMessage={t('reports.orderType.noData')}
+                  enableMultiSort={false}
                 />
               </div>
             )}

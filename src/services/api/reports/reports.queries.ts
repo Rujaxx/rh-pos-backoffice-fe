@@ -1,6 +1,10 @@
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { ReportData, ReportQueryParams } from '@/types/report.type';
+import {
+  OrderTypeReportResponse,
+  ReportData,
+  ReportQueryParams,
+} from '@/types/report.type';
 import { SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
 
@@ -31,6 +35,33 @@ class BaseReportService {
     const url = searchParams.toString()
       ? `${endpoint}?${searchParams.toString()}`
       : endpoint;
+
+    return api.get(url);
+  }
+
+  // Separate method for order type reports
+  async getOrderTypeReports(
+    params?: ReportQueryParams,
+  ): Promise<SuccessResponse<OrderTypeReportResponse>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
+            searchParams.append(key, String(value));
+          }
+        }
+      });
+    }
+
+    const url = searchParams.toString()
+      ? `${API_ENDPOINTS.REPORTS.ORDER_TYPE}?${searchParams.toString()}`
+      : API_ENDPOINTS.REPORTS.ORDER_TYPE;
 
     return api.get(url);
   }
@@ -78,5 +109,20 @@ export const useMealTimeReports = createReportHook(
   API_ENDPOINTS.REPORTS.LIST_SALES,
   'meal-time-reports',
 );
+
+// Order Type Report hook - uses OrderTypeReportResponse
+export const useOrderTypeReports = (
+  params?: ReportQueryParams,
+  options?: Omit<
+    UseQueryOptions<SuccessResponse<OrderTypeReportResponse>>,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery({
+    queryKey: ['order-type-reports', 'list', params],
+    queryFn: () => reportService.getOrderTypeReports(params),
+    ...options,
+  });
+};
 
 export { reportService };
