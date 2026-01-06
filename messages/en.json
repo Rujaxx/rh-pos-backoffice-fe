@@ -1802,5 +1802,8 @@
   "reports.mealTime.columns.timeSlot": "Time Slot",
   "reports.mealTime.columns.totalOrders": "Total Orders",
   "reports.mealTime.columns.avgOrderValue": "Average Order Value",
-  "reports.mealTime.columns.topSellingItem": "Top Selling Item"
+  "reports.mealTime.columns.topSellingItem": "Top Selling Item",
+  "reports.payment.paymentDistribution": "Payment Method Distribution",
+  "reports.payment.searchPaymentMethods": "Search Payment Methods...",
+  "reports.payment.noPaymentData": "No payment data available"
 }

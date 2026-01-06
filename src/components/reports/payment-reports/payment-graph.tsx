@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { PaymentMethodsEnum } from '@/types/report.type';
+import { PaymentMethodsEnum } from '@/types/payment-report.type';
 import { GenericBarChart } from '@/components/ui/generic-bar-chart';
 import type { ChartConfig } from '@/components/ui/chart';
 
@@ -22,18 +22,20 @@ const PAYMENT_METHOD_COLORS: Record<PaymentMethodsEnum, string> = {
   [PaymentMethodsEnum.CASH]: 'hsl(142, 76%, 36%)', // green-600
   [PaymentMethodsEnum.CARD]: 'hsl(217, 91%, 60%)', // blue-500
   [PaymentMethodsEnum.UPI]: 'hsl(258, 90%, 66%)', // purple-500
-  [PaymentMethodsEnum.PAYTM]: 'hsl(38, 92%, 50%)', // yellow-500
-  [PaymentMethodsEnum.GOOGLE_PAY]: 'hsl(160, 84%, 39%)', // emerald-500
-  [PaymentMethodsEnum.FREE_CHARGE]: 'hsl(0, 84%, 60%)', // red-500
+  [PaymentMethodsEnum.PHONEPE]: 'hsl(24, 90%, 60%)', //orange-500
+  [PaymentMethodsEnum.WALLET]: '',
+  [PaymentMethodsEnum.NET_BANKING]: '',
+  [PaymentMethodsEnum.OTHER]: '',
 };
 
 const PAYMENT_METHOD_LABELS: Record<PaymentMethodsEnum, string> = {
   [PaymentMethodsEnum.CASH]: 'Cash',
   [PaymentMethodsEnum.CARD]: 'Card',
   [PaymentMethodsEnum.UPI]: 'UPI',
-  [PaymentMethodsEnum.PAYTM]: 'Paytm',
-  [PaymentMethodsEnum.GOOGLE_PAY]: 'Google Pay',
-  [PaymentMethodsEnum.FREE_CHARGE]: 'Freecharge',
+  [PaymentMethodsEnum.PHONEPE]: 'PhonePe',
+  [PaymentMethodsEnum.WALLET]: 'Wallet',
+  [PaymentMethodsEnum.NET_BANKING]: 'Net Banking',
+  [PaymentMethodsEnum.OTHER]: 'Other',
 };
 
 export function PaymentReportChart({ data }: PaymentReportChartProps) {

@@ -1822,5 +1822,8 @@
   "reports.mealTime.columns.timeSlot": "الفترة الزمنية",
   "reports.mealTime.columns.totalOrders": "إجمالي الطلبات",
   "reports.mealTime.columns.avgOrderValue": "متوسط قيمة الطلب",
-  "reports.mealTime.columns.topSellingItem": "العنصر الأكثر مبيعًا"
+  "reports.mealTime.columns.topSellingItem": "العنصر الأكثر مبيعًا",
+  "reports.payment.paymentDistribution": "توزيع طرق الدفع",
+  "reports.payment.searchPaymentMethods": "ابحث عن طرق الدفع...",
+  "reports.payment.noPaymentData": "لا توجد بيانات دفع متاحة"
 }

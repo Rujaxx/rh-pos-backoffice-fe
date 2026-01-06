@@ -1,10 +1,10 @@
-// types/payment-report.type.ts
-export enum PaymentMethod {
+export enum PaymentMethodsEnum {
   CASH = 'CASH',
   CARD = 'CARD',
   UPI = 'UPI',
   WALLET = 'WALLET',
   NET_BANKING = 'NET_BANKING',
+  PHONEPE = 'PHONEPE',
   OTHER = 'OTHER',
 }
 
@@ -21,7 +21,7 @@ export interface PaymentSummary {
 }
 
 export interface PaymentReportData {
-  paymentMethod: PaymentMethod;
+  paymentMethod: PaymentMethodsEnum;
   amount: number;
   orderCount: number;
   percentage: number;

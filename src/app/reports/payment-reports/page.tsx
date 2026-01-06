@@ -1,30 +1,31 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
-import {
-  Download,
-  RefreshCw,
-  FileText,
-  BarChart,
-  DollarSign,
-} from 'lucide-react';
+import { Download, RefreshCw, FileText, DollarSign } from 'lucide-react';
 import {
   ReportQueryParams,
   GeneratedReport,
-  PaymentMethodsEnum,
   PaymentReportType,
 } from '@/types/report.type';
+import { PaymentMethodsEnum } from '@/types/payment-report.type';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { toast } from 'sonner';
-import { PaymentReportChart } from '@/components/reports/payment-reports/payment-graph';
 import { PaymentReportFilters } from '@/components/reports/report-filters/payment-report-filter';
 import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
+import { TanStackTable } from '@/components/ui/tanstack-table';
+import { ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@/components/ui/badge';
+import {
+  PaginationState,
+  SortingState,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
 
 // Report Type Buttons
 const PAYMENT_REPORT_TYPE_BUTTONS = [
@@ -53,28 +54,70 @@ const MOCK_PAYMENT_SUMMARY = {
   averageOrderValue: 622,
 };
 
-// Mock payment report data for chart
+// Mock payment report data for table
 const MOCK_PAYMENT_REPORT_DATA = [
   {
+    id: '1',
     paymentMethod: PaymentMethodsEnum.CASH,
     amount: 45000,
     orderCount: 90,
     percentage: 29.5,
     averageValue: 500,
+    status: 'ACTIVE',
   },
   {
+    id: '2',
     paymentMethod: PaymentMethodsEnum.CARD,
     amount: 68500,
     orderCount: 95,
     percentage: 44.9,
     averageValue: 721,
+    status: 'ACTIVE',
   },
   {
-    paymentMethod: PaymentMethodsEnum.UPI,
+    id: '3',
+    paymentMethod: PaymentMethodsEnum.PHONEPE,
     amount: 32000,
     orderCount: 50,
     percentage: 21.0,
     averageValue: 640,
+    status: 'ACTIVE',
+  },
+  {
+    id: '4',
+    paymentMethod: PaymentMethodsEnum.UPI,
+    amount: 5000,
+    orderCount: 10,
+    percentage: 3.3,
+    averageValue: 500,
+    status: 'ACTIVE',
+  },
+  {
+    id: '5',
+    paymentMethod: PaymentMethodsEnum.WALLET,
+    amount: 3500,
+    orderCount: 15,
+    percentage: 2.3,
+    averageValue: 233,
+    status: 'ACTIVE',
+  },
+  {
+    id: '6',
+    paymentMethod: PaymentMethodsEnum.NET_BANKING,
+    amount: 2500,
+    orderCount: 8,
+    percentage: 1.6,
+    averageValue: 313,
+    status: 'ACTIVE',
+  },
+  {
+    id: '7',
+    paymentMethod: PaymentMethodsEnum.OTHER,
+    amount: 2000,
+    orderCount: 7,
+    percentage: 1.3,
+    averageValue: 286,
+    status: 'ACTIVE',
   },
 ];
 
@@ -88,6 +131,22 @@ const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+// Format percentage
+const formatPercentage = (value: number): string => {
+  return `${value.toFixed(1)}%`;
+};
+
+// Payment method labels
+const PAYMENT_METHOD_LABELS: Record<PaymentMethodsEnum, string> = {
+  [PaymentMethodsEnum.CASH]: 'Cash',
+  [PaymentMethodsEnum.CARD]: 'Card',
+  [PaymentMethodsEnum.UPI]: 'UPI',
+  [PaymentMethodsEnum.PHONEPE]: 'PhonePe',
+  [PaymentMethodsEnum.WALLET]: 'Wallet',
+  [PaymentMethodsEnum.NET_BANKING]: 'Net Banking',
+  [PaymentMethodsEnum.OTHER]: 'Other',
+};
+
 export default function PaymentReportPage() {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<ReportQueryParams>({});
@@ -99,8 +158,32 @@ export default function PaymentReportPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Table state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   // Fetch all generated reports from the system
   const { data: generatedReports = [], isLoading } = useGeneratedReports();
+
+  // Filter mock data based on search term
+  const filteredPaymentData = useMemo(() => {
+    if (!searchTerm) return MOCK_PAYMENT_REPORT_DATA;
+
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return MOCK_PAYMENT_REPORT_DATA.filter((item) => {
+      const paymentMethod =
+        PAYMENT_METHOD_LABELS[item.paymentMethod] || item.paymentMethod;
+      return (
+        paymentMethod.toLowerCase().includes(lowerSearchTerm) ||
+        item.status.toLowerCase().includes(lowerSearchTerm)
+      );
+    });
+  }, [searchTerm]);
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -141,7 +224,7 @@ export default function PaymentReportPage() {
         setIsGenerating(false);
       }
     },
-    [filters, t],
+    [t],
   );
 
   const handleShowDetails = useCallback((report: GeneratedReport) => {
@@ -191,6 +274,57 @@ export default function PaymentReportPage() {
     toast.info(t('reports.payment.refreshingReports'));
     // TODO: Add API refetch here
   }, [t]);
+
+  // Define columns for payment method table
+  const paymentMethodColumns: ColumnDef<
+    (typeof MOCK_PAYMENT_REPORT_DATA)[0]
+  >[] = [
+    {
+      accessorKey: 'paymentMethod',
+      header: t('reports.payment.columns.paymentMethod') || 'Payment Method',
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {PAYMENT_METHOD_LABELS[row.original.paymentMethod] ||
+            row.original.paymentMethod}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'amount',
+      header: t('reports.payment.columns.amount') || 'Amount',
+      cell: ({ row }) => (
+        <div className="font-medium">{formatCurrency(row.original.amount)}</div>
+      ),
+    },
+    {
+      accessorKey: 'orderCount',
+      header: t('reports.payment.columns.orderCount') || 'Orders',
+      cell: ({ row }) => (
+        <div className="font-medium">{row.original.orderCount}</div>
+      ),
+      meta: {
+        className: 'text-center',
+      },
+    },
+    {
+      accessorKey: 'percentage',
+      header: t('reports.payment.columns.percentage') || 'Percentage',
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {formatPercentage(row.original.percentage)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'averageValue',
+      header: t('reports.payment.columns.averageValue') || 'Avg Value',
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {formatCurrency(row.original.averageValue)}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Layout>
@@ -351,19 +485,45 @@ export default function PaymentReportPage() {
           emptyMessage="reports.payment.noGeneratedReports"
         />
 
-        {/* Payment Graph Section */}
+        {/* Payment Method Distribution Table using TanStackTable */}
         <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between p-6 pb-4">
+            <div>
               <CardTitle className="text-lg">
-                {t('reports.payment.paymentGraph') ||
+                {t('reports.payment.paymentDistribution') ||
                   'Payment Method Distribution'}
               </CardTitle>
-              <BarChart className="h-5 w-5 text-muted-foreground" />
             </div>
           </CardHeader>
-          <CardContent>
-            <PaymentReportChart data={MOCK_PAYMENT_REPORT_DATA} />
+          <CardContent className="p-6 pt-0">
+            <TanStackTable
+              data={filteredPaymentData}
+              columns={paymentMethodColumns}
+              totalCount={filteredPaymentData.length}
+              isLoading={false}
+              searchValue={searchTerm}
+              searchPlaceholder={
+                t('reports.payment.searchPaymentMethods') ||
+                'Search payment methods...'
+              }
+              onSearchChange={setSearchTerm}
+              pagination={pagination}
+              onPaginationChange={setPagination}
+              sorting={sorting}
+              onSortingChange={setSorting}
+              columnFilters={columnFilters}
+              onColumnFiltersChange={setColumnFilters}
+              manualPagination={false}
+              manualSorting={false}
+              manualFiltering={false}
+              showSearch={true}
+              showPagination={true}
+              showPageSizeSelector={true}
+              emptyMessage={
+                t('reports.payment.noPaymentData') || 'No payment data found'
+              }
+              enableMultiSort={false}
+            />
           </CardContent>
         </Card>
       </div>
