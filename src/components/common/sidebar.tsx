@@ -24,6 +24,7 @@ import {
   Clock,
   DollarSign,
   ShoppingBag,
+  ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -180,6 +181,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     id: 'digital-orders',
     label: t('navigation.digitalOrders') || 'Online Orders',
     items: [
+      {
+        id: 'online-order',
+        label: t('navigation.onlineOrders') || 'Online Order',
+        href: '/digital-orders/online-order',
+        icon: ShoppingCart,
+      },
       {
         id: 'digital-order-settings',
         label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
