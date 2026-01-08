@@ -118,8 +118,8 @@
   "navigation.logout": "تسجيل خروج",
   "navigation.crm": "إدارة العملاء",
   "navigation.customers": "جميع العملاء",
-  "navigation.digitalOrderSettings": "إعدادات الطلبات الرقمية",
-  "navigation.digitalOrders": "الطلبات الرقمية",
+  "navigation.digitalOrderSettings": "إعدادات الطلبات الإلكترونية",
+  "navigation.digitalOrders": "الطلبات الإلكترونية",
   "pos.takeOrder": "أخذ طلب",
   "pos.splitBill": "تقسيم الفاتورة",
   "pos.applyDiscount": "تطبيق خصم",
@@ -1862,5 +1862,26 @@
   "orders.paymentStatus": "حالة الدفع:",
   "payment.pending": "قيد الانتظار",
   "payment.paid": "مدفوع",
-  "payment.failed": "فشل"
+  "payment.failed": "فشل",
+
+  "orders.newOrders": "طلبات جديدة",
+  "orders.runningOrders": "طلبات قيد التنفيذ",
+  "orders.dispatchedOrders": "تم الإرسال",
+  "orders.fulfilledOrders": "مكتملة",
+  "orders.cancelledOrders": "ملغاة",
+
+  "orders.reopened": "أُعيد فتحه",
+  "orders.deliveryBoyAssigned": "تم تعيين مندوب التوصيل للطلب",
+  "orders.delivery": "توصيل",
+  "orders.pickup": "استلام من المطعم",
+
+  "orders.platforms.uber_eats": "أوبر إيتس",
+  "orders.platforms.zomato": "زوماتو",
+  "orders.platforms.swiggy": "سويجي",
+  "orders.platforms.website": "الموقع الإلكتروني",
+
+  "common.refreshing": "جاري التحديث...",
+  "common.hideFilters": "إخفاء الفلاتر",
+  "common.showFilters": "إظهار الفلاتر",
+  "common.clear": "مسح"
 }

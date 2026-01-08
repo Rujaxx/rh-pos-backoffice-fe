@@ -1,3 +1,13 @@
+export interface OrderItem {
+  _id: string;
+  name: string;
+  quantity: number;
+  price: number;
+  discount: number;
+  tax: number;
+  subtotal: number;
+}
+
 export interface Order {
   _id: string;
   orderNumber: string;
@@ -20,14 +30,10 @@ export interface Order {
   platform: 'uber_eats' | 'zomato' | 'swiggy' | 'website';
   platformStore?: string;
   orderLater: boolean;
-}
-
-export interface OrderItem {
-  _id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  discount: number;
-  tax: number;
-  subtotal: number;
+  orderStatus?:
+    | 'acknowledged'
+    | 'food_ready'
+    | 'dispatched'
+    | 'fulfilled'
+    | 'cancelled';
 }

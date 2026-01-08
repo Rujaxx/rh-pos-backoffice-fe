@@ -179,18 +179,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
   },
   {
     id: 'digital-orders',
-    label: t('navigation.digitalOrders') || 'Online Orders',
+    label: t('navigation.digitalOrders'),
     items: [
       {
-        id: 'online-order',
-        label: t('navigation.onlineOrders') || 'Online Order',
-        href: '/digital-orders/online-order',
+        id: 'web-orders',
+        label: t('navigation.webOrders') || 'Web Orders',
+        href: '/digital-orders/web-orders',
         icon: ShoppingCart,
       },
       {
-        id: 'digital-order-settings',
-        label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
-        href: '/digital-orders/digital-order-settings',
+        id: 'online-order-settings',
+        label: t('navigation.digitalOrderSettings') || 'Online Order Settings',
+        href: '/digital-orders/online-order-settings',
         icon: Globe,
       },
     ],

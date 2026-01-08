@@ -118,7 +118,7 @@
   "navigation.logout": "Logout",
   "navigation.crm": "Customer Management",
   "navigation.customers": "All Customers",
-  "navigation.digitalOrderSettings": "Digital Order Settings",
+  "navigation.digitalOrderSettings": "Online Orders Settings",
   "navigation.digitalOrders": "Online Orders",
   "pos.takeOrder": "Take Order",
   "pos.splitBill": "Split Bill",
@@ -1815,8 +1815,8 @@
   "orders.orderLater": "Order Later",
   "orders.orderType": "Order Type",
   "orders.filters": "Order Filters",
-  "orders.managementTitle": "Digital Orders Management",
-  "navigation.onlineOrders": "Online Orders",
+  "orders.managementTitle": "Online Orders Management",
+  "navigation.webOrders": "Web Orders",
   "orders.managementDescription": "Manage and track all online orders from customers.",
   "orders.noOrdersMatchFilters": "No orders match your filters",
   "orders.noOrdersFound": "No orders found",
@@ -1842,5 +1842,27 @@
   "orders.paymentStatus": "Payment Status:",
   "payment.pending": "Pending",
   "payment.paid": "Paid",
-  "payment.failed": "Failed"
+  "payment.failed": "Failed",
+  "orders.newOrders": "New Orders",
+  "orders.runningOrders": "Running Orders",
+  "orders.dispatchedOrders": "Dispatched",
+  "orders.fulfilledOrders": "Fulfilled",
+  "orders.cancelledOrders": "Cancelled",
+
+  "orders.reopened": "reopened",
+  "orders.deliveryBoyAssigned": "Delivery boy assigned to order",
+
+  "orders.delivery": "Delivery",
+  "orders.pickup": "Pickup",
+
+  "orders.platforms.uber_eats": "Uber Eats",
+  "orders.platforms.zomato": "Zomato",
+  "orders.platforms.swiggy": "Swiggy",
+  "orders.platforms.website": "Website",
+
+  "common.refreshing": "Refreshing...",
+  "common.hideFilters": "Hide Filters",
+  "common.showFilters": "Show Filters",
+  "common.clear": "Clear All",
+  "common.apply": "Apply"
 }

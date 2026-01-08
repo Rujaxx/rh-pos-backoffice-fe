@@ -205,23 +205,28 @@ export function OrderDetailsModal({
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">{t('orders.items')}</h3>
           <div className="border rounded-md">
-            <div className="grid grid-cols-6 gap-4 p-4 border-b bg-muted/50 text-sm font-medium">
+            <div className="grid grid-cols-7 gap-4 p-4 border-b bg-muted/50 text-sm font-medium">
               <div className="col-span-2">Item Name</div>
               <div>Quantity</div>
-              <div>Discount</div>
               <div>Price</div>
+              <div>Discount</div>
               <div>Tax</div>
+              <div>Subtotal</div> {/* ADDED SUBTOTAL COLUMN */}
             </div>
             {order.items.map((item) => (
               <div
                 key={item._id}
-                className="grid grid-cols-6 gap-4 p-4 border-b"
+                className="grid grid-cols-7 gap-4 p-4 border-b"
               >
                 <div className="col-span-2">{item.name}</div>
                 <div>{item.quantity}</div>
-                <div>${item.discount.toFixed(2)}</div>
                 <div>${item.price.toFixed(2)}</div>
+                <div>${item.discount.toFixed(2)}</div>
                 <div>${item.tax.toFixed(2)}</div>
+                <div className="font-medium">
+                  ${item.subtotal.toFixed(2)}
+                </div>{' '}
+                {/* ADDED SUBTOTAL CELL */}
               </div>
             ))}
           </div>
