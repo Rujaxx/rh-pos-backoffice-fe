@@ -6,9 +6,8 @@ import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 
 // Reports service - custom implementation since ReportData has unique structure
 class ReportService {
-  private readonly baseEndpoint = API_ENDPOINTS.REPORTS.LIST_SALES;
-
   async getReports(
+    endpoint: string,
     params?: ReportQueryParams,
   ): Promise<SuccessResponse<ReportData>> {
     const searchParams = new URLSearchParams();
@@ -30,8 +29,8 @@ class ReportService {
     }
 
     const url = searchParams.toString()
-      ? `${this.baseEndpoint}?${searchParams.toString()}`
-      : this.baseEndpoint;
+      ? `${endpoint}?${searchParams.toString()}`
+      : endpoint;
 
     return api.get(url);
   }
@@ -39,19 +38,33 @@ class ReportService {
 
 const reportService = new ReportService();
 
-// Query hook
-export const useReports = (
-  params?: ReportQueryParams,
-  options?: Omit<
-    UseQueryOptions<SuccessResponse<ReportData>>,
-    'queryKey' | 'queryFn'
-  >,
-) => {
-  return useQuery({
-    queryKey: QUERY_KEYS.REPORTS.LIST(params),
-    queryFn: () => reportService.getReports(params),
-    ...options,
-  });
+// Generic query hook factory
+const createReportHook = (endpoint: string, queryKeyPrefix: string) => {
+  return (
+    params?: ReportQueryParams,
+    options?: Omit<
+      UseQueryOptions<SuccessResponse<ReportData>>,
+      'queryKey' | 'queryFn'
+    >,
+  ) => {
+    return useQuery({
+      queryKey: [queryKeyPrefix, 'list', params],
+      queryFn: () => reportService.getReports(endpoint, params),
+      ...options,
+    });
+  };
 };
+
+// Sales report hook (general sales endpoint)
+export const useReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'reports',
+);
+
+// Daily Sales Report hook
+export const useDailySalesReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'daily-sales-reports',
+);
 
 export { reportService };

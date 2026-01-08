@@ -17,10 +17,10 @@ import {
   XCircle,
   FileText,
 } from 'lucide-react';
-import { ReportFilters } from '@/components/reports/report-filters';
+import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { TanStackTable } from '@/components/ui/tanstack-table';
-import { useEditableBillsColumns } from '@/components/reports/editable-bill-columns';
-import { BillDetailsModal } from '@/components/reports/bill-details-modal';
+import { useEditableBillsColumns } from '@/components/reports/sales-reports/editable-bill-columns';
+import { BillDetailsModal } from '@/components/reports/sales-reports/bill-details-modal';
 import {
   PaginationState,
   SortingState,
