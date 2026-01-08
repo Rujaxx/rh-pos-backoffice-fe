@@ -102,17 +102,17 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
             maxHeight,
           },
         });
-        console.log(result.data);
         if (result.data) {
-          // Store the upload ID in the form (this will be sent to backend on form submission)
+          // Store the S3 key in the form (this will be sent to backend on form submission)
           form.setValue(
             name,
-            result.data.id as PathValue<TFormValues, typeof name>,
+            result.data.key as PathValue<TFormValues, typeof name>,
           );
+          // Store the upload ID separately for cleanup/confirmation purposes
           setCurrentUploadId(result.data.id);
 
-          // Update preview with the full S3 URL
-          setPreview(getS3UrlFromKey(result.data.url));
+          // Update preview with the full S3 URL (already a full URL from backend)
+          setPreview(result.data.url);
         }
       } catch (error) {
         console.error('Upload failed:', error);

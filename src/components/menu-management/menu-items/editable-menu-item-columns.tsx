@@ -26,7 +26,7 @@ interface EditableColumnsConfig {
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
   onDelete?: (menuItem: MenuItem) => void;
-  onUploadImage: (file: File) => Promise<{ id: string; url: string }>;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
 }
 
 /**
@@ -41,7 +41,7 @@ function PrimaryImageCell({
 }: {
   menuItem: MenuItem;
   imageKey: string;
-  onUploadImage: (file: File) => Promise<{ id: string; url: string }>;
+  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
 }) {
   const [previewUrl, setPreviewUrl] = useState<string>(
@@ -59,8 +59,8 @@ function PrimaryImageCell({
       const result = await onUploadImage(file);
       // Update preview immediately with the full URL
       setPreviewUrl(result.url);
-      // Save the ID to the backend/state
-      updateField(menuItem._id!, 'primaryImage', result.id);
+      // Save the S3 key to the backend/state
+      updateField(menuItem._id!, 'primaryImage', result.key);
     } catch (error) {
       console.error('Upload failed', error);
     } finally {
