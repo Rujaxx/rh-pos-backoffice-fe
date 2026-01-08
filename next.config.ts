@@ -53,8 +53,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    // Uncomment the line below if you want to disable image optimization entirely
-    // unoptimized: true,
+    unoptimized: true,
 
     domains: [
       // Legacy domains array (deprecated but kept for backward compatibility)

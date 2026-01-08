@@ -6,7 +6,7 @@
 import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { UseFormReturn, FieldPath, PathValue } from 'react-hook-form';
-import { Upload, X, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, X, Loader2, AlertCircle, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from './button';
 import { FormFieldWrapper } from './form-components';
@@ -45,6 +45,7 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   const [preview, setPreview] = useState<string>('');
   const [currentUploadId, setCurrentUploadId] = useState<string>('');
   const [dragOver, setDragOver] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const uploadMutation = useUploadImage();
   const deleteUploadMutation = useDeleteTemporaryUpload();
@@ -103,16 +104,16 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
           },
         });
         if (result.data) {
-          // Store the S3 key in the form (this will be sent to backend on form submission)
+          // Store the upload ID in the form (needed for upload confirmation API)
           form.setValue(
             name,
-            result.data.key as PathValue<TFormValues, typeof name>,
+            result.data.id as PathValue<TFormValues, typeof name>,
           );
-          // Store the upload ID separately for cleanup/confirmation purposes
           setCurrentUploadId(result.data.id);
 
           // Update preview with the full S3 URL (already a full URL from backend)
           setPreview(result.data.url);
+          setImageError(false); // Reset error state on successful upload
         }
       } catch (error) {
         console.error('Upload failed:', error);
@@ -184,6 +185,7 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
     form.setValue(name, '' as PathValue<TFormValues, typeof name>);
     setPreview('');
     setCurrentUploadId('');
+    setImageError(false); // Reset error state
   }, [form, name, currentUploadId, deleteUploadMutation]);
 
   // Initialize preview from current form value
@@ -233,16 +235,22 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
 
             {hasImage ? (
               <div className="relative group">
-                <Image
-                  src={displayUrl}
-                  alt="Preview"
-                  width={200}
-                  height={200}
-                  className="w-full h-48 object-contain rounded"
-                  onError={() => {
-                    setPreview('');
-                  }}
-                />
+                {imageError ? (
+                  <div className="w-full h-48 bg-muted rounded flex items-center justify-center">
+                    <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                ) : (
+                  <Image
+                    src={displayUrl}
+                    alt="Preview"
+                    width={200}
+                    height={200}
+                    className="w-full h-48 object-contain rounded"
+                    onError={() => {
+                      setImageError(true);
+                    }}
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded flex items-center justify-center">
                   <label
                     htmlFor={`file-upload-${name}`}
