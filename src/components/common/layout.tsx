@@ -36,11 +36,11 @@ function LayoutContent({ children }: LayoutProps) {
     if (menuState === 'hidden') {
       marginValue = '0';
     } else if (menuState === 'collapsed' && isHovered) {
-      marginValue = '16rem'; // 256px - full width
+      marginValue = '13rem'; // 256px - full width
     } else if (menuState === 'collapsed') {
       marginValue = '4rem'; // 64px - collapsed width
     } else {
-      marginValue = '16rem'; // 256px - full width
+      marginValue = '13rem'; // 256px - full width
     }
 
     // Apply margin to the correct side based on language direction

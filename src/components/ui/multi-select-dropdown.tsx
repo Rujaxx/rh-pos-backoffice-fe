@@ -55,25 +55,30 @@ export function MultiSelectDropdown({
         <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="z-50 w-auto min-w-[14rem] max-w-[90vw] rounded-md border bg-popover p-1 shadow-md max-h-60 overflow-y-auto"
+        className="z-50 w-full min-w-[14rem] max-w-xs rounded-md border bg-popover p-1 shadow-md max-h-60 overflow-y-auto"
         align="start"
+        style={{
+          maxWidth: 'calc(100vw - 2rem)', // Ensure it doesn't go off screen
+        }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-          {options.map((option) => (
-            <DropdownMenuCheckboxItem
-              key={option.value}
+        {options.map((option) => (
+          <DropdownMenuCheckboxItem
+            key={option.value}
+            checked={value.includes(option.value)}
+            onCheckedChange={() => handleToggle(option.value)}
+            className="flex items-center gap-2 cursor-pointer rounded-sm px-2 py-1.5 text-sm hover:bg-accent focus:bg-accent focus:outline-none min-w-0"
+            style={{
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+            }}
+          >
+            <Checkbox
               checked={value.includes(option.value)}
-              onCheckedChange={() => handleToggle(option.value)}
-              className="flex items-center gap-2 cursor-pointer rounded-sm px-2 py-1.5 text-sm hover:bg-accent focus:bg-accent focus:outline-none"
-            >
-              <Checkbox
-                checked={value.includes(option.value)}
-                className="pointer-events-none"
-              />
-              <span className="truncate">{option.label}</span>
-            </DropdownMenuCheckboxItem>
-          ))}
-        </div>
+              className="pointer-events-none shrink-0"
+            />
+            <span className="truncate min-w-0">{option.label}</span>
+          </DropdownMenuCheckboxItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

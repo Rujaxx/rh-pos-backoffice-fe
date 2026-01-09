@@ -133,8 +133,10 @@ export const API_ENDPOINTS = {
   },
   REPORTS: {
     LIST_SALES: '/reports/sales',
-    LIST_ORDERTYPE: '/reports/order-type',
-    LIST_MENU: '/reports/menu',
+    LIST_TDS: '/reports/tds-reports',
+    GENERATE_TDS: '/reports/generate/tds-report',
+    MEAL_TIME: '/reports/meal-time-report',
+    ORDER_TYPE: '/reports/order-type',
   },
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
@@ -156,6 +158,15 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `/customers/${id}`,
     DELETE: (id: string) => `/customers/${id}`,
     GET: (id: string) => `/customers/${id}`,
+  },
+  MEAL_TIME_FRAME: {
+    LIST: '/meal-time-frame',
+    LIST_BY_RESTAURANT: (restaurantId: string) =>
+      `/meal-time-frame/${restaurantId}`,
+    CREATE: '/meal-time-frame',
+    GET: (id: string) => `/meal-time-frame/${id}`,
+    UPDATE: (id: string) => `/meal-time-frame/${id}`,
+    DELETE: (id: string) => `/meal-time-frame/${id}`,
   },
 } as const;
 
@@ -235,6 +246,14 @@ export const QUERY_KEYS = {
   REPORTS: {
     LIST: (params?: Record<string, unknown>) =>
       ['reports', 'list', params] as const,
+    LIST_TDS: (params?: Record<string, unknown>) =>
+      ['reports', 'tds-report', params] as const,
+    GENERATE_TDS: (params?: Record<string, unknown>) =>
+      ['reports', 'generate/tds-report', params] as const,
+    MEAL_TIME: (params?: Record<string, unknown>) =>
+      ['reports', 'meal-time-report', params] as const,
+    ORDER_TYPE: (params?: Record<string, unknown>) =>
+      ['reports', 'order-type', params] as const,
   },
   DISCOUNTS: {
     LIST: (params?: Record<string, unknown>) =>
@@ -250,5 +269,10 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['customers', 'list', params] as const,
     DETAIL: (id: string) => ['customers', 'detail', id] as const,
+  },
+  MEAL_TIME_FRAME: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['meal-time-frame', 'list', params] as const,
+    DETAIL: (id: string) => ['meal-time-frame', 'detail', id] as const,
   },
 } as const;

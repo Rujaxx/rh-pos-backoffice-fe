@@ -1,5 +1,10 @@
-import { DashboardSaasLayout } from '@/components/dashboard';
+import Layout from '@/components/common/layout';
+import { DashboardContent } from '@/components/dashboard/content';
 
 export default function DashboardPage() {
-  return <DashboardSaasLayout />;
+  return (
+    <Layout>
+      <DashboardContent />
+    </Layout>
+  );
 }

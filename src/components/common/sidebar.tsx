@@ -4,24 +4,14 @@ import type React from 'react';
 import {
   BarChart2,
   Building2,
-  Users2,
   Settings,
   Home,
-  ShoppingCart,
-  FileText,
   TrendingUp,
-  Activity,
   UserPlus,
-  Clock,
-  DollarSign,
   Store,
-  Receipt,
-  Calendar,
   Utensils,
   Users,
-  CreditCard,
   ClipboardList,
-  Truck,
   ChevronDown,
   HelpCircle,
   Percent,
@@ -30,6 +20,11 @@ import {
   TicketPercent,
   Sofa,
   Globe,
+  Calendar,
+  Clock,
+  DollarSign,
+  ShoppingBag,
+  ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -69,59 +64,37 @@ interface MenuSection {
 // Function to generate POS menu data with translations
 const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
   // OVERVIEW SECTION NOT IMPLEMENTED YET
-  // {
-  //   id: 'overview',
-  //   label: t('navigation.overview'),
-  //   items: [
-  //     {
-  //       id: 'dashboard',
-  //       label: t('navigation.dashboard'),
-  //       href: '/dashboard',
-  //       icon: Home,
-  //       children: [
-  //         {
-  //           id: 'analytics',
-  //           label: t('navigation.analytics'),
-  //           href: '/dashboard/analytics',
-  //           icon: BarChart2,
-  //         },
-  //         {
-  //           id: 'reports',
-  //           label: t('navigation.reports'),
-  //           href: '/dashboard/reports',
-  //           icon: FileText,
-  //           children: [
-  //             {
-  //               id: 'sales-reports',
-  //               label: t('navigation.salesReports'),
-  //               href: '/dashboard/reports/sales',
-  //               icon: TrendingUp,
-  //             },
-  //             {
-  //               id: 'staff-reports',
-  //               label: t('navigation.staffReports'),
-  //               href: '/dashboard/reports/staff',
-  //               icon: Users2,
-  //             },
-  //             {
-  //               id: 'financial-reports',
-  //               label: t('navigation.financialReports'),
-  //               href: '/dashboard/reports/financial',
-  //               icon: DollarSign,
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           id: 'real-time',
-  //           label: t('navigation.realTime'),
-  //           href: '/dashboard/realtime',
-  //           icon: Activity,
-  //           isNew: true,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    id: 'overview',
+    label: t('navigation.overview'),
+    items: [
+      {
+        id: 'dashboard',
+        label: t('navigation.dashboard'),
+        href: '/dashboard',
+        icon: Home,
+      },
+      {
+        id: 'live-order-tracking',
+        label: t('navigation.liveOrderTracking'),
+        href: '/dashboard/live-order-tracking',
+        icon: BarChart2,
+      },
+      //   {
+      //     id: 'reports',
+      //     label: t('navigation.reports'),
+      //     href: '/dashboard/reports',
+      //     icon: FileText,
+      //   },
+      //   {
+      //     id: 'real-time',
+      //     label: t('navigation.realTime'),
+      //     href: '/dashboard/realtime',
+      //     icon: Activity,
+      //     isNew: true,
+      //   },
+    ],
+  },
   {
     id: 'operations',
     label: t('navigation.operations'),
@@ -206,12 +179,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
   },
   {
     id: 'digital-orders',
-    label: t('navigation.digitalOrders') || 'Online Orders',
+    label: t('navigation.digitalOrders'),
     items: [
       {
-        id: 'digital-order-settings',
-        label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
-        href: '/digital-orders/digital-order-settings',
+        id: 'web-orders',
+        label: t('navigation.webOrders') || 'Web Orders',
+        href: '/digital-orders/web-orders',
+        icon: ShoppingCart,
+      },
+      {
+        id: 'online-order-settings',
+        label: t('navigation.digitalOrderSettings') || 'Online Order Settings',
+        href: '/digital-orders/online-order-settings',
         icon: Globe,
       },
     ],
@@ -311,9 +290,46 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     items: [
       {
         id: 'sales-reports',
-        label: t('navigation.salesReports'),
+        label: t('navigation.salesReports') || 'Sales Report',
         href: '/reports/sales-reports',
         icon: TrendingUp,
+      },
+      {
+        id: 'daily-sales-reports',
+        label: t('navigation.dailySalesReport') || 'Daily Sales Report',
+        href: '/reports/daily-sales-reports',
+        icon: Calendar,
+      },
+      {
+        id: 'todays-reports',
+        label: t('navigation.todaysReport') || "Today's Sales Report",
+        href: '/reports/todays-reports',
+        icon: Calendar,
+      },
+      {
+        id: 'meal-time-reports',
+        label: t('navigation.mealTimeReports') || 'Meal Time Reports',
+        href: '/reports/meal-time-reports',
+        icon: Clock,
+      },
+      {
+        id: 'hourly-reports',
+        label: t('navigation.hourlyReports') || 'Hourly Reports',
+        href: '/reports/hourly-reports',
+        icon: Clock,
+      },
+
+      {
+        id: 'orderType-reports',
+        label: t('navigation.orderTypeReports') || 'Order Type Reports',
+        href: '/reports/order-type-reports',
+        icon: ShoppingBag,
+      },
+      {
+        id: 'payment-reports',
+        label: t('navigation.paymentReports') || 'Payment Reports',
+        href: '/reports/payment-reports',
+        icon: DollarSign,
       },
     ],
   },
@@ -584,12 +600,12 @@ export default function Sidebar() {
   // Calculate sidebar width - expand when collapsed and hovered, or full width on mobile
   const getSidebarWidth = () => {
     if (isMobile) {
-      return 'w-64'; // Always full width on mobile
+      return 'w-53'; // Always full width on mobile
     }
     if (menuState === 'collapsed' && isHovered) {
-      return 'w-64'; // Expand to full width when hovered
+      return 'w-53'; // Expand to full width when hovered
     }
-    return menuState === 'collapsed' ? 'w-16' : 'w-64';
+    return menuState === 'collapsed' ? 'w-16' : 'w-53';
   };
 
   // Show text if menu is full OR if collapsed and hovered OR on mobile
