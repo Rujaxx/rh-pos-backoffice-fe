@@ -11,7 +11,6 @@ import {
   Utensils,
   ChevronDown,
   X,
-  Filter,
   Search,
   Hash,
   Package,
@@ -23,7 +22,6 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -277,7 +275,7 @@ export function OrderFilters({
     <Card>
       <CardContent>
         {/* Main Filter Buttons Row */}
-        <div className="flex flex-wrap items-center gap-2 mb-3">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Date Range Button & Dropdown */}
           <div className="relative">
             <Button
@@ -479,46 +477,15 @@ export function OrderFilters({
             )}
           </div>
 
-          {/* ADVANCED FILTERS - NOW INLINE */}
+          {/* order online filters */}
           <div className="flex items-center gap-2">
-            {/* Search Input */}
+            {/* External Order ID Input */}
             <div className="relative">
               <div className="flex items-center gap-1">
                 <Search className="h-3.5 w-3.5 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search orders..."
-                  value={localChanges.search || ''}
-                  onChange={(e) =>
-                    setLocalChanges((prev) => ({
-                      ...prev,
-                      search: e.target.value,
-                    }))
-                  }
-                  className="h-8 w-40 text-sm"
-                />
-                {localChanges.search && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      setLocalChanges((prev) => ({ ...prev, search: '' }))
-                    }
-                    className="h-6 w-6 p-0 absolute right-1 top-1"
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* External Order ID Input */}
-            <div className="relative">
-              <div className="flex items-center gap-1">
-                <Hash className="h-3.5 w-3.5 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="External ID"
+                  placeholder="Search Order ID"
                   value={localChanges.externalOrderId || ''}
                   onChange={(e) =>
                     setLocalChanges((prev) => ({

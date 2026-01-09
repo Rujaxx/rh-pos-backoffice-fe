@@ -600,12 +600,12 @@ export default function Sidebar() {
   // Calculate sidebar width - expand when collapsed and hovered, or full width on mobile
   const getSidebarWidth = () => {
     if (isMobile) {
-      return 'w-64'; // Always full width on mobile
+      return 'w-53'; // Always full width on mobile
     }
     if (menuState === 'collapsed' && isHovered) {
-      return 'w-64'; // Expand to full width when hovered
+      return 'w-53'; // Expand to full width when hovered
     }
-    return menuState === 'collapsed' ? 'w-16' : 'w-64';
+    return menuState === 'collapsed' ? 'w-16' : 'w-53';
   };
 
   // Show text if menu is full OR if collapsed and hovered OR on mobile
