@@ -27,5 +27,9 @@ export interface OrderTypeData {
   orderFrom: string;
   orderCount: number;
   totalAmount: number;
-  status: 'Active' | 'Inactive' | 'Pending';
+  fulfilled?: number;
+  running?: number;
+  free?: number;
+  cancelled?: number;
+  status?: 'Active' | 'Inactive' | 'Pending';
 }

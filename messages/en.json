@@ -1798,7 +1798,10 @@
   "reports.orderType.columns.orderCount": "Count",
   "reports.orderType.columns.totalAmount": "Amount",
   "reports.orderType.columns.status": "Status",
-
+  "reports.orderType.columns.fulfilled": "Fulfilled",
+  "reports.orderType.columns.running": "Running",
+  "reports.orderType.columns.free": "Free",
+  "reports.orderType.columns.cancelled": "Cancelled",
   "reports.mealTime.columns.timeSlot": "Time Slot",
   "reports.mealTime.columns.totalOrders": "Total Orders",
   "reports.mealTime.columns.avgOrderValue": "Average Order Value",

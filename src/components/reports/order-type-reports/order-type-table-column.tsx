@@ -3,7 +3,6 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { OrderTypeReportItem } from '@/types/report.type';
-import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 
@@ -17,15 +16,26 @@ const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Column definitions for the order type table
+// Helper function to format number
+const formatNumber = (num: number): string => {
+  return new Intl.NumberFormat('en-IN').format(num);
+};
+
+// Column definitions for the order type table WITH CALCULATED TOTALS
 export const createOrderTypeColumns = (
   t: ReturnType<typeof useTranslation>['t'],
   locale: 'en' | 'ar',
+  totals: {
+    fulfilled: number;
+    running: number;
+    free: number;
+    cancelled: number;
+  },
 ): ColumnDef<OrderTypeReportItem>[] => [
   {
     accessorKey: 'orderType',
     id: 'orderType',
-    header: t('reports.orderType.columns.orderFrom') || 'Order Type',
+    header: t('reports.orderType.columns.orderFrom') || 'Order From',
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
       const getText = (item: OrderTypeReportItem) => {
@@ -57,10 +67,10 @@ export const createOrderTypeColumns = (
   {
     accessorKey: 'itemCount',
     id: 'itemCount',
-    header: t('reports.orderType.columns.orderCount') || 'Items',
+    header: t('reports.orderType.columns.orderCount') || 'Total Orders',
     enableSorting: true,
     cell: ({ row }) => (
-      <div className="font-medium text-center">{row.original.itemCount}</div>
+      <div className="font-medium ">{formatNumber(row.original.itemCount)}</div>
     ),
     meta: {
       className: 'text-center',
@@ -69,40 +79,81 @@ export const createOrderTypeColumns = (
   {
     accessorKey: 'amount',
     id: 'amount',
-    header: t('reports.orderType.columns.totalAmount') || 'Amount',
+    header: t('reports.orderType.columns.totalAmount') || 'Total Amount',
     enableSorting: true,
     cell: ({ row }) => (
       <div className="font-medium">{formatCurrency(row.original.amount)}</div>
     ),
+    meta: {
+      className: 'text-center',
+    },
   },
   {
-    accessorKey: 'status',
-    id: 'status',
-    header: t('reports.orderType.columns.status') || 'Status',
+    accessorKey: 'fulfilled',
+    id: 'fulfilled',
+    header: `${t('reports.orderType.columns.fulfilled') || 'Fulfilled'} (${formatNumber(totals.fulfilled)})`,
     enableSorting: true,
-    cell: ({ row }) => {
-      const status = row.original.status;
-      const statusColors: Record<string, string> = {
-        COMPLETED: 'bg-green-500 text-white',
-        ACTIVE: 'bg-blue-500 text-white',
-        CANCELLED: 'bg-red-500 text-white',
-        PENDING: 'bg-yellow-500 text-white',
-      };
-
-      return (
-        <Badge className={statusColors[status] || 'bg-gray-500 text-white'}>
-          {status}
-        </Badge>
-      );
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {formatNumber(row.original.fulfilled || 0)}
+      </div>
+    ),
+    meta: {
+      className: 'text-center',
+    },
+  },
+  {
+    accessorKey: 'running',
+    id: 'running',
+    header: `${t('reports.orderType.columns.running') || 'Running'} (${formatNumber(totals.running)})`,
+    enableSorting: true,
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {formatNumber(row.original.running || 0)}
+      </div>
+    ),
+    meta: {
+      className: 'text-center',
+    },
+  },
+  {
+    accessorKey: 'free',
+    id: 'free',
+    header: `${t('reports.orderType.columns.free') || 'Free'} (${formatNumber(totals.free)})`,
+    enableSorting: true,
+    cell: ({ row }) => (
+      <div className="font-medium">{formatNumber(row.original.free || 0)}</div>
+    ),
+    meta: {
+      className: 'text-center',
+    },
+  },
+  {
+    accessorKey: 'cancelled',
+    id: 'cancelled',
+    header: `${t('reports.orderType.columns.cancelled') || 'Cancelled'} (${formatNumber(totals.cancelled)})`,
+    enableSorting: true,
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {formatNumber(row.original.cancelled || 0)}
+      </div>
+    ),
+    meta: {
+      className: 'text-center',
     },
   },
 ];
 
 // Hook for using order type columns with current translation
-export const useOrderTypeColumns = () => {
+export const useOrderTypeColumns = (totals: {
+  fulfilled: number;
+  running: number;
+  free: number;
+  cancelled: number;
+}) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
-  return createOrderTypeColumns(t, locale);
+  return createOrderTypeColumns(t, locale, totals);
 };
 
 // Helper function to get sortable field from TanStack sorting state
@@ -117,7 +168,10 @@ export const getSortFieldForQuery = (
     orderType: 'orderType',
     itemCount: 'itemCount',
     amount: 'amount',
-    status: 'status',
+    fulfilled: 'fulfilled',
+    running: 'running',
+    free: 'free',
+    cancelled: 'cancelled',
   };
 
   return fieldMap[sort.id] || sort.id;
@@ -129,4 +183,22 @@ export const getSortOrderForQuery = (
 ): 'asc' | 'desc' | undefined => {
   if (!sorting.length) return undefined;
   return sorting[0].desc ? 'desc' : 'asc';
+};
+
+// Helper function to calculate totals from data
+export const calculateStatusTotals = (data: OrderTypeReportItem[]) => {
+  return data.reduce(
+    (acc, item) => ({
+      fulfilled: acc.fulfilled + (item.fulfilled || 0),
+      running: acc.running + (item.running || 0),
+      free: acc.free + (item.free || 0),
+      cancelled: acc.cancelled + (item.cancelled || 0),
+    }),
+    {
+      fulfilled: 0,
+      running: 0,
+      free: 0,
+      cancelled: 0,
+    },
+  );
 };

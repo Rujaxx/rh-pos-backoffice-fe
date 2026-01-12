@@ -169,7 +169,11 @@ export interface OrderTypeReportItem {
   orderType: string | { en?: string; ar?: string };
   itemCount: number;
   amount: number;
-  status: string;
+  // status: string;
+  fulfilled: number;
+  running: number;
+  free: number;
+  cancelled: number;
   billNumber?: string;
   createdAt?: string;
 }

@@ -21,6 +21,7 @@ import {
   useOrderTypeColumns,
   getSortFieldForQuery,
   getSortOrderForQuery,
+  calculateStatusTotals,
 } from '@/components/reports/order-type-reports/order-type-table-column';
 
 export default function OrderTypeReportPage() {
@@ -71,11 +72,16 @@ export default function OrderTypeReportPage() {
   });
 
   const orderTypeData: OrderTypeReportItem[] = reportsData?.data ?? [];
-
   const totalCount = reportsData?.meta?.total ?? orderTypeData.length;
 
-  // Get columns using hook (like brands example)
-  const orderTypeColumns = useOrderTypeColumns();
+  // CALCULATE TOTALS FROM DATA
+  const statusTotals = useMemo(
+    () => calculateStatusTotals(orderTypeData),
+    [orderTypeData],
+  );
+
+  // Get columns using hook WITH CALCULATED TOTALS
+  const orderTypeColumns = useOrderTypeColumns(statusTotals);
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
