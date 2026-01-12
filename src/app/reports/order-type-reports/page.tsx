@@ -23,6 +23,7 @@ import {
   getSortOrderForQuery,
   calculateStatusTotals,
 } from '@/components/reports/order-type-reports/order-type-table-column';
+import { OrderTypeReportFilters } from '@/components/reports/report-filters/ordertype-report-filter';
 
 export default function OrderTypeReportPage() {
   const { t } = useTranslation();
@@ -147,7 +148,13 @@ export default function OrderTypeReportPage() {
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onSubmit={handleApplyFilters}
-        />
+        >
+          <OrderTypeReportFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+          />
+        </ReportFilters>
 
         {/* Main Order Type Report Table */}
         <Card>
