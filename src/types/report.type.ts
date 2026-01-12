@@ -166,14 +166,24 @@ export interface StatusData {
 
 // Define the structure that backend returns for order-type endpoint
 export interface OrderTypeReportItem {
+  running: number;
   orderType: string | { en?: string; ar?: string };
   itemCount: number;
   amount: number;
-  // status: string;
-  fulfilled: number;
-  running: number;
-  free: number;
-  cancelled: number;
+  // Basic statuses
+  placed?: number;
+  pending?: number;
+  free?: number;
+  cancelled?: number;
+
+  // Detailed statuses
+  acknowledged?: number;
+  foodReady?: number;
+  fulfilled?: number;
+  deleted?: number;
+  dispatched?: number;
+  pendingDelivery?: number;
+
   billNumber?: string;
   createdAt?: string;
 }
