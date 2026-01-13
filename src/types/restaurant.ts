@@ -194,6 +194,8 @@ export interface RestaurantFormData extends Record<string, unknown> {
   eBillSettings: EBillSettings;
   digitalOrderSettings?: DigitalOrderSettings;
   currency: string;
+  // Internal field to track upload IDs that need confirmation (not sent to backend)
+  _uploadIds?: string[];
 }
 
 // Query parameters for restaurant API matching backend RestaurantQueryDto

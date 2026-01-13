@@ -697,6 +697,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
       billPrefix: 'BILL-',
       kotPrefix: 'KOT-',
       currency: '',
+      _uploadIds: [], // Internal field to track upload IDs for confirmation
     },
   });
 
@@ -766,6 +767,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         billPrefix: editingRestaurant.billPrefix,
         kotPrefix: editingRestaurant.kotPrefix,
         currency: editingRestaurant.currency,
+        _uploadIds: [], // Reset upload tracking for editing
       });
     } else {
       form.reset({
@@ -825,6 +827,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         billPrefix: 'BILL-',
         kotPrefix: 'KOT-',
         currency: '',
+        _uploadIds: [], // Reset upload tracking
       });
     }
   }, [editingRestaurant, form]);

@@ -50,18 +50,18 @@ export const useCreateRestaurant = (
 
   return useMutation({
     mutationFn: async (data: RestaurantFormData) => {
-      // First create the restaurant
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds = data._uploadIds || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data;
+
+      // First create the restaurant with S3 keys
       const result = await restaurantService.create(
-        transformToBackendFormat(data),
+        transformToBackendFormat(backendData),
       );
 
       // Then confirm uploads if there are any upload IDs
-      const uploadIds: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is an ID (not a URL), add it to confirm list
-        uploadIds.push(data.logo);
-      }
-
       if (uploadIds.length > 0) {
         try {
           await uploadService.confirmUploads(uploadIds);
@@ -124,19 +124,19 @@ export const useUpdateRestaurant = (
       id: string;
       data: RestaurantFormData;
     }) => {
-      // First update the restaurant (exclude _id from data)
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds = data._uploadIds || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data;
+
+      // First update the restaurant with S3 keys (exclude _id from data)
       const result = await restaurantService.update(
         id,
-        transformToBackendFormat(data, true),
+        transformToBackendFormat(backendData, true),
       );
 
       // Then confirm uploads if there are any upload IDs
-      const uploadIds: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is an ID (not a URL), add it to confirm list
-        uploadIds.push(data.logo);
-      }
-
       if (uploadIds.length > 0) {
         try {
           await uploadService.confirmUploads(uploadIds);

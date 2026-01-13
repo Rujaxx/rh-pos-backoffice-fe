@@ -190,6 +190,8 @@ export const restaurantSchema = z
     kotPrefix: z.string().max(10).optional(),
     digitalOrderSettings: DigitalOrderSettingsSchema.optional(),
     currency: z.string().optional(),
+    // Internal field to track upload IDs for confirmation (not sent to backend)
+    _uploadIds: z.array(z.string()).optional().default([]),
   })
   .refine(
     (data) => {

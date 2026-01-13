@@ -84,15 +84,6 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
         // Clear any existing errors
         form.clearErrors(name);
 
-        // Create preview
-        const reader = new FileReader();
-        // reader.onload = (e) => {
-        //   if (e.target?.result) {
-        //     setPreview(e.target.result as string);
-        //   }
-        // };
-        // reader.readAsDataURL(file);
-
         // Upload to API
         const result = await uploadMutation.mutateAsync({
           file,
@@ -104,12 +95,28 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
           },
         });
         if (result.data) {
-          // Store the upload ID in the form (needed for upload confirmation API)
+          // Store the S3 key in the form (needed for backend submission)
           form.setValue(
             name,
-            result.data.id as PathValue<TFormValues, typeof name>,
+            result.data.key as PathValue<TFormValues, typeof name>,
           );
+          // Track the upload ID separately for confirmation API
           setCurrentUploadId(result.data.id);
+
+          // Also store upload ID in hidden field for confirmation
+          const uploadIds =
+            (form.getValues(
+              '_uploadIds' as FieldPath<TFormValues>,
+            ) as unknown as string[]) || [];
+          if (!uploadIds.includes(result.data.id)) {
+            form.setValue(
+              '_uploadIds' as FieldPath<TFormValues>,
+              [...uploadIds, result.data.id] as PathValue<
+                TFormValues,
+                FieldPath<TFormValues>
+              >,
+            );
+          }
 
           // Update preview with the full S3 URL (already a full URL from backend)
           setPreview(result.data.url);
@@ -176,6 +183,17 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
     if (currentUploadId) {
       try {
         await deleteUploadMutation.mutateAsync(currentUploadId);
+
+        // Remove from _uploadIds tracking array
+        const uploadIds =
+          (form.getValues(
+            '_uploadIds' as FieldPath<TFormValues>,
+          ) as unknown as string[]) || [];
+        const filtered = uploadIds.filter((id) => id !== currentUploadId);
+        form.setValue(
+          '_uploadIds' as FieldPath<TFormValues>,
+          filtered as PathValue<TFormValues, FieldPath<TFormValues>>,
+        );
       } catch (error) {
         console.error('Failed to delete temporary upload:', error);
       }
