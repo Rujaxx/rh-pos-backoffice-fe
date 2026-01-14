@@ -84,53 +84,6 @@ export default function TopNav() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Combine "All Brands" option with API brands
-  const allBrandsOption = {
-    _id: 'all-brands',
-    name: { en: 'All Brands', ar: 'جميع العلامات التجارية' },
-    description: { en: '', ar: '' },
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as Brand;
-
-  const brands = [allBrandsOption, ...apiBrands];
-
-  // Mock restaurants data - TODO: Replace with real API when restaurants endpoint is ready
-  const restaurants = [
-    {
-      id: 'all-restaurants',
-      name: { en: 'All Restaurants', ar: 'جميع المطاعم' },
-      brandId: 'all',
-    },
-    ...apiBrands.flatMap((brand) => [
-      {
-        id: `${brand._id}-main`,
-        name: {
-          en: `${brand.name.en} - Main Branch`,
-          ar: `${brand.name.ar || brand.name.en} - الفرع الرئيسي`,
-        },
-        brandId: brand._id,
-      },
-      {
-        id: `${brand._id}-secondary`,
-        name: {
-          en: `${brand.name.en} - Secondary Branch`,
-          ar: `${brand.name.ar || brand.name.en} - الفرع الثانوي`,
-        },
-        brandId: brand._id,
-      },
-    ]),
-  ];
-
-  // Filter restaurants based on selected brand
-  const filteredRestaurants =
-    selectedBrand === 'all-brands'
-      ? restaurants
-      : restaurants.filter(
-          (r) => r.brandId === selectedBrand || r.id === 'all-restaurants',
-        );
-
   // Helper function to get localized name for brands
   const getBrandLocalizedName = (brand: Brand) => {
     return locale === 'ar' && brand.name.ar ? brand.name.ar : brand.name.en;
@@ -170,58 +123,6 @@ export default function TopNav() {
         >
           <Menu className="h-4 w-4" />
         </Button>
-
-        {/* Context Selectors - Brand and Restaurant */}
-        <div
-          className={`hidden sm:flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-3`}
-        >
-          {/* Brand Selector */}
-          <div
-            className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}
-          >
-            <Building2 className="h-4 w-4 text-gray-500" />
-            <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder={t('dashboard.selectBrand')} />
-              </SelectTrigger>
-              <SelectContent>
-                {!isBrandsLoading &&
-                  brands.map((brand) => (
-                    <SelectItem key={brand._id} value={brand._id}>
-                      {getBrandLocalizedName(brand)}
-                    </SelectItem>
-                  ))}
-                {isBrandsLoading && (
-                  <SelectItem value="loading" disabled>
-                    Loading brands...
-                  </SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Restaurant Selector */}
-          <div
-            className={`flex items-center ${isRTL ? 'space-x-reverse' : ''} space-x-2`}
-          >
-            <Store className="h-4 w-4 text-gray-500" />
-            <Select
-              value={selectedRestaurant}
-              onValueChange={setSelectedRestaurant}
-            >
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder={t('dashboard.selectRestaurant')} />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredRestaurants.map((restaurant) => (
-                  <SelectItem key={restaurant.id} value={restaurant.id}>
-                    {getRestaurantLocalizedName(restaurant)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
       </div>
 
       {/* Right side - Actions and Profile */}
@@ -233,21 +134,6 @@ export default function TopNav() {
 
         {/* Theme Toggle */}
         <ThemeToggle />
-
-        {/* Notifications */}
-        <Button variant="ghost" size="sm" className="relative p-2">
-          <Bell className="h-4 w-4" />
-          <Badge
-            className={`absolute -top-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white ${isRTL ? '-left-1' : '-right-1'}`}
-          >
-            3
-          </Badge>
-        </Button>
-
-        {/* Settings */}
-        <Button variant="ghost" size="sm" className="p-2">
-          <Settings className="h-4 w-4" />
-        </Button>
 
         {/* Profile Dropdown */}
         <DropdownMenu>
