@@ -145,6 +145,9 @@ export function RestaurantFormContent({
               label={t('restaurants.form.logoLabel')}
               description={t('restaurants.form.logoDescription')}
               folderType={UploadFolderType.RESTAURANT}
+              initialPreviewUrl={
+                editingRestaurant?.logoUrl || editingRestaurant?.logo
+              }
             />
 
             <RHFSwitch

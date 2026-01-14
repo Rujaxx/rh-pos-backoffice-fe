@@ -8,6 +8,8 @@ export const imageLibrarySchema = z.object({
   }),
   url: z.string().min(1, { message: 'Image is required' }),
   tags: z.array(z.string()).optional(),
+  // Internal field to track upload IDs for confirmation (not sent to backend)
+  _uploadIds: z.array(z.string()).optional(),
 });
 
 export type ImageLibraryFormValues = z.infer<typeof imageLibrarySchema>;

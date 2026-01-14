@@ -19,9 +19,10 @@ import {
   Phone,
   Globe,
   Calendar,
+  ImageIcon,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
 
 // Column definitions for the brands table
@@ -38,21 +39,37 @@ export const createBrandColumns = (
     enableSorting: false,
     cell: ({ row }) => {
       const brand = row.original;
+      const logoUrl = brand.logoUrl || brand.logo;
+
+      // If no logo URL, show thumbnail icon
+      if (!logoUrl) {
+        return (
+          <div className="flex items-center">
+            <div className="w-10 h-10 rounded-md border bg-muted flex items-center justify-center">
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="flex items-center">
           <div className="relative w-10 h-10">
             <Image
-              src={
-                getS3UrlFromKey(brand.logo) ||
-                getFallbackAvatarUrl(brand.name.en)
-              }
+              src={logoUrl}
               alt={brand.name.en}
               width={40}
               height={40}
               className="rounded-md object-cover border"
               onError={(e) => {
+                // Hide image and show fallback icon
                 const target = e.target as HTMLImageElement;
-                target.src = getFallbackAvatarUrl(brand.name.en);
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML =
+                    '<div class="w-10 h-10 rounded-md border bg-muted flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>';
+                }
               }}
             />
           </div>

@@ -6,6 +6,7 @@ export interface Brand extends Record<string, unknown> {
   name: MultilingualText;
   description?: MultilingualText;
   logo?: string;
+  logoUrl?: string; // Full S3 URL for displaying the logo (from backend)
   website?: string;
   isActive?: boolean;
   phone: string;

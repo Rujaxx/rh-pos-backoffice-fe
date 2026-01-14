@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { Settings, MapPin, Clock } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
 import { MultilingualText } from '@/types';
 
@@ -30,7 +30,7 @@ export const createDigitalOrderSettingsColumns = (
           <div className="relative w-10 h-10">
             <Image
               src={
-                getS3UrlFromKey(restaurant.logo) ||
+                restaurant.logoUrl ||
                 getFallbackAvatarUrl(restaurant.name?.en ?? '')
               }
               alt={restaurant.name?.en ?? 'Restaurant'}

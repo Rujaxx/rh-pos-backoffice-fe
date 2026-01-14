@@ -26,9 +26,13 @@ import { useMenu } from '@/services/api/menus/menus.queries';
 
 interface MenuItemFormContentProps {
   form: ReturnType<typeof useForm<MenuItemFormData>>;
+  editingItem?: MenuItem | null;
 }
 
-export function MenuItemFormContent({ form }: MenuItemFormContentProps) {
+export function MenuItemFormContent({
+  form,
+  editingItem,
+}: MenuItemFormContentProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
 
@@ -109,6 +113,7 @@ export function MenuItemFormContent({ form }: MenuItemFormContentProps) {
               name="primaryImage"
               label={t('menuItems.form.fields.primaryImage')}
               folderType={UploadFolderType.MENU_ITEMS}
+              initialPreviewUrl={editingItem?.primaryImageUrl}
             />
           </CardContent>
         </Card>

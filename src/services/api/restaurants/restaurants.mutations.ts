@@ -11,6 +11,7 @@ import { useQueryUtils } from '@/lib/query-client';
 import { restaurantService } from './restaurants.queries';
 import { uploadService } from '../upload/upload.queries';
 import { minutesToBackendTime } from '@/lib/utils/time.utils';
+import { getKeyFromS3Url } from '@/lib/upload-utils';
 import { toast } from 'sonner';
 
 function transformToBackendFormat(
@@ -28,6 +29,15 @@ function transformToBackendFormat(
     isFeedBackActive: data.isFeedBackActive ?? false,
     customQRcode: data.customQRcode ?? [],
   };
+
+  // Extract S3 key from logo URL if it's a full URL
+  if (
+    transformed.logo &&
+    typeof transformed.logo === 'string' &&
+    transformed.logo.startsWith('http')
+  ) {
+    transformed.logo = getKeyFromS3Url(transformed.logo);
+  }
 
   // Remove _id if excludeId is true
   if (excludeId && transformed._id) {

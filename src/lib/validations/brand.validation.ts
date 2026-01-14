@@ -56,6 +56,8 @@ export const brandSchema = z
         'Invalid PAN format',
       ),
     address: addressSchema.optional(),
+    // Internal field to track upload IDs for confirmation (not sent to backend)
+    _uploadIds: z.array(z.string()).optional(),
   })
   .refine((data) => validatePhoneForCountry(data.phone, data.countryCode), {
     message: PHONE_VALIDATION.COUNTRY_MESSAGE,

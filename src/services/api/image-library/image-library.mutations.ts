@@ -24,16 +24,19 @@ export const useCreateImageLibraryItem = (
 
   return useMutation({
     mutationFn: async (data: Omit<ImageLibraryItem, '_id' | 'code'>) => {
-      // First create the image library item
-      const result = await imageLibraryService.create(data);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data as Record<string, unknown>;
+
+      // First create the image library item with S3 keys
+      const result = await imageLibraryService.create(
+        backendData as Omit<ImageLibraryItem, '_id' | 'code'>,
+      );
 
       // Then confirm uploads if there are any upload IDs
-      const uploadIds: string[] = [];
-      if (data.url && !data.url.startsWith('http')) {
-        // If url is an ID (not a URL), add it to confirm list
-        uploadIds.push(data.url);
-      }
-
       if (uploadIds.length > 0) {
         try {
           await uploadService.confirmUploads(uploadIds);
@@ -90,16 +93,20 @@ export const useUpdateImageLibraryItem = (
       id: string;
       data: Partial<Omit<ImageLibraryItem, '_id'>>;
     }) => {
-      // Update the image library item
-      const result = await imageLibraryService.update(id, data);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data as Record<string, unknown>;
+
+      // Update the image library item with S3 keys
+      const result = await imageLibraryService.update(
+        id,
+        backendData as Partial<Omit<ImageLibraryItem, '_id'>>,
+      );
 
       // Then confirm uploads if there are any upload IDs
-      const uploadIds: string[] = [];
-      if (data.url && !data.url.startsWith('http')) {
-        // If url is an ID (not a URL), add it to confirm list
-        uploadIds.push(data.url);
-      }
-
       if (uploadIds.length > 0) {
         try {
           await uploadService.confirmUploads(uploadIds);

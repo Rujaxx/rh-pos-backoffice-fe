@@ -121,6 +121,7 @@ export interface Restaurant extends Record<string, unknown> {
   brandId: string;
   brandName: MultilingualText;
   logo?: string;
+  logoUrl?: string; // Full S3 URL for displaying the logo (from backend)
   address?: Address;
   timezone: TimezoneType;
   startDayTime: number; // Minutes since midnight (0-1439). Example: 360 = 6:00 AM

@@ -15,7 +15,6 @@ import {
   useDeleteTemporaryUpload,
 } from '@/services/api/upload/upload.mutations';
 import { UploadFolderType, UPLOAD_CONSTRAINTS } from '@/types/upload';
-import { getS3UrlFromKey } from '@/lib/upload-utils';
 
 interface ImageUploadProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
@@ -28,6 +27,8 @@ interface ImageUploadProps<TFormValues extends Record<string, unknown>> {
   maxHeight?: number;
   className?: string;
   required?: boolean;
+  /** Optional URL for displaying existing images (from backend) */
+  initialPreviewUrl?: string;
 }
 
 export function ImageUpload<TFormValues extends Record<string, unknown>>({
@@ -40,6 +41,7 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   maxWidth = UPLOAD_CONSTRAINTS.DEFAULT_MAX_WIDTH,
   maxHeight = UPLOAD_CONSTRAINTS.DEFAULT_MAX_HEIGHT,
   className,
+  initialPreviewUrl,
   // required = false,
 }: ImageUploadProps<TFormValues>) {
   const [preview, setPreview] = useState<string>('');
@@ -51,8 +53,8 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   const deleteUploadMutation = useDeleteTemporaryUpload();
 
   const currentValue = form.getValues(name) as string;
-  // Convert upload key to full S3 URL if needed
-  const displayUrl = preview || getS3UrlFromKey(currentValue) || '';
+  // Use preview from state (new upload) or initialPreviewUrl (existing image)
+  const displayUrl = preview || initialPreviewUrl || '';
 
   // Validate file before upload
   const validateFile = useCallback((file: File): string | null => {
@@ -206,13 +208,12 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
     setImageError(false); // Reset error state
   }, [form, name, currentUploadId, deleteUploadMutation]);
 
-  // Initialize preview from current form value
+  // Initialize preview from initialPreviewUrl prop
   React.useEffect(() => {
-    if (currentValue && !preview) {
-      // Convert upload key to full S3 URL for preview
-      setPreview(getS3UrlFromKey(currentValue));
+    if (initialPreviewUrl && !preview) {
+      setPreview(initialPreviewUrl);
     }
-  }, [currentValue, preview]);
+  }, [initialPreviewUrl, preview]);
 
   const isLoading = uploadMutation.isPending;
   const hasError = !!form.formState.errors[name];
