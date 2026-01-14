@@ -1821,5 +1821,14 @@
   "reports.mealTime.columns.topSellingItem": "Top Selling Item",
   "reports.payment.paymentDistribution": "Payment Method Distribution",
   "reports.payment.searchPaymentMethods": "Search Payment Methods...",
-  "reports.payment.noPaymentData": "No payment data available"
+  "reports.payment.noPaymentData": "No payment data available",
+
+  "navigation.categoryReports": "Category Report",
+  "reports.category.description": "View restaurant category-wise sales performance",
+  "reports.category.searchPlaceholder": "Search categories...",
+  "reports.category.noData": "No category data found",
+  "reports.category.columns.categoryName": "Category List",
+  "reports.category.columns.parentCategory": "Parent Category",
+  "reports.category.columns.soldItems": "Total Sold Items",
+  "reports.category.columns.totalAmount": "Total Amount"
 }
