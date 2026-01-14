@@ -15,84 +15,68 @@ import {
   SortingState,
   ColumnFiltersState,
 } from '@tanstack/react-table';
-import { useCategoryColumns } from '@/components/reports/category-reports/category-columns';
-import { CategoryReportFilters } from '@/components/reports/report-filters/category-report-filter';
+import { useKitchenDepartmentColumns } from '@/components/reports/kitchen-department-reports/kitchen-dept-columns';
+import { KitchenDepartmentReportFilters } from '@/components/reports/report-filters/kitchen-dept-filters';
 
-// Restaurant categories mock data
-const MOCK_CATEGORY_DATA = [
+// Mock kitchen department data
+const MOCK_KITCHEN_DEPARTMENT_DATA = [
   {
     id: '1',
+    kitchenDepartment: 'Main Kitchen',
     categoryName: 'Pizza',
-    parentCategory: 'Main Menu',
     soldItems: 480,
     totalAmount: 720000,
+    itemLevelDiscount: 7200,
+    itemLevelTotalCharges: 3600,
   },
   {
     id: '2',
+    kitchenDepartment: 'Main Kitchen',
     categoryName: 'Main Course',
-    parentCategory: 'Main Menu',
     soldItems: 620,
     totalAmount: 620000,
+    itemLevelDiscount: 6200,
+    itemLevelTotalCharges: 3100,
   },
   {
     id: '3',
+    kitchenDepartment: 'Beverage Station',
     categoryName: 'Beverages',
-    parentCategory: 'Drinks',
     soldItems: 850,
     totalAmount: 425000,
+    itemLevelDiscount: 4250,
+    itemLevelTotalCharges: 2125,
   },
   {
     id: '4',
+    kitchenDepartment: 'Main Kitchen',
     categoryName: 'Rice Items',
-    parentCategory: 'Main Menu',
     soldItems: 310,
     totalAmount: 372000,
+    itemLevelDiscount: 3720,
+    itemLevelTotalCharges: 1860,
   },
   {
     id: '5',
+    kitchenDepartment: 'Special Counter',
     categoryName: 'Combos',
-    parentCategory: 'Special',
     soldItems: 280,
     totalAmount: 336000,
+    itemLevelDiscount: 3360,
+    itemLevelTotalCharges: 1680,
   },
   {
     id: '6',
+    kitchenDepartment: 'Chinese Station',
     categoryName: 'Chinese',
-    parentCategory: 'International',
     soldItems: 220,
     totalAmount: 330000,
-  },
-  {
-    id: '7',
-    categoryName: 'Appetizers',
-    parentCategory: 'Starters',
-    soldItems: 350,
-    totalAmount: 175000,
-  },
-  {
-    id: '8',
-    categoryName: 'South Indian',
-    parentCategory: 'Regional',
-    soldItems: 290,
-    totalAmount: 174000,
-  },
-  {
-    id: '9',
-    categoryName: 'Thalis',
-    parentCategory: 'Special',
-    soldItems: 120,
-    totalAmount: 168000,
-  },
-  {
-    id: '10',
-    categoryName: 'Desserts',
-    parentCategory: 'Sweet',
-    soldItems: 320,
-    totalAmount: 160000,
+    itemLevelDiscount: 3300,
+    itemLevelTotalCharges: 1650,
   },
 ];
 
-export default function CategoryReportPage() {
+export default function KitchenDepartmentReportPage() {
   const { t } = useTranslation();
   // Initialize filters with today's date
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
@@ -103,6 +87,7 @@ export default function CategoryReportPage() {
       to: today.toISOString(),
     };
   });
+
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
 
@@ -118,16 +103,16 @@ export default function CategoryReportPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   // Filter mock data based on search term
-  const filteredCategoryData = useMemo(() => {
-    let data = [...MOCK_CATEGORY_DATA];
+  const filteredData = useMemo(() => {
+    let data = [...MOCK_KITCHEN_DEPARTMENT_DATA];
 
     // Apply search filter
     if (searchTerm) {
       const lowerSearchTerm = searchTerm.toLowerCase();
       data = data.filter((item) => {
         return (
-          item.categoryName.toLowerCase().includes(lowerSearchTerm) ||
-          item.parentCategory.toLowerCase().includes(lowerSearchTerm)
+          item.kitchenDepartment.toLowerCase().includes(lowerSearchTerm) ||
+          item.categoryName.toLowerCase().includes(lowerSearchTerm)
         );
       });
     }
@@ -170,7 +155,7 @@ export default function CategoryReportPage() {
 
   const handleApplyFilters = useCallback(() => {
     setSubmittedFilters(filters);
-    toast.info('Fetching category report data...');
+    toast.info('Fetching kitchen department report data...');
   }, [filters]);
 
   const handleRefresh = useCallback(() => {
@@ -182,7 +167,7 @@ export default function CategoryReportPage() {
   }, []);
 
   // Get columns from separate file
-  const columns = useCategoryColumns();
+  const columns = useKitchenDepartmentColumns();
 
   return (
     <Layout>
@@ -191,11 +176,12 @@ export default function CategoryReportPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">
-              {t('navigation.categoryReports') || 'Category Report'}
+              {t('navigation.kitchenDepartmentReports') ||
+                'Kitchen Department Report'}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <Button
               variant="outline"
               onClick={handleRefresh}
@@ -207,14 +193,14 @@ export default function CategoryReportPage() {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* Filters - Using the standard ReportFilters component */}
         <ReportFilters
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onSubmit={handleApplyFilters}
         >
-          <CategoryReportFilters
+          <KitchenDepartmentReportFilters
             filters={filters}
             onFilterChange={handleFilterChange}
             onClearFilters={handleClearFilters}
@@ -225,22 +211,24 @@ export default function CategoryReportPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between p-6 pb-4">
             <div>
-              <CardTitle className="text-lg">Restaurant Categories</CardTitle>
+              <CardTitle className="text-lg">
+                Kitchen Department Performance
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-6 pt-0">
-            {filteredCategoryData.length === 0 ? (
+            {filteredData.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                No category data found
+                No kitchen department data found
               </div>
             ) : (
               <TanStackTable
-                data={filteredCategoryData}
+                data={filteredData}
                 columns={columns}
-                totalCount={filteredCategoryData.length}
+                totalCount={filteredData.length}
                 isLoading={false}
                 searchValue={searchTerm}
-                searchPlaceholder="Search categories..."
+                searchPlaceholder="Search departments..."
                 onSearchChange={setSearchTerm}
                 pagination={pagination}
                 onPaginationChange={setPagination}
@@ -254,7 +242,7 @@ export default function CategoryReportPage() {
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage="No category data found"
+                emptyMessage="No kitchen department data found"
                 enableMultiSort={false}
               />
             )}

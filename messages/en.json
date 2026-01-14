@@ -1830,5 +1830,13 @@
   "reports.category.columns.categoryName": "Category List",
   "reports.category.columns.parentCategory": "Parent Category",
   "reports.category.columns.soldItems": "Total Sold Items",
-  "reports.category.columns.totalAmount": "Total Amount"
+  "reports.category.columns.totalAmount": "Total Amount",
+
+  "navigation.kitchenDepartmentReports": "Kitchen Department Report",
+  "reports.kitchenDepartment.description": "View kitchen department-wise sales performance",
+  "reports.kitchenDepartment.searchPlaceholder": "Search departments...",
+  "reports.kitchenDepartment.noData": "No kitchen department data found",
+  "reports.kitchenDepartment.columns.kitchenDepartment": "Kitchen Department",
+  "reports.kitchenDepartment.columns.itemLevelDiscount": "Item Level Discount",
+  "reports.kitchenDepartment.columns.itemLevelTotalCharges": "Item Level Total Charges"
 }

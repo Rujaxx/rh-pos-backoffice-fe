@@ -330,6 +330,13 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         href: '/reports/category-reports',
         icon: ClipboardList,
       },
+      {
+        id: 'kitchen-dept-reports',
+        label:
+          t('navigation.kitchenDepartmentReports') || 'Kitchen Dept Reports',
+        href: '/reports/kitchen-dept-reports',
+        icon: Utensils,
+      },
     ],
   },
   // FIANCE SECTION NOT IMPLEMENTED YET
