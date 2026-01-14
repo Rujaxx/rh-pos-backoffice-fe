@@ -1,11 +1,15 @@
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { ReportData, ReportQueryParams } from '@/types/report.type';
-import { SuccessResponse } from '@/types/api';
-import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import {
+  OrderTypeReportItem,
+  ReportData,
+  ReportQueryParams,
+} from '@/types/report.type';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
+import { API_ENDPOINTS } from '@/config/api';
 
 // Reports service - custom implementation since ReportData has unique structure
-class ReportService {
+class BaseReportService {
   async getReports(
     endpoint: string,
     params?: ReportQueryParams,
@@ -34,9 +38,36 @@ class ReportService {
 
     return api.get(url);
   }
+
+  // Separate method for order type reports
+  async getOrderTypeReports(
+    params?: ReportQueryParams,
+  ): Promise<PaginatedResponse<OrderTypeReportItem>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
+            searchParams.append(key, String(value));
+          }
+        }
+      });
+    }
+
+    const url = searchParams.toString()
+      ? `${API_ENDPOINTS.REPORTS.ORDER_TYPE}?${searchParams.toString()}`
+      : API_ENDPOINTS.REPORTS.ORDER_TYPE;
+
+    return api.get(url);
+  }
 }
 
-const reportService = new ReportService();
+const reportService = new BaseReportService();
 
 // Generic query hook factory
 const createReportHook = (endpoint: string, queryKeyPrefix: string) => {
@@ -66,5 +97,32 @@ export const useDailySalesReports = createReportHook(
   API_ENDPOINTS.REPORTS.LIST_SALES,
   'daily-sales-reports',
 );
+
+// Todays Sales Report hook
+export const useTodaysSalesReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'todays-sales-reports',
+);
+
+// Meal-Time Sales Report hook
+export const useMealTimeReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'meal-time-reports',
+);
+
+// Order Type Report hook
+export const useOrderTypeReports = (
+  params?: ReportQueryParams,
+  options?: Omit<
+    UseQueryOptions<PaginatedResponse<OrderTypeReportItem>>,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery({
+    queryKey: ['order-type-reports', 'list', params],
+    queryFn: () => reportService.getOrderTypeReports(params),
+    ...options,
+  });
+};
 
 export { reportService };

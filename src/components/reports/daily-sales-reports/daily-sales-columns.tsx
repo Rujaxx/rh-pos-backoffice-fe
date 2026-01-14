@@ -1,9 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  GeneratedReport,
-  ReportGenerationStatus,
-  DailyReportType,
-} from '@/types/report.type';
+import { GeneratedReport, ReportGenerationStatus } from '@/types/report.type';
 import { Badge } from '@/components/ui/badge';
 import { REPORT_TYPE_LABELS } from './constants';
 
@@ -43,6 +39,15 @@ interface GeneratedReportsColumnsProps {
   onShowDetails?: (report: GeneratedReport) => void;
   onDownload?: (report: GeneratedReport) => void;
 }
+
+// Helper function to get report label safely
+const getReportTypeLabel = (reportType: string): string => {
+  // Type assertion to handle different report types
+  return (
+    REPORT_TYPE_LABELS[reportType as keyof typeof REPORT_TYPE_LABELS] ||
+    reportType
+  );
+};
 
 // Create columns function that accepts handlers
 export const createGeneratedReportsColumns = (
@@ -131,7 +136,7 @@ export const createGeneratedReportsColumns = (
       size: 200,
       cell: ({ row }) => {
         const reportType = row.original.reportType;
-        const label = REPORT_TYPE_LABELS[reportType] || reportType;
+        const label = getReportTypeLabel(reportType);
 
         return (
           <div className="max-w-[200px]">

@@ -1,5 +1,6 @@
 import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
+import { MealTimeReportType } from './meal-time-report.type';
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -50,6 +51,18 @@ export enum DailyReportType {
   MONTH_WISE_SALES = 'MONTH_WISE_SALES',
 }
 
+// Hourly Report Types
+export enum HourlyReportType {
+  DAY_WISE = 'DAY_WISE_HOURLY',
+  DAY_WISE_SUMMARY = 'DAY_WISE_SUMMARY_HOURLY',
+  MONTH_WISE = 'MONTH_WISE_HOURLY_SALES',
+}
+
+export enum PaymentReportType {
+  PAYMENT_ORDER_DETAILS = 'PAYMENT_ORDER_DETAILS',
+  PAYMENT_SUMMARY = 'PAYMENT_SUMMARY',
+}
+
 // Generated Report (for DSR Page table)
 export interface GeneratedReport {
   _id: string;
@@ -57,7 +70,11 @@ export interface GeneratedReport {
   reportCompleteTime?: string;
   generatedBy: string;
   generatedByName?: string;
-  reportType: DailyReportType;
+  reportType:
+    | DailyReportType
+    | PaymentReportType
+    | HourlyReportType
+    | MealTimeReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -69,14 +86,15 @@ export interface GeneratedReport {
 // Base Query Parameters
 export interface ReportQueryParams extends QueryParams {
   // Date filters
-  date?: string; // ISO date string (YYYY-MM-DD)
   from?: string; // ISO date string
   to?: string; // ISO date string
 
   // Location filters
   restaurantIds?: string[];
   brandIds?: string[];
-  outletIds?: string[];
+
+  // Category filters
+  categoryIds?: string[];
 
   // Menu filters
   menuIds?: string[];
@@ -100,6 +118,9 @@ export interface ReportQueryParams extends QueryParams {
   // DSR specific filters
   b2bInvoices?: boolean;
   liquorExemptedSales?: boolean;
+
+  page?: number;
+  limit?: number;
 }
 
 // API Response for Generated Reports
@@ -142,3 +163,15 @@ export interface StatusData {
   pending?: number;
   other?: number;
 }
+
+// Define the structure that backend returns for order-type endpoint
+export interface OrderTypeReportItem {
+  orderType: string | { en?: string; ar?: string };
+  itemCount: number;
+  amount: number;
+  status: string;
+  billNumber?: string;
+  createdAt?: string;
+}
+
+export { PaymentMethodsEnum };
