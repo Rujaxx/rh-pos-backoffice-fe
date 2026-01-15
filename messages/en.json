@@ -106,6 +106,7 @@
   "common.status": "Status",
   "common.createdAt": "Created At",
   "common.updatedAt": "Updated At",
+  "common.restaurants": "Restaurants",
   "navigation.dashboard": "POS Dashboard",
   "navigation.orders": "Active Orders",
   "navigation.tables": "Tables",
@@ -680,7 +681,6 @@
   "taxGroups.form.primaryStatusDescription": "Set as primary tax group",
   "taxGroups.table.billDisplayName": "Bill Display Name",
   "taxGroups.form.billDisplayNamePlaceholder": "Enter bill display name",
-
   "taxGroups.edit.title": "Edit Tax Group",
   "taxGroups.edit.description": "Update the details of the selected tax group.",
   "taxGroups.table.productGroupName": "Product Group Name",
@@ -948,31 +948,25 @@
   "users.permissions.system:manage_configDescription": "Allows modifying core system configuration settings.",
   "users.permissions.system:view_logs": "View System Logs",
   "users.permissions.system:view_logsDescription": "Allows viewing application and server logs.",
-
   "users.permissions.payment:candel": "Cancel Payment",
-
   "users.permissions.table:create": "Create Table",
   "users.permissions.table:read": "View Table",
   "users.permissions.table:update": "Update Table",
   "users.permissions.table:delete": "Delete Table",
   "users.permissions.table:list": "List Tables",
-
   "users.permissions.table_section:create": "Create Table Section",
   "users.permissions.table_section:read": "View Table Section",
   "users.permissions.table_section:update": "Update Table Section",
   "users.permissions.table_section:delete": "Delete Table Section",
   "users.permissions.table_section:list": "List Table Sections",
-
   "users.permissions.view_screen:dashaboard": "View Dashboard",
   "users.permissions.view_screen:order_window": "View Order Window",
-
   "users.permissions.kot:create": "Create KOT",
   "users.permissions.kot:read": "View KOT",
   "users.permissions.kot:update": "Update KOT",
   "users.permissions.kot:delete": "Delete KOT",
   "users.permissions.kot:list": "List KOTs",
   "users.permissions.kot:manage_kot": "Manage KOT",
-
   "users.permissions.bill:create": "Create Bill",
   "users.permissions.bill:clear": "Clear Bill",
   "users.permissions.bill:read": "View Bill",
@@ -982,7 +976,6 @@
   "users.permissions.bill:manage_bill": "Manage Bill",
   "users.permissions.bill:apply_discount": "Apply Discount on Bill",
   "users.permissions.bill:quick_bill": "Quick Bill",
-
   "users.permissions.account_window:view_account_window": "View Account Window",
   "users.permissions.account_window:close_shift": "Close Shift",
   "users.permissions.account_window:open_shift": "Open Shift",
@@ -990,7 +983,6 @@
   "users.permissions.account_window:close_day": "Close Day",
   "users.permissions.account_window:cash_in": "Cash In",
   "users.permissions.account_window:cash_out": "Cash Out",
-
   "users.permissions.expenses_window:view_expenses_window": "View Expenses Window",
   "users.permissions.expenses_window:create": "Create Expense",
   "users.permissions.expenses_window:read": "View Expense",
@@ -1224,7 +1216,6 @@
   "reports.table.createdAt": "Created At",
   "reports.table.viewDetails": "View Details",
   "reports.noDataFound": "No reports found for the selected filters",
-
   "common.dateRange": "Date Range",
   "common.selectBrands": "Select Brands",
   "common.selectRestaurants": "Select Restaurants",
@@ -1233,7 +1224,6 @@
   "reports.filters.billStatus": "Bill Status",
   "reports.filters.selectBillStatus": "Select Bill Status",
   "common.clearFilters": "Clear Filters",
-
   "reports.table.customerName": "Customer Name",
   "reports.table.amountPaid": "Amount Paid",
   "reports.table.waiter": "Waiter",
@@ -1267,7 +1257,6 @@
   "discounts.delete.title": "Delete Discount",
   "discounts.delete.description": "Are you sure you want to delete {name}? This action cannot be undone.",
   "discounts.errorLoading": "Error loading discounts",
-
   "discounts.form.categoriesLabel": "Categories",
   "discounts.form.categoriesPlaceholder": "Select categories",
   "discounts.form.taxProductGroupsLabel": "Tax Product Groups",
@@ -1356,69 +1345,53 @@
   "common.allBrands": "All Brands",
   "common.filterByBrand": "Filter By Brand",
   "restaurant.managementDescription": "Manage your restaurant settings",
-
   "digitalOrders.outletConfigDescription": "Configure digital ordering behavior for this outlet.",
-
   "digitalOrders.globalIdentityTitle": "Global Identity & Behavior",
   "digitalOrders.enableDigitalOrdering": "Enable Digital Ordering",
   "digitalOrders.enableDigitalOrderingDesc": "Master switch to enable/disable the digital ordering platform for this outlet.",
-
   "digitalOrders.sendNotificationsOn": "Send Notifications On",
   "digitalOrders.defaultLanguage": "Default Language",
-
   "digitalOrders.notification.all": "All Channels",
   "digitalOrders.notification.sms": "SMS Only",
   "digitalOrders.notification.whatsapp": "WhatsApp Only",
-
   "digitalOrders.language.all": "All",
   "digitalOrders.language.en": "English",
   "digitalOrders.language.ar": "Arabic",
-
   "digitalOrders.whatsappNumber": "WhatsApp Number",
   "digitalOrders.reduceInventory": "Reduce Inventory",
   "digitalOrders.reduceInventoryDesc": "Automatically deduct stock for digital orders.",
-
   "digitalOrders.whatsappMessageBody": "WhatsApp Message Body",
   "digitalOrders.whatsappMessagePlaceholder": "Hello, I would like to order...",
   "digitalOrders.whatsappMessageDesc": "Default message when customer opens WhatsApp chat.",
-
   "digitalOrders.showCategoryFirst": "Show Categories First",
   "digitalOrders.showCategoryFirstDesc": "Display category list before items on the main page.",
-
   "digitalOrders.displayOptions": "Display Options",
   "digitalOrders.displayOptionsDesc": "Control what item details are visible to customers.",
-
   "digitalOrders.showItemDescription": "Show Item Description",
   "digitalOrders.showPreparationTime": "Show Preparation Time",
   "digitalOrders.showNutritionInfo": "Show Nutrition Info",
   "digitalOrders.enableCategorySorting": "Enable Category Sorting",
-
   "digitalOrders.defaultGridView": "Default to Grid View",
   "digitalOrders.enableListViewToggle": "Enable List View Toggle",
-
   "digitalOrders.orderTypeAvailability": "Order Type Availability",
   "digitalOrders.enableDelivery": "Enable Delivery",
   "digitalOrders.enablePickup": "Enable Pickup",
   "digitalOrders.enableDineIn": "Enable Dine-In",
-
   "digitalOrders.orderWorkflow": "Order Workflow",
   "digitalOrders.autoAcceptOrders": "Auto Accept All Orders",
   "digitalOrders.autoAcceptCashOrders": "Auto Accept Cash Orders",
   "digitalOrders.autoCompleteAfterAccept": "Auto Complete After Accept",
   "digitalOrders.askOrderTypeFirst": "Ask Order Type First",
   "digitalOrders.sendEBillOnCompletion": "Send E-Bill on Completion",
-
   "digitalOrders.otpSection": "OTP & Verification",
   "digitalOrders.sendOtpVia": "Send OTP Via",
   "digitalOrders.skipOtpVerification": "Skip OTP Verification",
   "digitalOrders.skipOtpVerificationDesc": "Allow orders without phone verification (Not recommended).",
-
   "digitalOrders.dineInConfig": "Dine-In Configuration",
   "digitalOrders.dineInTitlePrefix": "Dine-In Title Prefix",
   "digitalOrders.inputPlaceholder": "Input Placeholder",
   "digitalOrders.exampleTable": "e.g. Table",
   "digitalOrders.exampleEnterTableNo": "e.g. Enter Table No",
-
   "digitalOrders.paymentConfig": "Payment Configuration",
   "digitalOrders.paymentConfigDesc": "Configure specific payment gateways for each order type. (Currently JSON configuration)",
   "digitalOrders.dineInPaymentSettings": "Dine-In Payment Settings",
@@ -1426,12 +1399,10 @@
   "digitalOrders.deliveryPaymentSettings": "Delivery Payment Settings",
   "digitalOrders.jsonConfig": "JSON Configuration Object",
   "digitalOrders.comingSoon": "Configured via specific payment provider UI (Coming Soon)",
-
   "digitalOrders.socialLinks": "Social Links & Contact",
   "digitalOrders.contactNumber": "Contact Number",
   "digitalOrders.displayContactNumber": "Display Contact Number",
   "digitalOrders.showWhatsappLink": "Show WhatsApp Link",
-
   "digitalOrders.facebookUrl": "Facebook URL",
   "digitalOrders.instagramUrl": "Instagram URL",
   "digitalOrders.websiteUrl": "Website URL",
@@ -1462,7 +1433,6 @@
   "customer.form.addressPlaceholder": "Enter address",
   "restaurants.noQrCode": "No QR Code",
   "digitalOrders.allowedPaymentMethods": "Allowed Payment Methods",
-
   "digitalOrders.paymentMethods.card": "Card",
   "digitalOrders.paymentMethods.paytm": "Paytm",
   "digitalOrders.paymentMethods.phonePe": "PhonePe",
@@ -1474,11 +1444,9 @@
   "digitalOrders.paymentMethods.title": "Payment Methods",
   "restaurants.form.currencyLabel": "Currency",
   "restaurants.form.currencyPlaceholder": "Select currency",
-
   "dashboard.salesSummary": "Sales Summary",
   "dashboard.orderTypeSummary": "Order Type Summary",
   "dashboard.taxSummary": "Tax Summary",
-
   "dashboard.paymentStatistics": "Payment Statistics",
   "dashboard.paymentStatisticsDescription": "Payment Statistics Description",
   "dashboard.manageTaxGroup": "Manage Tax Group",
@@ -1493,29 +1461,21 @@
   "dashboard.netSalesDescription": "Net Sales Description",
   "dashboard.offlineSalesDescription": "Offline Sales Description",
   "dashboard.onlineSalesDescription": "Online Sales Description",
-
   "dashboard.dineInOrders": "Dine-In Orders",
   "dashboard.dineInOrdersDescription": "Total number of orders placed for dine-in service.",
-
   "dashboard.digitalOrders": "Digital Orders",
   "dashboard.digitalOrdersDescription": "Total number of orders placed through digital platforms.",
-
   "dashboard.takeawayOrders": "Takeaway Orders",
   "dashboard.takeawayOrdersDescription": "Total number of takeaway or pickup orders.",
-
   "dashboard.deliveryOrders": "Delivery Orders",
   "dashboard.deliveryOrdersDescription": "Total number of orders delivered to customers.",
-
   "dashboard.totalTax": "Total Tax",
   "dashboard.totalTaxDescription": "Total tax collected from all orders.",
-
   "dashboard.onlineOrdersTax": "Online Orders Tax",
   "dashboard.onlineOrdersTaxDescription": "Total tax collected from online orders.",
-
   "dashboard.offlineOrdersTax": "Offline Orders Tax",
   "dashboard.offlineOrdersTaxDescription": "Total tax collected from offline or POS orders.",
   "dashboard.revenueShare": "Revenue Share",
-
   "users.errorLoading": "Error loading users",
   "kitchen.errorLoading": "Error loading kitchen departments",
   "menus.errorLoading": "Error loading menus",
@@ -1583,7 +1543,6 @@
   "common.from": "From",
   "common.to": "To",
   "navigation.todaysReport": "Today's Sales Report",
-
   "navigation.mealTimeReports": "Meal Time Based Sales Report",
   "reports.mealTime.configureMealTimes": "Configure Meal Times",
   "reports.mealTime.mealTimeName": "Meal Time Name",
@@ -1644,13 +1603,11 @@
   "reports.mealTime.columns.totalTax": "Total Tax",
   "reports.mealTime.columns.totalDiscount": "Total Discount",
   "reports.mealTime.columns.averageBillValue": "Avg. Bill Value",
-
   "common.reset": "Reset",
   "common.filters": "Filters",
   "reports.generate": "Submit",
   "common.selectCategories": "Select Categories",
   "reports.mealTime.generatedReports": " Report Generation Status",
-
   "reports.mealTime.columns.totalBills": "Total Bills",
   "reports.mealTime.columns.generateDate": "Generate Date",
   "reports.mealTime.columns.generatedBy": "Generated By",
@@ -1676,7 +1633,6 @@
   "reports.mealTime.details.errorMessage": "Error Message",
   "reports.mealTime.reportTypes.meal_time_sales": "Meal Time Sales Report",
   "reports.mealTime.reportTypes.meal_time_detailed": "Detailed Meal Time Report",
-
   "reports.mealTime.addMealSlots": "Add Meal Slots",
   "reports.mealTime.availableMealSlots": "Available Meal Slots",
   "reports.mealTime.mealSlotName": "Meal Slot Name",
@@ -1729,12 +1685,10 @@
   "reports.filters.paymentMethods": "Payment Methods",
   "reports.filters.orderTypes": "Order Types",
   "reports.filters.restaurants": "Restaurants",
-
   "reports.payment.reportTypes.orderDetails": "Payment Report with Order Details",
   "reports.payment.reportTypes.orderDetailsDesc": "Generate detailed report showing payment methods for each order",
   "reports.payment.reportTypes.summary": "Payment Report",
   "reports.payment.reportTypes.summaryDesc": "Download summary report with all payment method details",
-
   "reports.payment.description": "View and analyze payment reports",
   "reports.payment.totalCollection": "Total Collection",
   "reports.payment.totalOrders": "Total Orders",
@@ -1754,14 +1708,12 @@
   "reports.payment.refreshingReports": "Refreshing reports...",
   "reports.payment.showDetails": "Show Details",
   "reports.payment.downloadReport": "Download Report",
-
   "reports.payment.generatedReports": "Report Generation Status",
   "reports.payment.noGeneratedReports": "No reports generated yet",
   "reports.payment.searchPlaceholder": "Search reports...",
   "reports.payment.report": "report",
   "reports.payment.generating": "Generating...",
   "reports.payment.downloading": "Downloading...",
-
   "reports.payment.columns.generateDate": "Generate Date",
   "reports.payment.columns.completeTime": "Complete Time",
   "reports.payment.columns.generatedBy": "Generated By",
@@ -1774,31 +1726,26 @@
   "reports.payment.columns.orderCount": "Orders",
   "reports.payment.columns.percentage": "Percentage",
   "reports.payment.columns.averageValue": "Avg Value",
-
   "reports.payment.paymentGraph": "Payment Method Distribution",
   "reports.payment.chart.amount": "Amount",
   "navigation.paymentReports": "Payment Reports",
   "reports.details.reportType": "Report Type",
   "reports.payment.reportDetails": "Payment Report Details",
   "reports.payment.summaryDesc": "Download summary report with all payment method details",
-
   "orderStatus.title": "Order Status",
   "orderStatus.pending": "Pending",
   "orderStatus.completed": "Completed",
   "orderStatus.cancelled": "Cancelled",
   "common.all": "All",
-
   "reports.orderType.description": "View order type statistics and analysis",
   "reports.orderType.orderTypeReport": "Order Type Analysis",
   "reports.orderType.refreshingReport": "Refreshing report data",
   "reports.orderType.searchPlaceholder": "Search order types...",
   "reports.orderType.noData": "No order data available",
-
   "reports.orderType.columns.orderFrom": "Order From",
   "reports.orderType.columns.orderCount": "Count",
   "reports.orderType.columns.totalAmount": "Amount",
   "reports.orderType.columns.status": "Status",
-
   "reports.mealTime.columns.timeSlot": "Time Slot",
   "reports.mealTime.columns.totalOrders": "Total Orders",
   "reports.mealTime.columns.avgOrderValue": "Average Order Value",
@@ -1848,21 +1795,19 @@
   "orders.dispatchedOrders": "Dispatched",
   "orders.fulfilledOrders": "Fulfilled",
   "orders.cancelledOrders": "Cancelled",
-
   "orders.reopened": "reopened",
   "orders.deliveryBoyAssigned": "Delivery boy assigned to order",
-
   "orders.delivery": "Delivery",
   "orders.pickup": "Pickup",
-
   "orders.platforms.uber_eats": "Uber Eats",
   "orders.platforms.zomato": "Zomato",
   "orders.platforms.swiggy": "Swiggy",
   "orders.platforms.website": "Website",
-
   "common.refreshing": "Refreshing...",
   "common.hideFilters": "Hide Filters",
   "common.showFilters": "Show Filters",
   "common.clear": "Clear All",
-  "common.apply": "Apply"
+  "common.apply": "Apply",
+  "customer.location": "Location",
+  "customer.joined": "Joined"
 }

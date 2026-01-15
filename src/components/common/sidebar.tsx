@@ -399,7 +399,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       {
         id: 'image-library',
         label: t('navigation.imageLibrary'),
-        href: 'image-library',
+        href: '/image-library',
         icon: ImageIcon,
       },
     ],
@@ -473,7 +473,7 @@ export default function Sidebar() {
   }) {
     const itemId = `${parentId}-${item.id}`;
     // const isExpanded = expandedItems.has(itemId);
-    const isRouteActive =
+    const _isRouteActive =
       item.children?.some((child) => pathname.startsWith(child.href)) ?? false;
 
     // const isExpanded =

@@ -81,7 +81,8 @@ export function CrudModal<
   const handleSubmit: SubmitHandler<TFormData> = async (data: TFormData) => {
     try {
       await onSubmit(data);
-      onClose();
+      // Don't call onClose here - parent component decides when to close
+      // This prevents modal from closing on validation errors
     } catch (error) {
       // Error handling is done in the parent component
       console.error('Form submission error:', error);

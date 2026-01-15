@@ -13,6 +13,7 @@ export interface Table extends Record<string, unknown> {
   isAvailable: boolean; // availability status
   restaurantId: string; // ObjectId of Restaurant
   restaurantName?: MultilingualText; // multilingual restaurant name for display (populated)
+  tableSectionName?: MultilingualText; // multilingual table section name for display (populated)
   createdBy: string; // ObjectId of User
   updatedBy: string; // ObjectId of User
   deletedBy?: string; // ObjectId of User

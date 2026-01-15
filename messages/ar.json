@@ -106,6 +106,7 @@
   "common.status": "الحالة",
   "common.createdAt": "تاريخ الإنشاء",
   "common.updatedAt": "تاريخ التحديث",
+  "common.restaurants": "المطاعم",
   "navigation.dashboard": "لوحة تحكم نقاط البيع",
   "navigation.orders": "الطلبات النشطة",
   "navigation.tables": "إدارة الطاولات",
@@ -784,7 +785,6 @@
   "taxGroups.form.primaryStatusDescription": "الضريبة الرئيسية.",
   "taxGroups.table.billDisplayName": "اسم العرض في الفاتورة",
   "taxGroups.form.billDisplayNamePlaceholder": "أدخل اسم العرض في الفاتورة",
-
   "kitchen.title": "أقسام المطبخ",
   "kitchen.subtitle": "إدارة جميع أقسام المطبخ في مطعمك",
   "kitchen.addNew": "إضافة قسم مطبخ جديد",
@@ -1139,7 +1139,6 @@
   "menuItems.table.discountedPrice": "السعر بعد الخصم",
   "menuItems.table.addOns": "الإضافات",
   "menuItems.table.image": "الصورة",
-
   "reports.salesReports.title": "تقارير المبيعات",
   "reports.salesReports.subtitle": "عرض وتحليل بيانات المبيعات مع معلومات الفواتير التفصيلية",
   "reports.salesReports.billsList": "قائمة الفواتير",
@@ -1165,27 +1164,21 @@
   "reports.filters.billStatus": "حالة الفاتورة",
   "reports.filters.selectBillStatus": "اختر حالة الفاتورة",
   "common.clearFilters": "مسح المرشحات",
-
   "reports.table.customerName": "اسم العميل",
   "reports.table.amountPaid": "المبلغ المدفوع",
   "reports.table.waiter": "النادل",
-
   "taxGroups.fixed": "مبلغ ثابت",
   "taxGroups.delete.title": "حذف مجموعة الضريبة",
   "taxGroups.delete.description": "هل أنت متأكد أنك تريد حذف {name}؟ هذا الإجراء لا يمكن التراجع عنه.",
-
   "discounts.title": "الخصومات",
   "discounts.subtitle": "إدارة جميع الخصومات وإعداداتها",
   "discounts.searchPlaceholder": "ابحث عن الخصومات...",
   "discounts.addDiscount": "إضافة خصم",
-
   "discounts.table.discountType": "نوع الخصم",
   "discounts.table.discountValue": "قيمة الخصم",
   "discounts.table.brand": "العلامة التجارية",
-
   "discounts.type.percentage": "نسبة مئوية",
   "discounts.fixed": "مبلغ ثابت",
-
   "discounts.form.title": "معلومات الخصم",
   "discounts.form.nameEn": "الاسم (بالإنجليزية)",
   "discounts.form.nameAr": "الاسم (بالعربية)",
@@ -1197,7 +1190,6 @@
   "discounts.form.discountValuePlaceholder": "أدخل قيمة الخصم",
   "discounts.form.discountTypePercentage": "نسبة مئوية",
   "discounts.form.discountTypeFixedAmount": "مبلغ ثابت",
-
   "discounts.create.title": "إنشاء خصم",
   "discounts.create.description": "حدد خصماً جديداً مع نوعه وقيمته.",
   "discounts.edit.title": "تعديل الخصم",
@@ -1207,7 +1199,6 @@
   "discounts.errorLoading": "حدث خطأ أثناء تحميل الخصومات",
   "discounts.form.categoriesLabel": "الفئات",
   "discounts.form.categoriesPlaceholder": "اختر الفئات",
-
   "discounts.form.taxProductGroupsLabel": "مجموعات المنتجات الضريبية",
   "discounts.form.taxProductGroupsPlaceholder": "اختر مجموعات المنتجات الضريبية",
   "discounts.form.orderTypesLabel": "أنواع الطلبات",
@@ -1289,69 +1280,53 @@
   "common.allBrands": "جميع العلامات التجارية",
   "common.filterByBrand": "تصفية حسب العلامة التجارية",
   "restaurant.managementDescription": "إدارة إعدادات المطعم",
-
   "digitalOrders.outletConfigDescription": "إعداد سلوك الطلب الرقمي لهذا الفرع",
-
   "digitalOrders.globalIdentityTitle": "الهوية العامة والسلوك",
   "digitalOrders.enableDigitalOrdering": "تفعيل الطلب الرقمي",
   "digitalOrders.enableDigitalOrderingDesc": "مفتاح رئيسي لتفعيل أو تعطيل منصة الطلب الرقمي لهذا الفرع.",
-
   "digitalOrders.sendNotificationsOn": "إرسال الإشعارات عبر",
   "digitalOrders.defaultLanguage": "اللغة الافتراضية",
-
   "digitalOrders.notification.all": "جميع القنوات",
   "digitalOrders.notification.sms": "الرسائل النصية فقط",
   "digitalOrders.notification.whatsapp": "واتساب فقط",
-
   "digitalOrders.language.all": "الكل",
   "digitalOrders.language.en": "الإنجليزية",
   "digitalOrders.language.ar": "العربية",
-
   "digitalOrders.whatsappNumber": "رقم واتساب",
   "digitalOrders.reduceInventory": "تقليل المخزون",
   "digitalOrders.reduceInventoryDesc": "خصم المخزون تلقائيًا للطلبات الرقمية.",
-
   "digitalOrders.whatsappMessageBody": "نص رسالة واتساب",
   "digitalOrders.whatsappMessagePlaceholder": "مرحبًا، أود تقديم طلب...",
   "digitalOrders.whatsappMessageDesc": "الرسالة الافتراضية عند فتح محادثة واتساب.",
-
   "digitalOrders.showCategoryFirst": "عرض الفئات أولًا",
   "digitalOrders.showCategoryFirstDesc": "عرض قائمة الفئات قبل العناصر في الصفحة الرئيسية.",
-
   "digitalOrders.displayOptions": "خيارات العرض",
   "digitalOrders.displayOptionsDesc": "التحكم في تفاصيل العناصر المعروضة للعملاء.",
-
   "digitalOrders.showItemDescription": "عرض وصف العنصر",
   "digitalOrders.showPreparationTime": "عرض وقت التحضير",
   "digitalOrders.showNutritionInfo": "عرض المعلومات الغذائية",
   "digitalOrders.enableCategorySorting": "تفعيل ترتيب الفئات",
-
   "digitalOrders.defaultGridView": "العرض الشبكي الافتراضي",
   "digitalOrders.enableListViewToggle": "تفعيل التبديل إلى عرض القائمة",
-
   "digitalOrders.orderTypeAvailability": "توفر أنواع الطلب",
   "digitalOrders.enableDelivery": "تفعيل التوصيل",
   "digitalOrders.enablePickup": "تفعيل الاستلام",
   "digitalOrders.enableDineIn": "تفعيل الطلب داخل المطعم",
-
   "digitalOrders.orderWorkflow": "سير عمل الطلب",
   "digitalOrders.autoAcceptOrders": "قبول جميع الطلبات تلقائيًا",
   "digitalOrders.autoAcceptCashOrders": "قبول طلبات الدفع النقدي تلقائيًا",
   "digitalOrders.autoCompleteAfterAccept": "إكمال الطلب تلقائيًا بعد القبول",
   "digitalOrders.askOrderTypeFirst": "طلب نوع الطلب أولًا",
   "digitalOrders.sendEBillOnCompletion": "إرسال الفاتورة الإلكترونية بعد الإكمال",
-
   "digitalOrders.otpSection": "التحقق ورمز OTP",
   "digitalOrders.sendOtpVia": "إرسال رمز التحقق عبر",
   "digitalOrders.skipOtpVerification": "تخطي التحقق برمز OTP",
   "digitalOrders.skipOtpVerificationDesc": "السماح بالطلبات بدون التحقق من الهاتف (غير موصى به).",
-
   "digitalOrders.dineInConfig": "إعدادات الطلب داخل المطعم",
   "digitalOrders.dineInTitlePrefix": "بادئة عنوان الطلب داخل المطعم",
   "digitalOrders.inputPlaceholder": "نص الحقل",
   "digitalOrders.exampleTable": "مثال: طاولة",
   "digitalOrders.exampleEnterTableNo": "مثال: أدخل رقم الطاولة",
-
   "digitalOrders.paymentConfig": "إعدادات الدفع",
   "digitalOrders.paymentConfigDesc": "إعداد بوابات دفع مخصصة لكل نوع طلب (إعداد JSON حاليًا)",
   "digitalOrders.dineInPaymentSettings": "إعدادات دفع الطلب داخل المطعم",
@@ -1359,12 +1334,10 @@
   "digitalOrders.deliveryPaymentSettings": "إعدادات دفع التوصيل",
   "digitalOrders.jsonConfig": "كائن إعدادات JSON",
   "digitalOrders.comingSoon": "يتم الإعداد عبر واجهة مزود الدفع (قريبًا)",
-
   "digitalOrders.socialLinks": "الروابط الاجتماعية ووسائل الاتصال",
   "digitalOrders.contactNumber": "رقم التواصل",
   "digitalOrders.displayContactNumber": "عرض رقم التواصل",
   "digitalOrders.showWhatsappLink": "عرض رابط واتساب",
-
   "digitalOrders.facebookUrl": "رابط فيسبوك",
   "digitalOrders.instagramUrl": "رابط إنستغرام",
   "digitalOrders.websiteUrl": "رابط الموقع الإلكتروني",
@@ -1396,7 +1369,6 @@
   "restaurants.qrcode": "كود QR",
   "restaurants.noQrCode": "لا يوجد كود QR",
   "digitalOrders.allowedPaymentMethods": "الدفع المسموح به",
-
   "digitalOrders.paymentMethods.card": "بطاقة",
   "digitalOrders.paymentMethods.paytm": "Paytm",
   "digitalOrders.paymentMethods.phonePe": "PhonePe",
@@ -1432,49 +1404,35 @@
   "users.form.shiftStartLabel": "بداية الوردية (بالدقائق)",
   "users.form.shiftEndLabel": "نهاية الوردية (بالدقائق)",
   "users.form.contactInfo": "اتصال و العنوان",
-
   "dashboard.paymentStatistics": "إحصائيات الدفع",
   "dashboard.paymentStatisticsDescription": "إحصائيات الدفع",
   "dashboard.manageTaxGroup": "إدارة مجموعة الضرائب",
-
   "dashboard.salesSummary": "ملخص المبيعات",
   "dashboard.orderTypeAnalysis": "تحليل نوع الطلب",
   "dashboard.taxSummary": "ملخص الضرائب",
-
   "dashboard.totalSales": "إجمالي المبيعات",
   "dashboard.totalSalesDescription": "إجمالي الإيرادات الناتجة عن جميع الطلبات المكتملة.",
-
   "dashboard.netSales": "صافي المبيعات",
   "dashboard.netSalesDescription": "إجمالي المبيعات بعد الخصومات والاسترجاعات والتعديلات.",
-
   "dashboard.offlineSales": "المبيعات غير المتصلة",
   "dashboard.offlineSalesDescription": "المبيعات الناتجة عن الطلبات داخل المطعم أو عبر نظام نقاط البيع.",
-
   "dashboard.onlineSales": "المبيعات عبر الإنترنت",
   "dashboard.onlineSalesDescription": "المبيعات الناتجة عن الطلبات الإلكترونية والطلبات الرقمية.",
-
   "dashboard.dineInOrders": "طلبات داخل المطعم",
   "dashboard.dineInOrdersDescription": "إجمالي عدد الطلبات المقدمة داخل المطعم.",
-
   "dashboard.digitalOrders": "الطلبات الرقمية",
   "dashboard.digitalOrdersDescription": "إجمالي عدد الطلبات المقدمة عبر المنصات الرقمية.",
-
   "dashboard.takeawayOrders": "طلبات الاستلام",
   "dashboard.takeawayOrdersDescription": "إجمالي عدد طلبات الاستلام أو التيك أواي.",
-
   "dashboard.deliveryOrders": "طلبات التوصيل",
   "dashboard.deliveryOrdersDescription": "إجمالي عدد الطلبات التي تم توصيلها للعملاء.",
-
   "dashboard.totalTax": "إجمالي الضريبة",
   "dashboard.totalTaxDescription": "إجمالي الضريبة المحصلة من جميع الطلبات.",
-
   "dashboard.onlineOrdersTax": "ضريبة الطلبات عبر الإنترنت",
   "dashboard.onlineOrdersTaxDescription": "إجمالي الضريبة المحصلة من الطلبات الإلكترونية.",
-
   "dashboard.offlineOrdersTax": "ضريبة الطلبات داخل المطعم",
   "dashboard.offlineOrdersTaxDescription": "إجمالي الضريبة المحصلة من الطلبات غير الإلكترونية.",
   "dashboard.revenueShare": "حصّة الإيرادات",
-
   "users.permissions.payment:candel": "إلغاء الدفع",
   "users.permissions.table:create": "إنشاء طاولة",
   "users.permissions.table:read": "عرض الطاولة",
@@ -1565,7 +1523,6 @@
   "reports.dailySales.failed": "فشل",
   "reports.dailySales.processing": "قيد المعالجة",
   "reports.dailySales.pending": "معلق",
-
   "reports.dailySales.columns.generateDate": "تاريخ الإنشاء",
   "reports.dailySales.columns.completeTime": "وقت الإكمال",
   "reports.dailySales.columns.generatedBy": "تم الإنشاء بواسطة",
@@ -1573,7 +1530,6 @@
   "reports.dailySales.columns.status": "الحالة",
   "reports.dailySales.columns.reportStatus": "حالة التقرير",
   "reports.dailySales.columns.actions": "الإجراءات",
-
   "reports.dailySales.reportTypes.dsrBillWise": "تقرير DSR حسب الفاتورة",
   "reports.dailySales.reportTypes.billWiseLiquorSale": "تقرير مبيعات الكحول حسب الفاتورة",
   "reports.dailySales.reportTypes.b2bSales": "تقرير مبيعات B2B",
@@ -1588,12 +1544,10 @@
   "reports.dailySales.reportTypes.taxSubmissionPayment": "تقرير دفع تقديم الضريبة",
   "reports.dailySales.reportTypes.orderTypeDayWise": "تقرير نوع الطلب حسب اليوم",
   "reports.dailySales.reportTypes.monthWiseSales": "المبيعات حسب الشهر",
-
   "reports.status.completed": "مكتمل",
   "reports.status.failed": "فشل",
   "reports.status.processing": "قيد المعالجة",
   "reports.status.pending": "معلق",
-
   "common.refresh": "تحديث",
   "common.actions": "الإجراءات",
   "common.errors.tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً.",
@@ -1601,9 +1555,7 @@
   "common.from": "من",
   "common.to": "إلى",
   "common.reset": "إعادة تعيين",
-
   "navigation.todaysReport": "تقرير اليوم",
-
   "navigation.mealTimeReports": "تقرير المبيعات حسب وقت الوجبة",
   "reports.mealTime.configureMealTimes": "تكوين أوقات الوجبات",
   "reports.mealTime.mealTimeName": "اسم وقت الوجبة",
@@ -1666,7 +1618,6 @@
   "reports.mealTime.columns.averageBillValue": "متوسط قيمة الفاتورة",
   "common.selectCategories": "اختر الفئات",
   "reports.mealTime.generatedReports": "التقارير المُنشأة",
-
   "reports.mealTime.columns.totalBills": "إجمالي الفواتير",
   "reports.mealTime.columns.generateDate": "تاريخ الإنشاء",
   "reports.mealTime.columns.generatedBy": "تم الإنشاء بواسطة",
@@ -1692,7 +1643,6 @@
   "reports.mealTime.details.errorMessage": "رسالة الخطأ",
   "reports.mealTime.reportTypes.meal_time_sales": "تقرير مبيعات وقت الوجبة",
   "reports.mealTime.reportTypes.meal_time_detailed": "تقرير مفصل لوقت الوجبة",
-
   "reports.mealTime.addMealSlots": "إضافة فترات الوجبات",
   "reports.mealTime.availableMealSlots": "فترات الوجبات المتاحة",
   "reports.mealTime.mealSlotName": "اسم فترة الوجبة",
@@ -1703,7 +1653,6 @@
   "reports.mealTime.slotAlreadyConfigured": "\"{label}\" مُكون بالفعل",
   "reports.mealTime.allSlotsConfigured": "تم تكوين جميع فترات الوجبات. أضف واحدة جديدة أعلاه.",
   "reports.mealTime.clickToAdd": "انقر على علامة لإضافتها كوقت وجبة",
-
   "reports.mealTime.generatingMealTimeReport": "Generating Meal Time Report...",
   "reports.mealTime.report": "تقرير",
   "reports.hourly.description": "إنشاء وتنزيل تقارير المبيعات بالساعة مع تحليلات مفصلة",
@@ -1748,14 +1697,11 @@
   "reports.filters.restaurants": "المطاعم",
   "common.filters": "الفلاتر",
   "reports.generate": "إرسال",
-
   "navigation.paymentReports": "تقارير الدفع",
-
   "reports.payment.reportTypes.orderDetails": "تقرير الدفع مع تفاصيل الطلب",
   "reports.payment.reportTypes.orderDetailsDesc": "توليد تقرير مفصل يوضح طرق الدفع لكل طلب",
   "reports.payment.reportTypes.summary": "تقرير الدفع",
   "reports.payment.reportTypes.summaryDesc": "تحميل تقرير ملخص بجميع تفاصيل طرق الدفع",
-
   "reports.payment.description": "عرض وتحليل تقارير الدفع",
   "reports.payment.totalCollection": "إجمالي التحصيل",
   "reports.payment.totalOrders": "إجمالي الطلبات",
@@ -1775,14 +1721,12 @@
   "reports.payment.refreshingReports": "جاري تحديث التقارير...",
   "reports.payment.showDetails": "عرض التفاصيل",
   "reports.payment.downloadReport": "تحميل التقرير",
-
   "reports.payment.generatedReports": "التقارير المولدة",
   "reports.payment.noGeneratedReports": "لا توجد تقارير مولدّة بعد",
   "reports.payment.searchPlaceholder": "بحث في التقارير...",
   "reports.payment.report": "تقرير",
   "reports.payment.generating": "جاري التوليد...",
   "reports.payment.downloading": "جاري التحميل...",
-
   "reports.payment.columns.generateDate": "تاريخ التوليد",
   "reports.payment.columns.completeTime": "وقت الانتهاء",
   "reports.payment.columns.generatedBy": "تم التوليد بواسطة",
@@ -1795,7 +1739,6 @@
   "reports.payment.columns.orderCount": "الطلبات",
   "reports.payment.columns.percentage": "النسبة",
   "reports.payment.columns.averageValue": "المتوسط",
-
   "reports.payment.paymentGraph": "توزيع طرق الدفع",
   "reports.payment.chart.amount": "المبلغ",
   "reports.details.reportType": "نوع التقرير",
@@ -1806,19 +1749,16 @@
   "orderStatus.completed": "مكتمل",
   "orderStatus.cancelled": "ملغي",
   "common.all": "الكل",
-
   "navigation.orderTypeReports": "تقرير أنواع الطلبات",
   "reports.orderType.description": "عرض إحصائيات وتحليل أنواع الطلبات",
   "reports.orderType.orderTypeReport": "تحليل أنواع الطلبات",
   "reports.orderType.refreshingReport": "جاري تحديث بيانات التقرير",
   "reports.orderType.searchPlaceholder": "البحث في أنواع الطلبات...",
   "reports.orderType.noData": "لا توجد بيانات طلبات متاحة",
-
   "reports.orderType.columns.orderFrom": "الطلبات من",
   "reports.orderType.columns.orderCount": "العدد",
   "reports.orderType.columns.totalAmount": "المبلغ",
   "reports.orderType.columns.status": "الحالة",
-
   "reports.mealTime.columns.timeSlot": "الفترة الزمنية",
   "reports.mealTime.columns.totalOrders": "إجمالي الطلبات",
   "reports.mealTime.columns.avgOrderValue": "متوسط قيمة الطلب",
@@ -1863,23 +1803,19 @@
   "payment.pending": "قيد الانتظار",
   "payment.paid": "مدفوع",
   "payment.failed": "فشل",
-
   "orders.newOrders": "طلبات جديدة",
   "orders.runningOrders": "طلبات قيد التنفيذ",
   "orders.dispatchedOrders": "تم الإرسال",
   "orders.fulfilledOrders": "مكتملة",
   "orders.cancelledOrders": "ملغاة",
-
   "orders.reopened": "أُعيد فتحه",
   "orders.deliveryBoyAssigned": "تم تعيين مندوب التوصيل للطلب",
   "orders.delivery": "توصيل",
   "orders.pickup": "استلام من المطعم",
-
   "orders.platforms.uber_eats": "أوبر إيتس",
   "orders.platforms.zomato": "زوماتو",
   "orders.platforms.swiggy": "سويجي",
   "orders.platforms.website": "الموقع الإلكتروني",
-
   "common.refreshing": "جاري التحديث...",
   "common.hideFilters": "إخفاء الفلاتر",
   "common.showFilters": "إظهار الفلاتر",

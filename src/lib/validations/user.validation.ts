@@ -30,8 +30,8 @@ export const userSchema = z
 
     role: z.string().min(1),
 
-    restaurantIds: z.array(z.string()).min(1),
-    brandIds: z.array(z.string()).min(1),
+    restaurantIds: z.array(z.string()).min(1, 'At least select one'),
+    brandIds: z.array(z.string()).min(1, 'At least select one'),
 
     isActive: z.boolean(),
     agreeToTerms: z.boolean(),

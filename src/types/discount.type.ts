@@ -30,6 +30,7 @@ export interface Discount extends Record<string, unknown> {
   brandId: string;
   brandName: MultilingualText;
   restaurantId?: string;
+  restaurantName?: MultilingualText;
   categoryIds: DiscountCategory[];
   taxProductGroupIds: DiscountTaxProductGroup[];
   orderTypeIds: DiscountOrderType[];

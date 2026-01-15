@@ -5,25 +5,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Brand } from '@/types/brand.type';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import Image from 'next/image';
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Phone,
-  Globe,
-  Calendar,
-  ImageIcon,
-} from 'lucide-react';
+import { Phone, Globe, Calendar, ImageIcon } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
+import { TableActions } from '@/components/ui/table-actions';
 
 // Column definitions for the brands table
 export const createBrandColumns = (
@@ -201,42 +188,17 @@ export const createBrandColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 100,
     cell: ({ row }) => {
       const brand = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(brand);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('brands.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(brand);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={brand.isActive ?? false} // Don't allow deleting active brands
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('brands.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(brand)}
+          onDelete={() => onDelete(brand)}
+          editLabel={t('brands.edit')}
+          deleteLabel={t('brands.delete')}
+        />
       );
     },
   },

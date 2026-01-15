@@ -229,7 +229,11 @@ export function UserFormContent({ form }: UserFormContentProps) {
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 rtl:left-auto rtl:right-3" />
                     <FormControl>
                       <input
-                        {...field}
+                        name={field.name}
+                        ref={field.ref}
+                        value={field.value || ''}
+                        onChange={field.onChange}
+                        onBlur={field.onBlur}
                         type={showPassword ? 'text' : 'password'}
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pl-10 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 rtl:pl-10 rtl:pr-10"
                         placeholder={t('users.form.passwordPlaceholder')}
@@ -423,6 +427,30 @@ export function useUserForm(editingUser?: User | null) {
         macAddress: editingUser.macAddress || '',
         language: editingUser.language || 'en',
         timeZone: editingUser.timeZone || getDefaultTimezone(),
+      });
+    } else {
+      // Reset to defaults when switching to add mode
+      form.reset({
+        name: '',
+        username: '',
+        password: '',
+        email: '',
+        phoneNumber: null,
+        countryCode: '',
+        address: '',
+        role: '',
+        designation: '',
+        restaurantIds: [],
+        brandIds: [],
+        isActive: true,
+        agreeToTerms: true,
+        shiftStart: timeStringToMinutes(DEFAULT_TIMES.START_TIME),
+        shiftEnd: timeStringToMinutes(DEFAULT_TIMES.END_TIME),
+        webAccess: false,
+        macAddress: '',
+        language: 'en',
+        timeZone: getDefaultTimezone(),
+        effectivePermissions: [],
       });
     }
   }, [editingUser, form]);

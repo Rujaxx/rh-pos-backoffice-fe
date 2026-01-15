@@ -4,22 +4,8 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Menu } from '@/types/menu.type';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Hash,
-  Calendar,
-  UtensilsCrossed,
-  List,
-} from 'lucide-react';
+import { Hash, Calendar, UtensilsCrossed, List } from 'lucide-react';
+import { TableActions } from '@/components/ui/table-actions';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useRouter } from 'next/navigation';
 
@@ -166,54 +152,25 @@ export const createMenuColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 120,
     cell: ({ row }) => {
       const menu = row.original;
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(menu);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('menus.table.edit')}
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/menu-management/menu-items?menuId=${menu._id}`);
-              }}
-              className="cursor-pointer"
-            >
-              <List className="mr-2 h-4 w-4" />
-              {t('menus.table.menuItems')} ({menu.menuItemCount || 0})
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(menu);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={menu.isActive} // prevent deleting active menu
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('menus.table.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(menu)}
+          onDelete={() => onDelete(menu)}
+          editLabel={t('menus.table.edit')}
+          deleteLabel={t('menus.table.delete')}
+          additionalActions={[
+            {
+              label: `${t('menus.table.menuItems')} (${menu.menuItemCount || 0})`,
+              onClick: () =>
+                router.push(`/menu-management/menu-items?menuId=${menu._id}`),
+              icon: <List className="h-4 w-4" />,
+            },
+          ]}
+        />
       );
     },
   },

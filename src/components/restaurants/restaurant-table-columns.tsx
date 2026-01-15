@@ -5,17 +5,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Restaurant } from '@/types/restaurant';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
 import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
   Phone,
   MapPin,
   Calendar,
@@ -25,10 +16,10 @@ import {
   ImageIcon,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
 import { MultilingualText } from '@/types';
 import { WhatsAppQRCode } from './qr-code';
+import { TableActions } from '@/components/ui/table-actions';
 
 import {
   Dialog,
@@ -293,42 +284,17 @@ export const createRestaurantColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 100,
     cell: ({ row }) => {
       const restaurant = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(restaurant);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('restaurants.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(restaurant);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={restaurant.isActive ?? false} // Don't allow deleting active restaurants
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('restaurants.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(restaurant)}
+          onDelete={() => onDelete(restaurant)}
+          editLabel={t('restaurants.edit')}
+          deleteLabel={t('restaurants.delete')}
+        />
       );
     },
   },

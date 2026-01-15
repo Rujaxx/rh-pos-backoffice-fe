@@ -3,24 +3,30 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import { TaxProductGroup } from '@/types/tax-product-group.type';
 import { MultilingualText } from '@/types';
+import { Restaurant } from '@/types/restaurant';
+import { TableActions } from '@/components/ui/table-actions';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+// Type for restaurant reference that can be string ID or populated object
+interface RestaurantRef {
+  _id: string;
+  name?: MultilingualText;
+}
 
 export const createTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
   onDelete: (item: TaxProductGroup) => void,
   t: ReturnType<typeof useTranslation>['t'],
   locale: string,
+  restaurants: Restaurant[] = [],
 ): ColumnDef<TaxProductGroup>[] => {
   return [
     {
@@ -93,46 +99,90 @@ export const createTaxProductGroupColumns = (
     },
 
     {
+      accessorKey: 'restaurantIds',
+      header: t('common.restaurants'),
+      cell: ({ row }) => {
+        const itemRestaurantIds = row.original.restaurantIds || [];
+
+        if (itemRestaurantIds.length === 0) return <span>-</span>;
+
+        // Resolve restaurant names
+        const resolvedRestaurants = itemRestaurantIds.map(
+          (r: string | RestaurantRef) => {
+            const id = typeof r === 'string' ? r : r._id;
+            const found = restaurants.find((res) => res._id === id);
+            if (found) return found;
+            // Fallback if r has name (legacy/backend populated)
+            return typeof r === 'object' && r.name
+              ? r
+              : { name: { en: 'Unknown', ar: 'Unknown' }, _id: id };
+          },
+        );
+
+        if (resolvedRestaurants.length === 1) {
+          const name =
+            resolvedRestaurants[0].name?.[locale as keyof MultilingualText] ||
+            resolvedRestaurants[0].name?.en ||
+            '-';
+          return (
+            <Badge
+              variant="outline"
+              className="truncate max-w-[150px] block"
+              title={name}
+            >
+              {name}
+            </Badge>
+          );
+        }
+
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-secondary"
+              >
+                {resolvedRestaurants.length} {t('common.restaurants')}
+              </Badge>
+            </PopoverTrigger>
+            <PopoverContent className="w-60 p-2">
+              <div className="space-y-1">
+                <h4 className="font-medium text-sm border-b pb-1 mb-1">
+                  {t('common.restaurants')}
+                </h4>
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {resolvedRestaurants.map((r) => (
+                    <div
+                      key={r._id}
+                      className="text-sm px-2 py-1 rounded hover:bg-muted truncate"
+                    >
+                      {r.name?.[locale as keyof MultilingualText] ||
+                        r.name?.en ||
+                        'Unknown'}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        );
+      },
+    },
+
+    {
       id: 'actions',
       header: t('table.actions'),
       enableSorting: false,
-      size: 80,
+      size: 100,
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              {/* Edit */}
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(item);
-                }}
-                className="cursor-pointer"
-              >
-                <Edit className="mr-2 h-4 w-4" />
-                {t('common.edit')}
-              </DropdownMenuItem>
-
-              {/* Delete */}
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(item);
-                }}
-                className="cursor-pointer text-destructive focus:text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t('common.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TableActions
+            onEdit={() => onEdit(item)}
+            onDelete={() => onDelete(item)}
+            editLabel={t('common.edit')}
+            deleteLabel={t('common.delete')}
+          />
         );
       },
     },
@@ -142,10 +192,11 @@ export const createTaxProductGroupColumns = (
 export const useTaxProductGroupColumns = (
   onEdit: (item: TaxProductGroup) => void,
   onDelete: (item: TaxProductGroup) => void,
+  restaurants: Restaurant[] = [],
 ) => {
   const { t } = useTranslation();
   const { locale } = useI18n();
-  return createTaxProductGroupColumns(onEdit, onDelete, t, locale);
+  return createTaxProductGroupColumns(onEdit, onDelete, t, locale, restaurants);
 };
 
 export const getSortFieldForTaxProductGroupQuery = (
