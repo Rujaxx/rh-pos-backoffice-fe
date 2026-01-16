@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { getCountryCallingCode, CountryCode } from 'libphonenumber-js';
 
 interface CustomerFormContentProps {
   form: UseFormReturn<CustomerFormData>;
@@ -50,7 +51,18 @@ export function CustomerFormContent({
             <FormLabel>{t('customer.dialCode')}</FormLabel>
             <FormControl>
               <div className="flex h-10 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm">
-                {editingCustomer?.countryCode ?? '--'}
+                {(() => {
+                  const code = editingCustomer?.countryCode;
+                  if (!code) return '--';
+                  try {
+                    if (code.length === 2) {
+                      return '+' + getCountryCallingCode(code as CountryCode);
+                    }
+                  } catch {
+                    // Fall through to return raw code
+                  }
+                  return code;
+                })()}
               </div>
             </FormControl>
             <FormMessage />

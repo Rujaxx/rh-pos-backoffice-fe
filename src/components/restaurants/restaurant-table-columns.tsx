@@ -5,29 +5,21 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Restaurant } from '@/types/restaurant';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
 import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
   Phone,
   MapPin,
   Calendar,
   Clock,
   Mail,
   QrCode,
+  ImageIcon,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { getS3UrlFromKey, getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useI18n } from '@/providers/i18n-provider';
 import { MultilingualText } from '@/types';
 import { WhatsAppQRCode } from './qr-code';
+import { TableActions } from '@/components/ui/table-actions';
 
 import {
   Dialog,
@@ -83,21 +75,37 @@ export const createRestaurantColumns = (
     enableSorting: false,
     cell: ({ row }) => {
       const restaurant = row.original;
+      const logoUrl = restaurant.logo;
+
+      // If no logo URL, show thumbnail icon
+      if (!logoUrl) {
+        return (
+          <div className="flex items-center">
+            <div className="w-10 h-10 rounded-md border bg-muted flex items-center justify-center">
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="flex items-center">
           <div className="relative w-10 h-10">
             <Image
-              src={
-                getS3UrlFromKey(restaurant.logo) ||
-                getFallbackAvatarUrl(restaurant.name?.en ?? '')
-              }
+              src={logoUrl}
               alt={restaurant.name?.en ?? 'Restaurant'}
               width={40}
               height={40}
               className="rounded-md object-cover border"
               onError={(e) => {
+                // Hide image and show fallback icon
                 const target = e.target as HTMLImageElement;
-                target.src = getFallbackAvatarUrl(restaurant.name?.en ?? '');
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML =
+                    '<div class="w-10 h-10 rounded-md border bg-muted flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>';
+                }
               }}
             />
           </div>
@@ -276,42 +284,17 @@ export const createRestaurantColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 100,
     cell: ({ row }) => {
       const restaurant = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(restaurant);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('restaurants.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(restaurant);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={restaurant.isActive ?? false} // Don't allow deleting active restaurants
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('restaurants.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(restaurant)}
+          onDelete={() => onDelete(restaurant)}
+          editLabel={t('restaurants.edit')}
+          deleteLabel={t('restaurants.delete')}
+        />
       );
     },
   },

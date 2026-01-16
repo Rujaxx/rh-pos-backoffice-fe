@@ -6,7 +6,7 @@
 import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { UseFormReturn, FieldPath, PathValue } from 'react-hook-form';
-import { Upload, X, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, X, Loader2, AlertCircle, ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from './button';
 import { FormFieldWrapper } from './form-components';
@@ -15,7 +15,6 @@ import {
   useDeleteTemporaryUpload,
 } from '@/services/api/upload/upload.mutations';
 import { UploadFolderType, UPLOAD_CONSTRAINTS } from '@/types/upload';
-import { getS3UrlFromKey } from '@/lib/upload-utils';
 
 interface ImageUploadProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
@@ -28,6 +27,8 @@ interface ImageUploadProps<TFormValues extends Record<string, unknown>> {
   maxHeight?: number;
   className?: string;
   required?: boolean;
+  /** Optional URL for displaying existing images (from backend) */
+  initialPreviewUrl?: string;
 }
 
 export function ImageUpload<TFormValues extends Record<string, unknown>>({
@@ -40,18 +41,20 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   maxWidth = UPLOAD_CONSTRAINTS.DEFAULT_MAX_WIDTH,
   maxHeight = UPLOAD_CONSTRAINTS.DEFAULT_MAX_HEIGHT,
   className,
+  initialPreviewUrl,
   // required = false,
 }: ImageUploadProps<TFormValues>) {
   const [preview, setPreview] = useState<string>('');
-  const [currentUploadKey, setCurrentUploadKey] = useState<string>('');
+  const [currentUploadId, setCurrentUploadId] = useState<string>('');
   const [dragOver, setDragOver] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const uploadMutation = useUploadImage();
   const deleteUploadMutation = useDeleteTemporaryUpload();
 
   const currentValue = form.getValues(name) as string;
-  // Convert upload key to full S3 URL if needed
-  const displayUrl = preview || getS3UrlFromKey(currentValue) || '';
+  // Use preview from state (new upload) or initialPreviewUrl (existing image)
+  const displayUrl = preview || initialPreviewUrl || '';
 
   // Validate file before upload
   const validateFile = useCallback((file: File): string | null => {
@@ -83,15 +86,6 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
         // Clear any existing errors
         form.clearErrors(name);
 
-        // Create preview
-        const reader = new FileReader();
-        // reader.onload = (e) => {
-        //   if (e.target?.result) {
-        //     setPreview(e.target.result as string);
-        //   }
-        // };
-        // reader.readAsDataURL(file);
-
         // Upload to API
         const result = await uploadMutation.mutateAsync({
           file,
@@ -102,17 +96,33 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
             maxHeight,
           },
         });
-        console.log(result.data);
         if (result.data) {
-          // Store the upload key in the form (this will be sent to backend on form submission)
+          // Store the S3 key in the form (needed for backend submission)
           form.setValue(
             name,
             result.data.key as PathValue<TFormValues, typeof name>,
           );
-          setCurrentUploadKey(result.data.key);
+          // Track the upload ID separately for confirmation API
+          setCurrentUploadId(result.data.id);
 
-          // Update preview with the full S3 URL
-          setPreview(getS3UrlFromKey(result.data.url));
+          // Also store upload ID in hidden field for confirmation
+          const uploadIds =
+            (form.getValues(
+              '_uploadIds' as FieldPath<TFormValues>,
+            ) as unknown as string[]) || [];
+          if (!uploadIds.includes(result.data.id)) {
+            form.setValue(
+              '_uploadIds' as FieldPath<TFormValues>,
+              [...uploadIds, result.data.id] as PathValue<
+                TFormValues,
+                FieldPath<TFormValues>
+              >,
+            );
+          }
+
+          // Update preview with the full S3 URL (already a full URL from backend)
+          setPreview(result.data.url);
+          setImageError(false); // Reset error state on successful upload
         }
       } catch (error) {
         console.error('Upload failed:', error);
@@ -172,9 +182,20 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
   // Remove uploaded image
   const handleRemove = useCallback(async () => {
     // Delete from API if there's a current upload
-    if (currentUploadKey) {
+    if (currentUploadId) {
       try {
-        await deleteUploadMutation.mutateAsync(currentUploadKey);
+        await deleteUploadMutation.mutateAsync(currentUploadId);
+
+        // Remove from _uploadIds tracking array
+        const uploadIds =
+          (form.getValues(
+            '_uploadIds' as FieldPath<TFormValues>,
+          ) as unknown as string[]) || [];
+        const filtered = uploadIds.filter((id) => id !== currentUploadId);
+        form.setValue(
+          '_uploadIds' as FieldPath<TFormValues>,
+          filtered as PathValue<TFormValues, FieldPath<TFormValues>>,
+        );
       } catch (error) {
         console.error('Failed to delete temporary upload:', error);
       }
@@ -183,16 +204,16 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
     // Clear form value and preview
     form.setValue(name, '' as PathValue<TFormValues, typeof name>);
     setPreview('');
-    setCurrentUploadKey('');
-  }, [form, name, currentUploadKey, deleteUploadMutation]);
+    setCurrentUploadId('');
+    setImageError(false); // Reset error state
+  }, [form, name, currentUploadId, deleteUploadMutation]);
 
-  // Initialize preview from current form value
+  // Initialize preview from initialPreviewUrl prop
   React.useEffect(() => {
-    if (currentValue && !preview) {
-      // Convert upload key to full S3 URL for preview
-      setPreview(getS3UrlFromKey(currentValue));
+    if (initialPreviewUrl && !preview) {
+      setPreview(initialPreviewUrl);
     }
-  }, [currentValue, preview]);
+  }, [initialPreviewUrl, preview]);
 
   const isLoading = uploadMutation.isPending;
   const hasError = !!form.formState.errors[name];
@@ -233,16 +254,22 @@ export function ImageUpload<TFormValues extends Record<string, unknown>>({
 
             {hasImage ? (
               <div className="relative group">
-                <Image
-                  src={displayUrl}
-                  alt="Preview"
-                  width={200}
-                  height={200}
-                  className="w-full h-48 object-contain rounded"
-                  onError={() => {
-                    setPreview('');
-                  }}
-                />
+                {imageError ? (
+                  <div className="w-full h-48 bg-muted rounded flex items-center justify-center">
+                    <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                ) : (
+                  <Image
+                    src={displayUrl}
+                    alt="Preview"
+                    width={200}
+                    height={200}
+                    className="w-full h-48 object-contain rounded"
+                    onError={() => {
+                      setImageError(true);
+                    }}
+                  />
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded flex items-center justify-center">
                   <label
                     htmlFor={`file-upload-${name}`}

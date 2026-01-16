@@ -3,30 +3,13 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Phone,
-  Mail,
-  Calendar,
-  UserCheck,
-  UserX,
-  Shield,
-} from 'lucide-react';
+import { Phone, Mail, Calendar, UserCheck, UserX, Shield } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getFallbackAvatarUrl } from '@/lib/upload-utils';
 import { useIntl } from 'react-intl';
 import { User } from '@/types/user.type';
+import { TableActions } from '@/components/ui/table-actions';
 
 // Column definitions for the users table
 export const createUserColumns = (
@@ -158,56 +141,24 @@ export const createUserColumns = (
     id: 'actions',
     header: t('users.table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 120,
     cell: ({ row }) => {
       const user = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(user);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('users.edit.title')}
-            </DropdownMenuItem>
-
-            {/* PERMISSIONS */}
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onPermissions(user);
-              }}
-              className="cursor-pointer"
-            >
-              <Shield className="mr-2 h-4 w-4" />
-              {t('users.permissions.title') || 'Permissions'}
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(user);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={user.accountStatus === 'ACTIVE'}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('common.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(user)}
+          onDelete={() => onDelete(user)}
+          editLabel={t('users.edit.title')}
+          deleteLabel={t('common.delete')}
+          additionalActions={[
+            {
+              label: t('users.permissions.title') || 'Permissions',
+              onClick: () => onPermissions(user),
+              icon: <Shield className="h-4 w-4" />,
+            },
+          ]}
+        />
       );
     },
   },

@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogTitle,
@@ -13,20 +12,15 @@ import {
   DialogContent,
   DialogDescription,
 } from '@/components/ui/dialog';
-import {
-  FormItem,
-  FormLabel,
-  FormField,
-  FormControl,
-} from '@/components/ui/form';
+import { FormField } from '@/components/ui/form';
 import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Shield, X, Save } from 'lucide-react';
 
 import { User } from '@/types/user.type';
-import { Permission } from '@/types/permission.type';
 import { usePermissions } from '@/services/api/roles/permission.queries';
+import { PermissionSelector } from '@/components/common/permissions/permission-selector';
 
 interface PermissionFormData {
   permissions: string[];
@@ -93,77 +87,6 @@ export function UserPermissionsModal({
     }
   };
 
-  // Dynamic icon picker based on module name
-  const getModuleIcon = (module: string) => {
-    const map: Record<
-      string,
-      React.ComponentType<React.SVGProps<SVGSVGElement>>
-    > = {
-      BRAND: Shield,
-      KITCHEN: Shield,
-      MENU: Shield,
-      ORDER: Shield,
-      PAYMENT: Shield,
-      REPORT: Shield,
-      RESTAURANT: Shield,
-      SYSTEM: Shield,
-      TAX: Shield,
-      USER: Shield,
-    };
-    return map[module] ?? Shield;
-  };
-
-  const renderPermissionModule = (
-    moduleName: string,
-    permissions: Permission[],
-    existingPermissions: string[],
-  ) => {
-    const ModuleIcon = getModuleIcon(moduleName);
-    return (
-      <Card key={moduleName} className="border-2">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <ModuleIcon className="w-5 h-5 text-primary" />
-            {moduleName}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-3">
-          {permissions.map((permission) => (
-            <FormField
-              key={permission._id}
-              control={form.control}
-              name="permissions"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value.includes(permission.name)}
-                      onCheckedChange={(checked) => {
-                        const updated = checked
-                          ? [...field.value, permission.name]
-                          : field.value.filter((p) => p !== permission.name);
-
-                        field.onChange(updated);
-                      }}
-                      disabled={isSubmitting || loading}
-                    />
-                  </FormControl>
-
-                  <div className="space-y-1 leading-none flex-1">
-                    <FormLabel className="text-sm font-normal flex items-center gap-2">
-                      {t(`users.permissions.${permission.name}`)}
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-          ))}
-        </CardContent>
-      </Card>
-    );
-  };
-
   if (!user) return null;
 
   return (
@@ -214,13 +137,22 @@ export function UserPermissionsModal({
                 <p>{t('common.loading')}</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {permissionModules.map((group) =>
-                    renderPermissionModule(
-                      group.module,
-                      group.permissions,
-                      user.permissions as string[],
-                    ),
-                  )}
+                  {permissionModules.map((group) => (
+                    <FormField
+                      key={group.module}
+                      control={form.control}
+                      name="permissions"
+                      render={({ field }) => (
+                        <PermissionSelector
+                          moduleName={group.module}
+                          permissions={group.permissions}
+                          selectedPermissions={field.value}
+                          onChange={(updated) => field.onChange(updated)}
+                          disabled={isSubmitting || loading}
+                        />
+                      )}
+                    />
+                  ))}
                 </div>
               )}
             </div>

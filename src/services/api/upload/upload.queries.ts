@@ -83,8 +83,8 @@ class UploadService {
   /**
    * Confirm uploaded files to make them permanent
    */
-  async confirmUploads(keys: string[]): Promise<UploadConfirmResponse> {
-    const payload: ConfirmUploadsRequest = { keys };
+  async confirmUploads(ids: string[]): Promise<UploadConfirmResponse> {
+    const payload: ConfirmUploadsRequest = { ids };
     return api.post(this.baseEndpoint.CONFIRM, payload);
   }
 

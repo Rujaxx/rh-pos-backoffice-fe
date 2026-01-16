@@ -320,7 +320,7 @@ export default function BrandsPage() {
               : t('brands.createBrand') || 'Create Brand'
           }
         >
-          <BrandFormContent form={form} />
+          <BrandFormContent form={form} editingBrand={editingBrand} />
         </CrudModal>
 
         {/* Confirmation Modal */}

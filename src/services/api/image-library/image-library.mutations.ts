@@ -24,19 +24,22 @@ export const useCreateImageLibraryItem = (
 
   return useMutation({
     mutationFn: async (data: Omit<ImageLibraryItem, '_id' | 'code'>) => {
-      // First create the image library item
-      const result = await imageLibraryService.create(data);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.url && !data.url.startsWith('http')) {
-        // If url is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.url);
-      }
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data as Record<string, unknown>;
 
-      if (uploadKeys.length > 0) {
+      // First create the image library item with S3 keys
+      const result = await imageLibraryService.create(
+        backendData as Omit<ImageLibraryItem, '_id' | 'code'>,
+      );
+
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but image library item was created:',
@@ -90,19 +93,23 @@ export const useUpdateImageLibraryItem = (
       id: string;
       data: Partial<Omit<ImageLibraryItem, '_id'>>;
     }) => {
-      // Update the image library item
-      const result = await imageLibraryService.update(id, data);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.url && !data.url.startsWith('http')) {
-        // If url is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.url);
-      }
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data as Record<string, unknown>;
 
-      if (uploadKeys.length > 0) {
+      // Update the image library item with S3 keys
+      const result = await imageLibraryService.update(
+        id,
+        backendData as Partial<Omit<ImageLibraryItem, '_id'>>,
+      );
+
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but image library item was updated:',

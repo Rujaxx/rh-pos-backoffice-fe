@@ -13,7 +13,6 @@ import {
 } from './editable-cells-components';
 import { MultilingualText } from '@/types';
 import { ImageIcon, Loader2, Trash2, Upload } from 'lucide-react';
-import { getS3UrlFromKey } from '@/lib/upload-utils';
 import { Button } from '@/components/ui/button';
 
 interface EditableColumnsConfig {
@@ -26,13 +25,29 @@ interface EditableColumnsConfig {
   addonsOptions: Array<{ value: string; label: string }>;
   isLoadingOptions: boolean;
   onDelete?: (menuItem: MenuItem) => void;
-  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+  onUploadImage: (
+    file: File,
+  ) => Promise<{ id: string; key: string; url: string }>;
 }
 
-/**
- * Extracted component to handle primary image cell rendering
- * Allows use of React hooks within the cell
- */
+// Store uploaded preview URLs by menu item ID (persists across re-renders)
+const uploadedPreviewUrls = new Map<string, string>();
+
+// Store upload IDs by menu item ID for confirmation after save
+const pendingUploadIds = new Map<string, string>();
+
+// Get all pending upload IDs and clear the map
+export const getPendingUploadIds = (): string[] => {
+  const ids = Array.from(pendingUploadIds.values());
+  return ids;
+};
+
+// Clear all pending upload IDs (call after successful confirmation)
+export const clearPendingUploadIds = (): void => {
+  pendingUploadIds.clear();
+  uploadedPreviewUrls.clear();
+};
+
 function PrimaryImageCell({
   menuItem,
   imageKey,
@@ -41,14 +56,31 @@ function PrimaryImageCell({
 }: {
   menuItem: MenuItem;
   imageKey: string;
-  onUploadImage: (file: File) => Promise<{ key: string; url: string }>;
+  onUploadImage: (
+    file: File,
+  ) => Promise<{ id: string; key: string; url: string }>;
   updateField: (itemId: string, field: keyof MenuItem, value: unknown) => void;
 }) {
-  const [previewUrl, setPreviewUrl] = useState<string>(
-    imageKey ? getS3UrlFromKey(imageKey) : '',
-  );
+  // Get preview URL: first check uploaded cache, then backend fields
+  const getPreviewUrl = () => {
+    // Check if we have a locally uploaded preview
+    const uploadedUrl = uploadedPreviewUrls.get(menuItem._id!);
+    if (uploadedUrl) return uploadedUrl;
+    // Check backend-provided URL
+    if (menuItem.primaryImageUrl) return menuItem.primaryImageUrl;
+    // If primaryImage is a full URL (starts with http), use it directly
+    if (menuItem.primaryImage?.startsWith('http')) return menuItem.primaryImage;
+    return '';
+  };
+
+  const [previewUrl, setPreviewUrl] = useState<string>(getPreviewUrl());
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync previewUrl when menuItem changes (e.g., after data refetch)
+  React.useEffect(() => {
+    setPreviewUrl(getPreviewUrl());
+  }, [menuItem._id, menuItem.primaryImageUrl, menuItem.primaryImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -57,10 +89,13 @@ function PrimaryImageCell({
     try {
       setIsUploading(true);
       const result = await onUploadImage(file);
-      // Update preview immediately with the full URL
+      // Store preview URL in module-level cache so it persists across re-renders
+      uploadedPreviewUrls.set(menuItem._id!, result.url);
+      // Store upload ID for confirmation after save
+      pendingUploadIds.set(menuItem._id!, result.id);
+      // Update local state
       setPreviewUrl(result.url);
-      // Only save the KEY to the backend/state if it's a new/modified image
-      // This ensures we only send updates when there's an actual change
+      // Save the key to the form (what backend expects)
       updateField(menuItem._id!, 'primaryImage', result.key);
     } catch (error) {
       console.error('Upload failed', error);

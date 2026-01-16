@@ -2,17 +2,15 @@
 
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import { Customer } from '@/types/customers.type';
+import { TableActions } from '@/components/ui/table-actions';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Phone, MapPin, Award, MessageCircle } from 'lucide-react';
+import { getFallbackAvatarUrl } from '@/lib/upload-utils';
+import { getCountryCallingCode, CountryCode } from 'libphonenumber-js';
 
 export const createCustomerColumns = (
   onEdit: (customer: Customer) => void,
@@ -25,60 +23,120 @@ export const createCustomerColumns = (
       accessorKey: 'name',
       id: 'name',
       header: t('customer.name'),
-      enableSorting: true, // Keep sortable
+      enableSorting: true,
       sortingFn: (rowA, rowB) =>
         (rowA.original.name || '').localeCompare(rowB.original.name || ''),
-      cell: ({ row }) => (
-        <div className="font-medium text-sm">{row.original.name}</div>
-      ),
-    },
-    {
-      accessorKey: 'countryCode',
-      id: 'countryCode',
-      header: t('customer.dialCode'),
-      enableSorting: false, // Make NOT sortable
-      cell: ({ row }) => (
-        <div className="text-sm">{row.original.countryCode}</div>
-      ),
-    },
-    {
-      accessorKey: 'phoneNumber',
-      id: 'phoneNumber',
-      header: t('customer.phoneNumber'),
-      enableSorting: false, // Make NOT sortable
-      cell: ({ row }) => (
-        <div className="text-sm">{row.original.phoneNumber}</div>
-      ),
+      cell: ({ row }) => {
+        const customer = row.original;
+
+        // Convert ISO country code to dial code
+        let dialCode = customer.countryCode;
+        try {
+          if (customer.countryCode && customer.countryCode.length === 2) {
+            dialCode =
+              '+' + getCountryCallingCode(customer.countryCode as CountryCode);
+          }
+        } catch {
+          // Keep original countryCode if conversion fails
+        }
+
+        const fullPhone =
+          dialCode && customer.phoneNumber
+            ? `${dialCode} ${customer.phoneNumber}`
+            : customer.phoneNumber || '-';
+
+        return (
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 border">
+              <AvatarImage
+                src={getFallbackAvatarUrl(customer.name)}
+                alt={customer.name}
+              />
+              <AvatarFallback>
+                {customer.name.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="font-medium text-sm leading-none">
+                {customer.name}
+              </span>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                <Phone className="h-3 w-3" />
+                <span>{fullPhone}</span>
+              </div>
+            </div>
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'address.country',
-      id: 'country',
-      header: t('customer.country'),
-      enableSorting: false, // Make NOT sortable
-      cell: ({ row }) => (
-        <div className="text-sm">{row.original.address?.country || '-'}</div>
-      ),
+      id: 'location',
+      header: t('customer.location'), // You might need to add this key or reuse 'address'
+      enableSorting: false,
+      cell: ({ row }) => {
+        const customer = row.original;
+
+        // Helper to check if address has meaningful data
+        const hasAddressData = (addr: typeof customer.address) =>
+          addr && (addr.city || addr.country || addr.addressLine1);
+
+        // 1. Try primary address first
+        let addr = hasAddressData(customer.address) ? customer.address : null;
+
+        // 2. Fallback to addresses array
+        if (!addr && customer.addresses && customer.addresses.length > 0) {
+          // Find default address
+          const defaultAddr = customer.addresses.find((a) => a.isDefault);
+          addr = defaultAddr || customer.addresses[0];
+        }
+
+        if (!addr) return <span className="text-muted-foreground">-</span>;
+
+        const locationStr = [addr.city, addr.country]
+          .filter(Boolean)
+          .join(', ');
+
+        if (!locationStr)
+          return <span className="text-muted-foreground">-</span>;
+
+        return (
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5" />
+            <span>{locationStr}</span>
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'loyaltyPoints',
       id: 'loyaltyPoints',
       header: t('customer.loyaltyPoints'),
-      enableSorting: false, // Make NOT sortable
-      cell: ({ row }) => (
-        <div className="text-sm">{row.original.loyaltyPoints ?? 0}</div>
-      ),
+      enableSorting: true,
+      cell: ({ row }) => {
+        const points = row.original.loyaltyPoints ?? 0;
+        return (
+          <Badge
+            variant="outline"
+            className="flex w-fit items-center gap-1 font-mono"
+          >
+            <Award className="h-3.5 w-3.5 text-amber-500" />
+            {points}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: 'createdAt',
       id: 'createdAt',
-      header: t('customer.createdAt'),
-      enableSorting: true, // Keep sortable
+      header: t('customer.joined'), // Changed to "Joined" conceptually
+      enableSorting: true,
       cell: ({ row }) => {
         const date = new Date(row.original.createdAt);
         return (
-          <div className="text-sm">
+          <div className="text-sm text-muted-foreground">
             {date.toLocaleDateString(locale, {
-              day: '2-digit',
+              day: 'numeric',
               month: 'short',
               year: 'numeric',
             })}
@@ -90,41 +148,56 @@ export const createCustomerColumns = (
       id: 'actions',
       header: t('table.actions'),
       enableSorting: false,
-      size: 80,
+      size: 100,
       cell: ({ row }) => {
         const customer = row.original;
 
+        // Construct WhatsApp link using proper dial code from ISO country code
+        let whatsappLink: string | undefined;
+        if (customer.phoneNumber) {
+          let dialCode = '';
+          try {
+            if (customer.countryCode && customer.countryCode.length === 2) {
+              dialCode = getCountryCallingCode(
+                customer.countryCode as CountryCode,
+              );
+            }
+          } catch {
+            // Fallback: try using countryCode as-is if it looks like a dial code
+            dialCode = customer.countryCode?.replace('+', '') || '';
+          }
+
+          if (dialCode) {
+            whatsappLink = `https://wa.me/${dialCode}${customer.phoneNumber}`;
+          }
+        }
+
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(customer);
-                }}
-              >
-                <Edit className="mr-2 h-4 w-4" />
-                {t('common.edit')}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(customer);
-                }}
-                className="text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t('common.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TableActions
+            onEdit={() => onEdit(customer)}
+            onDelete={() => onDelete(customer)}
+            editLabel={t('common.edit')}
+            deleteLabel={t('common.delete')}
+            additionalActions={[
+              ...(whatsappLink
+                ? [
+                    {
+                      label: 'WhatsApp',
+                      icon: (
+                        <MessageCircle className="h-4 w-4 text-green-600" />
+                      ),
+                      onClick: () => window.open(whatsappLink, '_blank'),
+                    },
+                  ]
+                : []),
+              // Placeholder for future history feature
+              // {
+              //   label: 'Order History',
+              //   icon: <History className="h-4 w-4" />,
+              //   onClick: () => console.log('View history', customer._id),
+              // }
+            ]}
+          />
         );
       },
     },

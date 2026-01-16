@@ -35,7 +35,7 @@ export const useUploadImage = (
 
       // Cache the upload result
       if (data.data) {
-        queryUtils.setQueryData(QUERY_KEYS.UPLOAD.IMAGE(data.data.key), data);
+        queryUtils.setQueryData(QUERY_KEYS.UPLOAD.IMAGE(data.data.id), data);
       }
     },
     onError: (error) => {
@@ -72,7 +72,7 @@ export const useUploadMultipleImages = (
       // Cache the upload results
       if (data.data) {
         data.data.forEach((upload) => {
-          queryUtils.setQueryData(QUERY_KEYS.UPLOAD.IMAGE(upload.key), {
+          queryUtils.setQueryData(QUERY_KEYS.UPLOAD.IMAGE(upload.id), {
             data: upload,
           });
         });
@@ -92,7 +92,7 @@ export const useConfirmUploads = (
   options?: UseMutationOptions<UploadConfirmResponse, Error, string[]>,
 ) => {
   return useMutation({
-    mutationFn: (keys: string[]) => uploadService.confirmUploads(keys),
+    mutationFn: (ids: string[]) => uploadService.confirmUploads(ids),
     onSuccess: (data, variables) => {
       console.log(`Confirmed ${variables.length} uploads successfully`);
       // Note: Not showing toast for confirm as it happens automatically after form submission

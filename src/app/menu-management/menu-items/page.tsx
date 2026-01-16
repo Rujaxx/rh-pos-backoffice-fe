@@ -46,7 +46,12 @@ import {
   getSortOrderForQuery,
   getSortFieldForQuery,
 } from '@/components/menu-management/menu-items/menu-item-table-columns';
-import { useEditableMenuItemColumns } from '@/components/menu-management/menu-items/editable-menu-item-columns';
+import {
+  useEditableMenuItemColumns,
+  getPendingUploadIds,
+  clearPendingUploadIds,
+} from '@/components/menu-management/menu-items/editable-menu-item-columns';
+import { uploadService } from '@/services/api/upload/upload.queries';
 import { useMenuItemChanges } from '@/hooks/useMenuItemChanges';
 import {
   ConfirmationModal,
@@ -211,8 +216,9 @@ function Page() {
       },
     });
     return {
-      key: result.data.key,
-      url: result.data.url,
+      id: result.data.id, // For upload confirmation tracking
+      key: result.data.key, // For saving to backend (primaryImage field)
+      url: result.data.url, // For preview display
     };
   };
 
@@ -274,6 +280,21 @@ function Page() {
     const itemsToUpdate = getModifiedItemsForUpdate();
     try {
       await bulkUpdateMutation.mutateAsync(itemsToUpdate);
+
+      // Confirm any pending uploads
+      const uploadIds = getPendingUploadIds();
+      if (uploadIds.length > 0) {
+        try {
+          await uploadService.confirmUploads(uploadIds);
+        } catch (error) {
+          console.error(
+            'Failed to confirm uploads, but menu items were updated:',
+            error,
+          );
+        }
+        clearPendingUploadIds();
+      }
+
       clearChanges();
     } catch (error) {
       console.error('Failed to save changes:', error);

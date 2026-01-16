@@ -121,10 +121,11 @@ export interface Restaurant extends Record<string, unknown> {
   brandId: string;
   brandName: MultilingualText;
   logo?: string;
+  logoUrl?: string; // Full S3 URL for displaying the logo (from backend)
   address?: Address;
   timezone: TimezoneType;
-  startDayTime: number; // Time format: 0-2359
-  endDayTime: number; // Time format: 0-2359
+  startDayTime: number; // Minutes since midnight (0-1439). Example: 360 = 6:00 AM
+  endDayTime: number; // Minutes since midnight (0-1439). Example: 1380 = 11:00 PM
   nextResetBillFreq: ResetBillFrequency;
   nextResetBillDate?: Date;
   phoneNumber?: string;
@@ -194,6 +195,8 @@ export interface RestaurantFormData extends Record<string, unknown> {
   eBillSettings: EBillSettings;
   digitalOrderSettings?: DigitalOrderSettings;
   currency: string;
+  // Internal field to track upload IDs that need confirmation (not sent to backend)
+  _uploadIds?: string[];
 }
 
 // Query parameters for restaurant API matching backend RestaurantQueryDto

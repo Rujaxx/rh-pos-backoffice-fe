@@ -11,6 +11,7 @@ import { useQueryUtils } from '@/lib/query-client';
 import { restaurantService } from './restaurants.queries';
 import { uploadService } from '../upload/upload.queries';
 import { minutesToBackendTime } from '@/lib/utils/time.utils';
+import { getKeyFromS3Url } from '@/lib/upload-utils';
 import { toast } from 'sonner';
 
 function transformToBackendFormat(
@@ -28,6 +29,15 @@ function transformToBackendFormat(
     isFeedBackActive: data.isFeedBackActive ?? false,
     customQRcode: data.customQRcode ?? [],
   };
+
+  // Extract S3 key from logo URL if it's a full URL
+  if (
+    transformed.logo &&
+    typeof transformed.logo === 'string' &&
+    transformed.logo.startsWith('http')
+  ) {
+    transformed.logo = getKeyFromS3Url(transformed.logo);
+  }
 
   // Remove _id if excludeId is true
   if (excludeId && transformed._id) {
@@ -50,21 +60,21 @@ export const useCreateRestaurant = (
 
   return useMutation({
     mutationFn: async (data: RestaurantFormData) => {
-      // First create the restaurant
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds = data._uploadIds || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data;
+
+      // First create the restaurant with S3 keys
       const result = await restaurantService.create(
-        transformToBackendFormat(data),
+        transformToBackendFormat(backendData),
       );
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
-      }
-
-      if (uploadKeys.length > 0) {
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but restaurant was created:',
@@ -124,22 +134,22 @@ export const useUpdateRestaurant = (
       id: string;
       data: RestaurantFormData;
     }) => {
-      // First update the restaurant (exclude _id from data)
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds = data._uploadIds || [];
+
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data;
+
+      // First update the restaurant with S3 keys (exclude _id from data)
       const result = await restaurantService.update(
         id,
-        transformToBackendFormat(data, true),
+        transformToBackendFormat(backendData, true),
       );
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
-      }
-
-      if (uploadKeys.length > 0) {
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but restaurant was updated:',

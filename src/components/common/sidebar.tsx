@@ -24,6 +24,7 @@ import {
   Clock,
   DollarSign,
   ShoppingBag,
+  ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -178,12 +179,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
   },
   {
     id: 'digital-orders',
-    label: t('navigation.digitalOrders') || 'Online Orders',
+    label: t('navigation.digitalOrders'),
     items: [
       {
-        id: 'digital-order-settings',
-        label: t('navigation.digitalOrderSettings') || 'Digital Order Settings',
-        href: '/digital-orders/digital-order-settings',
+        id: 'web-orders',
+        label: t('navigation.webOrders') || 'Web Orders',
+        href: '/digital-orders/web-orders',
+        icon: ShoppingCart,
+      },
+      {
+        id: 'online-order-settings',
+        label: t('navigation.digitalOrderSettings') || 'Online Order Settings',
+        href: '/digital-orders/online-order-settings',
         icon: Globe,
       },
     ],
@@ -405,7 +412,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       {
         id: 'image-library',
         label: t('navigation.imageLibrary'),
-        href: 'image-library',
+        href: '/image-library',
         icon: ImageIcon,
       },
     ],
@@ -479,7 +486,7 @@ export default function Sidebar() {
   }) {
     const itemId = `${parentId}-${item.id}`;
     // const isExpanded = expandedItems.has(itemId);
-    const isRouteActive =
+    const _isRouteActive =
       item.children?.some((child) => pathname.startsWith(child.href)) ?? false;
 
     // const isExpanded =
@@ -606,12 +613,12 @@ export default function Sidebar() {
   // Calculate sidebar width - expand when collapsed and hovered, or full width on mobile
   const getSidebarWidth = () => {
     if (isMobile) {
-      return 'w-64'; // Always full width on mobile
+      return 'w-53'; // Always full width on mobile
     }
     if (menuState === 'collapsed' && isHovered) {
-      return 'w-64'; // Expand to full width when hovered
+      return 'w-53'; // Expand to full width when hovered
     }
-    return menuState === 'collapsed' ? 'w-16' : 'w-64';
+    return menuState === 'collapsed' ? 'w-16' : 'w-53';
   };
 
   // Show text if menu is full OR if collapsed and hovered OR on mobile

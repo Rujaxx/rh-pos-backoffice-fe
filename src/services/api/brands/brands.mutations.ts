@@ -10,6 +10,7 @@ import { QUERY_KEYS } from '@/config/api';
 import { useQueryUtils } from '@/lib/query-client';
 import { brandService } from './brands.queries';
 import { uploadService } from '../upload/upload.queries';
+import { getKeyFromS3Url } from '@/lib/upload-utils';
 import { toast } from 'sonner';
 
 // Create brand mutation
@@ -20,19 +21,29 @@ export const useCreateBrand = (
 
   return useMutation({
     mutationFn: async (data: BrandFormData) => {
-      // First create the brand
-      const result = await brandService.create(data);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
+      // Remove internal tracking field before sending to backend
+      const { _uploadIds, ...backendData } = data as Record<string, unknown>;
+
+      // Extract S3 key from logo URL if it's a full URL
+      if (
+        backendData.logo &&
+        typeof backendData.logo === 'string' &&
+        backendData.logo.startsWith('http')
+      ) {
+        backendData.logo = getKeyFromS3Url(backendData.logo as string);
       }
 
-      if (uploadKeys.length > 0) {
+      // First create the brand with S3 keys
+      const result = await brandService.create(backendData as BrandFormData);
+
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but brand was created:',
@@ -77,20 +88,35 @@ export const useUpdateBrand = (
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: BrandFormData }) => {
-      // First update the brand (exclude _id from data)
-      const { _id, ...dataWithoutId } = data;
-      const result = await brandService.update(id, dataWithoutId);
+      // Extract upload IDs for confirmation (if any)
+      const uploadIds =
+        ((data as Record<string, unknown>)._uploadIds as string[]) || [];
 
-      // Then confirm uploads if there are any upload keys
-      const uploadKeys: string[] = [];
-      if (data.logo && !data.logo.startsWith('http')) {
-        // If logo is a key (not a URL), add it to confirm list
-        uploadKeys.push(data.logo);
+      // Remove internal tracking field and _id before sending to backend
+      const { _uploadIds, _id, ...backendData } = data as Record<
+        string,
+        unknown
+      >;
+
+      // Extract S3 key from logo URL if it's a full URL
+      if (
+        backendData.logo &&
+        typeof backendData.logo === 'string' &&
+        backendData.logo.startsWith('http')
+      ) {
+        backendData.logo = getKeyFromS3Url(backendData.logo as string);
       }
 
-      if (uploadKeys.length > 0) {
+      // First update the brand with S3 keys
+      const result = await brandService.update(
+        id,
+        backendData as BrandFormData,
+      );
+
+      // Then confirm uploads if there are any upload IDs
+      if (uploadIds.length > 0) {
         try {
-          await uploadService.confirmUploads(uploadKeys);
+          await uploadService.confirmUploads(uploadIds);
         } catch (error) {
           console.error(
             'Failed to confirm uploads, but brand was updated:',

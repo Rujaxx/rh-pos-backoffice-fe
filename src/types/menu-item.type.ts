@@ -56,6 +56,7 @@ export interface MenuItem {
 
   images: string[];
   primaryImage?: string;
+  primaryImageUrl?: string; // Full S3 URL for display (from backend)
 
   brandId: string;
   restaurantId: string;
@@ -230,6 +231,7 @@ export interface MenuItemUpdateArray extends Record<string, unknown> {
 
   images: string[];
   primaryImage?: string;
+  primaryImageUrl?: string;
 
   brandId: string;
   restaurantId: string;

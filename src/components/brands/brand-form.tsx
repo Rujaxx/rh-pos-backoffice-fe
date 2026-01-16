@@ -20,9 +20,13 @@ import { COUNTRY_CODES } from '@/mock/dropdown-constants';
 
 interface BrandFormContentProps {
   form: ReturnType<typeof useForm<BrandFormData>>;
+  editingBrand?: Brand | null;
 }
 
-export function BrandFormContent({ form }: BrandFormContentProps) {
+export function BrandFormContent({
+  form,
+  editingBrand,
+}: BrandFormContentProps) {
   const { t } = useTranslation();
   return (
     <>
@@ -79,6 +83,7 @@ export function BrandFormContent({ form }: BrandFormContentProps) {
               label={t('brands.form.logoLabel')}
               description={t('brands.form.logoDescription')}
               folderType={UploadFolderType.BRAND}
+              initialPreviewUrl={editingBrand?.logoUrl || editingBrand?.logo}
             />
 
             <RHFInput
@@ -183,6 +188,7 @@ export function useBrandForm(editingBrand?: Brand | null) {
       fssaiNo: '',
       trnOrGstNo: '',
       panNo: '',
+      countryCode: 'IN',
       address: {
         addressLine1: '',
         addressLine2: '',
@@ -192,6 +198,7 @@ export function useBrandForm(editingBrand?: Brand | null) {
         country: '',
         pincode: '',
       },
+      _uploadIds: [], // Track upload IDs for confirmation
     },
   });
 
@@ -206,10 +213,12 @@ export function useBrandForm(editingBrand?: Brand | null) {
         website: editingBrand.website || '',
         isActive: editingBrand.isActive ?? true,
         phone: editingBrand.phone || '',
+        countryCode: editingBrand.countryCode || 'IN',
         fssaiNo: editingBrand.fssaiNo || '',
         trnOrGstNo: editingBrand.trnOrGstNo || '',
         panNo: editingBrand.panNo || '',
         address: editingBrand.address,
+        _uploadIds: [], // Reset upload tracking for editing
       });
     } else {
       form.reset({
@@ -219,6 +228,7 @@ export function useBrandForm(editingBrand?: Brand | null) {
         website: '',
         isActive: true,
         phone: '',
+        countryCode: 'IN',
         fssaiNo: '',
         trnOrGstNo: '',
         panNo: '',
@@ -231,6 +241,7 @@ export function useBrandForm(editingBrand?: Brand | null) {
           country: '',
           pincode: '',
         },
+        _uploadIds: [], // Reset upload tracking
       });
     }
   }, [editingBrand, form]);

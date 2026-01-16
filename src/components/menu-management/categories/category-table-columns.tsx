@@ -4,22 +4,9 @@ import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Category } from '@/types/category.type';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Tag,
-  Calendar,
-  Hash,
-} from 'lucide-react';
+import { Tag, Calendar, Hash } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { TableActions } from '@/components/ui/table-actions';
 
 // Column definitions for the categories table
 export const createCategoryColumns = (
@@ -118,42 +105,17 @@ export const createCategoryColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 100,
     cell: ({ row }) => {
       const category = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(category);
-              }}
-              className="cursor-pointer"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              {t('categories.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(category);
-              }}
-              className="cursor-pointer text-destructive focus:text-destructive"
-              disabled={category.isActive ?? false} // Don't allow deleting active categories
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {t('categories.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(category)}
+          onDelete={() => onDelete(category)}
+          editLabel={t('categories.edit')}
+          deleteLabel={t('categories.delete')}
+        />
       );
     },
   },

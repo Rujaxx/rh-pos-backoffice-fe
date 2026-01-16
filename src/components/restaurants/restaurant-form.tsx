@@ -145,6 +145,9 @@ export function RestaurantFormContent({
               label={t('restaurants.form.logoLabel')}
               description={t('restaurants.form.logoDescription')}
               folderType={UploadFolderType.RESTAURANT}
+              initialPreviewUrl={
+                editingRestaurant?.logoUrl || editingRestaurant?.logo
+              }
             />
 
             <RHFSwitch
@@ -365,10 +368,9 @@ export function RestaurantFormContent({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="space-y-6">
-          {/* Notification Phone Numbers */}
-
-          <CardContent className="flex gap-10 items-center">
+        <CardContent className="space-y-4">
+          {/* Primary Phone and Email */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <RHFSelect
               form={form}
               name="countryCode"
@@ -383,85 +385,82 @@ export function RestaurantFormContent({
               label={t('common.form.phoneLabel')}
               placeholder={t('common.form.phonePlaceholder')}
               type="tel"
-              className="col-span-2"
             />
-          </CardContent>
-          <RHFInput
-            form={form}
-            name="contactEmail"
-            label={t('common.form.contactEmailLabel')}
-            placeholder={t('common.form.contactEmailPlaceholder')}
-            type="tel"
-            className="w-80"
-          />
+            <RHFInput
+              form={form}
+              name="contactEmail"
+              label={t('common.form.contactEmailLabel')}
+              placeholder={t('common.form.contactEmailPlaceholder')}
+              type="email"
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="notificationPhone"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel>{t('restaurants.form.notificationPhone')}</FormLabel>
-                <FormControl>
-                  <input
-                    type="text"
-                    className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2
-           text-sm placeholder:text-muted-foreground focus-visible:outline-none
-           focus-visible:ring-2 focus-visible:ring-ring"
-                    value={rawPhones}
-                    placeholder={t(
-                      'restaurants.form.notificationPhonePlaceholder',
-                    )}
-                    onChange={(e) => setRawPhones(e.target.value)}
-                    onBlur={() => {
-                      const values = rawPhones
-                        .split(',')
-                        .map((v) => v.trim())
-                        .filter((v) => v.length > 0);
+          {/* Notification Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="notificationPhone"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>
+                    {t('restaurants.form.notificationPhone')}
+                  </FormLabel>
+                  <FormControl>
+                    <input
+                      type="text"
+                      className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      value={rawPhones}
+                      placeholder={t(
+                        'restaurants.form.notificationPhonePlaceholder',
+                      )}
+                      onChange={(e) => setRawPhones(e.target.value)}
+                      onBlur={() => {
+                        const values = rawPhones
+                          .split(',')
+                          .map((v) => v.trim())
+                          .filter((v) => v.length > 0);
+                        field.onChange(values);
+                        setRawPhones(values.join(', '));
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                      field.onChange(values); // push array into form
-                      setRawPhones(values.join(', ')); // reformat nicely
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="notificationEmails"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel>
-                  {t('restaurants.form.notificationEmails')}
-                </FormLabel>
-                <FormControl>
-                  <input
-                    type="text"
-                    className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2
-           text-sm placeholder:text-muted-foreground focus-visible:outline-none
-           focus-visible:ring-2 focus-visible:ring-ring"
-                    value={rawEmails}
-                    placeholder={t(
-                      'restaurants.form.notificationEmailsPlaceholder',
-                    )}
-                    onChange={(e) => setRawEmails(e.target.value)}
-                    onBlur={() => {
-                      const values = rawEmails
-                        .split(',')
-                        .map((v) => v.trim())
-                        .filter((v) => v.length > 0);
-
-                      field.onChange(values);
-                      setRawEmails(values.join(', '));
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="notificationEmails"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel>
+                    {t('restaurants.form.notificationEmails')}
+                  </FormLabel>
+                  <FormControl>
+                    <input
+                      type="text"
+                      className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      value={rawEmails}
+                      placeholder={t(
+                        'restaurants.form.notificationEmailsPlaceholder',
+                      )}
+                      onChange={(e) => setRawEmails(e.target.value)}
+                      onBlur={() => {
+                        const values = rawEmails
+                          .split(',')
+                          .map((v) => v.trim())
+                          .filter((v) => v.length > 0);
+                        field.onChange(values);
+                        setRawEmails(values.join(', '));
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -697,6 +696,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
       billPrefix: 'BILL-',
       kotPrefix: 'KOT-',
       currency: '',
+      _uploadIds: [], // Internal field to track upload IDs for confirmation
     },
   });
 
@@ -766,6 +766,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         billPrefix: editingRestaurant.billPrefix,
         kotPrefix: editingRestaurant.kotPrefix,
         currency: editingRestaurant.currency,
+        _uploadIds: [], // Reset upload tracking for editing
       });
     } else {
       form.reset({
@@ -825,6 +826,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         billPrefix: 'BILL-',
         kotPrefix: 'KOT-',
         currency: '',
+        _uploadIds: [], // Reset upload tracking
       });
     }
   }, [editingRestaurant, form]);

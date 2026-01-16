@@ -3,6 +3,10 @@ import { Address } from './common/common.type';
 import { QueryParams } from './api';
 
 // Customer returned from API
+export interface CustomerAddress extends Address {
+  isDefault?: boolean;
+}
+
 export interface Customer {
   _id: string;
   name: string;
@@ -10,6 +14,7 @@ export interface Customer {
   phoneNumber: string;
   billId?: string;
   address?: Address;
+  addresses?: CustomerAddress[];
   loyaltyPoints: number;
   deletedAt?: Date;
   createdAt: Date;

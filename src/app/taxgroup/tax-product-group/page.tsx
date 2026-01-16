@@ -40,6 +40,7 @@ import {
   useTaxProductGroup,
   useTaxProductGroups,
 } from '@/services/api/tax-product-groups.ts/tax-product-groups.queries';
+import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
 import {
   useCreateTaxProductGroup,
   useDeleteTaxProductGroup,
@@ -98,6 +99,9 @@ export default function TaxProductGroupsPage() {
     error,
   } = useTaxProductGroups(queryParams);
 
+  const { data: restaurantsResponse } = useActiveRestaurants();
+  const restaurants = restaurantsResponse?.data || [];
+
   const createTaxProductGroupMutation = useCreateTaxProductGroup();
   const updateTaxProductGroupMutation = useUpdateTaxProductGroup();
   const deleteTaxProductGroupMutation = useDeleteTaxProductGroup();
@@ -153,7 +157,11 @@ export default function TaxProductGroupsPage() {
     deleteHandlerRef.current?.(item);
   }, []);
 
-  const stableColumns = useTaxProductGroupColumns(editHandler, deleteHandler);
+  const stableColumns = useTaxProductGroupColumns(
+    editHandler,
+    deleteHandler,
+    restaurants,
+  );
 
   // Wire refs
   editHandlerRef.current = (item: TaxProductGroup) => {

@@ -28,13 +28,15 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   timeStringToMinutes,
   minutesToTimeString,
 } from '@/lib/utils/time.utils';
+import { Country, State, City } from 'country-state-city';
+import type { ICountry, IState, ICity } from 'country-state-city';
+
 interface FormFieldWrapperProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
   name: FieldPath<TFormValues>;
@@ -267,16 +269,13 @@ export function RHFSelect<TFormValues extends Record<string, unknown>>({
       render={({ field }) => {
         const fieldValue = String(field.value || '');
 
-        const valueExists =
-          fieldValue && options.some((opt) => opt.value === fieldValue);
-
         return (
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <FormControl>
               <Select
                 onValueChange={field.onChange}
-                value={valueExists ? fieldValue : ''}
+                value={fieldValue}
                 disabled={disabled}
               >
                 <SelectTrigger className={cn('w-full', className)}>
@@ -440,108 +439,6 @@ export function RHFMultilingualInput<
   );
 }
 
-// interface RHFFileUploadProps<TFormValues extends Record<string, unknown>> {
-//   form: UseFormReturn<TFormValues>;
-//   name: FieldPath<TFormValues>;
-//   label: string;
-//   description?: string;
-//   accept?: string;
-//   className?: string;
-// }
-
-// export function RHFFileUpload<TFormValues extends Record<string, unknown>>({
-//   form,
-//   name,
-//   label,
-//   description,
-//   accept = 'image/*',
-//   className,
-// }: RHFFileUploadProps<TFormValues>) {
-//   const [preview, setPreview] = React.useState<string>('');
-
-//   const handleFileChange = (
-//     event: React.ChangeEvent<HTMLInputElement>,
-//     onChange: (value: string) => void,
-//   ) => {
-//     const file = event.target.files?.[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onloadend = () => {
-//         const result = reader.result as string;
-//         setPreview(result);
-//         onChange(result);
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   React.useEffect(() => {
-//     const currentValue = form.getValues(name);
-//     if (currentValue) {
-//       setPreview(currentValue as string);
-//     }
-//   }, [form, name]);
-
-//   return (
-//     <FormFieldWrapper
-//       form={form}
-//       name={name}
-//       label={label}
-//       description={description}
-//     >
-//       {(field) => (
-//         <div className={cn('space-y-2', className)}>
-//           <div className="flex items-center space-x-4">
-//             <div className="flex-1">
-//               <div className="relative">
-//                 <input
-//                   type="file"
-//                   accept={accept}
-//                   onChange={(e) => handleFileChange(e, field.onChange)}
-//                   className="hidden"
-//                   id={`file-upload-${name}`}
-//                 />
-//                 <label
-//                   htmlFor={`file-upload-${name}`}
-//                   className={cn(
-//                     'flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
-//                     'hover:bg-muted/50 hover:border-primary',
-//                     preview
-//                       ? 'border-primary bg-primary/5'
-//                       : 'border-muted-foreground/25',
-//                   )}
-//                 >
-//                   {preview ? (
-//                     <div className="flex flex-col items-center space-y-2">
-//                       <Image
-//                         src={preview}
-//                         alt="Preview"
-//                         width={64}
-//                         height={64}
-//                         className="object-contain rounded"
-//                       />
-//                       <span className="text-xs text-muted-foreground">
-//                         Click to change
-//                       </span>
-//                     </div>
-//                   ) : (
-//                     <div className="flex flex-col items-center space-y-2">
-//                       <Upload className="w-8 h-8 text-muted-foreground" />
-//                       <span className="text-sm text-muted-foreground">
-//                         Upload {label}
-//                       </span>
-//                     </div>
-//                   )}
-//                 </label>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </FormFieldWrapper>
-//   );
-// }
-
 interface RHFAddressFormProps<TFormValues extends Record<string, unknown>> {
   form: UseFormReturn<TFormValues>;
   name: FieldPath<TFormValues>;
@@ -552,71 +449,147 @@ interface RHFAddressFormProps<TFormValues extends Record<string, unknown>> {
 export function RHFAddressForm<TFormValues extends Record<string, unknown>>({
   form,
   name,
-  label,
   className,
 }: RHFAddressFormProps<TFormValues>) {
   const { t } = useTranslation();
 
+  // Watch country and state to update dependent dropdowns
+  const selectedCountry = form.watch(
+    `${name}.country` as FieldPath<TFormValues>,
+  ) as string;
+  const selectedState = form.watch(
+    `${name}.state` as FieldPath<TFormValues>,
+  ) as string;
+
+  // Get country options
+  const countryOptions = React.useMemo(() => {
+    return Country.getAllCountries().map((country: ICountry) => ({
+      value: country.isoCode,
+      label: country.name,
+    }));
+  }, []);
+
+  // Get state options based on selected country
+  const stateOptions = React.useMemo(() => {
+    if (!selectedCountry) return [];
+    return State.getStatesOfCountry(selectedCountry).map((state: IState) => ({
+      value: state.isoCode,
+      label: state.name,
+    }));
+  }, [selectedCountry]);
+
+  // Get city options based on selected country and state
+  const cityOptions = React.useMemo(() => {
+    if (!selectedCountry || !selectedState) return [];
+    return City.getCitiesOfState(selectedCountry, selectedState).map(
+      (city: ICity) => ({
+        value: city.name,
+        label: city.name,
+      }),
+    );
+  }, [selectedCountry, selectedState]);
+
+  // Clear dependent fields when parent changes
+  React.useEffect(() => {
+    if (selectedCountry) {
+      // Check if current state is valid for the new country
+      const validStates = State.getStatesOfCountry(selectedCountry);
+      const isStateValid = validStates.some(
+        (s: IState) => s.isoCode === selectedState,
+      );
+      if (!isStateValid && selectedState) {
+        form.setValue(
+          `${name}.state` as Path<TFormValues>,
+          '' as PathValue<TFormValues, Path<TFormValues>>,
+        );
+        form.setValue(
+          `${name}.city` as Path<TFormValues>,
+          '' as PathValue<TFormValues, Path<TFormValues>>,
+        );
+      }
+    }
+  }, [selectedCountry, selectedState, form, name]);
+
+  React.useEffect(() => {
+    if (selectedState && selectedCountry) {
+      // Check if current city is valid for the new state
+      const validCities = City.getCitiesOfState(selectedCountry, selectedState);
+      const currentCity = form.getValues(
+        `${name}.city` as FieldPath<TFormValues>,
+      ) as string;
+      const isCityValid = validCities.some(
+        (c: ICity) => c.name === currentCity,
+      );
+      if (!isCityValid && currentCity) {
+        form.setValue(
+          `${name}.city` as Path<TFormValues>,
+          '' as PathValue<TFormValues, Path<TFormValues>>,
+        );
+      }
+    }
+  }, [selectedState, selectedCountry, form, name]);
+
   return (
-    <div className={className}>
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm">
-            {label || t('form.address.title')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RHFInput
-              form={form}
-              name={`${name}.addressLine1` as FieldPath<TFormValues>}
-              label={t('form.address.addressLine1')}
-              placeholder={t('form.address.addressLine1Placeholder')}
-            />
-            <RHFInput
-              form={form}
-              name={`${name}.addressLine2` as FieldPath<TFormValues>}
-              label={t('form.address.addressLine2')}
-              placeholder={t('form.address.addressLine2Placeholder')}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <RHFInput
-              form={form}
-              name={`${name}.city` as FieldPath<TFormValues>}
-              label={t('form.address.city')}
-              placeholder={t('form.address.cityPlaceholder')}
-            />
-            <RHFInput
-              form={form}
-              name={`${name}.state` as FieldPath<TFormValues>}
-              label={t('form.address.state')}
-              placeholder={t('form.address.statePlaceholder')}
-            />
-            <RHFInput
-              form={form}
-              name={`${name}.country` as FieldPath<TFormValues>}
-              label={t('form.address.country')}
-              placeholder={t('form.address.countryPlaceholder')}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <RHFInput
-              form={form}
-              name={`${name}.pincode` as FieldPath<TFormValues>}
-              label={t('form.address.pincode')}
-              placeholder={t('form.address.pincodePlaceholder')}
-            />
-            <RHFInput
-              form={form}
-              name={`${name}.location` as FieldPath<TFormValues>}
-              label={t('form.address.location')}
-              placeholder={t('form.address.locationPlaceholder')}
-              description={t('form.address.locationDescription')}
-            />
-          </div>
-        </CardContent>
-      </Card>
+    <div className={cn('space-y-4', className)}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <RHFInput
+          form={form}
+          name={`${name}.addressLine1` as FieldPath<TFormValues>}
+          label={t('form.address.addressLine1')}
+          placeholder={t('form.address.addressLine1Placeholder')}
+        />
+        <RHFInput
+          form={form}
+          name={`${name}.addressLine2` as FieldPath<TFormValues>}
+          label={t('form.address.addressLine2')}
+          placeholder={t('form.address.addressLine2Placeholder')}
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <RHFSelect
+          form={form}
+          name={`${name}.country` as FieldPath<TFormValues>}
+          label={t('form.address.country')}
+          placeholder={t('form.address.countryPlaceholder')}
+          options={countryOptions}
+        />
+        <RHFSelect
+          form={form}
+          name={`${name}.state` as FieldPath<TFormValues>}
+          label={t('form.address.state')}
+          placeholder={
+            stateOptions.length === 0 ? 'Select country first' : 'Select state'
+          }
+          options={stateOptions}
+          disabled={!selectedCountry}
+        />
+        <RHFSelect
+          form={form}
+          name={`${name}.city` as FieldPath<TFormValues>}
+          label={t('form.address.city')}
+          placeholder={
+            cityOptions.length === 0 ? 'Select state first' : 'Select city'
+          }
+          options={cityOptions}
+          disabled={!selectedState}
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+        <RHFInput
+          form={form}
+          name={`${name}.pincode` as FieldPath<TFormValues>}
+          label={t('form.address.pincode')}
+          placeholder={t('form.address.pincodePlaceholder')}
+        />
+        <div className="md:col-span-2">
+          <RHFInput
+            form={form}
+            name={`${name}.location` as FieldPath<TFormValues>}
+            label={t('form.address.location')}
+            placeholder={t('form.address.locationPlaceholder')}
+          />
+        </div>
+      </div>
     </div>
   );
 }

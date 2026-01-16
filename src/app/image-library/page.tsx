@@ -73,7 +73,8 @@ export default function ImageLibraryPage() {
       dishName: { en: '', ar: '' },
       url: '',
       tags: [],
-    },
+      _uploadIds: [],
+    } as ImageLibraryFormValues,
   });
 
   const {
@@ -182,8 +183,15 @@ export default function ImageLibraryPage() {
         },
       });
 
+      // Use url for preview
       setUploadedImageUrl(result.data.url);
+      // Use key for form submission (what backend expects)
       setValue('url', result.data.key, { shouldValidate: true });
+      // Track upload ID for confirmation after save
+      const currentUploadIds = form.getValues('_uploadIds') || [];
+      if (!currentUploadIds.includes(result.data.id)) {
+        form.setValue('_uploadIds', [...currentUploadIds, result.data.id]);
+      }
     } catch (error) {
       console.error('Upload failed:', error);
     }
@@ -192,6 +200,7 @@ export default function ImageLibraryPage() {
   const clearUploadedImage = () => {
     setUploadedImageUrl('');
     setValue('url', '', { shouldValidate: true });
+    setValue('_uploadIds', []);
   };
 
   const openCreateModal = () => {
@@ -201,7 +210,8 @@ export default function ImageLibraryPage() {
       dishName: { en: '', ar: '' },
       url: '',
       tags: [],
-    });
+      _uploadIds: [],
+    } as ImageLibraryFormValues);
     setIsModalOpen(true);
   };
 
@@ -210,9 +220,13 @@ export default function ImageLibraryPage() {
     setUploadedImageUrl(item.url);
     const key = item.key ?? getKeyFromS3Url(item.url);
     reset({
-      dishName: item.dishName,
+      dishName: {
+        en: item.dishName?.en || '',
+        ar: item.dishName?.ar || '',
+      },
       url: key || '',
       tags: item.tags || [],
+      _uploadIds: [],
     });
     setIsModalOpen(true);
   };

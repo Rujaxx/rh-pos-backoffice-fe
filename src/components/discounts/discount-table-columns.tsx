@@ -3,18 +3,11 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
 import { Discount } from '@/types/discount.type';
 import { MultilingualText } from '@/types';
+import { TableActions } from '@/components/ui/table-actions';
 
 export const createDiscountColumns = (
   onEdit: (item: Discount) => void,
@@ -87,46 +80,30 @@ export const createDiscountColumns = (
       ),
     },
     {
+      header: t('table.restaurant'),
+      enableSorting: false,
+      cell: ({ row }) => (
+        <span>
+          {row.original.restaurantName?.[locale as keyof MultilingualText] ||
+            row.original.restaurantName?.en ||
+            '-'}
+        </span>
+      ),
+    },
+    {
       id: 'actions',
       header: t('table.actions'),
       enableSorting: false,
-      size: 80,
+      size: 100,
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              {/* Edit */}
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit(item);
-                }}
-                className="cursor-pointer"
-              >
-                <Edit className="mr-2 h-4 w-4" />
-                {t('common.edit')}
-              </DropdownMenuItem>
-
-              {/* Delete */}
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(item);
-                }}
-                className="cursor-pointer text-destructive focus:text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                {t('common.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <TableActions
+            onEdit={() => onEdit(item)}
+            onDelete={() => onDelete(item)}
+            editLabel={t('common.edit')}
+            deleteLabel={t('common.delete')}
+          />
         );
       },
     },

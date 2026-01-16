@@ -6,104 +6,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RHFInput, RHFSelect } from '@/components/ui/form-components';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  FormItem,
-  FormLabel,
-  FormField,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormField, FormMessage } from '@/components/ui/form';
 import { roleSchema, RoleFormData } from '@/lib/validations/role.validation';
 import { Shield } from 'lucide-react';
 import { Role } from '@/types/role.type';
 
-import { Permission, PermissionModuleGroup } from '@/types/permission.type';
+import { PermissionModuleGroup } from '@/types/permission.type';
 import { usePermissions } from '@/services/api/roles/permission.queries';
 import { useBrands } from '@/services/api/brands/brands.queries';
 import { useIntl } from 'react-intl';
+import { PermissionSelector } from '@/components/common/permissions/permission-selector';
 
 interface RoleFormContentProps {
   form: ReturnType<typeof useForm<RoleFormData>>;
 }
-
-export const renderPermissionModule = (
-  t: ReturnType<typeof useTranslation>['t'],
-  form: ReturnType<typeof useForm<RoleFormData>>,
-  moduleName: string,
-  permissions: Permission[],
-) => {
-  const watched = form.watch('permissions') || [];
-
-  const permissionNames = permissions.map((p) => p.name);
-
-  const allSelected = permissionNames.every((name) => watched.includes(name));
-  const partiallySelected =
-    !allSelected && permissionNames.some((name) => watched.includes(name));
-
-  const toggleModule = (checked: boolean) => {
-    const current = form.getValues('permissions') || [];
-
-    const updated = checked
-      ? Array.from(new Set([...current, ...permissionNames]))
-      : current.filter((p) => !permissionNames.includes(p));
-
-    form.setValue('permissions', updated, { shouldValidate: true });
-  };
-
-  return (
-    <Card key={moduleName} className="border-2">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Checkbox
-            checked={allSelected}
-            onCheckedChange={(checked) => toggleModule(Boolean(checked))}
-            data-indeterminate={partiallySelected ? 'true' : undefined}
-          />
-          <Shield className="w-5 h-5 text-primary" />
-          {moduleName}
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-3">
-        {permissions.map((permission) => (
-          <FormField
-            key={permission._id}
-            control={form.control}
-            name="permissions"
-            render={({ field }) => {
-              const value = field.value || [];
-              const isChecked = value.includes(permission.name);
-
-              return (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={isChecked}
-                      onCheckedChange={(checked) => {
-                        const updated = checked
-                          ? [...value, permission.name]
-                          : value.filter((v) => v !== permission.name);
-
-                        field.onChange(updated);
-                      }}
-                    />
-                  </FormControl>
-
-                  <div className="space-y-1 leading-none flex-1">
-                    <FormLabel className="text-sm font-normal flex items-center gap-2">
-                      {permission.name}
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              );
-            }}
-          />
-        ))}
-      </CardContent>
-    </Card>
-  );
-};
 
 export function RoleFormContent({ form }: RoleFormContentProps) {
   const { t } = useTranslation();
@@ -178,14 +94,21 @@ export function RoleFormContent({ form }: RoleFormContentProps) {
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {permissionModules.map((group) =>
-                renderPermissionModule(
-                  t,
-                  form,
-                  group.module,
-                  group.permissions,
-                ),
-              )}
+              {permissionModules.map((group) => (
+                <FormField
+                  key={group.module}
+                  control={form.control}
+                  name="permissions"
+                  render={({ field }) => (
+                    <PermissionSelector
+                      moduleName={group.module}
+                      permissions={group.permissions}
+                      selectedPermissions={field.value}
+                      onChange={(updated) => field.onChange(updated)}
+                    />
+                  )}
+                />
+              ))}
             </div>
           )}
 

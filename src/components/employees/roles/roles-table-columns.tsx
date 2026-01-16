@@ -3,17 +3,11 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Edit, Trash2, MoreHorizontal, Shield } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Role } from '@/types/role.type';
 import { Permission } from '@/types/permission.type';
+import { TableActions } from '@/components/ui/table-actions';
 
 // Table columns definition
 export const createRoleColumns = (
@@ -83,38 +77,17 @@ export const createRoleColumns = (
     id: 'actions',
     header: t('table.actions'),
     enableSorting: false,
-    size: 80,
+    size: 100,
     cell: ({ row }) => {
       const role = row.original;
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(role);
-              }}
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              {t('common.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(role);
-              }}
-              className="text-destructive focus:text-destructive"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              {t('common.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableActions
+          onEdit={() => onEdit(role)}
+          onDelete={() => onDelete(role)}
+          editLabel={t('common.edit')}
+          deleteLabel={t('common.delete')}
+        />
       );
     },
   },
