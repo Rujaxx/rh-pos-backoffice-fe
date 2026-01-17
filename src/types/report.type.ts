@@ -63,6 +63,11 @@ export enum PaymentReportType {
   PAYMENT_SUMMARY = 'PAYMENT_SUMMARY',
 }
 
+export enum DiscountReportType {
+  DISCOUNT_SUMMARY = 'DISCOUNT_SUMMARY',
+  DISCOUNT_ITEM_WISE = 'DISCOUNT_ITEM_WISE',
+}
+
 // Generated Report (for DSR Page table)
 export interface GeneratedReport {
   _id: string;
@@ -74,7 +79,8 @@ export interface GeneratedReport {
     | DailyReportType
     | PaymentReportType
     | HourlyReportType
-    | MealTimeReportType;
+    | MealTimeReportType
+    | DiscountReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -119,6 +125,14 @@ export interface ReportQueryParams extends QueryParams {
   b2bInvoices?: boolean;
   liquorExemptedSales?: boolean;
 
+  // Discount specific filters
+  discountStatus?: string;
+  discountCode?: string;
+  discountIds?: string[];
+  minDiscountAmount?: string;
+  maxDiscountAmount?: string;
+  minOrderAmount?: string;
+
   page?: number;
   limit?: number;
 }
@@ -138,7 +152,12 @@ export interface GeneratedReportsResponse {
 
 // Generate Report Request
 export interface GenerateReportRequest {
-  reportType: DailyReportType;
+  reportType:
+    | DailyReportType
+    | PaymentReportType
+    | HourlyReportType
+    | MealTimeReportType
+    | DiscountReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;
