@@ -1872,5 +1872,49 @@
   "reports.discount.reportType.discountCodeWise": "Discount Code-Wise",
   "common.selectUser": "Select User",
   "reports.discount.summaryReport": "Discount Summary Report",
-  "reports.discount.itemWiseReport": "Discount Item-Wise Report"
+  "reports.discount.itemWiseReport": "Discount Item-Wise Report",
+
+  "navigation.waiterIncentive": "Waiter Incentive Report",
+
+  "reports.waiterIncentive.description": "View and analyze waiter incentive reports",
+  "reports.waiterIncentive.searchPlaceholder": "Search incentive data...",
+  "reports.waiterIncentive.noData": "No incentive data available",
+  "reports.waiterIncentive.generatedReports": "Generated Reports",
+  "reports.waiterIncentive.noGeneratedReports": "No generated reports found",
+  "reports.waiterIncentive.generatingReport": "Generating report",
+  "reports.waiterIncentive.generatingDescription": "This may take a few moments",
+  "reports.waiterIncentive.generationSuccess": "Report generated successfully",
+  "reports.waiterIncentive.generationFailed": "Failed to generate report",
+  "reports.waiterIncentive.refreshingReports": "Refreshing reports",
+  "reports.waiterIncentive.downloadStarted": "Download started",
+  "reports.waiterIncentive.selectReportType": "Select Report Type",
+  "reports.waiterIncentive.waiterIncentiveReport": "Waiter Incentive Report",
+  "reports.waiterIncentive.configureIncentive": "Configure Incentive",
+  "reports.waiterIncentive.configDescription": "Configure incentive rules for menu items",
+
+  "reports.waiterIncentive.detailedReport": "Detailed Report",
+  "reports.waiterIncentive.detailedDescription": "Item-wise detailed report",
+  "reports.waiterIncentive.summaryReport": "Summary Report",
+  "reports.waiterIncentive.summaryDescription": "Waiter-wise summary",
+  "reports.waiterIncentive.waiterWiseReport": "Waiter-wise Report",
+  "reports.waiterIncentive.waiterWiseDescription": "Performance by waiter",
+
+  "reports.waiterIncentive.waiterName": "Waiter Name",
+  "reports.waiterIncentive.menuItems": "Menu Items",
+
+  "reports.waiterIncentive.columns.itemName": "Item Name",
+  "reports.waiterIncentive.columns.price": "Price",
+  "reports.waiterIncentive.columns.quantity": "Qty",
+  "reports.waiterIncentive.columns.amount": "Amount",
+  "reports.waiterIncentive.columns.incentiveValue": "Incentive Value",
+  "reports.waiterIncentive.columns.totalIncentive": "Total Incentive",
+  "reports.waiterIncentive.columns.waiterName": "Waiter",
+  "reports.waiterIncentive.columns.status": "Status",
+
+  "common.selectWaiter": "Select Waiter",
+  "common.selectMenuItems": "Select Menu Items",
+  "common.searchMenuItem": "Search by name or code...",
+  "common.configure": "Configure",
+  "common.saveAll": "Save All",
+  "common.download": "Download"
 }

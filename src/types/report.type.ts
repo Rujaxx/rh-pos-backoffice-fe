@@ -1,6 +1,7 @@
 import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
 import { MealTimeReportType } from './meal-time-report.type';
+import { WaiterIncentiveReportType } from './waiter-incentive-report.type';
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -157,7 +158,8 @@ export interface GenerateReportRequest {
     | PaymentReportType
     | HourlyReportType
     | MealTimeReportType
-    | DiscountReportType;
+    | DiscountReportType
+    | WaiterIncentiveReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;

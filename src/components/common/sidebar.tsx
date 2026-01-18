@@ -26,6 +26,7 @@ import {
   ShoppingBag,
   ShoppingCart,
   PercentIcon,
+  NotepadText,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -350,6 +351,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.discountReports') || 'Discount Reports',
         href: '/reports/discount-reports',
         icon: PercentIcon,
+      },
+      {
+        id: 'waiter-incentive-reports',
+        label: t('navigation.waiterIncentive') || 'Waiter Incentive Reports',
+        href: '/reports/waiter-incentive-reports',
+        icon: NotepadText,
       },
     ],
   },

@@ -15,6 +15,7 @@ import { DiscountReportItem } from '@/types/discount-report.type';
 import { DiscountDataTable } from '@/components/reports/discount-reports/discount-table';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 
 // Mock discount data for table
 const MOCK_DISCOUNT_REPORT_DATA: DiscountReportItem[] = [
@@ -93,6 +94,10 @@ export default function DiscountReportPage() {
     null,
   );
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
+    null,
+  );
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   // Fetch all generated reports from the system
   const { data: generatedReports = [], isLoading } = useGeneratedReports();
@@ -146,9 +151,13 @@ export default function DiscountReportPage() {
 
   // Handler for showing report details
   const handleShowReportDetails = useCallback((report: GeneratedReport) => {
-    toast.info('Report details would show here', {
-      description: `Report ID: ${report._id}`,
-    });
+    setSelectedReport(report);
+    setIsDetailsModalOpen(true);
+  }, []);
+
+  const handleCloseDetailsModal = useCallback(() => {
+    setIsDetailsModalOpen(false);
+    setSelectedReport(null);
   }, []);
 
   // Handler for downloading report
@@ -263,6 +272,13 @@ export default function DiscountReportPage() {
           emptyMessage="reports.discount.noData"
         />
       </div>
+
+      {/* Report Details Modal */}
+      <ReportDetailsModal
+        report={selectedReport}
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseDetailsModal}
+      />
     </Layout>
   );
 }
