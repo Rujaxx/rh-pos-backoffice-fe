@@ -6,6 +6,8 @@ import {
   DailyReportType,
   HourlyReportType,
   PaymentMethodsEnum,
+  KitchenDepartmentReportType,
+  DiscountReportType,
 } from '@/types/report.type';
 import { MealTimeReportType } from '@/types/meal-time-report.type';
 
@@ -214,6 +216,16 @@ export function getReportTypeLabel(reportType: string): string {
       'reports.mealTime.reportTypes.meal_time_sales',
     [MealTimeReportType.MEAL_TIME_DETAILED]:
       'reports.mealTime.reportTypes.meal_time_detailed',
+
+    // Kitchen Department Report Types
+    [KitchenDepartmentReportType.KITCHEN_DEPARTMENT_SUMMARY]:
+      'reports.kitchenDepartment.reportTypes.kitchenDeptSummary',
+
+    // Discount Report Types
+    [DiscountReportType.DISCOUNT_SUMMARY]:
+      'reports.discount.reportTypes.discountSummary',
+    [DiscountReportType.DISCOUNT_ITEM_WISE]:
+      'reports.discount.reportTypes.discountItemWise',
   };
 
   return labelMap[reportType] || reportType;

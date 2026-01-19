@@ -6,8 +6,20 @@ import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download } from 'lucide-react';
-import { ReportQueryParams } from '@/types/report.type';
+import {
+  RefreshCw,
+  Download,
+  Printer,
+  FileText,
+  Loader2,
+  ChefHat,
+} from 'lucide-react';
+import {
+  ReportQueryParams,
+  GeneratedReport,
+  KitchenDepartmentReportType,
+  ReportGenerationStatus,
+} from '@/types/report.type';
 import { toast } from 'sonner';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
@@ -17,6 +29,9 @@ import {
 } from '@tanstack/react-table';
 import { useKitchenDepartmentColumns } from '@/components/reports/kitchen-department-reports/kitchen-dept-columns';
 import { KitchenDepartmentReportFilters } from '@/components/reports/report-filters/kitchen-dept-filters';
+import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
+import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
+import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 
 // Mock kitchen department data
 const MOCK_KITCHEN_DEPARTMENT_DATA = [
@@ -78,10 +93,10 @@ const MOCK_KITCHEN_DEPARTMENT_DATA = [
 
 export default function KitchenDepartmentReportPage() {
   const { t } = useTranslation();
+
   // Initialize filters with today's date
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
-
     return {
       from: today.toISOString(),
       to: today.toISOString(),
@@ -90,6 +105,20 @@ export default function KitchenDepartmentReportPage() {
 
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
+  const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
+    null,
+  );
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedReportType, setSelectedReportType] =
+    useState<KitchenDepartmentReportType | null>(null);
+
+  // ADDED: Local state to store generated reports (like DSR)
+  const [localGeneratedReports, setLocalGeneratedReports] = useState<
+    GeneratedReport[]
+  >([]);
 
   // Table state
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,6 +130,16 @@ export default function KitchenDepartmentReportPage() {
     { id: 'totalAmount', desc: true },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // Fetch ALL generated reports from the system
+  const {
+    data: generatedReports = [],
+    isLoading: isLoadingReports,
+    refetch,
+  } = useGeneratedReports();
+
+  // ADDED: Combine API data with locally generated reports (like DSR)
+  const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
 
   // Filter mock data based on search term
   const filteredData = useMemo(() => {
@@ -141,6 +180,24 @@ export default function KitchenDepartmentReportPage() {
     return data;
   }, [searchTerm, sorting]);
 
+  // Calculate totals for the report
+  const reportTotals = useMemo(() => {
+    return filteredData.reduce(
+      (acc, item) => ({
+        totalSoldItems: acc.totalSoldItems + item.soldItems,
+        totalAmount: acc.totalAmount + item.totalAmount,
+        totalDiscount: acc.totalDiscount + item.itemLevelDiscount,
+        totalCharges: acc.totalCharges + item.itemLevelTotalCharges,
+      }),
+      {
+        totalSoldItems: 0,
+        totalAmount: 0,
+        totalDiscount: 0,
+        totalCharges: 0,
+      },
+    );
+  }, [filteredData]);
+
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
@@ -159,12 +216,264 @@ export default function KitchenDepartmentReportPage() {
   }, [filters]);
 
   const handleRefresh = useCallback(() => {
+    refetch(); // Refresh from API
     toast.success('Data refreshed');
+  }, [refetch]);
+
+  // CHANGED: Download button now GENERATES AND ADDS REPORT TO TABLE like DSR
+  const handleDownloadReport = useCallback(async () => {
+    setIsDownloading(true);
+    setSelectedReportType(
+      KitchenDepartmentReportType.KITCHEN_DEPARTMENT_SUMMARY,
+    );
+
+    toast.success('Generating Kitchen Department Summary...', {
+      description: 'This may take a few moments',
+    });
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // ADDED: Create a new report object (like DSR)
+      const newReport: GeneratedReport = {
+        _id: `kitchen_${Date.now()}`,
+        generateDate: new Date().toISOString(),
+        generatedBy: 'current-user',
+        generatedByName: 'Current User',
+        reportType: KitchenDepartmentReportType.KITCHEN_DEPARTMENT_SUMMARY,
+        generationStatus: ReportGenerationStatus.COMPLETED,
+        filters: submittedFilters || filters,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        downloadUrl: `https://example.com/reports/kitchen-dept-${Date.now()}.csv`,
+      };
+
+      // ADDED: Add the new report to local state (like DSR)
+      setLocalGeneratedReports((prev) => [newReport, ...prev]);
+
+      toast.success('Report generated successfully!', {
+        description:
+          'Kitchen Department Summary report has been generated and added to the table.',
+      });
+
+      // Also refetch from API if needed
+      refetch();
+    } catch (error) {
+      toast.error('Failed to generate report');
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [filters, submittedFilters, refetch]);
+
+  // Keep the original generate report function (for the "Generate Report" button)
+  const handleGenerateReport = useCallback(async () => {
+    setIsGenerating(true);
+
+    toast.info('Generating kitchen department report...', {
+      description: 'This may take a few moments',
+    });
+
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // ADDED: Also create a report for this button
+      const newReport: GeneratedReport = {
+        _id: `kitchen_gen_${Date.now()}`,
+        generateDate: new Date().toISOString(),
+        generatedBy: 'current-user',
+        generatedByName: 'Current User',
+        reportType: KitchenDepartmentReportType.KITCHEN_DEPARTMENT_SUMMARY,
+        generationStatus: ReportGenerationStatus.COMPLETED,
+        filters: submittedFilters || filters,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        downloadUrl: `https://example.com/reports/kitchen-dept-gen-${Date.now()}.csv`,
+      };
+
+      // ADDED: Add to local state
+      setLocalGeneratedReports((prev) => [newReport, ...prev]);
+
+      toast.success('Report generated successfully!', {
+        description: 'The report has been added to your generated reports list',
+      });
+
+      // Refresh the generated reports list
+      refetch();
+    } catch (error) {
+      toast.error('Failed to generate report');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [filters, submittedFilters, refetch]);
+
+  const handlePrint = useCallback(() => {
+    if (filteredData.length === 0) {
+      toast.error('No data to print');
+      return;
+    }
+
+    setIsPrinting(true);
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      toast.error('Please allow popups for printing');
+      setIsPrinting(false);
+      return;
+    }
+
+    // Format dates for display
+    const formatDate = (dateString?: string) => {
+      if (!dateString) return 'N/A';
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+    };
+
+    // Generate clean print HTML
+    const printContent = `
+      <div class="print-content" style="padding: 20mm; max-width: 210mm; margin: 0 auto; font-family: system-ui, -apple-system, sans-serif;">
+        <!-- Header -->
+        <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb;">
+          <h1 style="font-size: 24pt; font-weight: bold; color: #111827; margin-bottom: 8px;">
+            Kitchen Department Performance Report
+          </h1>
+          <div style="font-size: 10pt; color: #6b7280; margin-bottom: 4px;">
+            <div>Period: ${formatDate(filters.from)} to ${formatDate(filters.to)}</div>
+            <div>Generated: ${new Date().toLocaleString()}</div>
+            <div>Report ID: KD-${Date.now().toString(36).toUpperCase()}</div>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+          <thead>
+            <tr style="background: #f3f4f6;">
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Kitchen Department
+              </th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Category
+              </th>
+              <th style="padding: 12px 16px; text-align: right; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Sold Items
+              </th>
+              <th style="padding: 12px 16px; text-align: right; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Total Amount
+              </th>
+              <th style="padding: 12px 16px; text-align: right; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Discount
+              </th>
+              <th style="padding: 12px 16px; text-align: right; font-weight: 600; font-size: 10pt; text-transform: uppercase; letter-spacing: 0.05em; color: #374151; border: 1px solid #e5e7eb;">
+                Charges
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredData
+              .map(
+                (item) => `
+              <tr>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt;">${item.kitchenDepartment}</td>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt;">${item.categoryName}</td>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt; text-align: right;">${item.soldItems.toLocaleString()}</td>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt; text-align: right;">₹${item.totalAmount.toLocaleString()}</td>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt; text-align: right;">₹${item.itemLevelDiscount.toLocaleString()}</td>
+                <td style="padding: 12px 16px; border: 1px solid #e5e7eb; font-size: 11pt; text-align: right;">₹${item.itemLevelTotalCharges.toLocaleString()}</td>
+              </tr>
+            `,
+              )
+              .join('')}
+          </tbody>
+        </table>
+
+      </div>
+    `;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Kitchen Department Report - ${new Date().toLocaleDateString()}</title>
+          <style>
+            @media print {
+              @page {
+                margin: 15mm;
+                size: A4 portrait;
+              }
+              html, body {
+                height: auto;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+              }
+              body {
+                background: white !important;
+                color: black !important;
+                font-family: system-ui, -apple-system, sans-serif !important;
+                font-size: 12px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              * {
+                box-sizing: border-box !important;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent}
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(() => {
+                try { window.close(); } catch (e) {}
+              }, 1000);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    setIsPrinting(false);
+  }, [filteredData, filters, reportTotals]);
+
+  const handleShowReportDetails = useCallback((report: GeneratedReport) => {
+    setSelectedReport(report);
+    setIsDetailsModalOpen(true);
   }, []);
 
-  const handleExport = useCallback(() => {
-    toast.success('Export started');
+  const handleCloseDetailsModal = useCallback(() => {
+    setIsDetailsModalOpen(false);
+    setSelectedReport(null);
   }, []);
+
+  // Download generated report from the table
+  const handleDownloadGeneratedReport = useCallback(
+    (report: GeneratedReport) => {
+      if (!report.downloadUrl) {
+        toast.error('Download URL not available');
+        return;
+      }
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = report.downloadUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.download = `kitchen-dept-report-${report._id}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('Download started');
+    },
+    [],
+  );
 
   // Get columns from separate file
   const columns = useKitchenDepartmentColumns();
@@ -179,9 +488,28 @@ export default function KitchenDepartmentReportPage() {
               {t('navigation.kitchenDepartmentReports') ||
                 'Kitchen Department Report'}
             </h2>
+            <p className="text-muted-foreground">
+              {t('reports.kitchenDepartment.description') ||
+                'View and analyze kitchen department performance and generate reports'}
+            </p>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            {isGenerating && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Generating report...
+              </div>
+            )}
+            <Button
+              variant="outline"
+              onClick={handleGenerateReport}
+              disabled={isGenerating}
+              className="flex items-center gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              {t('common.generate') || 'Generate Report'}
+            </Button>
             <Button
               variant="outline"
               onClick={handleRefresh}
@@ -193,7 +521,7 @@ export default function KitchenDepartmentReportPage() {
           </div>
         </div>
 
-        {/* Filters - Using the standard ReportFilters component */}
+        {/* Filters */}
         <ReportFilters
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -207,13 +535,50 @@ export default function KitchenDepartmentReportPage() {
           />
         </ReportFilters>
 
-        {/* Table */}
+        {/* Generated Reports Table - CHANGED: Now uses allGeneratedReports (like DSR) */}
+        <GeneratedReportsTable
+          title="reports.payment.generatedReports"
+          data={allGeneratedReports} // ← CHANGED: Use combined reports
+          isLoading={isLoadingReports}
+          onShowDetails={handleShowReportDetails}
+          onDownload={handleDownloadGeneratedReport}
+          defaultCollapsed={false}
+          searchPlaceholder="Search generated reports..."
+          emptyMessage="No generated reports found"
+        />
+
+        {/* Performance Data Table */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between p-6 pb-4">
             <div>
               <CardTitle className="text-lg">
                 Kitchen Department Performance
               </CardTitle>
+            </div>
+            {/* Print and Download buttons - Download button now ADDS TO TABLE like DSR */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePrint}
+                disabled={isPrinting || filteredData.length === 0}
+                className="flex items-center gap-2"
+              >
+                <Printer className="h-4 w-4" />
+                {isPrinting ? 'Preparing...' : 'Print'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadReport} // ← This now adds report to table
+                disabled={isDownloading}
+                className="flex items-center gap-2"
+              >
+                <Download className="h-4 w-4" />
+                {isDownloading
+                  ? 'Generating...'
+                  : t('common.download') || 'Download Report'}
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="p-6 pt-0">
@@ -248,6 +613,13 @@ export default function KitchenDepartmentReportPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Report Details Modal */}
+        <ReportDetailsModal
+          report={selectedReport}
+          isOpen={isDetailsModalOpen}
+          onClose={handleCloseDetailsModal}
+        />
       </div>
     </Layout>
   );

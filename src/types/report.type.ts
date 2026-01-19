@@ -69,6 +69,11 @@ export enum DiscountReportType {
   DISCOUNT_ITEM_WISE = 'DISCOUNT_ITEM_WISE',
 }
 
+// Kitchen Department Report Types
+export enum KitchenDepartmentReportType {
+  KITCHEN_DEPARTMENT_SUMMARY = 'KITCHEN_DEPARTMENT_SUMMARY',
+}
+
 // Generated Report (for DSR Page table)
 export interface GeneratedReport {
   _id: string;
@@ -81,7 +86,8 @@ export interface GeneratedReport {
     | PaymentReportType
     | HourlyReportType
     | MealTimeReportType
-    | DiscountReportType;
+    | DiscountReportType
+    | KitchenDepartmentReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -134,6 +140,10 @@ export interface ReportQueryParams extends QueryParams {
   maxDiscountAmount?: string;
   minOrderAmount?: string;
 
+  // Kitchen Department specific filters
+  kitchenDepartmentIds?: string[];
+  categoryIdsKitchen?: string[];
+
   page?: number;
   limit?: number;
 }
@@ -159,7 +169,8 @@ export interface GenerateReportRequest {
     | HourlyReportType
     | MealTimeReportType
     | DiscountReportType
-    | WaiterIncentiveReportType;
+    | WaiterIncentiveReportType
+    | KitchenDepartmentReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;
