@@ -495,21 +495,6 @@ export default function KitchenDepartmentReportPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            {isGenerating && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Generating report...
-              </div>
-            )}
-            <Button
-              variant="outline"
-              onClick={handleGenerateReport}
-              disabled={isGenerating}
-              className="flex items-center gap-2"
-            >
-              <FileText className="h-4 w-4" />
-              {t('common.generate') || 'Generate Report'}
-            </Button>
             <Button
               variant="outline"
               onClick={handleRefresh}
