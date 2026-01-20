@@ -1,39 +1,99 @@
-export interface OrderItem {
-  _id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  discount: number;
-  tax: number;
-  subtotal: number;
+import { MultilingualText } from './common/common.type';
+
+// Order Status Enum matching actual backend values (UPPERCASE)
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  FOOD_READY = 'FOOD_READY',
+  DISPATCHED = 'DISPATCHED',
+  FULFILLED = 'FULFILLED',
+  CANCELLED = 'CANCELLED',
 }
 
-export interface Order {
+// Payment Status Enum matching actual backend values (UPPERCASE)
+export enum PaymentStatus {
+  UNPAID = 'UNPAID',
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  FAILED = 'FAILED',
+  PARTIALLY_PAID = 'PARTIALLY_PAID',
+  REFUNDED = 'REFUNDED',
+}
+
+// Nested DTOs from backend
+export interface MenuInfo {
+  _id: string;
+  name: MultilingualText;
+  shortCode: string;
+  isActive: boolean;
+}
+
+export interface OrderTypeInfo {
+  _id: string;
+  name: MultilingualText;
+  isActive: boolean;
+}
+
+export interface RestaurantInfo {
+  _id: string;
+  name: MultilingualText;
+  restoCode?: string;
+  isActive?: boolean;
+}
+
+// Order Item from backend response
+export interface OrderItemResponse {
+  _id: string;
+  menuItemId: string;
+  name: MultilingualText;
+  quantity: number;
+  unitPrice: number;
+  price: number;
+  discountAmount: number;
+  taxAmount: number;
+  total: number;
+}
+
+// Payment Response from backend
+export interface PaymentResponse {
+  _id: string;
+  paymentMethod: string;
+  amount: number;
+  status: PaymentStatus;
+  transactionId?: string;
+  paidAt?: Date;
+}
+
+// Main Order List Item matching OrderListResponseDto
+export interface OrderListItem {
   _id: string;
   orderNumber: string;
-  externalOrderId: string;
+  brandId: string;
   restaurantId: string;
-  restaurantName: string;
-  restaurantLogo?: string;
-  customerName: string;
-  customerPhone: string;
+  restaurantDoc?: RestaurantInfo;
+  customerId?: string;
+  menuId: string;
+  menuDoc?: MenuInfo;
+  orderTypeId: string;
+  orderTypeDoc?: OrderTypeInfo;
+  tableId?: string;
+  customerName?: string;
+  countryCode?: string;
+  customerPhone?: string;
+  items: OrderItemResponse[];
+  subTotal: number;
+  discountAmount: number;
+  taxAmount: number;
+  deliveryTip: number;
   totalAmount: number;
-  paymentMethod: 'cash' | 'card' | 'pay_later' | 'paytm' | 'online';
-  paymentStatus: 'pending' | 'paid' | 'failed';
-  status: 'new' | 'active' | 'fulfilled' | 'cancelled';
-  deliveryType: 'pickup' | 'delivery';
+  paymentStatus: PaymentStatus;
+  payments: PaymentResponse[];
+  orderStatus: OrderStatus;
+  orderNote?: string;
+  platform: string;
   deliveryBoy?: string;
-  items: OrderItem[];
-  createdAt: string;
-  updatedAt: string;
-  brandId?: string;
-  platform: 'uber_eats' | 'zomato' | 'swiggy' | 'website';
-  platformStore?: string;
-  orderLater: boolean;
-  orderStatus?:
-    | 'acknowledged'
-    | 'food_ready'
-    | 'dispatched'
-    | 'fulfilled'
-    | 'cancelled';
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+// export interface Order extends OrderListItem {}

@@ -196,7 +196,7 @@ export interface OrderTypeReportItem {
   cancelled?: number;
 
   // Detailed statuses
-  acknowledged?: number;
+  confirmed?: number;
   foodReady?: number;
   fulfilled?: number;
   deleted?: number;

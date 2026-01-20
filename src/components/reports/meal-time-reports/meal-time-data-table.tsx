@@ -20,7 +20,6 @@ export function MealTimeDataTable({
   data,
   isLoading = false,
 }: MealTimeDataTableProps) {
-  console.log('data table: ', data);
   const { t } = useTranslation();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,

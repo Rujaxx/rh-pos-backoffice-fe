@@ -8,12 +8,14 @@ import Layout from '@/components/common/layout';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { OrderDetailsModal } from '@/components/online-orders/order-details-modal';
 import { OrderFilters } from '@/components/online-orders/online-order-filter';
-import { Order } from '@/types/order';
+import { OrderListItem, OrderStatus } from '@/types/order';
 import { createOrdersColumns } from '@/components/online-orders/online-table-column';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useOrders } from '@/services/api/orders/orders.queries';
+import { OrderQueryParams } from '@/services/api/orders/orders.queries';
 
 // Create type for order filters
 interface OrderFilterParams {
@@ -34,171 +36,6 @@ interface OrderFilterParams {
   [key: string]: unknown;
 }
 
-// Mock data (same as before)
-const mockOrders: Order[] = [
-  {
-    _id: '1',
-    orderNumber: 'ORD-001',
-    externalOrderId: 'UBER-12345',
-    restaurantId: 'resto-1',
-    restaurantName: 'The Great Restaurant',
-    customerName: 'John Doe',
-    customerPhone: '+1 234 567 890',
-    totalAmount: 45.99,
-    paymentMethod: 'cash',
-    paymentStatus: 'paid',
-    status: 'active',
-    orderStatus: 'acknowledged',
-    deliveryType: 'delivery',
-    platform: 'uber_eats',
-    orderLater: false,
-    items: [
-      {
-        _id: '1',
-        name: 'Pizza',
-        quantity: 1,
-        price: 12.99,
-        discount: 0,
-        tax: 1.3,
-        subtotal: 14.29,
-      },
-      {
-        _id: '2',
-        name: 'Garlic Bread',
-        quantity: 2,
-        price: 4.5,
-        discount: 0,
-        tax: 0.9,
-        subtotal: 9.9,
-      },
-    ],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    _id: '2',
-    orderNumber: 'ORD-002',
-    externalOrderId: 'ZOMATO-67890',
-    restaurantId: 'resto-2',
-    restaurantName: 'Fine Dining',
-    customerName: 'Jane Smith',
-    customerPhone: '+1 234 567 891',
-    totalAmount: 89.5,
-    paymentMethod: 'card',
-    paymentStatus: 'paid',
-    status: 'active',
-    orderStatus: 'food_ready',
-    deliveryType: 'pickup',
-    platform: 'zomato',
-    orderLater: false,
-    items: [
-      {
-        _id: '3',
-        name: 'Salmon',
-        quantity: 1,
-        price: 24.99,
-        discount: 2.0,
-        tax: 2.3,
-        subtotal: 25.29,
-      },
-    ],
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
-    updatedAt: new Date(Date.now() - 3600000).toISOString(),
-  },
-  {
-    _id: '3',
-    orderNumber: 'ORD-003',
-    externalOrderId: 'SWIGGY-54321',
-    restaurantId: 'resto-3',
-    restaurantName: 'Fast Food',
-    customerName: 'Bob Johnson',
-    customerPhone: '+1 234 567 892',
-    totalAmount: 32.75,
-    paymentMethod: 'pay_later',
-    paymentStatus: 'pending',
-    status: 'active',
-    orderStatus: 'dispatched',
-    deliveryType: 'delivery',
-    deliveryBoy: 'Rider-001',
-    platform: 'swiggy',
-    orderLater: true,
-    items: [
-      {
-        _id: '4',
-        name: 'Burger',
-        quantity: 2,
-        price: 8.99,
-        discount: 1.0,
-        tax: 1.78,
-        subtotal: 18.76,
-      },
-    ],
-    createdAt: new Date(Date.now() - 7200000).toISOString(),
-    updatedAt: new Date(Date.now() - 7200000).toISOString(),
-  },
-  {
-    _id: '4',
-    orderNumber: 'ORD-004',
-    externalOrderId: 'WEB-98765',
-    restaurantId: 'resto-4',
-    restaurantName: 'Coffee Corner',
-    customerName: 'Alice Brown',
-    customerPhone: '+1 234 567 893',
-    totalAmount: 15.25,
-    paymentMethod: 'online',
-    paymentStatus: 'failed',
-    status: 'cancelled',
-    orderStatus: 'cancelled',
-    deliveryType: 'pickup',
-    platform: 'website',
-    orderLater: false,
-    items: [
-      {
-        _id: '5',
-        name: 'Cappuccino',
-        quantity: 1,
-        price: 4.5,
-        discount: 0,
-        tax: 0.45,
-        subtotal: 4.95,
-      },
-    ],
-    createdAt: new Date(Date.now() - 10800000).toISOString(),
-    updatedAt: new Date(Date.now() - 10800000).toISOString(),
-  },
-  {
-    _id: '5',
-    orderNumber: 'ORD-005',
-    externalOrderId: 'UBER-54321',
-    restaurantId: 'resto-1',
-    restaurantName: 'The Great Restaurant',
-    customerName: 'Michael Chen',
-    customerPhone: '+1 234 567 894',
-    totalAmount: 67.8,
-    paymentMethod: 'card',
-    paymentStatus: 'paid',
-    status: 'fulfilled',
-    orderStatus: 'fulfilled',
-    deliveryType: 'delivery',
-    deliveryBoy: 'Rider-002',
-    platform: 'uber_eats',
-    orderLater: false,
-    items: [
-      {
-        _id: '6',
-        name: 'Sushi Platter',
-        quantity: 1,
-        price: 32.5,
-        discount: 0,
-        tax: 3.25,
-        subtotal: 35.75,
-      },
-    ],
-    createdAt: new Date(Date.now() - 14400000).toISOString(),
-    updatedAt: new Date(Date.now() - 14400000).toISOString(),
-  },
-];
-
 type OrderTab =
   | 'new'
   | 'running'
@@ -209,8 +46,9 @@ type OrderTab =
 
 export default function OnlineOrdersPage() {
   const { t } = useTranslation();
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderListItem | null>(
+    null,
+  );
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<OrderTab>('new');
@@ -218,24 +56,55 @@ export default function OnlineOrdersPage() {
   // Filter states using OrderFilterParams
   const [filters, setFilters] = useState<OrderFilterParams>({});
 
-  // Helper function to filter orders by status
-  const filterOrdersByStatus = (ordersList: Order[]) => {
+  // Convert filters to API query params
+  const queryParams = useMemo<OrderQueryParams>(() => {
     return {
-      new: ordersList.filter((o) => o.orderStatus === 'acknowledged'),
+      startDate: filters.from,
+      endDate: filters.to,
+      restaurantId: filters.restaurantIds?.[0],
+      orderNumber: filters.search,
+    };
+  }, [filters]);
+
+  // Fetch orders from API
+  const {
+    data: ordersResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useOrders(queryParams);
+
+  // ordersResponse IS the PaginatedResponse object, so we access data directly
+  const orders = ordersResponse?.data || [];
+
+  // Helper function to filter orders by status
+  const filterOrdersByStatus = (ordersList: OrderListItem[]) => {
+    return {
+      new: ordersList.filter((o) => o.orderStatus === OrderStatus.PENDING),
       running: ordersList.filter(
         (o) =>
-          o.orderStatus === 'acknowledged' || o.orderStatus === 'food_ready',
+          o.orderStatus === OrderStatus.CONFIRMED ||
+          o.orderStatus === OrderStatus.FOOD_READY,
       ),
-      food_ready: ordersList.filter((o) => o.orderStatus === 'food_ready'),
-      dispatched: ordersList.filter((o) => o.orderStatus === 'dispatched'),
-      fulfilled: ordersList.filter((o) => o.orderStatus === 'fulfilled'),
-      cancelled: ordersList.filter((o) => o.orderStatus === 'cancelled'),
+      food_ready: ordersList.filter(
+        (o) => o.orderStatus === OrderStatus.FOOD_READY,
+      ),
+      dispatched: ordersList.filter(
+        (o) => o.orderStatus === OrderStatus.DISPATCHED,
+      ),
+      fulfilled: ordersList.filter(
+        (o) => o.orderStatus === OrderStatus.FULFILLED,
+      ),
+      cancelled: ordersList.filter(
+        (o) => o.orderStatus === OrderStatus.CANCELLED,
+      ),
     };
   };
 
   // Apply all filters to orders
   const applyFiltersToOrders = useCallback(
-    (ordersList: Order[]) => {
+    (ordersList: OrderListItem[]) => {
       let filtered = [...ordersList];
 
       // Date range filter
@@ -265,32 +134,14 @@ export default function OnlineOrdersPage() {
         filtered = filtered.filter(
           (order) =>
             order.orderNumber.toLowerCase().includes(searchTerm) ||
-            order.customerName.toLowerCase().includes(searchTerm) ||
-            order.customerPhone.toLowerCase().includes(searchTerm) ||
-            order.restaurantName.toLowerCase().includes(searchTerm),
+            order.customerName?.toLowerCase().includes(searchTerm) ||
+            order.customerPhone?.toLowerCase().includes(searchTerm) ||
+            order.restaurantDoc?.name.en?.toLowerCase().includes(searchTerm),
         );
       }
 
-      // External Order ID filter
-      if (filters.externalOrderId) {
-        filtered = filtered.filter((order) =>
-          order.externalOrderId
-            .toLowerCase()
-            .includes(filters.externalOrderId!.toLowerCase()),
-        );
-      }
-
-      // Platform filter
-      if (filters.platform) {
-        filtered = filtered.filter(
-          (order) => order.platform === filters.platform,
-        );
-      }
-
-      // Order Later filter
-      if (filters.orderLater) {
-        filtered = filtered.filter((order) => order.orderLater === true);
-      }
+      // Note: External Order ID, Platform, and Order Later filters
+      // have been removed as they don't exist in the backend DTO
 
       return filtered;
     },
@@ -334,82 +185,57 @@ export default function OnlineOrdersPage() {
     async (orderId: string, action: string, data?: unknown) => {
       setIsProcessing(orderId);
       try {
+        // TODO: Implement actual API calls for order actions
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        setOrders((prev) =>
-          prev.map((order) => {
-            if (order._id === orderId) {
-              const updated = { ...order };
+        // For now, show success message and refetch
+        switch (action) {
+          case 'food_ready':
+            toast.success(`Order marked as Food Ready`);
+            break;
+          case 'dispatch':
+            toast.success(`Order marked as Dispatched`);
+            break;
+          case 'mark_fulfilled':
+            toast.success(`Order marked as Fulfilled`);
+            break;
+          case 'cancel':
+            toast.error(`Order cancelled`);
+            break;
+          case 'reopen':
+            toast.info(`Order reopened`);
+            break;
+          case 'assign_delivery_boy':
+            toast.success(`Delivery boy assigned`);
+            break;
+          case 'print_kot':
+            toast.success(`KOT printed`);
+            break;
+          case 'print_bill':
+            toast.success(`Bill printed`);
+            break;
+        }
 
-              switch (action) {
-                case 'food_ready':
-                  updated.orderStatus = 'food_ready';
-                  toast.success(
-                    `Order #${order.orderNumber} marked as Food Ready`,
-                  );
-                  break;
-                case 'dispatch':
-                  updated.orderStatus = 'dispatched';
-                  toast.success(
-                    `Order #${order.orderNumber} marked as Dispatched`,
-                  );
-                  break;
-                case 'mark_fulfilled':
-                  updated.orderStatus = 'fulfilled';
-                  toast.success(
-                    `Order #${order.orderNumber} marked as Fulfilled`,
-                  );
-                  break;
-                case 'cancel':
-                  updated.orderStatus = 'cancelled';
-                  toast.error(`Order #${order.orderNumber} cancelled`);
-                  break;
-                case 'reopen':
-                  updated.orderStatus = 'acknowledged';
-                  toast.info(`Order #${order.orderNumber} reopened`);
-                  break;
-                case 'assign_delivery_boy':
-                  const deliveryData = data as
-                    | { deliveryBoyId?: string }
-                    | undefined;
-                  updated.deliveryBoy = deliveryData?.deliveryBoyId;
-                  if (deliveryData?.deliveryBoyId) {
-                    toast.success(
-                      `Delivery boy assigned to order #${order.orderNumber}`,
-                    );
-                  }
-                  break;
-                case 'print_kot':
-                  toast.success(`KOT printed for order #${order.orderNumber}`);
-                  break;
-                case 'print_bill':
-                  toast.success(`Bill printed for order #${order.orderNumber}`);
-                  break;
-              }
-
-              updated.updatedAt = new Date().toISOString();
-              return updated;
-            }
-            return order;
-          }),
-        );
+        // Refetch orders after action
+        await refetch();
       } catch (error) {
         toast.error(t('common.errors.actionFailed') || 'Action failed');
       } finally {
         setIsProcessing(null);
       }
     },
-    [t],
+    [t, refetch],
   );
 
-  const handleViewDetails = useCallback((order: Order) => {
+  const handleViewDetails = useCallback((order: OrderListItem) => {
     setSelectedOrder(order);
     setIsDetailsOpen(true);
   }, []);
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = useCallback(async () => {
+    await refetch();
     toast.success(t('common.refreshSuccess') || 'Orders refreshed');
-  }, [t]);
+  }, [t, refetch]);
 
   // Get filtered orders for current tab
   const filteredOrders = useMemo(() => {
@@ -470,10 +296,7 @@ export default function OnlineOrdersPage() {
       filters.from ||
       filters.to ||
       (filters.restaurantIds && filters.restaurantIds.length > 0) ||
-      (filters.search && filters.search !== '') ||
-      (filters.externalOrderId && filters.externalOrderId !== '') ||
-      (filters.platform && filters.platform !== '') ||
-      filters.orderLater,
+      (filters.search && filters.search !== ''),
     [filters],
   );
 
@@ -555,11 +378,31 @@ export default function OnlineOrdersPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <TanStackTable
-              columns={columns}
-              data={filteredOrders}
-              emptyMessage={`No ${activeTab} orders found`}
-            />
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <span className="ml-2 text-muted-foreground">
+                  Loading orders...
+                </span>
+              </div>
+            ) : isError ? (
+              <div className="flex flex-col items-center justify-center py-8 text-destructive">
+                <p>Error loading orders: {error?.message || 'Unknown error'}</p>
+                <Button
+                  variant="outline"
+                  onClick={() => refetch()}
+                  className="mt-4"
+                >
+                  Retry
+                </Button>
+              </div>
+            ) : (
+              <TanStackTable
+                columns={columns}
+                data={filteredOrders}
+                emptyMessage={`No ${activeTab} orders found`}
+              />
+            )}
           </CardContent>
         </Card>
 

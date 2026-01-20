@@ -1787,7 +1787,7 @@
   "orders.paymentSummary": "ملخص الدفع",
   "orders.printKOT": "طباعة KOT",
   "orders.printBill": "طباعة الفاتورة",
-  "orders.acknowledged": "مستلم",
+  "orders.confirmed": "مستلم",
   "orders.foodReady": "الطعام جاهز",
   "orders.fulfilled": "مكتمل",
   "orders.cancelled": "ملغى",

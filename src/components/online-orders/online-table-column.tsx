@@ -9,13 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
 import {
   Eye,
   MoreVertical,
@@ -23,16 +17,15 @@ import {
   XCircle,
   Clock,
   Truck,
-  Package,
   Printer,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Order } from '@/types/order';
+import { OrderListItem } from '@/types/order';
 
 export const createOrdersColumns = (
-  onViewDetails: (order: Order) => void,
+  onViewDetails: (order: OrderListItem) => void,
   onAction: (orderId: string, action: string, data?: unknown) => void,
-): ColumnDef<Order>[] => [
+): ColumnDef<OrderListItem>[] => [
   {
     accessorKey: 'orderNumber',
     header: 'Order #',
@@ -41,19 +34,16 @@ export const createOrdersColumns = (
       return (
         <div className="font-medium">
           <div>{order.orderNumber}</div>
-          <div className="text-xs text-muted-foreground">
-            {order.externalOrderId}
-          </div>
         </div>
       );
     },
   },
   {
-    accessorKey: 'restaurantName',
+    accessorKey: 'restaurantDoc',
     header: 'Restaurant',
     cell: ({ row }) => {
       const order = row.original;
-      return <div>{order.restaurantName}</div>;
+      return <div>{order.restaurantDoc?.name.en || 'N/A'}</div>;
     },
   },
   {
@@ -63,9 +53,9 @@ export const createOrdersColumns = (
       const order = row.original;
       return (
         <div>
-          <div className="font-medium">{order.customerName}</div>
+          <div className="font-medium">{order.customerName || 'N/A'}</div>
           <div className="text-sm text-muted-foreground">
-            {order.customerPhone}
+            {order.customerPhone || ''}
           </div>
         </div>
       );
@@ -93,32 +83,32 @@ export const createOrdersColumns = (
       const order = row.original;
       const getStatusConfig = () => {
         switch (order.orderStatus) {
-          case 'acknowledged':
+          case 'CONFIRMED':
             return {
               variant: 'default' as const,
               icon: Clock,
-              label: 'Acknowledged',
+              label: 'Confirmed',
             };
-          case 'food_ready':
+          case 'FOOD_READY':
             return {
               variant: 'secondary' as const,
               icon: CheckCircle,
               label: 'Food Ready',
             };
-          case 'dispatched':
+          case 'DISPATCHED':
             return {
               variant: 'default' as const,
               icon: Truck,
               label: 'Dispatched',
             };
-          case 'fulfilled':
+          case 'FULFILLED':
             return {
               variant: 'default' as const,
               icon: CheckCircle,
               label: 'Fulfilled',
               className: 'bg-green-100 text-green-800',
             };
-          case 'cancelled':
+          case 'CANCELLED':
             return {
               variant: 'destructive' as const,
               icon: XCircle,
@@ -128,7 +118,7 @@ export const createOrdersColumns = (
             return {
               variant: 'default' as const,
               icon: Clock,
-              label: 'Acknowledged',
+              label: 'Confirmed',
             };
         }
       };
@@ -148,46 +138,6 @@ export const createOrdersColumns = (
     },
   },
   {
-    accessorKey: 'deliveryType',
-    header: 'Delivery',
-    cell: ({ row }) => {
-      const order = row.original;
-      return (
-        <div className="space-y-2">
-          <div className="flex items-center gap-1">
-            {order.deliveryType === 'delivery' ? (
-              <Truck className="h-3 w-3" />
-            ) : (
-              <Package className="h-3 w-3" />
-            )}
-            <span className="capitalize">{order.deliveryType}</span>
-          </div>
-          {order.deliveryType === 'delivery' && (
-            <Select
-              value={order.deliveryBoy || ''}
-              onValueChange={(value) => {
-                onAction(order._id, 'assign_delivery_boy', {
-                  deliveryBoyId: value,
-                });
-              }}
-            >
-              <SelectTrigger className="h-7 text-xs">
-                <SelectValue placeholder="Assign Rider" />
-              </SelectTrigger>
-              <SelectContent>
-                {['Rider-001', 'Rider-002', 'Rider-003'].map((rider) => (
-                  <SelectItem key={rider} value={rider}>
-                    {rider}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: 'totalAmount',
     header: 'Total',
     cell: ({ row }) => {
@@ -196,35 +146,20 @@ export const createOrdersColumns = (
     },
   },
   {
-    accessorKey: 'paymentMethod',
+    accessorKey: 'paymentStatus',
     header: 'Payment',
     cell: ({ row }) => {
       const order = row.original;
-      const getPaymentLabel = () => {
-        switch (order.paymentMethod) {
-          case 'cash':
-            return 'Cash';
-          case 'card':
-            return 'Card';
-          case 'pay_later':
-            return 'Pay Later';
-          case 'paytm':
-            return 'Paytm';
-          case 'online':
-            return 'Online';
-          default:
-            return order.paymentMethod;
-        }
-      };
+      const isPaid = order.paymentStatus === 'PAID';
+      const paymentMethod = order.payments?.[0]?.paymentMethod || 'N/A';
 
-      const isPaid = order.paymentStatus === 'paid';
       return (
         <div>
           <Badge
             variant={isPaid ? 'default' : 'secondary'}
             className={isPaid ? 'bg-green-100 text-green-800' : ''}
           >
-            {getPaymentLabel()}
+            {paymentMethod}
           </Badge>
           <div className="text-xs text-muted-foreground">
             {order.paymentStatus}
@@ -233,18 +168,7 @@ export const createOrdersColumns = (
       );
     },
   },
-  {
-    accessorKey: 'platform',
-    header: 'Platform',
-    cell: ({ row }) => {
-      const order = row.original;
-      return (
-        <Badge variant="outline" className="capitalize">
-          {order.platform.replace('_', ' ')}
-        </Badge>
-      );
-    },
-  },
+
   {
     id: 'actions',
     header: 'Actions',
@@ -272,7 +196,7 @@ export const createOrdersColumns = (
               <DropdownMenuLabel>Order Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
 
-              {order.orderStatus === 'acknowledged' && (
+              {order.orderStatus === 'CONFIRMED' && (
                 <DropdownMenuItem
                   onClick={() => onAction(order._id, 'food_ready')}
                 >
@@ -281,7 +205,7 @@ export const createOrdersColumns = (
                 </DropdownMenuItem>
               )}
 
-              {order.orderStatus === 'food_ready' && (
+              {order.orderStatus === 'FOOD_READY' && (
                 <>
                   <DropdownMenuItem
                     onClick={() => onAction(order._id, 'dispatch')}
@@ -298,7 +222,7 @@ export const createOrdersColumns = (
                 </>
               )}
 
-              {order.orderStatus === 'dispatched' && (
+              {order.orderStatus === 'DISPATCHED' && (
                 <DropdownMenuItem
                   onClick={() => onAction(order._id, 'mark_fulfilled')}
                 >
@@ -322,9 +246,9 @@ export const createOrdersColumns = (
                 Print Bill
               </DropdownMenuItem>
 
-              {(order.orderStatus === 'acknowledged' ||
-                order.orderStatus === 'food_ready' ||
-                order.orderStatus === 'dispatched') && (
+              {(order.orderStatus === 'CONFIRMED' ||
+                order.orderStatus === 'FOOD_READY' ||
+                order.orderStatus === 'DISPATCHED') && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -337,8 +261,8 @@ export const createOrdersColumns = (
                 </>
               )}
 
-              {(order.orderStatus === 'fulfilled' ||
-                order.orderStatus === 'cancelled') && (
+              {(order.orderStatus === 'FULFILLED' ||
+                order.orderStatus === 'CANCELLED') && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

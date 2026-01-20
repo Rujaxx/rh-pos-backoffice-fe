@@ -46,7 +46,7 @@ export function OrderTypeDetailsModal({
   const statusMetrics = [
     { label: 'Placed', value: getSafeNumber(item.placed) },
     { label: 'Pending', value: getSafeNumber(item.pending) },
-    { label: 'Acknowledged', value: getSafeNumber(item.acknowledged) },
+    { label: 'Confirmed', value: getSafeNumber(item.confirmed) },
     { label: 'Food Ready', value: getSafeNumber(item.foodReady) },
     { label: 'Dispatched', value: getSafeNumber(item.dispatched) },
     { label: 'Fulfilled', value: getSafeNumber(item.fulfilled) },
