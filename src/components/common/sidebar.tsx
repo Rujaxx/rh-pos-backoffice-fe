@@ -27,6 +27,7 @@ import {
   ShoppingCart,
   PercentIcon,
   NotepadText,
+  Receipt,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -357,6 +358,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.waiterIncentive') || 'Waiter Incentive Reports',
         href: '/reports/waiter-incentive-reports',
         icon: NotepadText,
+      },
+      {
+        id: 'bill-print-reports',
+        label: t('navigation.billPrintReports') || 'Waiter Incentive Reports',
+        href: '/reports/bill-print-reports',
+        icon: Receipt,
       },
     ],
   },

@@ -8,6 +8,7 @@ import {
   PaymentMethodsEnum,
   KitchenDepartmentReportType,
   DiscountReportType,
+  BillPrintReportType,
 } from '@/types/report.type';
 import { MealTimeReportType } from '@/types/meal-time-report.type';
 
@@ -226,6 +227,9 @@ export function getReportTypeLabel(reportType: string): string {
       'reports.discount.reportTypes.discountSummary',
     [DiscountReportType.DISCOUNT_ITEM_WISE]:
       'reports.discount.reportTypes.discountItemWise',
+
+    [BillPrintReportType.BILL_PRINT_SUMMARY]:
+      'reports.billPrint.reportType.summary',
   };
 
   return labelMap[reportType] || reportType;

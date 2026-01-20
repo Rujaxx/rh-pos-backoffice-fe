@@ -2,6 +2,7 @@ import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
 import { MealTimeReportType } from './meal-time-report.type';
 import { WaiterIncentiveReportType } from './waiter-incentive-report.type';
+import { OrderType } from './order-type.type'; // Import from order-type.type
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -74,6 +75,18 @@ export enum KitchenDepartmentReportType {
   KITCHEN_DEPARTMENT_SUMMARY = 'KITCHEN_DEPARTMENT_SUMMARY',
 }
 
+// Bill Print Report Types
+export enum BillPrintReportType {
+  BILL_PRINT_SUMMARY = 'BILL_PRINT_SUMMARY',
+}
+
+// Print Status
+export enum PrintStatus {
+  FULFILLED = 'FULFILLED',
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED',
+}
+
 // Generated Report (for DSR Page table)
 export interface GeneratedReport {
   _id: string;
@@ -87,7 +100,9 @@ export interface GeneratedReport {
     | HourlyReportType
     | MealTimeReportType
     | DiscountReportType
-    | KitchenDepartmentReportType;
+    | KitchenDepartmentReportType
+    | BillPrintReportType
+    | WaiterIncentiveReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -113,7 +128,8 @@ export interface ReportQueryParams extends QueryParams {
   menuIds?: string[];
 
   // Order filters
-  orderTypeIds?: string[];
+  orderTypeIds?: string[]; // For order type IDs
+  orderType?: string; // For order type name filter
 
   // Payment filters
   paymentMethods?: PaymentMethodsEnum[];
@@ -121,8 +137,12 @@ export interface ReportQueryParams extends QueryParams {
   // Bill filters
   billStatus?: BillStatus[];
 
+  // Print Status for bill print reports
+  printStatus?: PrintStatus;
+
   // Search
   term?: string;
+  search?: string; // For bill print reports
 
   // Sorting
   sortBy?: string;
@@ -170,7 +190,8 @@ export interface GenerateReportRequest {
     | MealTimeReportType
     | DiscountReportType
     | WaiterIncentiveReportType
-    | KitchenDepartmentReportType;
+    | KitchenDepartmentReportType
+    | BillPrintReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;
