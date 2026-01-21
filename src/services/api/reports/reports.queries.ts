@@ -8,6 +8,7 @@ import {
 import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
 import { DiscountReportData } from '@/types/discount-report.type';
+import { BillerWiseReportItem } from '@/types/biller-wise-report.type';
 
 // Reports service - custom implementation since ReportData has unique structure
 class BaseReportService {
@@ -94,6 +95,32 @@ class BaseReportService {
 
     return api.get(url);
   }
+
+  async getBillerWiseReports(
+    params?: ReportQueryParams,
+  ): Promise<PaginatedResponse<BillerWiseReportItem>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
+            searchParams.append(key, String(value));
+          }
+        }
+      });
+    }
+
+    const url = searchParams.toString()
+      ? `${API_ENDPOINTS.REPORTS.BILLER_WISE}?${searchParams.toString()}`
+      : API_ENDPOINTS.REPORTS.BILLER_WISE;
+
+    return api.get(url);
+  }
 }
 
 const reportService = new BaseReportService();
@@ -159,5 +186,19 @@ export const useDiscountReports = createReportHook(
   API_ENDPOINTS.REPORTS.LIST_SALES,
   'meal-time-reports',
 );
+
+export const useBillerWiseReports = (
+  params?: ReportQueryParams,
+  options?: Omit<
+    UseQueryOptions<PaginatedResponse<BillerWiseReportItem>>,
+    'queryKey' | 'queryFn'
+  >,
+) => {
+  return useQuery({
+    queryKey: ['biller-wise-reports', 'list', params],
+    queryFn: () => reportService.getBillerWiseReports(params),
+    ...options,
+  });
+};
 
 export { reportService };

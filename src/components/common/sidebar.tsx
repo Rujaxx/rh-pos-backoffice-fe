@@ -28,6 +28,7 @@ import {
   PercentIcon,
   NotepadText,
   Receipt,
+  ReceiptTextIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -361,9 +362,15 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
       },
       {
         id: 'bill-print-reports',
-        label: t('navigation.billPrintReports') || 'Waiter Incentive Reports',
+        label: t('navigation.billPrintReports') || 'Bill Print Reports',
         href: '/reports/bill-print-reports',
         icon: Receipt,
+      },
+      {
+        id: 'biller-wise-reports',
+        label: t('navigation.billerWiseReports') || 'Biller Wise Reports',
+        href: '/reports/biller-wise-reports',
+        icon: ReceiptTextIcon,
       },
     ],
   },

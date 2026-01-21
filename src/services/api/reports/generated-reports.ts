@@ -37,24 +37,6 @@ const MOCK_ALL_GENERATED_REPORTS: GeneratedReport[] = [
     createdAt: '2025-12-29T10:30:00Z',
     updatedAt: '2025-12-29T10:32:15Z',
   },
-  {
-    _id: 'payment-2',
-    generateDate: '2025-12-29T09:15:00Z',
-    reportCompleteTime: '2025-12-29T09:16:45Z',
-    generatedBy: 'user456',
-    generatedByName: 'Jane Smith',
-    reportType: PaymentReportType.PAYMENT_SUMMARY,
-    generationStatus: ReportGenerationStatus.PROCESSING,
-    downloadUrl: '',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-28T23:59:59Z',
-      restaurantIds: ['rest1'],
-    },
-    createdAt: '2025-12-29T09:15:00Z',
-    updatedAt: '2025-12-29T09:16:45Z',
-  },
-
   // Daily Sales Reports
   {
     _id: 'daily-1',
@@ -75,41 +57,6 @@ const MOCK_ALL_GENERATED_REPORTS: GeneratedReport[] = [
     createdAt: '2025-12-29T11:45:00Z',
     updatedAt: '2025-12-29T11:47:30Z',
   },
-  {
-    _id: 'daily-2',
-    generateDate: '2025-12-29T08:20:00Z',
-    reportCompleteTime: '2025-12-29T08:21:45Z',
-    generatedBy: 'user456',
-    generatedByName: 'Jane Smith',
-    reportType: DailyReportType.BILL_WISE_LIQUOR_SALE,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-28T23:59:59Z',
-      restaurantIds: ['rest1'],
-    },
-    createdAt: '2025-12-29T08:20:00Z',
-    updatedAt: '2025-12-29T08:21:45Z',
-  },
-  {
-    _id: 'daily-3',
-    generateDate: '2025-12-29T07:10:00Z',
-    reportCompleteTime: '',
-    generatedBy: 'user789',
-    generatedByName: 'Bob Wilson',
-    reportType: DailyReportType.DSR_BILL_MONTH_WISE,
-    generationStatus: ReportGenerationStatus.PENDING,
-    downloadUrl: '',
-    filters: {
-      from: '2025-12-27T00:00:00Z',
-      to: '2025-12-28T23:59:59Z',
-      restaurantIds: ['rest2', 'rest3'],
-    },
-    createdAt: '2025-12-29T07:10:00Z',
-    updatedAt: '2025-12-29T07:10:00Z',
-  },
-
   // Hourly Reports
   {
     _id: 'hourly-1',
@@ -127,23 +74,6 @@ const MOCK_ALL_GENERATED_REPORTS: GeneratedReport[] = [
     },
     createdAt: '2025-12-29T14:30:00Z',
     updatedAt: '2025-12-29T14:32:00Z',
-  },
-  {
-    _id: 'hourly-2',
-    generateDate: '2025-12-29T13:15:00Z',
-    reportCompleteTime: '',
-    generatedBy: 'user456',
-    generatedByName: 'Jane Smith',
-    reportType: HourlyReportType.MONTH_WISE,
-    generationStatus: ReportGenerationStatus.FAILED,
-    downloadUrl: '',
-    filters: {
-      from: '2025-12-01T00:00:00Z',
-      to: '2025-12-31T23:59:59Z',
-      restaurantIds: ['rest1', 'rest2'],
-    },
-    createdAt: '2025-12-29T13:15:00Z',
-    updatedAt: '2025-12-29T13:16:30Z',
   },
 ];
 

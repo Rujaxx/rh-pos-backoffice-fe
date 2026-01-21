@@ -137,6 +137,7 @@ export const API_ENDPOINTS = {
     GENERATE_TDS: '/reports/generate/tds-report',
     MEAL_TIME: '/reports/meal-time-report',
     ORDER_TYPE: '/reports/order-type',
+    BILLER_WISE: '/reports/biller-wise-report',
   },
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
