@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Printer, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -35,8 +35,8 @@ export function OrderDetailsModal({
 }: OrderDetailsModalProps) {
   const { t } = useTranslation();
 
-  const getStatusBadge = () => {
-    switch (order.orderStatus) {
+  const getStatusBadge = (status: string) => {
+    switch (status) {
       case OrderStatus.PENDING:
         return <Badge variant="default">{t('orders.pending')}</Badge>;
       case OrderStatus.CONFIRMED:
@@ -52,7 +52,7 @@ export function OrderDetailsModal({
       case OrderStatus.CANCELLED:
         return <Badge variant="destructive">{t('orders.cancelled')}</Badge>;
       default:
-        return <Badge variant="default">{order.orderStatus}</Badge>;
+        return <Badge variant="default">{order.status}</Badge>;
     }
   };
 
@@ -143,8 +143,8 @@ export function OrderDetailsModal({
                 <span className="font-medium">{order.orderNumber}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm">{t('orders.orderStatus')}</span>
-                {getStatusBadge()}
+                <span className="text-sm">{t('orders.status')}</span>
+                {getStatusBadge(order.status)}
               </div>
               <div className="flex justify-between">
                 <span className="text-sm">{t('orders.orderType')}</span>
@@ -169,9 +169,9 @@ export function OrderDetailsModal({
               <div>Discount</div>
               <div>Tax</div>
             </div>
-            {order.items.map((item) => (
+            {order.items.map((item, index) => (
               <div
-                key={item._id}
+                key={`${item.menuItemId}-${index}`}
                 className="grid grid-cols-6 gap-4 p-4 border-b"
               >
                 <div className="col-span-2">
@@ -220,7 +220,7 @@ export function OrderDetailsModal({
             <div className="flex justify-between items-center text-sm text-muted-foreground">
               <span>{t('orders.paymentMethod')}</span>
               <span className="capitalize">
-                {order.payments?.[0]?.paymentMethod || 'N/A'}
+                {order.payments?.[0]?.method || 'N/A'}
               </span>
             </div>
             <div className="flex justify-between items-center text-sm text-muted-foreground">

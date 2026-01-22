@@ -1311,7 +1311,7 @@
   "bill.status.ACTIVE": "Active",
   "bill.status.COMPLETED": "Completed",
   "bill.status.CANCELLED": "Cancelled",
-  "bill.orderStatus": "Order Status",
+  "bill.status": "Order Status",
   "bill.paymentStatus": "Payment Status",
   "common.selectOrderTypes": "Select Order Types",
   "common.selectMenus": "Select Menu",
@@ -1733,10 +1733,10 @@
   "reports.details.reportType": "Report Type",
   "reports.payment.reportDetails": "Payment Report Details",
   "reports.payment.summaryDesc": "Download summary report with all payment method details",
-  "orderStatus.title": "Order Status",
-  "orderStatus.pending": "Pending",
-  "orderStatus.completed": "Completed",
-  "orderStatus.cancelled": "Cancelled",
+  "order.status.title": "Order Status",
+  "order.status.pending": "Pending",
+  "order.status.completed": "Completed",
+  "order.status.cancelled": "Cancelled",
   "common.all": "All",
   "reports.orderType.description": "View order type statistics and analysis",
   "reports.orderType.orderTypeReport": "Order Type Analysis",
@@ -1815,7 +1815,7 @@
   "orders.fulfilled": "Fulfilled",
   "orders.cancelled": "Cancelled",
   "orders.billNo": "Bill No:",
-  "orders.orderStatus": "Order Status:",
+  "orders.status": "Order Status:",
   "orders.deliveryType": "Delivery Type:",
   "orders.subtotal": "Subtotal:",
   "orders.discount": "Discount:",
@@ -1872,5 +1872,9 @@
   "reports.discount.reportType.discountCodeWise": "Discount Code-Wise",
   "common.selectUser": "Select User",
   "reports.discount.summaryReport": "Discount Summary Report",
-  "reports.discount.itemWiseReport": "Discount Item-Wise Report"
+  "reports.discount.itemWiseReport": "Discount Item-Wise Report",
+
+  "orders.pending": "Pending",
+  "payment.unpaid": "Unpaid",
+  "common.refreshSuccess": "Orders refreshed successfully"
 }

@@ -42,16 +42,16 @@ export function PaymentReportFilters({
 
   const orderStatusOptions = [
     { value: 'all', label: t('common.all') },
-    { value: 'pending', label: t('orderStatus.pending') || 'Pending' },
-    { value: 'completed', label: t('orderStatus.completed') || 'Completed' },
-    { value: 'cancelled', label: t('orderStatus.cancelled') || 'Cancelled' },
+    { value: 'pending', label: t('order.status.pending') || 'Pending' },
+    { value: 'completed', label: t('order.status.completed') || 'Completed' },
+    { value: 'cancelled', label: t('order.status.cancelled') || 'Cancelled' },
   ];
   const handleOrderStatusChange = (value: string) => {
     const newFilters = { ...filters };
     if (value === 'all') {
-      delete newFilters.orderStatus;
+      delete newFilters.status;
     } else {
-      newFilters.orderStatus = value;
+      newFilters.status = value;
     }
     onFilterChange(newFilters);
   };
@@ -69,9 +69,9 @@ export function PaymentReportFilters({
         />
       </div>
       <div className="space-y-2">
-        <Label>{t('orderStatus.title')}</Label>
+        <Label>{t('order.status.title')}</Label>
         <Select
-          value={filters.orderStatus ? String(filters.orderStatus) : undefined}
+          value={filters.status ? String(filters.status) : undefined}
           onValueChange={handleOrderStatusChange}
         >
           <SelectTrigger className="w-full">

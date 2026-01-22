@@ -1843,5 +1843,9 @@
   "reports.discount.reportType.discountTypeWise": "حسب نوع الخصم",
   "reports.discount.reportType.userWise": "حسب المستخدم",
   "reports.discount.reportType.restaurantWise": "حسب المطعم",
-  "reports.discount.reportType.discountCodeWise": "حسب رمز الخصم"
+  "reports.discount.reportType.discountCodeWise": "حسب رمز الخصم",
+
+  "orders.pending": "قيد الانتظار",
+  "payment.unpaid": "غير مدفوع",
+  "common.refreshSuccess": "تم تحديث الطلبات بنجاح"
 }

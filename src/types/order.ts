@@ -8,6 +8,8 @@ export enum OrderStatus {
   DISPATCHED = 'DISPATCHED',
   FULFILLED = 'FULFILLED',
   CANCELLED = 'CANCELLED',
+  RUNNING = 'RUNNING',
+  ACTIVE = 'ACTIVE',
 }
 
 // Payment Status Enum matching actual backend values (UPPERCASE)
@@ -18,6 +20,13 @@ export enum PaymentStatus {
   FAILED = 'FAILED',
   PARTIALLY_PAID = 'PARTIALLY_PAID',
   REFUNDED = 'REFUNDED',
+}
+
+// Bill/Order Status Enum
+export enum BillStatus {
+  ACTIVE = 'Active',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled',
 }
 
 // Nested DTOs from backend
@@ -38,62 +47,95 @@ export interface RestaurantInfo {
   _id: string;
   name: MultilingualText;
   restoCode?: string;
-  isActive?: boolean;
+  isActive: boolean;
 }
 
-// Order Item from backend response
+// Order Item Response (updated to match BillItem)
 export interface OrderItemResponse {
-  _id: string;
   menuItemId: string;
   name: MultilingualText;
   quantity: number;
-  unitPrice: number;
   price: number;
-  discountAmount: number;
   taxAmount: number;
-  total: number;
+  discountAmount: number;
+  notes?: string;
 }
 
-// Payment Response from backend
+// Payment Response
 export interface PaymentResponse {
-  _id: string;
-  paymentMethod: string;
+  method: string;
   amount: number;
-  status: PaymentStatus;
-  transactionId?: string;
-  paidAt?: Date;
+  paymentDate: Date;
 }
 
-// Main Order List Item matching OrderListResponseDto
+// Main Order/Bill List Item (matching actual API response)
 export interface OrderListItem {
   _id: string;
+  billNumber?: string;
   orderNumber: string;
-  brandId: string;
-  restaurantId: string;
-  restaurantDoc?: RestaurantInfo;
-  customerId?: string;
-  menuId: string;
-  menuDoc?: MenuInfo;
   orderTypeId: string;
-  orderTypeDoc?: OrderTypeInfo;
+  menuId: string;
   tableId?: string;
+  waiterId?: string;
+  waiterName?: string;
   customerName?: string;
-  countryCode?: string;
   customerPhone?: string;
-  items: OrderItemResponse[];
+  customerId: string;
+  restaurantId: string;
+  brandId: string;
   subTotal: number;
   discountAmount: number;
   taxAmount: number;
-  deliveryTip: number;
+  packagingCharges: number;
   totalAmount: number;
-  paymentStatus: PaymentStatus;
+  amountPaid: number;
+  status: string; // Order/Bill status (PENDING, ACTIVE, COMPLETED, CANCELLED)
+  paymentStatus: string; // Payment status (UNPAID, PENDING, PAID, etc.)
   payments: PaymentResponse[];
-  orderStatus: OrderStatus;
-  orderNote?: string;
-  platform: string;
-  deliveryBoy?: string;
+  items: OrderItemResponse[];
+  closedAt?: Date;
+  createdBy?: string;
+  updatedBy?: string;
   createdAt: Date;
   updatedAt: Date;
+
+  // Optional populated fields (from populate)
+  restaurantDoc?: RestaurantInfo;
+  menuDoc?: MenuInfo;
+  orderTypeDoc?: OrderTypeInfo;
+
+  platform?: string;
+  deliveryBoy?: string;
+  countryCode?: string;
+  deliveryTip?: number;
+  orderNote?: string;
 }
 
-// export interface Order extends OrderListItem {}
+// Legacy Order type alias for backward compatibility
+export type Order = OrderListItem;
+
+export interface OrderFilterParams {
+  // Date range
+  from?: string;
+  to?: string;
+
+  // Restaurant filter
+  restaurantIds?: string[];
+
+  // Advanced filters
+  search?: string;
+  externalOrderId?: string;
+  platform?: string;
+  orderLater?: boolean;
+
+  // Any other filters
+  [key: string]: unknown;
+}
+
+// Update Order DTO for PATCH requests
+export interface UpdateOrderDto {
+  status?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+  deliveryBoy?: string;
+  orderNote?: string;
+}

@@ -8,41 +8,25 @@ import Layout from '@/components/common/layout';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { OrderDetailsModal } from '@/components/online-orders/order-details-modal';
 import { OrderFilters } from '@/components/online-orders/online-order-filter';
-import { OrderListItem, OrderStatus } from '@/types/order';
+import { OrderFilterParams, OrderListItem, OrderStatus } from '@/types/order';
 import { createOrdersColumns } from '@/components/online-orders/online-table-column';
-import { RefreshCw, Loader2 } from 'lucide-react';
+import { RefreshCw, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useOrders } from '@/services/api/orders/orders.queries';
 import { OrderQueryParams } from '@/services/api/orders/orders.queries';
-
-// Create type for order filters
-interface OrderFilterParams {
-  // Date range
-  from?: string;
-  to?: string;
-
-  // Restaurant filter
-  restaurantIds?: string[];
-
-  // Advanced filters
-  search?: string;
-  externalOrderId?: string;
-  platform?: string;
-  orderLater?: boolean;
-
-  // Any other filters
-  [key: string]: unknown;
-}
+import { useUpdateOrder } from '@/services/api/orders/orders.mutations';
+import { useOrderSocket } from '@/hooks/useOrderSocket';
+import { useSocket } from '@/providers/socket-provider';
 
 type OrderTab =
-  | 'new'
-  | 'running'
-  | 'food_ready'
-  | 'dispatched'
-  | 'fulfilled'
-  | 'cancelled';
+  | 'NEW'
+  | 'RUNNING'
+  | 'FOOD_READY'
+  | 'DISPATCHED'
+  | 'FULFILLED'
+  | 'CANCELLED';
 
 export default function OnlineOrdersPage() {
   const { t } = useTranslation();
@@ -51,7 +35,8 @@ export default function OnlineOrdersPage() {
   );
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<OrderTab>('new');
+  const [activeTab, setActiveTab] = useState<OrderTab>('NEW');
+  const [loadingOrders, setLoadingOrders] = useState<Set<string>>(new Set());
 
   // Filter states using OrderFilterParams
   const [filters, setFilters] = useState<OrderFilterParams>({});
@@ -74,35 +59,60 @@ export default function OnlineOrdersPage() {
     error,
     refetch,
   } = useOrders(queryParams);
-
-  // ordersResponse IS the PaginatedResponse object, so we access data directly
   const orders = ordersResponse?.data || [];
 
-  // Helper function to filter orders by status
+  // Get socket connection methods for manual refresh
+  const socket = useSocket();
+  // Socket connection for real-time updates (professional pattern)
+  const { isConnected: socketConnected } = useOrderSocket({
+    enabled: true,
+    showNotifications: true,
+    onDisconnect: (reason) => {
+      toast.error('Connection lost', { description: reason });
+    },
+  });
+
+  // Mutation hook for updating order status
+  const updateOrderMutation = useUpdateOrder();
+
+  // Handle status update
+  const handleStatusUpdate = useCallback(
+    async (orderId: string, status: OrderStatus) => {
+      // Add to loading set
+      setLoadingOrders((prev) => new Set(prev).add(orderId));
+
+      try {
+        await updateOrderMutation.mutateAsync({
+          orderId,
+          data: { status },
+        });
+      } finally {
+        // Remove from loading set
+        setLoadingOrders((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(orderId);
+          return newSet;
+        });
+      }
+    },
+    [updateOrderMutation],
+  );
+
   const filterOrdersByStatus = (ordersList: OrderListItem[]) => {
     return {
-      new: ordersList.filter((o) => o.orderStatus === OrderStatus.PENDING),
-      running: ordersList.filter(
+      // PENDING status for RUNNING orders
+      NEW: ordersList.filter(
         (o) =>
-          o.orderStatus === OrderStatus.CONFIRMED ||
-          o.orderStatus === OrderStatus.FOOD_READY,
+          o.status === OrderStatus.PENDING || o.status === OrderStatus.ACTIVE,
       ),
-      food_ready: ordersList.filter(
-        (o) => o.orderStatus === OrderStatus.FOOD_READY,
-      ),
-      dispatched: ordersList.filter(
-        (o) => o.orderStatus === OrderStatus.DISPATCHED,
-      ),
-      fulfilled: ordersList.filter(
-        (o) => o.orderStatus === OrderStatus.FULFILLED,
-      ),
-      cancelled: ordersList.filter(
-        (o) => o.orderStatus === OrderStatus.CANCELLED,
-      ),
+      RUNNING: ordersList.filter((o) => o.status === OrderStatus.RUNNING),
+      FOOD_READY: ordersList.filter((o) => o.status === OrderStatus.FOOD_READY),
+      DISPATCHED: ordersList.filter((o) => o.status === OrderStatus.DISPATCHED),
+      FULFILLED: ordersList.filter((o) => o.status === OrderStatus.FULFILLED),
+      CANCELLED: ordersList.filter((o) => o.status === OrderStatus.CANCELLED),
     };
   };
 
-  // Apply all filters to orders
   const applyFiltersToOrders = useCallback(
     (ordersList: OrderListItem[]) => {
       let filtered = [...ordersList];
@@ -140,9 +150,6 @@ export default function OnlineOrdersPage() {
         );
       }
 
-      // Note: External Order ID, Platform, and Order Later filters
-      // have been removed as they don't exist in the backend DTO
-
       return filtered;
     },
     [filters],
@@ -171,12 +178,12 @@ export default function OnlineOrdersPage() {
     const filtered = applyFiltersToOrders(orders);
     const statusFiltered = filterOrdersByStatus(filtered);
     return {
-      new: statusFiltered.new.length,
-      running: statusFiltered.running.length,
-      food_ready: statusFiltered.food_ready.length,
-      dispatched: statusFiltered.dispatched.length,
-      fulfilled: statusFiltered.fulfilled.length,
-      cancelled: statusFiltered.cancelled.length,
+      NEW: statusFiltered.NEW.length,
+      RUNNING: statusFiltered.RUNNING.length,
+      FOOD_READY: statusFiltered.FOOD_READY.length,
+      DISPATCHED: statusFiltered.DISPATCHED.length,
+      FULFILLED: statusFiltered.FULFILLED.length,
+      CANCELLED: statusFiltered.CANCELLED.length,
     };
   }, [orders, applyFiltersToOrders]);
 
@@ -190,7 +197,7 @@ export default function OnlineOrdersPage() {
 
         // For now, show success message and refetch
         switch (action) {
-          case 'food_ready':
+          case 'FOOD_READY':
             toast.success(`Order marked as Food Ready`);
             break;
           case 'dispatch':
@@ -233,9 +240,20 @@ export default function OnlineOrdersPage() {
   }, []);
 
   const handleRefresh = useCallback(async () => {
-    await refetch();
-    toast.success(t('common.refreshSuccess') || 'Orders refreshed');
-  }, [t, refetch]);
+    try {
+      // Reconnect socket
+      socket.connect();
+
+      // Refetch order data
+      await refetch();
+
+      toast.success(t('common.refreshSuccess') || 'Orders refreshed');
+    } catch (error) {
+      toast.error('Refresh failed', {
+        description: 'Failed to refresh data. Please try again.',
+      });
+    }
+  }, [t, refetch, socket]);
 
   // Get filtered orders for current tab
   const filteredOrders = useMemo(() => {
@@ -245,40 +263,46 @@ export default function OnlineOrdersPage() {
   }, [orders, activeTab, applyFiltersToOrders]);
 
   const columns = useMemo(
-    () => createOrdersColumns(handleViewDetails, handleOrderAction),
-    [handleViewDetails, handleOrderAction],
+    () =>
+      createOrdersColumns(
+        handleViewDetails,
+        handleOrderAction,
+        handleStatusUpdate,
+        loadingOrders,
+      ),
+    [handleViewDetails, handleOrderAction, handleStatusUpdate, loadingOrders],
   );
 
   const tabs = [
     {
-      id: 'new' as const,
+      id: 'NEW' as const,
       label: t('orders.newOrders') || 'New Orders',
-      count: orderCounts.new,
+      count: orderCounts.NEW,
     },
     {
-      id: 'running' as const,
+      id: 'RUNNING' as const,
       label: t('orders.runningOrders') || 'Running Orders',
-      count: orderCounts.running,
+      count: orderCounts.RUNNING,
     },
     {
-      id: 'food_ready' as const,
+      id: 'FOOD_READY' as const,
       label: t('orders.foodReady') || 'Food Ready',
-      count: orderCounts.food_ready,
+      count: orderCounts.FOOD_READY,
     },
     {
-      id: 'dispatched' as const,
+      id: 'DISPATCHED' as const,
       label: t('orders.dispatchedOrders') || 'Dispatched',
-      count: orderCounts.dispatched,
+      count: orderCounts.DISPATCHED,
     },
     {
-      id: 'fulfilled' as const,
+      id: 'FULFILLED' as const,
       label: t('orders.fulfilledOrders') || 'Fulfilled',
-      count: orderCounts.fulfilled,
+      count: orderCounts.FULFILLED,
     },
     {
-      id: 'cancelled' as const,
+      id: 'CANCELLED' as const,
       label: t('orders.cancelledOrders') || 'Cancelled',
-      count: orderCounts.cancelled,
+      count: orderCounts.CANCELLED,
     },
   ];
 
@@ -364,12 +388,34 @@ export default function OnlineOrdersPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>
-                {tabs.find((tab) => tab.id === activeTab)?.label}
-                <span className="text-muted-foreground ml-2">
-                  ({filteredOrders.length} orders)
-                </span>
-              </CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle>
+                  {tabs.find((tab) => tab.id === activeTab)?.label}
+                  <span className="text-muted-foreground ml-2">
+                    ({filteredOrders.length} orders)
+                  </span>
+                </CardTitle>
+
+                {/* Real-time Connection Status */}
+                <div className="flex items-center gap-1.5">
+                  {socketConnected ? (
+                    <>
+                      <Wifi className="h-4 w-4 text-green-500" />
+                      <span className="text-xs text-green-600 font-medium">
+                        Live
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <WifiOff className="h-4 w-4 text-gray-400" />
+                      <span className="text-xs text-gray-500 font-medium">
+                        Offline
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+
               {isAnyFilterActive && (
                 <Badge variant="outline" className="ml-2">
                   Filtered

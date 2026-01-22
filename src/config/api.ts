@@ -171,6 +171,7 @@ export const API_ENDPOINTS = {
   ORDERS: {
     LIST: '/orders',
     GET: (id: string) => `/orders/${id}`,
+    UPDATE: (id: string) => `/orders/${id}`,
   },
 } as const;
 
@@ -283,5 +284,6 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['orders', 'list', params] as const,
     DETAIL: (id: string) => ['orders', 'detail', id] as const,
+    UPDATE: (id: string) => ['orders', 'update', id] as const,
   },
 } as const;

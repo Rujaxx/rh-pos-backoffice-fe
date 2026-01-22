@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Billings Socket Test</title>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      #log {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+        background: #f9f9f9;
+      }
+      .event {
+        margin-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+      }
+      .timestamp {
+        color: #888;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Billings Socket Test</h1>
+    <p>Status: <span id="status">Disconnected</span></p>
+    <div id="log"></div>
+
+    <script>
+      const statusEl = document.getElementById('status');
+      const logEl = document.getElementById('log');
+
+      function log(message, data) {
+        const div = document.createElement('div');
+        div.className = 'event';
+        const timestamp = new Date().toLocaleTimeString();
+        const dataStr = data
+          ? `<pre>${JSON.stringify(data, null, 2)}</pre>`
+          : '';
+        div.innerHTML = `<span class="timestamp">[${timestamp}]</span> <strong>${message}</strong>${dataStr}`;
+        logEl.appendChild(div);
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OTUwMGJiYWVhMTU1NjdmMTVlY2FmNGYiLCJ1c2VybmFtZSI6ImthaWYiLCJwZXJtaXNzaW9ucyI6WyJ1c2VyOmNyZWF0ZSIsInVzZXI6cmVhZCIsInVzZXI6dXBkYXRlIiwidXNlcjpsaXN0IiwidXNlcjpkZWxldGUiLCJ1c2VyOm1hbmFnZV9yb2xlcyIsInJlc3RhdXJhbnQ6Y3JlYXRlIiwicmVzdGF1cmFudDpyZWFkIiwicmVzdGF1cmFudDp1cGRhdGUiLCJyZXN0YXVyYW50OmRlbGV0ZSIsInJlc3RhdXJhbnQ6bGlzdCIsInJlc3RhdXJhbnQ6bWFuYWdlX3RhYmxlcyIsImJyYW5kOmNyZWF0ZSIsImJyYW5kOnJlYWQiLCJicmFuZDp1cGRhdGUiLCJicmFuZDpsaXN0IiwibWVudTpjcmVhdGUiLCJtZW51OnJlYWQiLCJtZW51OnVwZGF0ZSIsIm1lbnU6ZGVsZXRlIiwibWVudTpsaXN0IiwibWVudTptYW5hZ2VfY2F0ZWdvcmllcyIsIm1lbnU6bWFuYWdlX2l0ZW1zIiwibWVudTptYW5hZ2VfcHJpY2luZyIsIm1lbnU6cHVibGlzaCIsIm9yZGVyOmNyZWF0ZSIsIm9yZGVyOnJlYWQiLCJvcmRlcjp1cGRhdGUiLCJvcmRlcjpkZWxldGUiLCJvcmRlcjpsaXN0Iiwib3JkZXI6Y2FuY2VsIiwib3JkZXI6cmVmdW5kIiwib3JkZXI6a2l0Y2hlbl92aWV3Iiwib3JkZXI6a2l0Y2hlbl91cGRhdGUiLCJraXRjaGVuOnZpZXdfb3JkZXJzIiwia2l0Y2hlbjp1cGRhdGVfc3RhdHVzIiwia2l0Y2hlbjptYW5hZ2VfZGVwYXJ0bWVudHMiLCJwYXltZW50OnByb2Nlc3MiLCJwYXltZW50OnZpZXciLCJwYXltZW50OnJlZnVuZCIsInBheW1lbnQ6dmlld19yZXBvcnRzIiwicGF5bWVudDpjYW5kZWwiLCJ0YXg6Y3JlYXRlIiwidGF4OnJlYWQiLCJ0YXg6dXBkYXRlIiwidGF4OmRlbGV0ZSIsInRheDpsaXN0IiwidGF4Om1hbmFnZV9ncm91cHMiLCJyZXBvcnQ6dmlld19zYWxlcyIsInJlcG9ydDp2aWV3X2ludmVudG9yeSIsInJlcG9ydDp2aWV3X2ZpbmFuY2lhbCIsInJlcG9ydDp2aWV3X3VzZXJfYWN0aXZpdHkiLCJyZXBvcnQ6ZXhwb3J0IiwidGFibGU6Y3JlYXRlIiwidGFibGU6cmVhZCIsInRhYmxlOnVwZGF0ZSIsInRhYmxlOmRlbGV0ZSIsInRhYmxlOmxpc3QiLCJ0YWJsZV9zZWN0aW9uOmNyZWF0ZSIsInRhYmxlX3NlY3Rpb246cmVhZCIsInRhYmxlX3NlY3Rpb246dXBkYXRlIiwidGFibGVfc2VjdGlvbjpkZWxldGUiLCJ0YWJsZV9zZWN0aW9uOmxpc3QiLCJ2aWV3X3NjcmVlbjpkYXNoYWJvYXJkIiwidmlld19zY3JlZW46b3JkZXJfd2luZG93Iiwia290OmNyZWF0ZSIsImtvdDpyZWFkIiwia290OnVwZGF0ZSIsImtvdDpkZWxldGUiLCJrb3Q6bGlzdCIsImtvdDptYW5hZ2Vfa290IiwiYmlsbDpjcmVhdGUiLCJiaWxsOnJlYWQiLCJiaWxsOnVwZGF0ZSIsImJpbGw6ZGVsZXRlIiwiYmlsbDpsaXN0IiwiYmlsbDptYW5hZ2VfYmlsbCIsImJpbGw6YWFwbHlfZGlzY291bnQiLCJiaWxsOnF1aWNrX2JpbGwiLCJiaWxsOmNsZWFyIiwiYWNjb3VudF93aW5kb3c6dmlld19hY2NvdW50X3dpbmRvdyIsImFjY291bnRfd2luZG93OmNsb3NlX3NoaWZ0IiwiYWNjb3VudF93aW5kb3c6b3Blbl9zaGlmdCIsImFjY291bnRfd2luZG93Om9wZW5fZGF5IiwiYWNjb3VudF93aW5kb3c6Y2xvc2VfZGF5IiwiYWNjb3VudF93aW5kb3c6Y2FzaF9pbiIsImFjY291bnRfd2luZG93OmNhc2hfb3V0IiwiZXhwZW5zZXNfd2luZG93OnZpZXdfZXhwZW5zZXNfd2luZG93IiwiZXhwZW5zZXNfd2luZG93OmNyZWF0ZSIsImV4cGVuc2VzX3dpbmRvdzpyZWFkIiwiZXhwZW5zZXNfd2luZG93OnVwZGF0ZSIsImV4cGVuc2VzX3dpbmRvdzpkZWxldGUiLCJleHBlbnNlc193aW5kb3c6bGlzdCIsImV4cGVuc2VzX3dpbmRvdzphZGRfdmVuZGVyIl0sInNlc3Npb25JZCI6IjhjNWUyNmM0LWNlYWItNDc5OC1hNGEyLTQ2YTQyMTI3MzhiZCIsImlhdCI6MTc2ODk4NzExNywiZXhwIjoxNzcxNTc5MTE3fQ.oXbm-E-21XTcPXzqgPeAYq4G06lDPwyZdKyt76QFJ-c';
+
+      const socket = io('http://localhost:4000/events', {
+        transports: ['polling'],
+        transportOptions: {
+          polling: {
+            extraHeaders: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        },
+      });
+
+      socket.on('connect', () => {
+        statusEl.textContent = `Connected to ${socket.id}`;
+        statusEl.style.color = 'green';
+        log('Connected to server');
+      });
+
+      socket.on('disconnect', () => {
+        statusEl.textContent = 'Disconnected';
+        statusEl.style.color = 'red';
+        log('Disconnected from server');
+      });
+
+      socket.on('connect_error', (err) => {
+        statusEl.textContent = 'Connection Error';
+        statusEl.style.color = 'red';
+        log('Connection Error', err.message);
+      });
+
+      // Listen for new-order event
+      socket.on('newOrder', (data) => {
+        log('Received new-order event', data);
+        alert('Got new order');
+      });
+    </script>
+  </body>
+</html>

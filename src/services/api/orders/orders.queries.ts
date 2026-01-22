@@ -3,6 +3,7 @@ import { BaseApiService } from '@/services/api/base/client';
 import { OrderListItem } from '@/types/order';
 import { PaginatedResponse, QueryParams, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
+import { toast } from 'sonner';
 
 // Query parameters for filtering orders
 export interface OrderQueryParams extends QueryParams {
@@ -19,7 +20,7 @@ export interface OrderQueryParams extends QueryParams {
   tableId?: string;
 
   // Status filters
-  orderStatus?: string;
+  status?: string;
   paymentStatus?: string;
 
   // Search filters
@@ -45,6 +46,30 @@ class OrderService extends BaseApiService<
 
   async getOrderById(id: string): Promise<SuccessResponse<OrderListItem>> {
     return this.getById(id);
+  }
+
+  /**
+   * Batch fetch orders by IDs (professional pattern)
+   * Fallback: fetch individually if backend doesn't support batch
+   */
+  async getOrdersByIds(orderIds: string[]): Promise<OrderListItem[]> {
+    try {
+      // Try individual fetches (fallback approach)
+      const promises = orderIds.map((id) => this.getById(id));
+      const results = await Promise.allSettled(promises);
+
+      // Extract successful orders
+      return results
+        .filter((r) => r.status === 'fulfilled')
+        .map(
+          (r) =>
+            (r as PromiseFulfilledResult<SuccessResponse<OrderListItem>>).value
+              .data,
+        );
+    } catch (error) {
+      toast.error(`[OrderService] Batch fetch failed.`);
+      return [];
+    }
   }
 }
 
