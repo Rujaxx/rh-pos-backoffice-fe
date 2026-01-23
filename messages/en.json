@@ -1222,8 +1222,8 @@
   "common.selectRestaurants": "Select Restaurants",
   "reports.filters.paymentModes": "Payment Modes",
   "reports.filters.selectPaymentModes": "Select Modes",
-  "reports.filters.billStatus": "Bill Status",
-  "reports.filters.selectBillStatus": "Select Bill Status",
+  "reports.filters.billStatus": "Status",
+  "reports.filters.selectBillStatus": "Select Status",
   "common.clearFilters": "Clear Filters",
   "reports.table.customerName": "Customer Name",
   "reports.table.amountPaid": "Amount Paid",
@@ -1966,5 +1966,68 @@
   "common.cancelled": "Cancelled",
   "reports.generated.searchPlaceholder": "Search generated reports...",
   "reports.generated.noReports": "No generated reports found",
-  "reports.generatedReports": "Generated Reports"
+  "reports.generatedReports": "Generated Reports",
+  "navigation.itemReports": "Item Reports",
+
+  "common.filtersCleared": "Filters cleared",
+  "common.dataRefreshed": "Data refreshed",
+  "common.reportGenerated": "Report generated successfully",
+  "common.generateFailed": "Failed to generate report",
+  "common.downloadUrlNotAvailable": "Download URL not available",
+  "common.downloadStarted": "Download started",
+  "common.searchGeneratedReports": "Search generated reports...",
+  "common.noGeneratedReports": "No generated reports found",
+  "reports.itemReport.description": "View and analyze comprehensive item reports",
+
+  "reports.itemReport.tabs.soldItems": "Sold Items",
+  "reports.itemReport.tabs.complementary": "Complementary Items",
+  "reports.itemReport.tabs.kotItems": "KOT Item Wise",
+  "reports.itemReport.tabs.billDetails": "Bill-wise KOT Details",
+
+  "reports.itemReport.tabs.soldItemsDesc": "View sold items with detailed metrics",
+  "reports.itemReport.tabs.complementaryDesc": "View complementary items given",
+  "reports.itemReport.tabs.kotItemsDesc": "View KOT items and their status",
+  "reports.itemReport.tabs.billDetailsDesc": "View bill-wise KOT details",
+
+  "reports.itemReport.reportTypes.soldItems": "Sold Items Report",
+  "reports.itemReport.reportTypes.complementary": "Complementary Items Report",
+  "reports.itemReport.reportTypes.kotItems": "KOT Items Report",
+  "reports.itemReport.reportTypes.billDetails": "Bill Details Report",
+  "reports.itemReport.reportTypes.consolidated": "Consolidated Item Report",
+
+  "reports.itemReport.totalSales": "Total Sales",
+  "reports.itemReport.averagePrice": "Average Price",
+  "reports.itemReport.itemsCount": "Items Count",
+  "reports.itemReport.totalItems": "Total Items",
+  "reports.itemReport.totalQuantity": "Total Quantity",
+
+  "reports.itemReport.consolidatedReport": "Consolidated Report",
+  "reports.itemReport.billKotDetails": "Bill-wise KOT Details Report",
+
+  "reports.itemReport.downloading": "Generating...",
+  "reports.itemReport.fetchingData": "Fetching item report data...",
+  "reports.itemReport.mayTakeMoments": "This may take a few moments",
+
+  "reports.itemReport.generatingSoldItems": "Generating Sold Items Report...",
+  "reports.itemReport.generatingConsolidated": "Generating Consolidated Item Report...",
+  "reports.itemReport.generatingComplementary": "Generating Complementary Items Report...",
+  "reports.itemReport.generatingBillKOT": "Generating Bill-wise KOT Details Report...",
+  "reports.itemReport.generatingItemReport": "Generating Item Report...",
+
+  "reports.itemReport.soldItemsAdded": "Sold Items Report has been generated and added to the table.",
+  "reports.itemReport.consolidatedAdded": "Consolidated Item Report has been generated and added to the table.",
+  "reports.itemReport.complementaryAdded": "Complementary Items Report has been added to your generated reports list",
+  "reports.itemReport.billKOTAdded": "Bill-wise KOT Details Report has been added to your generated reports list",
+  "reports.itemReport.itemReportAdded": "Item Report has been generated and added to the table.",
+
+  "reports.itemReport.empty.sold-items": "No sold items found",
+  "reports.itemReport.empty.complimentary": "No complementary items found",
+  "reports.itemReport.empty.kot-items": "No KOT items found",
+  "reports.itemReport.empty.bill-details": "No bill details found",
+
+  "reports.itemReport.searchItems": "Search items...",
+
+  "reports.itemReport.reportTypes.soldItemsSummary": "Sold Items Summary Report",
+  "taxProductGroups.title": "Tax Product Groups",
+  "common.selectTaxProductGroups": "Select Tax Product Groups"
 }

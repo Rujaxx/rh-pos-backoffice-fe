@@ -27,8 +27,9 @@ import {
   ShoppingCart,
   PercentIcon,
   NotepadText,
-  Receipt,
   ReceiptTextIcon,
+  Package,
+  Printer,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -342,6 +343,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         icon: ClipboardList,
       },
       {
+        id: 'item-reports',
+        label: t('navigation.itemReports') || 'Item Reports',
+        href: '/reports/item-reports',
+        icon: Package,
+      },
+      {
         id: 'kitchen-dept-reports',
         label:
           t('navigation.kitchenDepartmentReports') || 'Kitchen Dept Reports',
@@ -364,7 +371,7 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         id: 'bill-print-reports',
         label: t('navigation.billPrintReports') || 'Bill Print Reports',
         href: '/reports/bill-print-reports',
-        icon: Receipt,
+        icon: Printer,
       },
       {
         id: 'biller-wise-reports',

@@ -11,6 +11,7 @@ import {
   BillPrintReportType,
 } from '@/types/report.type';
 import { MealTimeReportType } from '@/types/meal-time-report.type';
+import { ItemReportType } from '@/types/item-report.type';
 
 // Centralized mock data for ALL generated reports across the system
 const MOCK_ALL_GENERATED_REPORTS: GeneratedReport[] = [
@@ -160,6 +161,18 @@ export function getReportTypeLabel(reportType: string): string {
 
     [BillPrintReportType.BILL_PRINT_SUMMARY]:
       'reports.billPrint.reportType.summary',
+
+    // Item Report Types
+    [ItemReportType.SOLD_ITEMS_DETAILS]:
+      'reports.itemReport.reportTypes.soldItems',
+    [ItemReportType.COMPLEMENTARY_ITEMS]:
+      'reports.itemReport.reportTypes.complementary',
+    [ItemReportType.KOT_ITEMS_REPORT]:
+      'reports.itemReport.reportTypes.kotItems',
+    [ItemReportType.BILL_DETAILS_REPORT]:
+      'reports.itemReport.reportTypes.billDetails',
+    [ItemReportType.CONSOLIDATED_ITEM_REPORT]:
+      'reports.itemReport.reportTypes.consolidated',
   };
 
   return labelMap[reportType] || reportType;

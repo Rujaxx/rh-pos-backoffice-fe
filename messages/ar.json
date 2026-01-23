@@ -1161,8 +1161,8 @@
   "common.selectRestaurants": "اختر المطاعم",
   "reports.filters.paymentModes": "طرق الدفع",
   "reports.filters.selectPaymentModes": "اختر طرق الدفع",
-  "reports.filters.billStatus": "حالة الفاتورة",
-  "reports.filters.selectBillStatus": "اختر حالة الفاتورة",
+  "reports.filters.billStatus": "الحالة",
+  "reports.filters.selectBillStatus": "اختر الحالة",
   "common.clearFilters": "مسح المرشحات",
   "reports.table.customerName": "اسم العميل",
   "reports.table.amountPaid": "المبلغ المدفوع",
@@ -1985,5 +1985,68 @@
   "reports.generated.searchPlaceholder": "ابحث في التقارير المنشأة...",
   "Search generated reports...": "ابحث في التقارير المنشأة...",
   "reports.generated.noReports": "لم يتم العثور على تقارير منشأة",
-  "Generated Reports": "التقارير المنشأة"
+
+  "navigation.itemReports": "تقارير العناصر",
+
+  "common.filtersCleared": "تم مسح الفلاتر",
+  "common.dataRefreshed": "تم تحديث البيانات",
+  "common.reportGenerated": "تم إنشاء التقرير بنجاح",
+  "common.generateFailed": "فشل إنشاء التقرير",
+  "common.downloadUrlNotAvailable": "رابط التحميل غير متوفر",
+  "common.downloadStarted": "بدأ التحميل",
+  "common.searchGeneratedReports": "البحث في التقارير المولدة...",
+  "common.noGeneratedReports": "لم يتم العثور على تقارير مولدة",
+  "reports.itemReport.description": "عرض وتحليل تقارير العناصر الشاملة",
+
+  "reports.itemReport.tabs.soldItems": "العناصر المباعة",
+  "reports.itemReport.tabs.complementary": "العناصر المجانية",
+  "reports.itemReport.tabs.kotItems": "عناصر KOT حسب العنصر",
+  "reports.itemReport.tabs.billDetails": "تفاصيل KOT حسب الفاتورة",
+
+  "reports.itemReport.tabs.soldItemsDesc": "عرض العناصر المباعة مع المقاييس التفصيلية",
+  "reports.itemReport.tabs.complementaryDesc": "عرض العناصر المجانية المعطاة",
+  "reports.itemReport.tabs.kotItemsDesc": "عرض عناصر KOT وحالتها",
+  "reports.itemReport.tabs.billDetailsDesc": "عرض تفاصيل KOT حسب الفاتورة",
+
+  "reports.itemReport.reportTypes.soldItems": "تقرير العناصر المباعة",
+  "reports.itemReport.reportTypes.complementary": "تقرير العناصر المجانية",
+  "reports.itemReport.reportTypes.kotItems": "تقرير عناصر KOT",
+  "reports.itemReport.reportTypes.billDetails": "تقرير تفاصيل الفواتير",
+  "reports.itemReport.reportTypes.consolidated": "تقرير العناصر الموحد",
+
+  "reports.itemReport.totalSales": "إجمالي المبيعات",
+  "reports.itemReport.averagePrice": "متوسط السعر",
+  "reports.itemReport.itemsCount": "عدد العناصر",
+  "reports.itemReport.totalItems": "إجمالي العناصر",
+  "reports.itemReport.totalQuantity": "إجمالي الكمية",
+
+  "reports.itemReport.consolidatedReport": "تقرير موحد",
+  "reports.itemReport.billKotDetails": "تقرير تفاصيل KOT حسب الفاتورة",
+
+  "reports.itemReport.downloading": "جارٍ الإنشاء...",
+  "reports.itemReport.fetchingData": "جارٍ جلب بيانات تقرير العناصر...",
+  "reports.itemReport.mayTakeMoments": "قد يستغرق هذا بضع لحظات",
+
+  "reports.itemReport.generatingSoldItems": "جارٍ إنشاء تقرير العناصر المباعة...",
+  "reports.itemReport.generatingConsolidated": "جارٍ إنشاء تقرير العناصر الموحد...",
+  "reports.itemReport.generatingComplementary": "جارٍ إنشاء تقرير العناصر المجانية...",
+  "reports.itemReport.generatingBillKOT": "جارٍ إنشاء تقرير تفاصيل KOT حسب الفاتورة...",
+  "reports.itemReport.generatingItemReport": "جارٍ إنشاء تقرير العناصر...",
+
+  "reports.itemReport.soldItemsAdded": "تم إنشاء تقرير العناصر المباعة وإضافته إلى الجدول.",
+  "reports.itemReport.consolidatedAdded": "تم إنشاء تقرير العناصر الموحد وإضافته إلى الجدول.",
+  "reports.itemReport.complementaryAdded": "تمت إضافة تقرير العناصر المجانية إلى قائمة تقاريرك المولدة",
+  "reports.itemReport.billKOTAdded": "تمت إضافة تقرير تفاصيل KOT حسب الفاتورة إلى قائمة تقاريرك المولدة",
+  "reports.itemReport.itemReportAdded": "تم إنشاء تقرير العناصر وإضافته إلى الجدول.",
+
+  "reports.itemReport.empty.sold-items": "لم يتم العثور على عناصر مباعة",
+  "reports.itemReport.empty.complimentary": "لم يتم العثور على عناصر مجانية",
+  "reports.itemReport.empty.kot-items": "لم يتم العثور على عناصر KOT",
+  "reports.itemReport.empty.bill-details": "لم يتم العثور على تفاصيل الفواتير",
+
+  "reports.itemReport.searchItems": "البحث في العناصر...",
+
+  "reports.itemReport.reportTypes.soldItemsSummary": "تقرير ملخص العناصر المباعة",
+  "taxProductGroups.title": "مجموعات المنتجات الضريبية",
+  "common.selectTaxProductGroups": "اختر مجموعات المنتجات الضريبية"
 }

@@ -3,6 +3,7 @@ import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
 import { MealTimeReportType } from './meal-time-report.type';
 import { WaiterIncentiveReportType } from './waiter-incentive-report.type';
 import { OrderType } from './order-type.type'; // Import from order-type.type
+import { ItemReportType } from './item-report.type';
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -102,7 +103,8 @@ export interface GeneratedReport {
     | DiscountReportType
     | KitchenDepartmentReportType
     | BillPrintReportType
-    | WaiterIncentiveReportType;
+    | WaiterIncentiveReportType
+    | ItemReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -133,6 +135,8 @@ export interface ReportQueryParams extends QueryParams {
 
   // Payment filters
   paymentMethods?: PaymentMethodsEnum[];
+
+  taxProductGroupIds?: string[];
 
   // Bill filters
   billStatus?: BillStatus[];
@@ -191,7 +195,8 @@ export interface GenerateReportRequest {
     | DiscountReportType
     | WaiterIncentiveReportType
     | KitchenDepartmentReportType
-    | BillPrintReportType;
+    | BillPrintReportType
+    | ItemReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;

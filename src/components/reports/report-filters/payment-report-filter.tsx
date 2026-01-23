@@ -8,13 +8,7 @@ import { useI18n } from '@/providers/i18n-provider';
 import { ReportFiltersProps } from './report-filters';
 import { ReportQueryParams } from '@/types/report.type';
 import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
-import { Select } from '@radix-ui/react-select';
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { BillStatus } from '@/types/bill.type';
 
 export function PaymentReportFilters({
   filters,
@@ -40,21 +34,10 @@ export function PaymentReportFilters({
     onFilterChange({ ...filters, [field]: value });
   };
 
-  const orderStatusOptions = [
-    { value: 'all', label: t('common.all') },
-    { value: 'pending', label: t('orderStatus.pending') || 'Pending' },
-    { value: 'completed', label: t('orderStatus.completed') || 'Completed' },
-    { value: 'cancelled', label: t('orderStatus.cancelled') || 'Cancelled' },
-  ];
-  const handleOrderStatusChange = (value: string) => {
-    const newFilters = { ...filters };
-    if (value === 'all') {
-      delete newFilters.orderStatus;
-    } else {
-      newFilters.orderStatus = value;
-    }
-    onFilterChange(newFilters);
-  };
+  const billStatusOptions = Object.values(BillStatus).map((status) => ({
+    label: status,
+    value: status,
+  }));
 
   return (
     <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -69,22 +52,15 @@ export function PaymentReportFilters({
         />
       </div>
       <div className="space-y-2">
-        <Label>{t('orderStatus.title')}</Label>
-        <Select
-          value={filters.orderStatus ? String(filters.orderStatus) : undefined}
-          onValueChange={handleOrderStatusChange}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select order status" />
-          </SelectTrigger>
-          <SelectContent>
-            {orderStatusOptions.map((status) => (
-              <SelectItem key={status.value} value={status.value}>
-                {status.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label>{t('reports.filters.billStatus') || 'Bill Status'}</Label>
+        <MultiSelectDropdown
+          options={billStatusOptions}
+          value={filters.billStatus || []}
+          onChange={(value) => handleMultiSelectChange('billStatus', value)}
+          placeholder={
+            t('reports.filters.selectBillStatus') || 'Select Bill Status'
+          }
+        />
       </div>
     </div>
   );
