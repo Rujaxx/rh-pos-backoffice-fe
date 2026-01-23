@@ -168,6 +168,11 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `/meal-time-frame/${id}`,
     DELETE: (id: string) => `/meal-time-frame/${id}`,
   },
+  ORDERS: {
+    LIST: '/orders',
+    GET: (id: string) => `/orders/${id}`,
+    UPDATE: (id: string) => `/orders/${id}`,
+  },
 } as const;
 
 // Query keys for consistent caching
@@ -274,5 +279,11 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['meal-time-frame', 'list', params] as const,
     DETAIL: (id: string) => ['meal-time-frame', 'detail', id] as const,
+  },
+  ORDERS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['orders', 'list', params] as const,
+    DETAIL: (id: string) => ['orders', 'detail', id] as const,
+    UPDATE: (id: string) => ['orders', 'update', id] as const,
   },
 } as const;

@@ -7,6 +7,7 @@ import {
 } from '@/types/report.type';
 import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
+import { DiscountReportData } from '@/types/discount-report.type';
 
 // Reports service - custom implementation since ReportData has unique structure
 class BaseReportService {
@@ -26,6 +27,34 @@ class BaseReportService {
             });
           } else {
             // Handle primitive values
+            searchParams.append(key, String(value));
+          }
+        }
+      });
+    }
+
+    const url = searchParams.toString()
+      ? `${endpoint}?${searchParams.toString()}`
+      : endpoint;
+
+    return api.get(url);
+  }
+
+  // Method for discount reports
+  async getDiscountReports(
+    endpoint: string,
+    params?: ReportQueryParams,
+  ): Promise<SuccessResponse<DiscountReportData>> {
+    const searchParams = new URLSearchParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
             searchParams.append(key, String(value));
           }
         }
@@ -124,5 +153,11 @@ export const useOrderTypeReports = (
     ...options,
   });
 };
+
+// Meal-Time Sales Report hook
+export const useDiscountReports = createReportHook(
+  API_ENDPOINTS.REPORTS.LIST_SALES,
+  'meal-time-reports',
+);
 
 export { reportService };

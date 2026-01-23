@@ -25,6 +25,7 @@ import {
   DollarSign,
   ShoppingBag,
   ShoppingCart,
+  PercentIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -330,6 +331,25 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.paymentReports') || 'Payment Reports',
         href: '/reports/payment-reports',
         icon: DollarSign,
+      },
+      {
+        id: 'category-reports',
+        label: t('navigation.categoryReports') || 'Category Reports',
+        href: '/reports/category-reports',
+        icon: ClipboardList,
+      },
+      {
+        id: 'kitchen-dept-reports',
+        label:
+          t('navigation.kitchenDepartmentReports') || 'Kitchen Dept Reports',
+        href: '/reports/kitchen-dept-reports',
+        icon: Utensils,
+      },
+      {
+        id: 'discount-reports',
+        label: t('navigation.discountReports') || 'Discount Reports',
+        href: '/reports/discount-reports',
+        icon: PercentIcon,
       },
     ],
   },

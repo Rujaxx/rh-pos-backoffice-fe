@@ -3,9 +3,10 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { OrderTypeReportItem } from '@/types/report.type';
-import { Badge } from '@/components/ui/badge';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useI18n } from '@/providers/i18n-provider';
+import { Button } from '@/components/ui/button';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 // Helper function to format currency
 const formatCurrency = (amount: number): string => {
@@ -17,15 +18,41 @@ const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Column definitions for the order type table
+// Helper function to format number
+const formatNumber = (num: number): string => {
+  return new Intl.NumberFormat('en-IN').format(num);
+};
+
+// Create columns function
 export const createOrderTypeColumns = (
   t: ReturnType<typeof useTranslation>['t'],
   locale: 'en' | 'ar',
 ): ColumnDef<OrderTypeReportItem>[] => [
   {
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={row.getToggleExpandedHandler()}
+          className="h-8 w-8 p-0"
+        >
+          {row.getIsExpanded() ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </Button>
+      );
+    },
+    size: 60,
+  },
+  {
     accessorKey: 'orderType',
     id: 'orderType',
-    header: t('reports.orderType.columns.orderFrom') || 'Order Type',
+    header: t('reports.orderType.columns.orderFrom') || 'Order From',
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
       const getText = (item: OrderTypeReportItem) => {
@@ -53,15 +80,19 @@ export const createOrderTypeColumns = (
 
       return <div className="font-medium">{orderTypeText}</div>;
     },
+    size: 200,
   },
   {
     accessorKey: 'itemCount',
     id: 'itemCount',
-    header: t('reports.orderType.columns.orderCount') || 'Items',
+    header: t('reports.orderType.columns.orderCount') || 'Total Orders',
     enableSorting: true,
     cell: ({ row }) => (
-      <div className="font-medium text-center">{row.original.itemCount}</div>
+      <div className="font-medium text-center">
+        {formatNumber(row.original.itemCount)}
+      </div>
     ),
+    size: 120,
     meta: {
       className: 'text-center',
     },
@@ -69,64 +100,23 @@ export const createOrderTypeColumns = (
   {
     accessorKey: 'amount',
     id: 'amount',
-    header: t('reports.orderType.columns.totalAmount') || 'Amount',
+    header: t('reports.orderType.columns.totalAmount') || 'Total Amount',
     enableSorting: true,
     cell: ({ row }) => (
-      <div className="font-medium">{formatCurrency(row.original.amount)}</div>
+      <div className="font-medium text-center">
+        {formatCurrency(row.original.amount)}
+      </div>
     ),
-  },
-  {
-    accessorKey: 'status',
-    id: 'status',
-    header: t('reports.orderType.columns.status') || 'Status',
-    enableSorting: true,
-    cell: ({ row }) => {
-      const status = row.original.status;
-      const statusColors: Record<string, string> = {
-        COMPLETED: 'bg-green-500 text-white',
-        ACTIVE: 'bg-blue-500 text-white',
-        CANCELLED: 'bg-red-500 text-white',
-        PENDING: 'bg-yellow-500 text-white',
-      };
-
-      return (
-        <Badge className={statusColors[status] || 'bg-gray-500 text-white'}>
-          {status}
-        </Badge>
-      );
+    size: 150,
+    meta: {
+      className: 'text-center',
     },
   },
 ];
 
-// Hook for using order type columns with current translation
+// Hook for using order type columns
 export const useOrderTypeColumns = () => {
   const { t } = useTranslation();
   const { locale } = useI18n();
   return createOrderTypeColumns(t, locale);
-};
-
-// Helper function to get sortable field from TanStack sorting state
-export const getSortFieldForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
-): string | undefined => {
-  if (!sorting.length) return undefined;
-
-  const sort = sorting[0];
-  // Map TanStack column IDs to backend field names
-  const fieldMap: Record<string, string> = {
-    orderType: 'orderType',
-    itemCount: 'itemCount',
-    amount: 'amount',
-    status: 'status',
-  };
-
-  return fieldMap[sort.id] || sort.id;
-};
-
-// Helper function to get sort order from TanStack sorting state
-export const getSortOrderForQuery = (
-  sorting: Array<{ id: string; desc: boolean }>,
-): 'asc' | 'desc' | undefined => {
-  if (!sorting.length) return undefined;
-  return sorting[0].desc ? 'desc' : 'asc';
 };

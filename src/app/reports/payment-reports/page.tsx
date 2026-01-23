@@ -149,7 +149,16 @@ const PAYMENT_METHOD_LABELS: Record<PaymentMethodsEnum, string> = {
 
 export default function PaymentReportPage() {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<ReportQueryParams>({});
+  // Initialize filters with today's date
+  const [filters, setFilters] = useState<ReportQueryParams>(() => {
+    const today = new Date();
+
+    return {
+      from: today.toISOString(),
+      to: today.toISOString(),
+    };
+  });
+
   const [selectedReportType, setSelectedReportType] =
     useState<PaymentReportType | null>(null);
   const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
