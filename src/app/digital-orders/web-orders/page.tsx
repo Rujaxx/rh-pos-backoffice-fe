@@ -67,9 +67,7 @@ export default function OnlineOrdersPage() {
   const { isConnected: socketConnected } = useOrderSocket({
     enabled: true,
     showNotifications: true,
-    onDisconnect: (reason) => {
-      toast.error('Connection lost', { description: reason });
-    },
+    onDisconnect: () => {},
   });
 
   // Mutation hook for updating order status

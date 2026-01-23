@@ -5,7 +5,7 @@ export const SOCKET_CONFIG: SocketServiceConfig = {
   url: process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:4000',
   autoConnect: false,
   reconnection: true,
-  reconnectionAttempts: 5,
+  reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,

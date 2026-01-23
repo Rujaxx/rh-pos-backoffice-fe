@@ -12,6 +12,7 @@ class SocketService {
   private socket: Socket | null = null;
   private connectionState: ConnectionState = ConnectionState.DISCONNECTED;
   private eventListeners: Map<string, Set<SocketEventCallback>> = new Map();
+  private connectionAttempts: number = 0; // Track total connection attempts
 
   private constructor() {}
 
@@ -26,6 +27,8 @@ class SocketService {
     if (this.socket?.connected) {
       return;
     }
+
+    this.connectionAttempts++;
 
     const url = SOCKET_CONFIG.url + SOCKET_NAMESPACES.EVENTS;
 
@@ -69,8 +72,6 @@ class SocketService {
         );
       } else if (reason === 'transport close') {
         toast.error('Network connection lost - will auto-reconnect');
-      } else if (reason === 'ping timeout') {
-        toast.error('Ping timeout - will auto-reconnect');
       }
     });
 
@@ -162,6 +163,14 @@ class SocketService {
     this.socket = null;
     this.connectionState = ConnectionState.DISCONNECTED;
     this.eventListeners.clear();
+  }
+
+  getConnectionAttempts(): number {
+    return this.connectionAttempts;
+  }
+
+  resetConnectionAttempts(): void {
+    this.connectionAttempts = 0;
   }
 }
 

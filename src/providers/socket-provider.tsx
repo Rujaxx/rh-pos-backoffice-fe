@@ -59,15 +59,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const handleDisconnect = (reason: string) => {
       console.warn(`[SocketProvider] Disconnected: ${reason}`);
       setConnectionState(ConnectionState.DISCONNECTED);
-
-      // Only show toast for unexpected disconnects
-      if (reason !== 'io client disconnect') {
-        toast.warning('Connection lost', {
-          description: `Reason: ${reason}`,
-          duration: 4000,
-          id: 'socket-disconnected',
-        });
-      }
     };
 
     const handleError = (error: Error) => {
@@ -122,7 +113,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       socketService.off(SocketEvent.RECONNECT_ATTEMPT, handleReconnecting);
       socketService.off(SocketEvent.RECONNECT_FAILED, handleReconnectFailed);
     };
-  }, [errorCount]); // Include errorCount to manage error sound playback
+  }, []);
 
   const value: SocketContextValue = {
     connectionState,
