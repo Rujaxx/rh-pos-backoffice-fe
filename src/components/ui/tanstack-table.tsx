@@ -4,12 +4,14 @@ import React, { useState, useCallback, useEffect } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
+  getExpandedRowModel,
   flexRender,
   ColumnDef,
   PaginationState,
   SortingState,
   ColumnFiltersState,
   OnChangeFn,
+  ExpandedState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -109,6 +111,8 @@ export interface TanStackTableProps<T> {
   enableMultiSort?: boolean;
   rowSelection?: Record<string, boolean>;
   onRowSelectionChange?: (selection: Record<string, boolean>) => void;
+  renderSubComponent?: (props: { row: unknown }) => React.ReactElement;
+  getRowCanExpand?: (row: unknown) => boolean;
 }
 
 export function TanStackTable<T>({
@@ -136,9 +140,12 @@ export function TanStackTable<T>({
   enableMultiSort = false,
   rowSelection = {},
   onRowSelectionChange,
+  renderSubComponent,
+  getRowCanExpand,
 }: TanStackTableProps<T>) {
   const { t } = useTranslation();
   const [localSearchValue, setLocalSearchValue] = useState(searchValue);
+  const [expanded, setExpanded] = useState<ExpandedState>({});
 
   // Update local search when external search changes
   useEffect(() => {
@@ -207,14 +214,19 @@ export function TanStackTable<T>({
       sorting,
       columnFilters,
       rowSelection,
+      expanded,
     },
     onPaginationChange: handlePaginationChange,
     onSortingChange: handleSortingChange,
     onColumnFiltersChange: handleColumnFiltersChange,
     onRowSelectionChange: handleRowSelectionChange,
+    onExpandedChange: setExpanded,
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: getRowCanExpand,
     enableMultiSort,
     enableSorting: true,
     enableColumnFilters: true,
+    enableExpanding: !!renderSubComponent,
   });
 
   // Handle search input change (only updates local state)
@@ -393,20 +405,36 @@ export function TanStackTable<T>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className="hover:bg-muted/50"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-2">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <React.Fragment key={row.id}>
+                  <TableRow
+                    data-state={row.getIsSelected() && 'selected'}
+                    className={cn(
+                      'hover:bg-muted/50',
+                      renderSubComponent && 'cursor-pointer',
+                    )}
+                    onClick={() => {
+                      if (renderSubComponent && row.getCanExpand()) {
+                        row.toggleExpanded();
+                      }
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-2">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  {row.getIsExpanded() && renderSubComponent && (
+                    <TableRow>
+                      <TableCell colSpan={row.getVisibleCells().length}>
+                        {renderSubComponent({ row })}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
               ))
             ) : (
               <TableRow>

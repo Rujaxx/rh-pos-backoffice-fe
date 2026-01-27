@@ -2048,5 +2048,24 @@
 
   "reports.itemReport.reportTypes.soldItemsSummary": "تقرير ملخص العناصر المباعة",
   "taxProductGroups.title": "مجموعات المنتجات الضريبية",
-  "common.selectTaxProductGroups": "اختر مجموعات المنتجات الضريبية"
+  "common.selectTaxProductGroups": "اختر مجموعات المنتجات الضريبية",
+  "reports.refreshingReports": "جارٍ تحديث التقارير...",
+  "reports.downloadStarted": "بدأ التنزيل",
+  "reports.downloadUrlMissing": "رابط التنزيل غير متوفر",
+  "reports.columns.reportName": "اسم التقرير",
+  "reports.columns.type": "نوع التقرير",
+  "reports.columns.dateRange": "نطاق التاريخ",
+  "reports.columns.status": "الحالة",
+  "reports.columns.generatedBy": "تم الإنشاء بواسطة",
+  "reports.noReportsAvailable": "لا توجد تقارير متاحة",
+  "reports.searchReports": "بحث في التقارير...",
+  "reports.downloadReport": "تنزيل التقرير",
+  "reports.available": "التقارير المتاحة",
+  "report.validTill24hr": "ستنتهي صلاحية رابط تنزيل التقرير بعد 24 ساعة.",
+  "reports.download": "تنزيل",
+  "reports.hourly.hourlyReport": "تقرير ساعي",
+  "reports.hourly.monthlyHourlyReport": "تقرير ساعي شهري",
+  "reports.hourly.generatingHourlyReport": "جارٍ إنشاء التقرير الساعي...",
+  "reports.hourly.generatingMonthlyReport": "جارٍ إنشاء التقرير الساعي الشهري...",
+  "reports.hourly.reportGenerated": "تم بدء إنشاء التقرير بنجاح"
 }

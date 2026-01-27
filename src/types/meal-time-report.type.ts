@@ -8,21 +8,7 @@ export interface MealTimeReportQueryParams extends ReportQueryParams {
   restaurantId?: string;
   menuId?: string;
   categoryId?: string;
-}
-
-export interface MealTimeReportItem {
-  name: string;
-  slot: string;
-  totalRevenue: number;
-  totalOrders: number;
-  avgOrderValue: number;
-  topSellingItem: string;
-}
-
-export interface MealTimeReportResponseData {
-  report: MealTimeReportItem[];
-  generatedBy: string;
-  generatedAt: string;
+  isDownload?: boolean;
 }
 
 // Meal Time Report Type
@@ -58,4 +44,21 @@ export interface MealTimeConfig {
   restaurantId?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface MealTimeReportItem {
+  name: string;
+  slot: string;
+  totalRevenue: number;
+  totalOrders: number;
+  avgOrderValue: number;
+  topSellingItem: string;
+}
+
+export interface MealTimeReportResponse {
+  brandId: string;
+  restaurantIds: string[];
+  report: MealTimeReportItem[];
+  dateRange: string;
+  restaurantName: string;
 }

@@ -14,8 +14,8 @@ import { DiscountReportFilters } from '@/components/reports/report-filters/disco
 import { DiscountReportItem } from '@/types/discount-report.type';
 import { DiscountDataTable } from '@/components/reports/discount-reports/discount-table';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Mock discount data for table
 const MOCK_DISCOUNT_REPORT_DATA: DiscountReportItem[] = [
@@ -100,7 +100,8 @@ export default function DiscountReportPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   // Fetch all generated reports from the system
-  const { data: generatedReports = [], isLoading } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoading = false;
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -271,6 +272,9 @@ export default function DiscountReportPage() {
           searchPlaceholder="reports.discount.searchPlaceholder"
           emptyMessage="reports.discount.noData"
         />
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
 
       {/* Report Details Modal */}

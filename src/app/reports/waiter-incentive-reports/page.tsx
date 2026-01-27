@@ -12,9 +12,9 @@ import { WaiterIncentiveFilter } from '@/components/reports/report-filters/waite
 import { WaiterIncentiveReportItem } from '@/types/waiter-incentive-report.type';
 import { WaiterIncentiveTable } from '@/components/reports/waiter-incentive-reports/waiter-incentive-table';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { IncentiveConfigModal } from '@/components/reports/waiter-incentive-reports/waiter-config-modal';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Mock data for waiter incentive report
 const MOCK_WAITER_INCENTIVE_DATA: WaiterIncentiveReportItem[] = [
@@ -139,9 +139,8 @@ export default function WaiterIncentivePage() {
   );
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  // Fetch all generated reports from the system
-  const { data: generatedReports = [], isLoading } = useGeneratedReports();
-
+  const generatedReports: GeneratedReport[] = [];
+  const isLoading = false;
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
@@ -280,6 +279,9 @@ export default function WaiterIncentivePage() {
           onConfigureIncentive={handleConfigureIncentive}
           onDownload={handleDownloadReport}
         />
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Incentive Configuration Modal */}
         <IncentiveConfigModal

@@ -2,7 +2,6 @@ import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
 import { MealTimeReportType } from './meal-time-report.type';
 import { WaiterIncentiveReportType } from './waiter-incentive-report.type';
-import { OrderType } from './order-type.type'; // Import from order-type.type
 import { ItemReportType } from './item-report.type';
 
 // Report Summary for Sales Reports
@@ -56,9 +55,8 @@ export enum DailyReportType {
 
 // Hourly Report Types
 export enum HourlyReportType {
-  DAY_WISE = 'DAY_WISE_HOURLY',
-  DAY_WISE_SUMMARY = 'DAY_WISE_SUMMARY_HOURLY',
-  MONTH_WISE = 'MONTH_WISE_HOURLY_SALES',
+  HOURLY_REPORT = 'HOURLY_REPORT', // maps to reports/hourly-report
+  MONTHLY_HOURLY_REPORT = 'MONTHLY_HOURLY_REPORT', // maps to reports/monthly-hourly-report
 }
 
 export enum PaymentReportType {
@@ -167,6 +165,9 @@ export interface ReportQueryParams extends QueryParams {
   // Kitchen Department specific filters
   kitchenDepartmentIds?: string[];
   categoryIdsKitchen?: string[];
+
+  // Download flag
+  isDownload?: boolean;
 
   page?: number;
   limit?: number;

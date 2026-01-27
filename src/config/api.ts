@@ -132,6 +132,7 @@ export const API_ENDPOINTS = {
     GET: (id: string) => `/image-library/${id}`,
   },
   REPORTS: {
+    LIST: '/reports/list',
     LIST_SALES: '/reports/sales',
     LIST_TDS: '/reports/tds-reports',
     GENERATE_TDS: '/reports/generate/tds-report',

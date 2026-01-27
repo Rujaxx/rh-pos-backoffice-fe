@@ -32,8 +32,8 @@ import {
 } from '@/components/reports/bill-print-reports/bill-print-columns';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Mock bill print data with the 4 order types
 const MOCK_BILL_PRINT_DATA: BillPrintReportItem[] = [
@@ -124,11 +124,8 @@ export default function BillPrintReportPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   // Fetch ALL generated reports from the system
-  const {
-    data: generatedReports = [],
-    isLoading: isLoadingReports,
-    refetch,
-  } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoadingReports = false;
 
   // Combine API data with locally generated reports
   const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
@@ -238,11 +235,6 @@ export default function BillPrintReportPage() {
     );
   }, [filters, t]);
 
-  const handleRefresh = useCallback(() => {
-    refetch();
-    toast.success(t('common.refresh') || 'Data refreshed');
-  }, [refetch, t]);
-
   // Download button that generates and adds report to table
   const handleDownloadReport = useCallback(async () => {
     setIsDownloading(true);
@@ -287,9 +279,6 @@ export default function BillPrintReportPage() {
             'Bill Print Summary report has been generated and added to the table.',
         },
       );
-
-      // Also refetch from API if needed
-      refetch();
     } catch (error) {
       toast.error(
         t('reports.billPrint.generationFailed') || 'Failed to generate report',
@@ -297,7 +286,7 @@ export default function BillPrintReportPage() {
     } finally {
       setIsDownloading(false);
     }
-  }, [filters, submittedFilters, refetch, t]);
+  }, [filters, submittedFilters, t]);
 
   const handleShowReportDetails = useCallback((report: GeneratedReport) => {
     setSelectedReport(report);
@@ -353,11 +342,7 @@ export default function BillPrintReportPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={handleRefresh}
-              className="flex items-center gap-2"
-            >
+            <Button variant="outline" className="flex items-center gap-2">
               <RefreshCw className="h-4 w-4" />
               {t('common.refresh') || 'Refresh'}
             </Button>
@@ -521,6 +506,9 @@ export default function BillPrintReportPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Report Details Modal */}
         <ReportDetailsModal

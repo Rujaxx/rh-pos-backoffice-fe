@@ -38,9 +38,10 @@ import { createSoldItemsColumns } from '@/components/reports/item-reports/sold-i
 import { createComplementaryColumns } from '@/components/reports/item-reports/complementary-cols';
 import { createKotItemsColumns } from '@/components/reports/item-reports/kot-items-cols';
 import { createBillDetailsColumns } from '@/components/reports/item-reports/bill-details-cols';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { ItemReportFilter } from '@/components/reports/report-filters/item-report-filters';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Mock sold items data
 const MOCK_SOLD_ITEMS: SoldItem[] = [
@@ -249,11 +250,8 @@ export default function ItemReportPage() {
     GeneratedReport[]
   >([]);
 
-  const {
-    data: generatedReports = [],
-    isLoading: isLoadingReports,
-    refetch,
-  } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoadingReports = false;
 
   // Combine API data with locally generated reports
   const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
@@ -318,12 +316,6 @@ export default function ItemReportPage() {
     toast.info(t('reports.itemReport.fetchingData'));
   }, [filters, t]);
 
-  const handleRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    refetch().finally(() => setIsRefreshing(false));
-    toast.success(t('common.dataRefreshed'));
-  }, [refetch, t]);
-
   // Generate Sold Items Report (Download button)
   const handleGenerateSoldReport = useCallback(async () => {
     setIsDownloading(true);
@@ -355,14 +347,12 @@ export default function ItemReportPage() {
       toast.success(t('common.reportGenerated'), {
         description: t('reports.itemReport.soldItemsAdded'),
       });
-
-      refetch();
     } catch {
       toast.error(t('common.generateFailed'));
     } finally {
       setIsDownloading(false);
     }
-  }, [filters, submittedFilters, refetch, t]);
+  }, [filters, submittedFilters, t]);
 
   // Generate Consolidated Report (Consolidated button)
   const handleGenerateConsolidatedReport = useCallback(async () => {
@@ -395,14 +385,12 @@ export default function ItemReportPage() {
       toast.success(t('common.reportGenerated'), {
         description: t('reports.itemReport.consolidatedAdded'),
       });
-
-      refetch();
     } catch {
       toast.error(t('common.generateFailed'));
     } finally {
       setIsGenerating(false);
     }
-  }, [filters, submittedFilters, refetch, t]);
+  }, [filters, submittedFilters, t]);
 
   // Generate Complementary Report (Download button)
   const handleGenerateComplementaryReport = useCallback(async () => {
@@ -433,14 +421,12 @@ export default function ItemReportPage() {
       toast.success(t('common.reportGenerated'), {
         description: t('reports.itemReport.complementaryAdded'),
       });
-
-      refetch();
     } catch {
       toast.error(t('common.generateFailed'));
     } finally {
       setIsDownloading(false);
     }
-  }, [filters, submittedFilters, refetch, t]);
+  }, [filters, submittedFilters, t]);
 
   // Generate Bill Details Report (Bill-wise KOT Details Report button)
   const handleGenerateBillDetailsReport = useCallback(async () => {
@@ -471,14 +457,12 @@ export default function ItemReportPage() {
       toast.success(t('common.reportGenerated'), {
         description: t('reports.itemReport.billKOTAdded'),
       });
-
-      refetch();
     } catch {
       toast.error(t('common.generateFailed'));
     } finally {
       setIsGenerating(false);
     }
-  }, [filters, submittedFilters, refetch, t]);
+  }, [filters, submittedFilters, t]);
 
   // Show report details
   const handleShowReportDetails = useCallback((report: GeneratedReport) => {
@@ -562,7 +546,6 @@ export default function ItemReportPage() {
 
           <Button
             variant="outline"
-            onClick={handleRefresh}
             disabled={isRefreshing || isLoadingReports}
             className="flex items-center gap-2"
           >
@@ -816,6 +799,9 @@ export default function ItemReportPage() {
           onClose={handleCloseDetailsModal}
         />
       </div>
+
+      {/* Download Report Options */}
+      <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
     </Layout>
   );
 }

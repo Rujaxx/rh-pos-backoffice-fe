@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FilterX, ChevronDown, ChevronUp } from 'lucide-react';
+import { FilterX, ChevronDown, ChevronUp, Download } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { useActiveBrands } from '@/services/api/brands/brands.queries';
 import { useActiveRestaurants } from '@/services/api/restaurants/restaurants.queries';
@@ -17,8 +17,11 @@ export interface ReportFiltersProps {
   filters: ReportQueryParams;
   onFilterChange: (filters: ReportQueryParams) => void;
   onClearFilters: () => void;
-  onSubmit?: () => void;
+  onSubmit?: (isDownload?: boolean) => void;
   children?: React.ReactNode;
+  validateFilters?: (filters: ReportQueryParams) => boolean;
+  disableSubmit?: boolean;
+  showDownloadButton?: boolean;
 }
 
 export function ReportFilters({
@@ -27,6 +30,9 @@ export function ReportFilters({
   onClearFilters,
   onSubmit,
   children,
+  validateFilters,
+  disableSubmit = false,
+  showDownloadButton = true,
 }: ReportFiltersProps) {
   const { t } = useTranslation();
   const { locale } = useI18n();
@@ -49,12 +55,33 @@ export function ReportFilters({
     value: r._id!,
   }));
 
-  const isoToLocalDateTime = (iso?: string) =>
-    iso ? new Date(iso).toISOString().slice(0, 16) : '';
-  const localDateTimeToISO = (local: string) =>
-    local ? new Date(local).toISOString() : '';
+  // Convert ISO to local datetime with time defaulting to 12:00 if not present
+  const isoToLocalDateTime = (iso?: string) => {
+    if (!iso) return '';
+    const date = new Date(iso);
+    return date.toISOString().slice(0, 16);
+  };
+
+  // Convert local datetime to ISO, ensuring time is always 12:00 if only date is provided
+  const localDateTimeToISO = (local: string) => {
+    if (!local) return '';
+
+    // Check if time portion exists (format: YYYY-MM-DDTHH:mm)
+    const hasTime = local.length === 16 && local.includes('T');
+
+    if (!hasTime) {
+      // If only date is provided (YYYY-MM-DD), append 12:00
+      const dateOnly = local.split('T')[0];
+      return new Date(`${dateOnly}T12:00:00`).toISOString();
+    }
+
+    return new Date(local).toISOString();
+  };
 
   const handleDateTimeChange = (field: 'from' | 'to', value: string) => {
+    // If value is empty, don't update (keep existing value)
+    if (!value) return;
+
     onFilterChange({ ...filters, [field]: localDateTimeToISO(value) });
   };
 
@@ -64,6 +91,13 @@ export function ReportFilters({
   ) => {
     onFilterChange({ ...filters, [field]: value });
   };
+
+  // Default validation: check if from and to dates are filled
+  const isValid = validateFilters
+    ? validateFilters(filters)
+    : !!(filters.from && filters.to);
+
+  const isDisabled = disableSubmit || !isValid;
 
   return (
     <Card className="mb-6">
@@ -86,7 +120,7 @@ export function ReportFilters({
 
       {/* Collapsible Content */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 translate-y-[-4px]' : 'max-h-[2000px] opacity-100 translate-y-0'}`}
+        className={`overflow-hidden tr  nsition-all duration-300 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 translate-y-[-4px]' : 'max-h-[2000px] opacity-100 translate-y-0'}`}
       >
         <CardContent className="p-4 pt-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -139,9 +173,27 @@ export function ReportFilters({
           {/* Buttons */}
           <div className="flex justify-end gap-2 mt-4">
             {onSubmit && (
-              <Button onClick={onSubmit} className="flex items-center gap-2">
-                {t('reports.generate') || 'Generate Report'}
-              </Button>
+              <>
+                {showDownloadButton && (
+                  <Button
+                    onClick={() => onSubmit(true)}
+                    variant="default"
+                    className="flex items-center gap-2"
+                    disabled={isDisabled}
+                  >
+                    <Download className="h-4 w-4" />
+                    {t('reports.download') || 'Download'}
+                  </Button>
+                )}
+                <Button
+                  onClick={() => onSubmit(false)}
+                  variant="default"
+                  className="flex items-center gap-2"
+                  disabled={isDisabled}
+                >
+                  {t('reports.generate') || 'Generate Report'}
+                </Button>
+              </>
             )}
             <Button
               variant="outline"

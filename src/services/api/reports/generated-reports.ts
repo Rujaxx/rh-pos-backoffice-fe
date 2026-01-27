@@ -1,11 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
 import {
-  GeneratedReport,
-  ReportGenerationStatus,
   PaymentReportType,
   DailyReportType,
   HourlyReportType,
-  PaymentMethodsEnum,
   KitchenDepartmentReportType,
   DiscountReportType,
   BillPrintReportType,
@@ -13,96 +9,6 @@ import {
 import { MealTimeReportType } from '@/types/meal-time-report.type';
 import { ItemReportType } from '@/types/item-report.type';
 
-// Centralized mock data for ALL generated reports across the system
-const MOCK_ALL_GENERATED_REPORTS: GeneratedReport[] = [
-  // Payment Reports
-  {
-    _id: 'payment-1',
-    generateDate: '2025-12-29T10:30:00Z',
-    reportCompleteTime: '2025-12-29T10:32:15Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: PaymentReportType.PAYMENT_ORDER_DETAILS,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-29T23:59:59Z',
-      restaurantIds: ['rest1', 'rest2'],
-      paymentMethods: [
-        PaymentMethodsEnum.CASH,
-        PaymentMethodsEnum.CARD,
-        PaymentMethodsEnum.UPI,
-      ],
-    },
-    createdAt: '2025-12-29T10:30:00Z',
-    updatedAt: '2025-12-29T10:32:15Z',
-  },
-  // Daily Sales Reports
-  {
-    _id: 'daily-1',
-    generateDate: '2025-12-29T11:45:00Z',
-    reportCompleteTime: '2025-12-29T11:47:30Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: DailyReportType.DSR_BILL_WISE,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-29T23:59:59Z',
-      restaurantIds: ['rest1', 'rest2'],
-      b2bInvoices: true,
-      liquorExemptedSales: false,
-    },
-    createdAt: '2025-12-29T11:45:00Z',
-    updatedAt: '2025-12-29T11:47:30Z',
-  },
-  // Hourly Reports
-  {
-    _id: 'hourly-1',
-    generateDate: '2025-12-29T14:30:00Z',
-    reportCompleteTime: '2025-12-29T14:32:00Z',
-    generatedBy: 'user123',
-    generatedByName: 'John Doe',
-    reportType: HourlyReportType.DAY_WISE,
-    generationStatus: ReportGenerationStatus.COMPLETED,
-    downloadUrl: '#',
-    filters: {
-      from: '2025-12-28T00:00:00Z',
-      to: '2025-12-29T23:59:59Z',
-      restaurantIds: ['rest1'],
-    },
-    createdAt: '2025-12-29T14:30:00Z',
-    updatedAt: '2025-12-29T14:32:00Z',
-  },
-];
-
-// Hook to fetch all generated reports
-export function useGeneratedReports() {
-  return useQuery({
-    queryKey: ['generated-reports'],
-    queryFn: async () => {
-      // TODO: Replace with actual API call
-      // const response = await axiosInstance.get('/api/reports/generated');
-      // return response.data;
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Return mock data sorted by generateDate (newest first)
-      return MOCK_ALL_GENERATED_REPORTS.sort(
-        (a, b) =>
-          new Date(b.generateDate).getTime() -
-          new Date(a.generateDate).getTime(),
-      );
-    },
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // Refetch every minute to check for new reports
-  });
-}
-
-// Helper function to get report type display label
 export function getReportTypeLabel(reportType: string): string {
   const labelMap: Record<string, string> = {
     // Payment Reports
@@ -138,10 +44,9 @@ export function getReportTypeLabel(reportType: string): string {
       'reports.dailySales.reportTypes.monthWiseSales',
 
     // Hourly Reports
-    [HourlyReportType.DAY_WISE]: 'reports.hourly.reportTypes.dayWise',
-    [HourlyReportType.DAY_WISE_SUMMARY]:
-      'reports.hourly.reportTypes.dayWiseSummary',
-    [HourlyReportType.MONTH_WISE]: 'reports.hourly.reportTypes.monthWise',
+    [HourlyReportType.HOURLY_REPORT]: 'reports.hourly.reportTypes.hourlyReport',
+    [HourlyReportType.MONTHLY_HOURLY_REPORT]:
+      'reports.hourly.reportTypes.monthlyHourlyReport',
 
     // Meal Time Reports
     [MealTimeReportType.MEAL_TIME_SALES]:

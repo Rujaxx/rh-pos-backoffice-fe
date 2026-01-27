@@ -18,6 +18,7 @@ import {
 import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { BillerWiseReportFilters } from '@/components/reports/report-filters/biller-wise-report-filter';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 interface BillerWiseReportData {
   totalBills: number;
@@ -471,6 +472,9 @@ export default function BillerWiseReportPage() {
             </Card>
           </>
         )}
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
     </Layout>
   );

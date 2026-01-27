@@ -6,7 +6,7 @@ import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { TanStackTable } from '@/components/ui/tanstack-table';
@@ -17,6 +17,7 @@ import {
 } from '@tanstack/react-table';
 import { useCategoryColumns } from '@/components/reports/category-reports/category-columns';
 import { CategoryReportFilters } from '@/components/reports/report-filters/category-report-filter';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Restaurant categories mock data
 const MOCK_CATEGORY_DATA = [
@@ -260,6 +261,9 @@ export default function CategoryReportPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
     </Layout>
   );

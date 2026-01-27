@@ -3,19 +3,17 @@ import api from '@/lib/axios';
 import { BaseApiService } from '@/services/api/base/client';
 import { SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
-import {
-  MealTimeReportResponse,
-  MealTimeReportQueryParams,
-} from '@/types/meal-time-report.type';
+import { ReportQueryParams } from '@/types/report.type';
+import { OrderTypeGroupedItem } from '@/types/order-type-report.type';
 
-class MealTimeReportService extends BaseApiService<MealTimeReportResponse> {
+class OrderTypeReportService extends BaseApiService<OrderTypeGroupedItem[]> {
   constructor() {
-    super(API_ENDPOINTS.REPORTS.MEAL_TIME);
+    super(API_ENDPOINTS.REPORTS.ORDER_TYPE);
   }
 
   async getReport(
-    params: MealTimeReportQueryParams,
-  ): Promise<SuccessResponse<MealTimeReportResponse>> {
+    params: ReportQueryParams,
+  ): Promise<SuccessResponse<OrderTypeGroupedItem[]>> {
     const searchParams = new URLSearchParams();
 
     Object.entries(params).forEach(([key, value]) => {
@@ -29,23 +27,22 @@ class MealTimeReportService extends BaseApiService<MealTimeReportResponse> {
     });
 
     const url = `${this.baseEndpoint}?${searchParams.toString()}`;
-    // Use api.get directly as BaseApiService.getAll expects array response
-    return api.get<SuccessResponse<MealTimeReportResponse>>(url);
+    return api.get<SuccessResponse<OrderTypeGroupedItem[]>>(url);
   }
 }
 
-const mealTimeReportService = new MealTimeReportService();
+const orderTypeReportService = new OrderTypeReportService();
 
-export const useMealTimeReport = (
-  params: MealTimeReportQueryParams,
+export const useOrderTypeReport = (
+  params: ReportQueryParams,
   options?: Omit<
-    UseQueryOptions<SuccessResponse<MealTimeReportResponse>>,
+    UseQueryOptions<SuccessResponse<OrderTypeGroupedItem[]>>,
     'queryKey' | 'queryFn'
   >,
 ) => {
   return useQuery({
-    queryKey: QUERY_KEYS.REPORTS.MEAL_TIME(params),
-    queryFn: () => mealTimeReportService.getReport(params),
+    queryKey: QUERY_KEYS.REPORTS.ORDER_TYPE(params),
+    queryFn: () => orderTypeReportService.getReport(params),
     ...options,
   });
 };

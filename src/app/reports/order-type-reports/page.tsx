@@ -1,18 +1,23 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Eye } from 'lucide-react';
+import { RefreshCw, ChevronRight, ChevronDown } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
-import { OrderTypeReportItem } from '@/types/report.type';
-import { useOrderTypeReports } from '@/services/api/reports';
-import { OrderTypeReportFilters } from '@/components/reports/report-filters/ordertype-report-filter';
-import { OrderTypeDetailsModal } from '@/components/reports/order-type-reports/order-details-modal';
+import { OrderTypeGroupedItem } from '@/types/order-type-report.type';
+import { useOrderTypeReport } from '@/services/api/reports/order-type-report.query';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
   PaginationState,
@@ -25,8 +30,8 @@ const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 };
 
@@ -34,82 +39,48 @@ const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-IN').format(num);
 };
 
-const getSafeNumber = (value: number | undefined): number => value ?? 0;
-
 // Define columns for TanStackTable
-const getOrderTypeColumns = (
-  handleViewDetails: (item: OrderTypeReportItem) => void,
-) => [
+const getOrderTypeColumns = () => [
   {
-    accessorKey: 'orderType',
-    header: 'Order Source',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => {
-      const orderType = row.original.orderType;
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }: { row: { getIsExpanded: () => boolean } }) => {
       return (
-        <div className="font-medium">
-          {typeof orderType === 'string' ? orderType : orderType.en}
+        <div className="flex items-center justify-center w-4 h-4">
+          {row.getIsExpanded() ? (
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          )}
         </div>
       );
     },
+    enableSorting: false,
+    enableColumnFilter: false,
+    size: 40,
   },
   {
-    accessorKey: 'itemCount',
-    header: 'Total Orders',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
+    accessorKey: 'orderType',
+    header: 'Order Type',
+    cell: ({ row }: { row: { original: OrderTypeGroupedItem } }) => (
+      <div className="font-medium">{row.original.orderType}</div>
+    ),
+  },
+  {
+    accessorKey: 'totalBillCount',
+    header: 'Total Bills',
+    cell: ({ row }: { row: { original: OrderTypeGroupedItem } }) => (
       <div className="text-center font-medium">
-        {formatNumber(row.original.itemCount)}
+        {formatNumber(row.original.totalBillCount)}
       </div>
     ),
   },
   {
-    accessorKey: 'amount',
-    header: 'Total Amount',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
+    accessorKey: 'totalRevenue',
+    header: 'Total Revenue',
+    cell: ({ row }: { row: { original: OrderTypeGroupedItem } }) => (
       <div className="text-center font-medium text-green-600">
-        {formatCurrency(row.original.amount)}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'fulfilled',
-    header: 'Fulfilled',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
-      <div className="text-center font-medium">
-        {formatNumber(getSafeNumber(row.original.fulfilled))}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'cancelled',
-    header: 'Cancelled',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
-      <div className="text-center font-medium">
-        {formatNumber(getSafeNumber(row.original.cancelled))}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'pending',
-    header: 'Pending',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
-      <div className="text-center font-medium">
-        {formatNumber(getSafeNumber(row.original.pending))}
-      </div>
-    ),
-  },
-  {
-    id: 'actions',
-    header: 'Actions',
-    cell: ({ row }: { row: { original: OrderTypeReportItem } }) => (
-      <div className="text-center">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => handleViewDetails(row.original)}
-          className="h-8 w-8 p-0"
-        >
-          <Eye className="h-4 w-4" />
-        </Button>
+        {formatCurrency(row.original.totalRevenue)}
       </div>
     ),
   },
@@ -119,24 +90,23 @@ const getOrderTypeColumns = (
 export default function OrderTypeReportPage() {
   const { t } = useTranslation();
 
-  // Initialize filters
+  // Initialize filters with today's date and 12:00 PM time
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setDate(today.getDate() - 30);
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
 
     return {
-      from: lastMonth.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
-  const [selectedItem, setSelectedItem] = useState<OrderTypeReportItem | null>(
-    null,
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Table state
   const [searchTerm, setSearchTerm] = useState('');
@@ -147,28 +117,39 @@ export default function OrderTypeReportPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  // Store ref to download component's refetch function
+  const downloadRefetchRef = useRef<(() => void) | null>(null);
+
   // Build query params
-  const queryParams: ReportQueryParams = useMemo(() => {
+  const queryParams = useMemo(() => {
     const activeFilters = submittedFilters || {};
     return {
       ...activeFilters,
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
+      isDownload: activeFilters.isDownload,
     };
   }, [submittedFilters, pagination]);
 
-  // Fetch reports - ALWAYS ENABLED when filters are submitted
+  // Fetch reports
   const {
     data: reportsData,
     isLoading,
     refetch,
-  } = useOrderTypeReports(queryParams, {
-    enabled: !!submittedFilters,
+  } = useOrderTypeReport(queryParams, {
+    enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
   });
 
-  // Use real API data only
+  // Use real API data
   const orderTypeData = reportsData?.data ?? [];
-  const totalCount = reportsData?.meta?.total ?? 0;
+  const totalCount = reportsData?.data?.length ?? 0;
+
+  // Trigger download component refresh when report data loads
+  useEffect(() => {
+    if (reportsData && downloadRefetchRef.current) {
+      downloadRefetchRef.current();
+    }
+  }, [reportsData]);
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -177,51 +158,95 @@ export default function OrderTypeReportPage() {
 
   const handleClearFilters = useCallback(() => {
     const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setDate(today.getDate() - 30);
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
 
     setFilters({
-      from: lastMonth.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     });
     setSubmittedFilters(null);
     setPagination({ pageIndex: 0, pageSize: 10 });
   }, []);
 
-  const handleApplyFilters = useCallback(() => {
-    setSubmittedFilters(filters);
-    toast.info('Fetching order type data...');
-  }, [filters]);
+  const handleApplyFilters = useCallback(
+    (isDownload?: boolean) => {
+      const queryParams = {
+        ...filters,
+        ...(isDownload && { isDownload: true }),
+      };
+
+      if (JSON.stringify(queryParams) === JSON.stringify(submittedFilters)) {
+        refetch();
+      } else {
+        setSubmittedFilters(queryParams);
+      }
+    },
+    [filters, submittedFilters, refetch],
+  );
+
+  // Custom validation
+  const validateFilters = useCallback((filters: ReportQueryParams) => {
+    return !!(
+      filters.from &&
+      filters.to &&
+      filters.brandIds?.length &&
+      filters.restaurantIds?.length
+    );
+  }, []);
 
   const handleRefresh = useCallback(() => {
     if (!submittedFilters) {
-      toast.info('Please apply filters first');
+      toast.info(
+        t('reports.pleaseApplyFilters') || 'Please apply filters first',
+      );
       return;
     }
-
     refetch();
     toast.success(t('common.refreshSuccess') || 'Data refreshed');
   }, [submittedFilters, refetch, t]);
 
-  const handleExport = useCallback(() => {
-    toast.success(t('reports.exportStarted') || 'Export started');
-  }, [t]);
-
-  const handleViewDetails = useCallback((item: OrderTypeReportItem) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
-  }, []);
-
   // Get columns
-  const columns = useMemo(
-    () => getOrderTypeColumns(handleViewDetails),
-    [handleViewDetails],
-  );
+  const columns = useMemo(() => getOrderTypeColumns(), []);
+
+  // Render Sub Component for expansion
+  const renderSubComponent = useCallback(({ row }: { row: unknown }) => {
+    const typedRow = row as { original: OrderTypeGroupedItem };
+    const breakdown = typedRow.original.breakdown || [];
+
+    if (breakdown.length === 0) {
+      return (
+        <div className="p-4 text-center text-muted-foreground text-sm">
+          No breakdown details available
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-4 bg-muted/30 rounded-md">
+        <h4 className="text-sm font-semibold mb-3">Status Breakdown</h4>
+        <div className="grid gap-4">
+          <div className="grid grid-cols-3 gap-4 pb-2 border-b text-sm font-medium text-muted-foreground">
+            <div>Status</div>
+            <div className="text-center">Bills</div>
+            <div className="text-center">Revenue</div>
+          </div>
+          {breakdown.map((item, index) => (
+            <div key={index} className="grid grid-cols-3 gap-4 text-sm">
+              <div className="font-medium">{item.billStatus}</div>
+              <div className="text-center">{formatNumber(item.billCount)}</div>
+              <div className="text-center text-green-600">
+                {formatCurrency(item.totalRevenue)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }, []);
 
   return (
     <Layout>
@@ -234,24 +259,16 @@ export default function OrderTypeReportPage() {
             </h2>
             <p className="text-muted-foreground">
               {t('reports.orderType.description') ||
-                'View order source statistics and analysis'}
+                'View order type statistics and analysis'}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
-              onClick={handleExport}
-              className="flex items-center gap-2"
-            >
-              <Download className="h-4 w-4" />
-              {t('common.export')}
-            </Button>
-            <Button
-              variant="outline"
               onClick={handleRefresh}
               className="flex items-center gap-2"
-              disabled={!submittedFilters}
+              disabled={!submittedFilters || isLoading}
             >
               <RefreshCw
                 className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
@@ -267,13 +284,16 @@ export default function OrderTypeReportPage() {
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onSubmit={handleApplyFilters}
-        >
-          <OrderTypeReportFilters
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onClearFilters={handleClearFilters}
-          />
-        </ReportFilters>
+          validateFilters={validateFilters}
+        />
+
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={(refetchFn) => {
+            downloadRefetchRef.current = refetchFn;
+          }}
+        />
 
         {/* Table */}
         <Card>
@@ -281,29 +301,24 @@ export default function OrderTypeReportPage() {
             <div>
               <CardTitle className="text-lg">
                 {t('reports.orderType.orderTypeReport') ||
-                  'Order Type Breakdown'}
+                  'Order Type Statistics'}
               </CardTitle>
             </div>
-            {orderTypeData.length > 0 && (
-              <div className="text-sm text-muted-foreground">
-                {orderTypeData.length} order sources
-                {totalCount > orderTypeData.length && ` of ${totalCount}`}
-              </div>
-            )}
           </CardHeader>
+
           <CardContent className="p-6 pt-0">
             {!submittedFilters ? (
               <div className="text-center py-12 text-muted-foreground">
-                Apply filters to view order type data
+                {t('reports.applyFiltersMessage') ||
+                  'Apply filters to view data'}
               </div>
             ) : isLoading ? (
               <div className="text-center py-12 text-muted-foreground">
-                Loading order type data...
+                {t('common.loading') || 'Loading...'}
               </div>
             ) : orderTypeData.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                {t('reports.orderType.noData') ||
-                  'No order type data found for the selected date range'}
+                {t('reports.noDataFound') || 'No data found'}
               </div>
             ) : (
               <TanStackTable
@@ -323,26 +338,21 @@ export default function OrderTypeReportPage() {
                 onSortingChange={setSorting}
                 columnFilters={columnFilters}
                 onColumnFiltersChange={setColumnFilters}
-                manualPagination={true}
-                manualSorting={true}
-                manualFiltering={true}
+                manualPagination={false}
+                manualSorting={false}
+                manualFiltering={false}
                 showSearch={true}
                 showPagination={true}
                 showPageSizeSelector={true}
-                emptyMessage={t('reports.orderType.noData')}
+                emptyMessage={t('reports.noDataFound') || 'No data found'}
                 enableMultiSort={false}
+                renderSubComponent={renderSubComponent}
+                getRowCanExpand={() => true}
               />
             )}
           </CardContent>
         </Card>
       </div>
-
-      {/* Status Details Modal */}
-      <OrderTypeDetailsModal
-        item={selectedItem}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
     </Layout>
   );
 }

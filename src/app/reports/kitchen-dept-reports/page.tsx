@@ -31,7 +31,7 @@ import { useKitchenDepartmentColumns } from '@/components/reports/kitchen-depart
 import { KitchenDepartmentReportFilters } from '@/components/reports/report-filters/kitchen-dept-filters';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Mock kitchen department data
 const MOCK_KITCHEN_DEPARTMENT_DATA = [
@@ -132,11 +132,8 @@ export default function KitchenDepartmentReportPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   // Fetch ALL generated reports from the system
-  const {
-    data: generatedReports = [],
-    isLoading: isLoadingReports,
-    refetch,
-  } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoading = false;
 
   // ADDED: Combine API data with locally generated reports (like DSR)
   const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
@@ -215,11 +212,6 @@ export default function KitchenDepartmentReportPage() {
     toast.info('Fetching kitchen department report data...');
   }, [filters]);
 
-  const handleRefresh = useCallback(() => {
-    refetch(); // Refresh from API
-    toast.success('Data refreshed');
-  }, [refetch]);
-
   // CHANGED: Download button now GENERATES AND ADDS REPORT TO TABLE like DSR
   const handleDownloadReport = useCallback(async () => {
     setIsDownloading(true);
@@ -256,15 +248,12 @@ export default function KitchenDepartmentReportPage() {
         description:
           'Kitchen Department Summary report has been generated and added to the table.',
       });
-
-      // Also refetch from API if needed
-      refetch();
     } catch (error) {
       toast.error('Failed to generate report');
     } finally {
       setIsDownloading(false);
     }
-  }, [filters, submittedFilters, refetch]);
+  }, [filters, submittedFilters]);
 
   // Keep the original generate report function (for the "Generate Report" button)
   const handleGenerateReport = useCallback(async () => {
@@ -298,15 +287,12 @@ export default function KitchenDepartmentReportPage() {
       toast.success('Report generated successfully!', {
         description: 'The report has been added to your generated reports list',
       });
-
-      // Refresh the generated reports list
-      refetch();
     } catch (error) {
       toast.error('Failed to generate report');
     } finally {
       setIsGenerating(false);
     }
-  }, [filters, submittedFilters, refetch]);
+  }, [filters, submittedFilters]);
 
   const handlePrint = useCallback(() => {
     if (filteredData.length === 0) {
@@ -495,11 +481,7 @@ export default function KitchenDepartmentReportPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={handleRefresh}
-              className="flex items-center gap-2"
-            >
+            <Button variant="outline" className="flex items-center gap-2">
               <RefreshCw className="h-4 w-4" />
               {t('common.refresh') || 'Refresh'}
             </Button>
@@ -524,7 +506,6 @@ export default function KitchenDepartmentReportPage() {
         <GeneratedReportsTable
           title="reports.payment.generatedReports"
           data={allGeneratedReports} // ← CHANGED: Use combined reports
-          isLoading={isLoadingReports}
           onShowDetails={handleShowReportDetails}
           onDownload={handleDownloadGeneratedReport}
           defaultCollapsed={false}
@@ -598,6 +579,9 @@ export default function KitchenDepartmentReportPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Report Details Modal */}
         <ReportDetailsModal

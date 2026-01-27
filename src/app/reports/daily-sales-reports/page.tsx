@@ -17,8 +17,9 @@ import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/rep
 import { toast } from 'sonner';
 import { REPORT_TYPE_BUTTONS } from '@/components/reports/daily-sales-reports/constants';
 import { DailySalesReportFilters } from '@/components/reports/report-filters/daily-sales-filter';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
+
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 export default function DailySalesReportPage() {
   const { t } = useTranslation();
@@ -50,11 +51,8 @@ export default function DailySalesReportPage() {
   >([]);
 
   // Fetch all generated reports from the system
-  const {
-    data: generatedReports = [],
-    isLoading,
-    refetch,
-  } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoading = false;
 
   // Combine API data with locally generated reports
   const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
@@ -116,9 +114,6 @@ export default function DailySalesReportPage() {
         toast.success(t('reports.dailySales.generationSuccess'), {
           description: `${reportLabel} report has been generated and added to the table.`,
         });
-
-        // Also refetch from API if needed
-        refetch();
       } catch (error) {
         toast.error(t('reports.dailySales.generationFailed'), {
           description: t('common.errors.tryAgainLater'),
@@ -127,7 +122,7 @@ export default function DailySalesReportPage() {
         setIsGenerating(false);
       }
     },
-    [t, refetch, submittedFilters],
+    [t, submittedFilters],
   );
 
   const handleShowDetails = useCallback((report: GeneratedReport) => {
@@ -160,11 +155,6 @@ export default function DailySalesReportPage() {
     [t],
   );
 
-  const handleRefresh = useCallback(() => {
-    refetch(); // Refresh from API
-    toast.success(t('common.refreshSuccess') || 'Reports refreshed');
-  }, [refetch, t]);
-
   return (
     <Layout>
       <div className="flex flex-1 flex-col space-y-8 p-8">
@@ -179,11 +169,7 @@ export default function DailySalesReportPage() {
             </p>
           </div>
 
-          <Button
-            variant="outline"
-            onClick={handleRefresh}
-            className="flex items-center gap-2"
-          >
+          <Button variant="outline" className="flex items-center gap-2">
             <RefreshCw
               className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
             />
@@ -259,6 +245,9 @@ export default function DailySalesReportPage() {
           searchPlaceholder="reports.dailySales.searchPlaceholder"
           emptyMessage="reports.dailySales.noGeneratedReports"
         />
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
 
       {/* Report Details Modal */}
