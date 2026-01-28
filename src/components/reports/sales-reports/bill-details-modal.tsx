@@ -242,7 +242,7 @@ export function BillDetailsModal({
             {/* Order Status */}
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground font-medium">
-                {t('bill.orderStatus') || 'Order Status'}
+                {t('bill.status') || 'Order Status'}
               </span>
               <span className="text-muted-foreground">|</span>
               <Badge

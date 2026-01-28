@@ -6,6 +6,7 @@
 import api from '@/lib/axios';
 import { API_ENDPOINTS } from '@/config/api';
 import { AuthTokens, AuthUser, LoginCredentials } from '@/types/auth/auth.type';
+import { socketService } from '@/services/socket/socket.service';
 
 export class AuthService {
   /**
@@ -29,6 +30,7 @@ export class AuthService {
       });
       return response;
     } catch (error) {
+      console.warn(error);
       // If refresh fails, the token is expired or invalid
       throw new Error('REFRESH_TOKEN_EXPIRED');
     }
@@ -51,6 +53,28 @@ export class AuthService {
     } catch (error) {
       // Ignore logout errors - we'll clear local state anyway
       console.warn('Logout request failed:', error);
+    } finally {
+      // Disconnect socket on logout
+      socketService.disconnect();
     }
   }
+}
+
+/**
+ * Helper function to get current access token from storage
+ */
+export function getToken(): string | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const stored = localStorage.getItem('rh-pos-auth');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return parsed.accessToken || null;
+    }
+  } catch (error) {
+    console.warn('Failed to get token from localStorage:', error);
+  }
+
+  return null;
 }

@@ -1787,7 +1787,7 @@
   "orders.paymentSummary": "ملخص الدفع",
   "orders.printKOT": "طباعة KOT",
   "orders.printBill": "طباعة الفاتورة",
-  "orders.acknowledged": "مستلم",
+  "orders.confirmed": "مستلم",
   "orders.foodReady": "الطعام جاهز",
   "orders.fulfilled": "مكتمل",
   "orders.cancelled": "ملغى",
@@ -2067,5 +2067,9 @@
   "reports.hourly.monthlyHourlyReport": "تقرير ساعي شهري",
   "reports.hourly.generatingHourlyReport": "جارٍ إنشاء التقرير الساعي...",
   "reports.hourly.generatingMonthlyReport": "جارٍ إنشاء التقرير الساعي الشهري...",
-  "reports.hourly.reportGenerated": "تم بدء إنشاء التقرير بنجاح"
+  "reports.hourly.reportGenerated": "تم بدء إنشاء التقرير بنجاح",
+
+  "orders.pending": "قيد الانتظار",
+  "payment.unpaid": "غير مدفوع",
+  "common.refreshSuccess": "تم تحديث الطلبات بنجاح"
 }

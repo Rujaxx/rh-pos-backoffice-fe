@@ -12,7 +12,6 @@ import {
   ChevronDown,
   X,
   Search,
-  Hash,
   Package,
   Check,
 } from 'lucide-react';
@@ -29,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 
 interface Platform {
   _id: string;

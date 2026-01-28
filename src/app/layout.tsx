@@ -6,6 +6,8 @@ import { I18nProvider } from '@/providers/i18n-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { ErrorBoundary } from '@/components/error-boundary/error-boundary';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { AudioUnlocker } from '@/components/sound/audio-unlocker';
+import { SocketProvider } from '@/providers/socket-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -53,8 +55,11 @@ export default function RootLayout({
         <QueryProvider>
           <ThemeProvider>
             <I18nProvider>
-              <ErrorBoundary>{children}</ErrorBoundary>
-              <Toaster />
+              <SocketProvider>
+                <ErrorBoundary>{children}</ErrorBoundary>
+                <AudioUnlocker />
+                <Toaster />
+              </SocketProvider>
             </I18nProvider>
           </ThemeProvider>
         </QueryProvider>
