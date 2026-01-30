@@ -14,13 +14,8 @@ import {
   BarChart3,
   Loader2,
 } from 'lucide-react';
-import {
-  ReportQueryParams,
-  GeneratedReport,
-  ReportGenerationStatus,
-} from '@/types/report.type';
+import { ReportQueryParams, GeneratedReport } from '@/types/report.type';
 import { toast } from 'sonner';
-import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -42,185 +37,11 @@ import { createBillDetailsColumns } from '@/components/reports/item-reports/bill
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { ItemReportFilter } from '@/components/reports/report-filters/item-report-filters';
 import { DownloadReportOptions } from '@/components/reports/download-report-options';
-
-// Mock sold items data
-const MOCK_SOLD_ITEMS: SoldItem[] = [
-  {
-    _id: '1',
-    itemName: 'Margherita Pizza',
-    averagePrice: 12.99,
-    quantity: 45,
-    totalQty: 45,
-    discountOnItem: 2.5,
-    parentCategory: 'Main Course',
-    subCategory: 'Pizza',
-  },
-  {
-    _id: '2',
-    itemName: 'Garlic Bread',
-    averagePrice: 4.5,
-    quantity: 89,
-    totalQty: 89,
-    discountOnItem: 0.5,
-    parentCategory: 'Appetizers',
-    subCategory: 'Breads',
-  },
-  {
-    _id: '3',
-    itemName: 'Chocolate Brownie',
-    averagePrice: 6.99,
-    quantity: 32,
-    totalQty: 32,
-    discountOnItem: 1.0,
-    parentCategory: 'Desserts',
-    subCategory: 'Cakes',
-  },
-  {
-    _id: '4',
-    itemName: 'Caesar Salad',
-    averagePrice: 8.5,
-    quantity: 27,
-    totalQty: 27,
-    discountOnItem: 0,
-    parentCategory: 'Salads',
-    subCategory: 'Vegetarian',
-  },
-  {
-    _id: '5',
-    itemName: 'Grilled Salmon',
-    averagePrice: 18.99,
-    quantity: 18,
-    totalQty: 18,
-    discountOnItem: 3.0,
-    parentCategory: 'Main Course',
-    subCategory: 'Seafood',
-  },
-];
-
-// Mock complementary items data
-const MOCK_COMPLEMENTARY_ITEMS: ComplementaryItem[] = [
-  {
-    _id: '1',
-    itemName: 'Mineral Water',
-    price: 2.0,
-    quantity: 15,
-    totalQty: 15,
-    reason: 'Customer Complaint',
-    date: '2024-01-15',
-  },
-  {
-    _id: '2',
-    itemName: 'Garlic Bread',
-    price: 4.5,
-    quantity: 8,
-    totalQty: 8,
-    reason: 'Birthday Celebration',
-    date: '2024-01-14',
-  },
-  {
-    _id: '3',
-    itemName: 'Chocolate Brownie',
-    price: 6.99,
-    quantity: 5,
-    totalQty: 5,
-    reason: 'Anniversary',
-    date: '2024-01-13',
-  },
-];
-
-// Mock KOT items data
-const MOCK_KOT_ITEMS: KotItem[] = [
-  {
-    _id: '1',
-    kotNumber: 'KOT-001',
-    itemName: 'Margherita Pizza',
-    orderType: 'dine-in',
-    tableNumber: 'T12',
-    status: 'settled',
-    username: 'john.doe',
-    placedQty: 2,
-    settleQty: 2,
-    price: 12.99,
-    date: '2024-01-15 19:30:00',
-  },
-  {
-    _id: '2',
-    kotNumber: 'KOT-002',
-    itemName: 'Pasta Carbonara',
-    orderType: 'takeaway',
-    tableNumber: 'N/A',
-    status: 'placed',
-    username: 'jane.smith',
-    placedQty: 1,
-    settleQty: 0,
-    price: 14.99,
-    date: '2024-01-15 20:15:00',
-  },
-  {
-    _id: '3',
-    kotNumber: 'KOT-003',
-    itemName: 'Caesar Salad',
-    orderType: 'dine-in',
-    tableNumber: 'T05',
-    status: 'cancelled',
-    username: 'bob.johnson',
-    placedQty: 1,
-    settleQty: 0,
-    price: 8.5,
-    date: '2024-01-15 18:45:00',
-  },
-];
-
-// Mock bill details data
-const MOCK_BILL_DETAILS: BillDetail[] = [
-  {
-    _id: '1',
-    billNumber: 'BILL-001',
-    orderId: 'ORD-12345',
-    grandTotal: 45.97,
-    user: 'John Doe',
-    kotNumber: 'KOT-001',
-    dateTime: '2024-01-15 20:45:00',
-  },
-  {
-    _id: '2',
-    billNumber: 'BILL-002',
-    orderId: 'ORD-12346',
-    grandTotal: 28.5,
-    user: 'Jane Smith',
-    kotNumber: 'KOT-002',
-    dateTime: '2024-01-15 21:30:00',
-  },
-  {
-    _id: '3',
-    billNumber: 'BILL-003',
-    orderId: 'ORD-12347',
-    grandTotal: 67.8,
-    user: 'Bob Johnson',
-    kotNumber: 'KOT-003, KOT-004',
-    dateTime: '2024-01-15 22:15:00',
-  },
-];
-
-// Calculate consolidated data from mock sold items
-const getConsolidatedData = () => {
-  const totalAmount = MOCK_SOLD_ITEMS.reduce(
-    (sum, item) => sum + item.averagePrice * item.quantity,
-    0,
-  );
-
-  const totalItems = MOCK_SOLD_ITEMS.reduce(
-    (sum, item) => sum + item.quantity,
-    0,
-  );
-
-  return {
-    totalAmount,
-    totalItems,
-    averagePrice: totalItems > 0 ? totalAmount / totalItems : 0,
-    itemCount: MOCK_SOLD_ITEMS.length,
-  };
-};
+import {
+  useSoldItemReport,
+  soldItemReportService,
+} from '@/services/api/reports/sold-item-report.query';
+import { SoldItemsFilterParams } from '@/types/item-report.type';
 
 export default function ItemReportPage() {
   const { t } = useTranslation();
@@ -238,39 +59,90 @@ export default function ItemReportPage() {
   const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
     null,
   );
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  // Local state to store generated reports
-  const [localGeneratedReports, setLocalGeneratedReports] = useState<
-    GeneratedReport[]
-  >([]);
+  // Ref for updating download options
+  const optionsRefetchRef = React.useRef<(() => void) | null>(null);
 
-  const generatedReports: GeneratedReport[] = [];
-  const isLoadingReports = false;
+  // Fetch Sold Item Report Data
+  const {
+    data: soldItemReportData,
+    isLoading: isLoadingReports,
+    refetch: refetchSoldItems,
+    isRefetching: isRefetchingSoldItems,
+  } = useSoldItemReport(submittedFilters as SoldItemsFilterParams, {
+    enabled: !!submittedFilters && activeTab === 'sold-items',
+  });
 
-  // Combine API data with locally generated reports
-  const allGeneratedReports = [...generatedReports, ...localGeneratedReports];
+  const soldItemsData = (soldItemReportData?.data?.report as SoldItem[]) || [];
+
+  // Refresh handler
+  const handleRefresh = useCallback(() => {
+    if (activeTab === 'sold-items' && submittedFilters) {
+      refetchSoldItems();
+      toast.success(t('common.refreshing'));
+    }
+  }, [activeTab, submittedFilters, refetchSoldItems, t]);
+
+  // Generate Sold Items Report (Download button)
+  const handleGenerateSoldReport = useCallback(async () => {
+    if (!submittedFilters) return;
+
+    setIsDownloading(true);
+    toast.success(t('reports.itemReport.generatingSoldItems'), {
+      description: t('reports.itemReport.mayTakeMoments'),
+    });
+
+    try {
+      await soldItemReportService.downloadReport(
+        submittedFilters as SoldItemsFilterParams,
+      );
+
+      // Refresh the download list
+      if (optionsRefetchRef.current) {
+        optionsRefetchRef.current();
+      }
+    } catch {
+      toast.error(t('common.generateFailed'));
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [submittedFilters, t]);
+
+  const handleGenerateConsolidatedReport = useCallback(async () => {
+    toast.info('Coming soon');
+  }, []);
+
+  const handleGenerateComplementaryReport = useCallback(async () => {
+    toast.info('Coming soon');
+  }, []);
+
+  const handleGenerateBillDetailsReport = useCallback(async () => {
+    toast.info('Coming soon');
+  }, []);
 
   // Get data count for each tab
-  const getTabDataCount = useCallback((tabId: ItemReportTab) => {
-    switch (tabId) {
-      case 'sold-items':
-        return MOCK_SOLD_ITEMS.length;
-      case 'complimentary':
-        return MOCK_COMPLEMENTARY_ITEMS.length;
-      case 'kot-items':
-        return MOCK_KOT_ITEMS.length;
-      case 'bill-details':
-        return MOCK_BILL_DETAILS.length;
-      default:
-        return 0;
-    }
-  }, []);
+  const getTabDataCount = useCallback(
+    (tabId: ItemReportTab) => {
+      switch (tabId) {
+        case 'sold-items':
+          return soldItemsData.length;
+        case 'complimentary':
+          return 0; // Temporary 0 until API is integrated
+        case 'kot-items':
+          return 0;
+        case 'bill-details':
+          return 0;
+        default:
+          return 0;
+      }
+    },
+    [soldItemsData],
+  );
 
   // Get current tab data
   const getCurrentData = useCallback((): (
@@ -281,19 +153,18 @@ export default function ItemReportPage() {
   )[] => {
     switch (activeTab) {
       case 'sold-items':
-        return MOCK_SOLD_ITEMS;
+        return soldItemsData;
       case 'complimentary':
-        return MOCK_COMPLEMENTARY_ITEMS;
+        return [];
       case 'kot-items':
-        return MOCK_KOT_ITEMS;
+        return [];
       case 'bill-details':
-        return MOCK_BILL_DETAILS;
+        return [];
       default:
         return [];
     }
-  }, [activeTab]);
+  }, [activeTab, soldItemsData]);
 
-  // Get current tab data
   const currentData = getCurrentData();
 
   // Filter handlers
@@ -316,193 +187,15 @@ export default function ItemReportPage() {
     toast.info(t('reports.itemReport.fetchingData'));
   }, [filters, t]);
 
-  // Generate Sold Items Report (Download button)
-  const handleGenerateSoldReport = useCallback(async () => {
-    setIsDownloading(true);
-    toast.success(t('reports.itemReport.generatingSoldItems'), {
-      description: t('reports.itemReport.mayTakeMoments'),
-    });
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Create a new report object
-      const newReport: GeneratedReport = {
-        _id: `sold_items_${Date.now()}`,
-        generateDate: new Date().toISOString(),
-        generatedBy: 'current-user',
-        generatedByName: 'Current User',
-        reportType: ItemReportType.SOLD_ITEMS_DETAILS,
-        generationStatus: ReportGenerationStatus.COMPLETED,
-        filters: submittedFilters || filters,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        downloadUrl: `https://example.com/reports/sold-items-${Date.now()}.csv`,
-      };
-
-      // Add the new report to local state
-      setLocalGeneratedReports((prev) => [newReport, ...prev]);
-
-      toast.success(t('common.reportGenerated'), {
-        description: t('reports.itemReport.soldItemsAdded'),
-      });
-    } catch {
-      toast.error(t('common.generateFailed'));
-    } finally {
-      setIsDownloading(false);
-    }
-  }, [filters, submittedFilters, t]);
-
-  // Generate Consolidated Report (Consolidated button)
-  const handleGenerateConsolidatedReport = useCallback(async () => {
-    setIsGenerating(true);
-    toast.success(t('reports.itemReport.generatingConsolidated'), {
-      description: t('reports.itemReport.mayTakeMoments'),
-    });
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Create a consolidated report
-      const newReport: GeneratedReport = {
-        _id: `consolidated_${Date.now()}`,
-        generateDate: new Date().toISOString(),
-        generatedBy: 'current-user',
-        generatedByName: 'Current User',
-        reportType: ItemReportType.CONSOLIDATED_ITEM_REPORT,
-        generationStatus: ReportGenerationStatus.COMPLETED,
-        filters: submittedFilters || filters,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        downloadUrl: `https://example.com/reports/consolidated-${Date.now()}.csv`,
-      };
-
-      // Add to local state
-      setLocalGeneratedReports((prev) => [newReport, ...prev]);
-
-      toast.success(t('common.reportGenerated'), {
-        description: t('reports.itemReport.consolidatedAdded'),
-      });
-    } catch {
-      toast.error(t('common.generateFailed'));
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [filters, submittedFilters, t]);
-
-  // Generate Complementary Report (Download button)
-  const handleGenerateComplementaryReport = useCallback(async () => {
-    setIsDownloading(true);
-    toast.success(t('reports.itemReport.generatingComplementary'), {
-      description: t('reports.itemReport.mayTakeMoments'),
-    });
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Create a new report object
-      const newReport: GeneratedReport = {
-        _id: `complementary_${Date.now()}`,
-        generateDate: new Date().toISOString(),
-        generatedBy: 'current-user',
-        generatedByName: 'Current User',
-        reportType: ItemReportType.COMPLEMENTARY_ITEMS,
-        generationStatus: ReportGenerationStatus.COMPLETED,
-        filters: submittedFilters || filters,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        downloadUrl: `https://example.com/reports/complementary-${Date.now()}.csv`,
-      };
-
-      setLocalGeneratedReports((prev) => [newReport, ...prev]);
-      toast.success(t('common.reportGenerated'), {
-        description: t('reports.itemReport.complementaryAdded'),
-      });
-    } catch {
-      toast.error(t('common.generateFailed'));
-    } finally {
-      setIsDownloading(false);
-    }
-  }, [filters, submittedFilters, t]);
-
-  // Generate Bill Details Report (Bill-wise KOT Details Report button)
-  const handleGenerateBillDetailsReport = useCallback(async () => {
-    setIsGenerating(true);
-    toast.success(t('reports.itemReport.generatingBillKOT'), {
-      description: t('reports.itemReport.mayTakeMoments'),
-    });
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Create a bill details report
-      const newReport: GeneratedReport = {
-        _id: `bill_details_${Date.now()}`,
-        generateDate: new Date().toISOString(),
-        generatedBy: 'current-user',
-        generatedByName: 'Current User',
-        reportType: ItemReportType.BILL_DETAILS_REPORT,
-        generationStatus: ReportGenerationStatus.COMPLETED,
-        filters: submittedFilters || filters,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        downloadUrl: `https://example.com/reports/bill-details-${Date.now()}.csv`,
-      };
-
-      setLocalGeneratedReports((prev) => [newReport, ...prev]);
-      toast.success(t('common.reportGenerated'), {
-        description: t('reports.itemReport.billKOTAdded'),
-      });
-    } catch {
-      toast.error(t('common.generateFailed'));
-    } finally {
-      setIsGenerating(false);
-    }
-  }, [filters, submittedFilters, t]);
-
-  // Show report details
-  const handleShowReportDetails = useCallback((report: GeneratedReport) => {
-    setSelectedReport(report);
-    setIsDetailsModalOpen(true);
-  }, []);
-
   const handleCloseDetailsModal = useCallback(() => {
     setIsDetailsModalOpen(false);
     setSelectedReport(null);
   }, []);
 
-  // Download generated report from the table
-  const handleDownloadGeneratedReport = useCallback(
-    (report: GeneratedReport) => {
-      if (!report.downloadUrl) {
-        toast.error(t('common.downloadUrlNotAvailable'));
-        return;
-      }
-
-      // Create download link
-      const link = document.createElement('a');
-      link.href = report.downloadUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.download = `item-report-${report._id}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.success(t('common.downloadStarted'));
-    },
-    [t],
-  );
-
   // Get columns for current tab with proper typing
   const getCurrentColumns = useCallback((): ColumnDef<
     SoldItem | ComplementaryItem | KotItem | BillDetail
   >[] => {
-    // Helper function to safely cast columns to the union type
     const castColumns = <T,>(
       columns: ColumnDef<T>[],
     ): ColumnDef<SoldItem | ComplementaryItem | KotItem | BillDetail>[] =>
@@ -525,9 +218,23 @@ export default function ItemReportPage() {
   }, [activeTab]);
 
   // Consolidated data for sold items
-  const consolidatedData = useMemo(() => getConsolidatedData(), []);
+  const consolidatedData = useMemo(() => {
+    if (activeTab === 'sold-items' && soldItemReportData?.data) {
+      return {
+        totalAmount: soldItemReportData.data.totalRevenue,
+        totalItems: soldItemReportData.data.totalItemSold,
+        averagePrice: soldItemReportData.data.averageItemPrice,
+        itemCount: soldItemsData.length,
+      };
+    }
+    return {
+      totalAmount: 0,
+      totalItems: 0,
+      averagePrice: 0,
+      itemCount: 0,
+    };
+  }, [activeTab, soldItemReportData, soldItemsData]);
 
-  // Get current columns
   const currentColumns = getCurrentColumns();
 
   return (
@@ -546,10 +253,11 @@ export default function ItemReportPage() {
 
           <Button
             variant="outline"
-            disabled={isRefreshing || isLoadingReports}
+            disabled={isRefetchingSoldItems || isLoadingReports}
+            onClick={handleRefresh}
             className="flex items-center gap-2"
           >
-            {isRefreshing ? (
+            {isRefetchingSoldItems ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <RefreshCw className="h-4 w-4" />
@@ -573,16 +281,12 @@ export default function ItemReportPage() {
           />
         </ReportFilters>
 
-        {/* Generated Reports Table */}
-        <GeneratedReportsTable
-          title="reports.generatedReports"
-          data={allGeneratedReports}
-          isLoading={isLoadingReports}
-          onShowDetails={handleShowReportDetails}
-          onDownload={handleDownloadGeneratedReport}
-          defaultCollapsed={false}
-          searchPlaceholder={t('common.searchGeneratedReports')}
-          emptyMessage={t('common.noGeneratedReports')}
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={(refetch) => {
+            optionsRefetchRef.current = refetch;
+          }}
         />
 
         {/* Tabs with count on ALL tabs */}
@@ -620,7 +324,6 @@ export default function ItemReportPage() {
         {/* Summary Cards Section */}
         {activeTab === 'sold-items' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Total Sales Card */}
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -647,7 +350,6 @@ export default function ItemReportPage() {
               </CardContent>
             </Card>
 
-            {/* Average Price Card */}
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -674,7 +376,6 @@ export default function ItemReportPage() {
               </CardContent>
             </Card>
 
-            {/* Items Count Card */}
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -716,7 +417,6 @@ export default function ItemReportPage() {
 
               {/* Tab-specific action buttons */}
               <div className="flex items-center gap-2">
-                {/* Sold Items Tab - Download and Consolidated buttons */}
                 {activeTab === 'sold-items' && (
                   <>
                     <Button
@@ -732,7 +432,11 @@ export default function ItemReportPage() {
                     </Button>
                     <Button
                       onClick={handleGenerateConsolidatedReport}
-                      disabled={isGenerating || currentData.length === 0}
+                      disabled={
+                        isGenerating ||
+                        currentData.length === 0 ||
+                        !submittedFilters
+                      }
                       className="flex items-center gap-2"
                     >
                       <FileText className="h-4 w-4" />
@@ -743,27 +447,19 @@ export default function ItemReportPage() {
                   </>
                 )}
 
-                {/* Complementary Tab */}
                 {activeTab === 'complimentary' && (
                   <Button
                     variant="outline"
-                    onClick={handleGenerateComplementaryReport}
-                    disabled={isDownloading || currentData.length === 0}
+                    disabled={currentData.length === 0}
                     className="flex items-center gap-2"
+                    onClick={handleGenerateComplementaryReport}
                   >
                     <Download className="h-4 w-4" />
-                    {isDownloading
-                      ? t('reports.itemReport.downloading')
-                      : t('common.download')}
+                    {t('common.download')}
                   </Button>
                 )}
 
-                {/* KOT Items Tab */}
-                {activeTab === 'kot-items' && (
-                  <div className="text-sm text-muted-foreground italic"></div>
-                )}
-
-                {/* Bill Details Tab - Bill-wise KOT Details Report button */}
+                {/* Bill Details Tab */}
                 {activeTab === 'bill-details' && (
                   <Button
                     variant="outline"
@@ -781,14 +477,29 @@ export default function ItemReportPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <TanStackTable
-              columns={currentColumns}
-              data={currentData}
-              emptyMessage={t(`reports.itemReport.empty.${activeTab}`)}
-              showSearch={true}
-              searchPlaceholder={t('reports.itemReport.searchItems')}
-              showPagination={true}
-            />
+            {activeTab === 'sold-items' ? (
+              <TanStackTable
+                columns={currentColumns}
+                data={currentData}
+                emptyMessage={t(`reports.itemReport.empty.${activeTab}`)}
+                showSearch={true}
+                searchPlaceholder={t('reports.itemReport.searchItems')}
+                showPagination={activeTab !== 'sold-items'}
+              />
+            ) : (
+              <div className="flex h-64 w-full items-center justify-center rounded-lg border border-dashed text-muted-foreground">
+                <div className="text-center">
+                  <p className="text-lg font-medium">Coming Soon</p>
+                  <p className="text-sm">
+                    {t(
+                      ITEM_REPORT_TABS.find((tab) => tab.id === activeTab)
+                        ?.label || '',
+                    )}{' '}
+                    report is under development
+                  </p>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -799,9 +510,6 @@ export default function ItemReportPage() {
           onClose={handleCloseDetailsModal}
         />
       </div>
-
-      {/* Download Report Options */}
-      <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
     </Layout>
   );
 }

@@ -2053,5 +2053,28 @@
 
   "orders.pending": "Pending",
   "payment.unpaid": "Unpaid",
-  "common.refreshSuccess": "Orders refreshed successfully"
+  "common.refreshSuccess": "Orders refreshed successfully",
+
+  "reports.category.categoryReport": "Category Report",
+  "reports.applyFiltersMessage": "Apply Filters",
+  "reports.category.totalCategories": "Total Categories",
+  "reports.category.totalRevenue": "Total Revenue",
+  "reports.category.totalItemsSold": "Total Items Sold",
+
+  "reports.kitchenDepartment.totalDepartments": "Total Departments",
+  "reports.kitchenDepartment.totalItemsSold": "Total Items Sold",
+  "reports.kitchenDepartment.totalRevenue": "Total Revenue",
+  "reports.kitchenDepartment.totalDiscount": "Total Discount",
+  "reports.kitchenDepartment.totalCharges": "Total Charges",
+  "reports.kitchenDepartment.kitchenDepartmentName": "Kitchen Department",
+  "reports.kitchenDepartment.kitchenDepartmentReport": "Kitchen Department Sales Report",
+  "reports.pleaseApplyFilters": "Please apply filters first",
+  "reports.billPrint.generatingReport": "Generating report...",
+  "reports.generating": "Generating Reprot",
+  "reports.discount.columns.orderType": "Order Type",
+  "reports.discount.columns.billStatus": "Bill Status",
+  "reports.discount.columns.totalDiscount": "Total Discount",
+  "reports.discount.columns.billCount": "Bill Count",
+  "common.top": "Top",
+  "common.topPlaceholder": "Top"
 }

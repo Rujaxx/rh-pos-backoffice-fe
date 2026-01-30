@@ -21,68 +21,64 @@ const formatAmount = (amount: number): string => {
   }).format(amount);
 };
 
-// Create columns for discount report items - LIKE PAYMENT TABLE
+// Create columns for discount report items
 const createDiscountReportItemColumns = (
   t: ReturnType<typeof useTranslation>['t'],
 ): ColumnDef<DiscountReportItem>[] => [
   {
-    accessorKey: 'orderFrom',
-    id: 'orderFrom',
-    header: t('reports.discount.columns.orderFrom') || 'Order From',
+    accessorKey: 'orderType',
+    id: 'orderType',
+    header: t('reports.discount.columns.orderType') || 'Order Type',
     cell: ({ row }) => (
-      <div className="font-medium">
-        {row.original.orderFrom}
-        {row.original.customerName && (
-          <div className="text-xs text-muted-foreground">
-            {row.original.customerName}
-          </div>
-        )}
-      </div>
+      <div className="font-medium">{row.original.orderType}</div>
     ),
   },
   {
-    accessorKey: 'discountAmount',
-    id: 'discountAmount',
-    header: t('reports.discount.columns.discountAmount') || 'Discount Amount',
-    cell: ({ row }) => (
-      <div className="font-medium">
-        {formatAmount(row.original.discountAmount)}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'status',
-    id: 'status',
-    header: t('reports.discount.columns.status') || 'Status',
+    accessorKey: 'billStatus',
+    id: 'billStatus',
+    header: t('reports.discount.columns.billStatus') || 'Bill Status',
     cell: ({ row }) => {
-      const status = row.original.status;
-      const statusConfig = {
-        Fulfilled: {
-          variant: 'default' as const,
-          className: 'bg-green-500 text-white',
-        },
-        Free: {
-          variant: 'outline' as const,
-          className: 'bg-yellow-500 text-white',
-        },
-        Cancelled: {
-          variant: 'secondary' as const,
-          className: 'bg-red-500 text-white',
-        },
-      }[status] || {
-        variant: 'outline' as const,
-        className: 'bg-gray-100 text-gray-800',
-      };
+      const status = row.original.billStatus;
+      // Simple status badge logic
+      const variant =
+        status === 'Paid' || status === 'PAID' ? 'default' : 'secondary';
+      const className =
+        status === 'Paid' || status === 'PAID'
+          ? 'bg-green-500 text-white'
+          : 'bg-gray-500 text-white';
 
       return (
-        <Badge
-          variant={statusConfig.variant}
-          className={statusConfig.className}
-        >
+        <Badge variant={variant} className={className}>
           {status}
         </Badge>
       );
     },
+  },
+  {
+    accessorKey: 'totalDiscount',
+    id: 'totalDiscount',
+    header: () => (
+      <div className="text-right">
+        {t('reports.discount.columns.totalDiscount') || 'Total Discount'}
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-right font-medium text-orange-600">
+        {formatAmount(row.original.totalDiscount)}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'billCount',
+    id: 'billCount',
+    header: () => (
+      <div className="text-center">
+        {t('reports.discount.columns.billCount') || 'Bill Count'}
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center font-medium">{row.original.billCount}</div>
+    ),
   },
 ];
 

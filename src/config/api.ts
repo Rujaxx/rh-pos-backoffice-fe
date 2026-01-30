@@ -139,7 +139,16 @@ export const API_ENDPOINTS = {
     MEAL_TIME: '/reports/meal-time-report',
     ORDER_TYPE: '/reports/order-type',
     BILLER_WISE: '/reports/biller-wise-report',
+    PAYMENT: '/reports/payment-report',
+    CATEGORY: '/reports/category-report',
+    KITCHEN_DEPARTMENT: '/reports/kitchen-department-report',
+    DISCOUNT_REPORT: '/reports/discount-report',
+    ITEM_WISE_DISCOUNT_REPORT: '/reports/item-wise-discount-report',
+    BILL_PRINT: '/reports/bill-print-report',
+    BILL_PRINT_DOWNLOAD: '/download/bill-print-report',
+    SOLD_ITEM: '/reports/sold-item-report',
   },
+
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
     DELETE: (id: string) => `/bills/${id}`,
@@ -261,6 +270,16 @@ export const QUERY_KEYS = {
       ['reports', 'meal-time-report', params] as const,
     ORDER_TYPE: (params?: Record<string, unknown>) =>
       ['reports', 'order-type', params] as const,
+    PAYMENT: (params?: Record<string, unknown>) =>
+      ['reports', 'payment-report', params] as const,
+    CATEGORY: (params?: Record<string, unknown>) =>
+      ['reports', 'category-report', params] as const,
+    KITCHEN_DEPARTMENT: (params?: Record<string, unknown>) =>
+      ['reports', 'kitchen-department-report', params] as const,
+    DISCOUNT_REPORT: (params?: Record<string, unknown>) =>
+      ['reports', 'discount-report', params] as const,
+    SOLD_ITEM: (params?: Record<string, unknown>) =>
+      ['reports', 'sold-item-report', params] as const,
   },
   DISCOUNTS: {
     LIST: (params?: Record<string, unknown>) =>

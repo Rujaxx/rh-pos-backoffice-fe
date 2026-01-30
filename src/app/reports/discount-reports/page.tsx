@@ -1,107 +1,66 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
-import { ReportQueryParams, GeneratedReport } from '@/types/report.type';
+import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { REPORT_TYPE_BUTTONS } from '@/components/reports/discount-reports/constants';
-import { DiscountReportFilters } from '@/components/reports/report-filters/discount-report-filters';
-import { DiscountReportItem } from '@/types/discount-report.type';
 import { DiscountDataTable } from '@/components/reports/discount-reports/discount-table';
-import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
-import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { DownloadReportOptions } from '@/components/reports/download-report-options';
-
-// Mock discount data for table
-const MOCK_DISCOUNT_REPORT_DATA: DiscountReportItem[] = [
-  {
-    _id: '1',
-    orderNumber: 'ORD-001',
-    orderFrom: 'John Doe',
-    customerName: 'John Doe',
-    orderDate: '2024-01-15T10:30:00Z',
-    totalAmount: 1500,
-    discountAmount: 150,
-    discountPercentage: 10,
-    discountType: 'Percentage',
-    discountCode: 'WELCOME10',
-    appliedBy: 'System',
-    status: 'Fulfilled',
-    restaurantName: 'Main Restaurant',
-    orderType: 'Dine-in',
-    billStatus: 'PAID',
-    createdAt: '2024-01-15T10:30:00Z',
-    updatedAt: '2024-01-15T10:30:00Z',
-  },
-  {
-    _id: '2',
-    orderNumber: 'ORD-002',
-    orderFrom: 'Jane Smith',
-    customerName: 'Jane Smith',
-    orderDate: '2024-01-15T11:45:00Z',
-    totalAmount: 2500,
-    discountAmount: 500,
-    discountPercentage: 20,
-    discountType: 'Fixed Amount',
-    discountCode: 'FLAT500',
-    appliedBy: 'Manager',
-    status: 'Fulfilled',
-    restaurantName: 'Main Restaurant',
-    orderType: 'Takeaway',
-    billStatus: 'PAID',
-    createdAt: '2024-01-15T11:45:00Z',
-    updatedAt: '2024-01-15T11:45:00Z',
-  },
-  {
-    _id: '3',
-    orderNumber: 'ORD-003',
-    orderFrom: 'Bob Johnson',
-    customerName: 'Bob Johnson',
-    orderDate: '2024-01-15T12:30:00Z',
-    totalAmount: 1200,
-    discountAmount: 0,
-    discountPercentage: 0,
-    discountType: 'None',
-    discountCode: '',
-    appliedBy: '',
-    status: 'Cancelled',
-    restaurantName: 'Main Restaurant',
-    orderType: 'Delivery',
-    billStatus: 'PAID',
-    createdAt: '2024-01-15T12:30:00Z',
-    updatedAt: '2024-01-15T12:30:00Z',
-  },
-];
+import {
+  useDiscountReport,
+  useGenerateItemWiseDiscountReport,
+  useGenerateDiscountReport,
+} from '@/services/api/reports/discount-report.query';
 
 export default function DiscountReportPage() {
   const { t } = useTranslation();
 
-  // Filters
+  // Initialize filters with today's date
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
+
     return {
-      from: today.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 
-  const [selectedReportType, setSelectedReportType] = useState<string | null>(
-    null,
-  );
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
-    null,
-  );
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [submittedFilters, setSubmittedFilters] =
+    useState<ReportQueryParams | null>(null);
 
-  // Fetch all generated reports from the system
-  const generatedReports: GeneratedReport[] = [];
-  const isLoading = false;
+  // Store ref to download component's refetch function
+  const downloadRefetchRef = useRef<(() => void) | null>(null);
+
+  const queryParams = useMemo(() => {
+    const activeFilters = submittedFilters || {};
+    return {
+      ...activeFilters,
+    };
+  }, [submittedFilters]);
+
+  // Hook for Simple Discount Report Table Data
+  const {
+    data: discountReportData,
+    isLoading: isTableLoading,
+    refetch: refetchTable,
+  } = useDiscountReport(queryParams, {
+    enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
+  });
+
+  // Mutation for Item Wise Report Generation
+  const generateItemWiseMutation = useGenerateItemWiseDiscountReport();
+  const generateDiscountReportMutation = useGenerateDiscountReport();
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -110,66 +69,112 @@ export default function DiscountReportPage() {
 
   const handleClearFilters = useCallback(() => {
     const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
+
     setFilters({
-      from: today.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     });
+    setSubmittedFilters(null);
   }, []);
 
-  // Generate report handler
+  const handleApplyFilters = useCallback(() => {
+    if (JSON.stringify(filters) === JSON.stringify(submittedFilters)) {
+      refetchTable();
+    } else {
+      setSubmittedFilters(filters);
+    }
+  }, [filters, submittedFilters, refetchTable]);
+
+  // Validation
+  const validateFilters = useCallback((filters: ReportQueryParams) => {
+    return !!(
+      filters.from &&
+      filters.to &&
+      filters.brandIds?.length &&
+      filters.restaurantIds?.length
+    );
+  }, []);
+
+  const isValid = validateFilters(filters);
+
+  // Handlers
   const handleGenerateReport = useCallback(
-    async (reportType: string) => {
-      setSelectedReportType(reportType);
-      setIsGenerating(true);
+    (reportType: string) => {
+      if (!isValid) {
+        toast.error(
+          t('reports.pleaseApplyFilters') || 'Please select required filters',
+        );
+        return;
+      }
 
-      const reportBtn = REPORT_TYPE_BUTTONS.find(
-        (btn) => btn.type === reportType,
-      );
-      const reportLabel = reportBtn ? t(reportBtn.translationKey) : reportType;
+      const mutation =
+        reportType === 'DISCOUNT_SUMMARY'
+          ? generateDiscountReportMutation
+          : generateItemWiseMutation;
 
-      toast.success(
-        t('reports.discount.generatingReport', { reportName: reportLabel }),
-        {
-          description: t('reports.discount.generatingDescription'),
-        },
-      );
+      if (
+        reportType === 'DISCOUNT_SUMMARY' ||
+        reportType === 'DISCOUNT_ITEM_WISE'
+      ) {
+        const btn = REPORT_TYPE_BUTTONS.find((b) => b.type === reportType);
+        const name = btn ? t(btn.translationKey) : 'Report';
+        toast.info(
+          t('reports.discount.generatingReport', { reportName: name }),
+        );
 
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        toast.success(t('reports.discount.generationSuccess'));
-      } catch (error) {
-        toast.error(t('reports.discount.generationFailed'));
-      } finally {
-        setIsGenerating(false);
+        mutation.mutate(filters, {
+          onSuccess: () => {
+            toast.success(t('reports.discount.generationSuccess'));
+            // Refresh download options
+            if (downloadRefetchRef.current) {
+              downloadRefetchRef.current();
+            }
+          },
+          onError: () => {
+            toast.error(t('reports.discount.generationFailed'));
+          },
+        });
+
+        // Also refresh table if it is summary (optional but good UX)
+        if (reportType === 'DISCOUNT_SUMMARY') {
+          handleApplyFilters();
+        }
+        return;
       }
     },
-    [t],
+    [
+      isValid,
+      filters,
+      handleApplyFilters,
+      generateItemWiseMutation,
+      generateDiscountReportMutation,
+      t,
+    ],
   );
 
   const handleRefresh = useCallback(() => {
-    toast.info(t('reports.discount.refreshingReports'));
-  }, [t]);
+    if (submittedFilters) {
+      refetchTable();
+      // Also refresh downloads if needed
+      if (downloadRefetchRef.current) {
+        downloadRefetchRef.current();
+      }
+      toast.success(t('common.refreshSuccess'));
+    } else {
+      toast.info(t('reports.pleaseApplyFilters'));
+    }
+  }, [submittedFilters, refetchTable, t]);
 
-  // Handler for showing report details
-  const handleShowReportDetails = useCallback((report: GeneratedReport) => {
-    setSelectedReport(report);
-    setIsDetailsModalOpen(true);
+  const tableData = discountReportData?.data?.report || [];
+
+  const handleDownloadRefetchReady = useCallback((refetchFn: () => void) => {
+    downloadRefetchRef.current = refetchFn;
   }, []);
-
-  const handleCloseDetailsModal = useCallback(() => {
-    setIsDetailsModalOpen(false);
-    setSelectedReport(null);
-  }, []);
-
-  // Handler for downloading report
-  const handleDownloadReport = useCallback(
-    (report: GeneratedReport) => {
-      toast.success(
-        t('reports.discount.downloadStarted') || 'Download started',
-      );
-    },
-    [t],
-  );
 
   return (
     <Layout>
@@ -190,8 +195,11 @@ export default function DiscountReportPage() {
             variant="outline"
             onClick={handleRefresh}
             className="flex items-center gap-2"
+            disabled={!submittedFilters || isTableLoading}
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw
+              className={`h-4 w-4 ${isTableLoading ? 'animate-spin' : ''}`}
+            />
             {t('common.refresh')}
           </Button>
         </div>
@@ -201,16 +209,12 @@ export default function DiscountReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onSubmit={() => {}}
-        >
-          <DiscountReportFilters
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onClearFilters={handleClearFilters}
-          />
-        </ReportFilters>
+          onSubmit={handleApplyFilters}
+          validateFilters={validateFilters}
+          showDownloadButton={false}
+        />
 
-        {/* Report Type Selection */}
+        {/* Report Type Buttons (Actions) */}
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
@@ -218,33 +222,28 @@ export default function DiscountReportPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {REPORT_TYPE_BUTTONS.map((reportBtn) => {
                 const Icon = reportBtn.icon;
-                const isSelected = selectedReportType === reportBtn.type;
-                const isCurrentlyGenerating =
-                  isGenerating && selectedReportType === reportBtn.type;
                 const label = t(reportBtn.translationKey);
+                const isGenerating =
+                  reportBtn.type === 'DISCOUNT_ITEM_WISE' &&
+                  generateItemWiseMutation.isPending;
 
                 return (
                   <Button
                     key={reportBtn.type}
-                    variant={isSelected ? 'default' : 'outline'}
-                    className="h-auto py-4 px-4 flex flex-col items-start gap-2 relative"
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex items-center gap-3 justify-start"
                     onClick={() => handleGenerateReport(reportBtn.type)}
-                    disabled={isGenerating}
+                    disabled={!isValid || isGenerating}
                   >
-                    <div className="flex items-center gap-2 w-full">
-                      <Icon className="h-5 w-5" />
-                      <span className="text-sm font-medium text-left flex-1">
-                        {label}
-                      </span>
-                      {isCurrentlyGenerating && (
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                      )}
+                    <Icon className="h-5 w-5" />
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-medium">{label}</span>
                     </div>
-                    {isCurrentlyGenerating && (
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500 animate-pulse rounded-b-md" />
+                    {isGenerating && (
+                      <RefreshCw className="h-4 w-4 animate-spin ml-auto" />
                     )}
                   </Button>
                 );
@@ -253,36 +252,20 @@ export default function DiscountReportPage() {
           </CardContent>
         </Card>
 
-        {/* Generated Reports Table */}
-        <GeneratedReportsTable
-          title="reports.discount.generatedReports"
-          data={generatedReports}
-          isLoading={isLoading}
-          onShowDetails={handleShowReportDetails}
-          onDownload={handleDownloadReport}
-          defaultCollapsed={false}
-          searchPlaceholder="reports.discount.searchPlaceholder"
-          emptyMessage="reports.discount.noGeneratedReports"
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={handleDownloadRefetchReady}
         />
 
         {/* Discount Data Table */}
         <DiscountDataTable
-          data={MOCK_DISCOUNT_REPORT_DATA}
-          isLoading={false}
+          data={tableData}
+          isLoading={isTableLoading}
           searchPlaceholder="reports.discount.searchPlaceholder"
           emptyMessage="reports.discount.noData"
         />
-
-        {/* Download Report Options */}
-        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
-
-      {/* Report Details Modal */}
-      <ReportDetailsModal
-        report={selectedReport}
-        isOpen={isDetailsModalOpen}
-        onClose={handleCloseDetailsModal}
-      />
     </Layout>
   );
 }

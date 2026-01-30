@@ -121,6 +121,9 @@ export interface ReportQueryParams extends QueryParams {
   restaurantIds?: string[];
   brandIds?: string[];
 
+  brandId?: string;
+  restaurantId?: string;
+
   // Category filters
   categoryIds?: string[];
 
@@ -171,6 +174,7 @@ export interface ReportQueryParams extends QueryParams {
 
   page?: number;
   limit?: number;
+  top?: number;
 }
 
 // API Response for Generated Reports

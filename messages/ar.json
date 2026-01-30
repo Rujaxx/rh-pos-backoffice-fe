@@ -2071,5 +2071,24 @@
 
   "orders.pending": "قيد الانتظار",
   "payment.unpaid": "غير مدفوع",
-  "common.refreshSuccess": "تم تحديث الطلبات بنجاح"
+  "common.refreshSuccess": "تم تحديث الطلبات بنجاح",
+
+  "reports.category.categoryReport": "تقرير الفئة",
+  "reports.applyFiltersMessage": "تطبيق الفلاتر",
+  "reports.category.totalCategories": "إجمالي الفئات",
+  "reports.category.totalRevenue": "إجمالي الإيرادات",
+  "reports.category.totalItemsSold": "إجمالي العناصر المباعة",
+
+  "reports.kitchenDepartment.totalDepartments": "إجمالي الأقسام",
+  "reports.kitchenDepartment.totalItemsSold": "إجمالي العناصر المباعة",
+  "reports.kitchenDepartment.totalRevenue": "إجمالي الإيرادات",
+  "reports.kitchenDepartment.totalDiscount": "إجمالي الخصومات",
+  "reports.kitchenDepartment.totalCharges": "إجمالي الرسوم",
+  "reports.kitchenDepartment.kitchenDepartmentName": "قسم المطبخ",
+  "reports.kitchenDepartment.kitchenDepartmentReport": "تقرير مبيعات أقسام المطبخ",
+  "reports.pleaseApplyFilters": "يرجى تطبيق الفلاتر أولاً",
+  "reports.billPrint.generatingReport": "جارٍ إنشاء التقرير...",
+  "reports.generating": "جارٍ إنشاء التقرير...",
+  "common.top": "أعلى",
+  "common.topPlaceholder": "أعلى"
 }

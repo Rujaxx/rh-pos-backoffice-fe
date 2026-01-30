@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,16 +25,7 @@ import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { BillerWiseReportFilters } from '@/components/reports/report-filters/biller-wise-report-filter';
 import { DownloadReportOptions } from '@/components/reports/download-report-options';
-
-interface BillerWiseReportData {
-  totalBills: number;
-  fulfilledBills: number;
-  cancelledBills: number;
-  totalRevenue: number;
-  complementaryItems: number;
-  cancelledItems: number;
-  paymentMethods: Record<string, number>;
-}
+import { useBillerWiseReports } from '@/services/api/reports/reports.queries';
 
 // Helper functions
 const formatCurrency = (amount: number): string => {
@@ -59,12 +56,23 @@ export default function BillerWiseReportPage() {
 
   const [submittedFilters, setSubmittedFilters] =
     useState<ReportQueryParams | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // Mock data matching your backend response
-  const [reportData, setReportData] = useState<BillerWiseReportData | null>(
-    null,
-  );
+  // Store ref to download component's refetch function
+  const downloadRefetchRef = useRef<(() => void) | null>(null);
+
+  // API Call
+  // We trigger the query only when submittedFilters is set.
+  const {
+    data: reportResponse,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useBillerWiseReports(submittedFilters || undefined, {
+    enabled: !!submittedFilters,
+  });
+
+  const reportData = reportResponse?.data;
+  const isQueryLoading = isLoading || isRefetching;
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -81,41 +89,41 @@ export default function BillerWiseReportPage() {
       to: today.toISOString().split('T')[0],
     });
     setSubmittedFilters(null);
-    setReportData(null);
   }, []);
 
-  const handleApplyFilters = useCallback(() => {
-    setIsLoading(true);
-
-    // Simulate API call with your backend data structure
-    setTimeout(() => {
-      const mockData: BillerWiseReportData = {
-        totalBills: 156,
-        fulfilledBills: 148,
-        cancelledBills: 8,
-        totalRevenue: 245600.75,
-        complementaryItems: 15,
-        cancelledItems: 12,
-        paymentMethods: {
-          CASH: 122800.25,
-          CARD: 70800.5,
-          UPI: 29500.75,
-          WALLET: 8000.0,
-          NET_BANKING: 0,
-          OTHER: 0,
-          PHONEPE: 15000.25,
-        },
+  const handleApplyFilters = useCallback(
+    (isDownload?: boolean) => {
+      const queryParams = {
+        ...filters,
+        ...(isDownload && { isDownload: true }),
       };
 
-      setReportData(mockData);
-      setSubmittedFilters(filters);
-      setIsLoading(false);
-      toast.success(
-        t('reports.billerWise.reportGenerated') ||
-          'Biller wise report generated',
-      );
-    }, 500);
-  }, [filters, t]);
+      // If it's a download request, we force a refetch or update state to trigger query with isDownload=true
+      if (isDownload) {
+        // If we just setSubmittedFilters, it will trigger the useQuery.
+        // But if we are ALREADY showing the same filters, React might skip update if state is identical.
+        // However, 'isDownload' makes it different.
+      }
+
+      setSubmittedFilters(queryParams);
+
+      if (isDownload) {
+        toast.info(t('reports.downloadInitiated') || 'Download initiated...');
+      } else {
+        toast.info(t('reports.generating') || 'Generating report...');
+      }
+    },
+    [filters, t],
+  );
+
+  // Trigger download component refresh when report data loads (if it was a download)
+  useEffect(() => {
+    // If the query finished and we have results, refresh the download list.
+    // Ideally we check if `submittedFilters.isDownload` was true, but refreshing on any data load is also safe.
+    if (reportResponse && downloadRefetchRef.current) {
+      downloadRefetchRef.current();
+    }
+  }, [reportResponse]);
 
   const handleRefresh = useCallback(() => {
     if (!submittedFilters) {
@@ -126,14 +134,11 @@ export default function BillerWiseReportPage() {
       return;
     }
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      toast.success(t('common.dataRefreshed') || 'Data refreshed');
-    }, 300);
-  }, [submittedFilters, t]);
+    refetch();
+    toast.success(t('common.dataRefreshed') || 'Data refreshed');
+  }, [submittedFilters, refetch, t]);
 
-  // Calculate derived values
+  // Calculate derived values for UI
   const calculatedValues = useMemo(() => {
     if (!reportData) return null;
 
@@ -142,18 +147,17 @@ export default function BillerWiseReportPage() {
       reportData.totalBills -
       (reportData.fulfilledBills + reportData.cancelledBills);
 
-    // Calculate payment method totals
-    const totalPaymentAmount = Object.values(reportData.paymentMethods).reduce(
-      (sum, amount) => sum + amount,
-      0,
-    );
-    const paymentBreakdown = Object.entries(reportData.paymentMethods)
-      .filter(([_, amount]) => amount > 0)
-      .map(([method, amount]) => ({
-        method,
-        amount,
+    const paymentBreakdown = [...reportData.paymentMethods]
+      .map((pm) => ({
+        method: pm.paymentMethod,
+        amount: pm.totalAmount,
       }))
       .sort((a, b) => b.amount - a.amount);
+
+    const totalPaymentAmount = paymentBreakdown.reduce(
+      (sum, item) => sum + item.amount,
+      0,
+    );
 
     return {
       netSales,
@@ -163,7 +167,6 @@ export default function BillerWiseReportPage() {
     };
   }, [reportData]);
 
-  // Check if we have a specific biller selected (not "All Billers")
   const hasSpecificBiller = useMemo(() => {
     return submittedFilters?.userId && submittedFilters.userId !== 'all';
   }, [submittedFilters]);
@@ -188,10 +191,10 @@ export default function BillerWiseReportPage() {
               variant="outline"
               onClick={handleRefresh}
               className="flex items-center gap-2 border-input bg-background hover:bg-accent hover:text-accent-foreground"
-              disabled={!submittedFilters}
+              disabled={!submittedFilters || isQueryLoading}
             >
               <RefreshCw
-                className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+                className={`h-4 w-4 ${isQueryLoading ? 'animate-spin' : ''}`}
               />
               {t('common.refresh') || 'Refresh'}
             </Button>
@@ -212,6 +215,14 @@ export default function BillerWiseReportPage() {
           />
         </ReportFilters>
 
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={(refetchFn) => {
+            downloadRefetchRef.current = refetchFn;
+          }}
+        />
+
         {/* Main Content */}
         {!submittedFilters ? (
           <Card className="bg-background border-border">
@@ -229,7 +240,7 @@ export default function BillerWiseReportPage() {
               </div>
             </CardContent>
           </Card>
-        ) : isLoading ? (
+        ) : isQueryLoading ? (
           <Card className="bg-background border-border">
             <CardContent className="p-12">
               <div className="text-center">
@@ -472,10 +483,9 @@ export default function BillerWiseReportPage() {
             </Card>
           </>
         )}
-
-        {/* Download Report Options */}
-        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
     </Layout>
   );
 }
+
+//reports.discount.columns.orderType, reports.discount.columns.billStatus, reports.discount.columns.totalDiscount, reports.discount.columns.billCount

@@ -7,12 +7,11 @@ import { useOrderTypes } from '@/services/api/order-types/order-types.queries';
 import { PrintStatus } from '@/types/report.type';
 
 export interface BillPrintReportItem {
-  id: string;
-  orderNumber: string;
+  billNumber: string;
   orderType: string;
-  date: string;
-  amount: number;
-  status: PrintStatus;
+  billStatus: string;
+  totalAmount: number;
+  billDate: string;
   printCount: number;
 }
 
@@ -61,7 +60,7 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
   };
 
   // Helper function to get status display name
-  const getStatusDisplayName = (status: PrintStatus): string => {
+  const getStatusDisplayName = (status: string): string => {
     switch (status) {
       case PrintStatus.FULFILLED:
         return t('reports.billPrint.status.fulfilled') || 'Fulfilled';
@@ -75,7 +74,7 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
   };
 
   // Helper function to get status config
-  const getStatusConfig = (status: PrintStatus) => {
+  const getStatusConfig = (status: string) => {
     switch (status) {
       case PrintStatus.FULFILLED:
         return {
@@ -110,10 +109,10 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
 
   return [
     {
-      accessorKey: 'orderNumber',
-      header: t('reports.billPrint.columns.orderNumber') || 'Order Number',
+      accessorKey: 'billNumber',
+      header: t('reports.billPrint.columns.orderNumber') || 'Bill Number',
       cell: ({ row }) => (
-        <div className="font-medium">{row.getValue('orderNumber')}</div>
+        <div className="font-medium">{row.getValue('billNumber')}</div>
       ),
     },
     {
@@ -132,10 +131,10 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
       },
     },
     {
-      accessorKey: 'date',
+      accessorKey: 'billDate',
       header: t('reports.billPrint.columns.date') || 'Date & Time',
       cell: ({ row }) => {
-        const date = new Date(row.getValue('date'));
+        const date = new Date(row.getValue('billDate'));
         return (
           <div className="whitespace-nowrap">
             {date.toLocaleDateString()}{' '}
@@ -148,10 +147,10 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
       },
     },
     {
-      accessorKey: 'amount',
+      accessorKey: 'totalAmount',
       header: t('reports.billPrint.columns.amount') || 'Amount',
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue('amount'));
+        const amount = parseFloat(row.getValue('totalAmount'));
         return (
           <div className="font-semibold">
             {amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
@@ -160,10 +159,10 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
       },
     },
     {
-      accessorKey: 'status',
+      accessorKey: 'billStatus',
       header: t('reports.billPrint.columns.status') || 'Status',
       cell: ({ row }) => {
-        const status = row.getValue('status') as PrintStatus;
+        const status = row.getValue('billStatus') as string;
         const config = getStatusConfig(status);
 
         return (
@@ -182,7 +181,7 @@ export const useBillPrintColumns = (): ColumnDef<BillPrintReportItem>[] => {
       header: t('reports.billPrint.columns.printCount') || 'Print Count',
       cell: ({ row }) => {
         const count = row.getValue('printCount') as number;
-        const status = row.getValue('status') as PrintStatus;
+        const status = row.getValue('billStatus') as string;
 
         if (status === PrintStatus.CANCELLED) {
           return <div className="text-muted-foreground">-</div>;

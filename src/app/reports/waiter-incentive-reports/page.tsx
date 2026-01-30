@@ -260,17 +260,8 @@ export default function WaiterIncentivePage() {
           />
         </ReportFilters>
 
-        {/* Generated Reports Table */}
-        <GeneratedReportsTable
-          title="reports.waiterIncentive.generatedReports"
-          data={generatedReports}
-          isLoading={isLoading}
-          onShowDetails={handleShowReportDetails}
-          onDownload={handleDownloadGeneratedReport}
-          defaultCollapsed={false}
-          searchPlaceholder="reports.waiterIncentive.searchPlaceholder"
-          emptyMessage="reports.waiterIncentive.noGeneratedReports"
-        />
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Waiter Incentive Data Table */}
         <WaiterIncentiveTable
@@ -279,9 +270,6 @@ export default function WaiterIncentivePage() {
           onConfigureIncentive={handleConfigureIncentive}
           onDownload={handleDownloadReport}
         />
-
-        {/* Download Report Options */}
-        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Incentive Configuration Modal */}
         <IncentiveConfigModal

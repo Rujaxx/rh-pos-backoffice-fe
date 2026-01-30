@@ -482,18 +482,8 @@ export default function PaymentReportPage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Generated Reports Table using generic component */}
-        <GeneratedReportsTable
-          title="reports.payment.generatedReports"
-          data={generatedReports}
-          isLoading={isLoading}
-          onShowDetails={handleShowDetails}
-          onDownload={handleDownloadReport}
-          defaultCollapsed={false}
-          searchPlaceholder="reports.payment.searchPlaceholder"
-          emptyMessage="reports.payment.noGeneratedReports"
-        />
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Payment Method Distribution Table using TanStackTable */}
         <Card>
@@ -536,9 +526,6 @@ export default function PaymentReportPage() {
             />
           </CardContent>
         </Card>
-
-        {/* Download Report Options */}
-        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
 
       {/* Report Details Modal */}

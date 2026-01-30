@@ -8,7 +8,7 @@ import {
 import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/config/api';
 import { DiscountReportData } from '@/types/discount-report.type';
-import { BillerWiseReportItem } from '@/types/biller-wise-report.type';
+import { BillerWiseReportResponseDto } from '@/types/biller-wise-report.type';
 
 // Reports service - custom implementation since ReportData has unique structure
 class BaseReportService {
@@ -98,7 +98,7 @@ class BaseReportService {
 
   async getBillerWiseReports(
     params?: ReportQueryParams,
-  ): Promise<PaginatedResponse<BillerWiseReportItem>> {
+  ): Promise<SuccessResponse<BillerWiseReportResponseDto>> {
     const searchParams = new URLSearchParams();
 
     if (params) {
@@ -190,7 +190,7 @@ export const useDiscountReports = createReportHook(
 export const useBillerWiseReports = (
   params?: ReportQueryParams,
   options?: Omit<
-    UseQueryOptions<PaginatedResponse<BillerWiseReportItem>>,
+    UseQueryOptions<SuccessResponse<BillerWiseReportResponseDto>>,
     'queryKey' | 'queryFn'
   >,
 ) => {

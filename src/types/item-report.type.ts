@@ -18,14 +18,25 @@ export enum ItemReportType {
 
 // Data Types
 export interface SoldItem {
-  _id: string;
   itemName: string;
-  averagePrice: number;
+  restaurantName: string;
+  categoryName: string;
+  parentCategoryName: string | null;
+  taxProductGroupName: string | null;
+  taxType: string;
+  taxValue: number;
   quantity: number;
-  totalQty: number;
+  avgPrice: number;
+  totalPriceOfSoldItem: number;
   discountOnItem: number;
-  parentCategory: string;
-  subCategory: string;
+  netAmount: number;
+}
+
+export interface SoldItemReportResponse {
+  report: SoldItem[];
+  totalRevenue: number;
+  totalItemSold: number;
+  averageItemPrice: number;
 }
 
 export interface ComplementaryItem {
@@ -75,6 +86,7 @@ export interface SoldItemsFilterParams extends ReportQueryParams {
   subCategoryId?: string;
   quantity?: number;
   itemName?: string;
+  top?: number;
 }
 
 export interface ComplementaryFilterParams extends ReportQueryParams {

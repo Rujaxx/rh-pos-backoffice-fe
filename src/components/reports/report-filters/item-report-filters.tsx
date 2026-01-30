@@ -16,6 +16,7 @@ import { Menu } from '@/types/menu.type';
 import { Category } from '@/types/category.type';
 import { OrderType } from '@/types/order-type.type';
 import { TaxProductGroup } from '@/types/tax-product-group.type';
+import { Input } from '@/components/ui/input';
 
 export interface ItemReportFilterProps extends ReportFiltersProps {
   activeTab: 'sold-items' | 'complimentary' | 'kot-items' | 'bill-details';
@@ -214,6 +215,25 @@ export function ItemReportFilter({
     </div>
   );
 
+  // Top Filter
+  const renderTopFilter = () => (
+    <div className="space-y-2">
+      <Label>{t('common.top')}</Label>
+      <Input
+        type="number"
+        placeholder={t('common.topPlaceholder')}
+        value={filters.top || ''}
+        onChange={(e) =>
+          onFilterChange({
+            ...filters,
+            top: e.target.value ? Number(e.target.value) : undefined,
+          })
+        }
+        min={1}
+      />
+    </div>
+  );
+
   // Render different filters based on active tab
   const renderTabSpecificFilters = () => {
     switch (activeTab) {
@@ -226,6 +246,7 @@ export function ItemReportFilter({
             {renderOrderTypeFilter()}
             {renderBillStatusFilter()}
             {renderPaymentMethodFilter()}
+            {renderTopFilter()}
           </div>
         );
 

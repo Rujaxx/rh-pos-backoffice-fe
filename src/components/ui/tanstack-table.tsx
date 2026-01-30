@@ -376,7 +376,7 @@ export function TanStackTable<T>({
                     }}
                     onClick={header.column.getToggleSortingHandler()}
                   >
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -384,7 +384,7 @@ export function TanStackTable<T>({
                             header.getContext(),
                           )}
                       {header.column.getCanSort() && (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col ml-2">
                           {header.column.getIsSorted() === 'asc' && (
                             <ChevronUp className="h-4 w-4" />
                           )}

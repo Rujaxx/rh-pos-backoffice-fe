@@ -12,24 +12,53 @@ export const createSoldItemsColumns = (): ColumnDef<SoldItem>[] => [
     ),
   },
   {
-    accessorKey: 'averagePrice',
-    header: 'Average Price',
-    cell: ({ row }) => (
-      <div className="font-medium">${row.original.averagePrice.toFixed(2)}</div>
-    ),
+    accessorKey: 'restaurantName',
+    header: 'Restaurant',
   },
   {
-    accessorKey: 'quantity', // Changed from quality to quantity
+    accessorKey: 'categoryName',
+    header: 'Category',
+  },
+  {
+    accessorKey: 'parentCategoryName',
+    header: 'Parent Category',
+    cell: ({ row }) => <div>{row.original.parentCategoryName || '-'}</div>,
+  },
+  {
+    accessorKey: 'taxProductGroupName',
+    header: 'Tax Product Group',
+    cell: ({ row }) => <div>{row.original.taxProductGroupName || '-'}</div>,
+  },
+  {
+    accessorKey: 'taxType',
+    header: 'Tax Type',
+  },
+  {
+    accessorKey: 'taxValue',
+    header: 'Tax Value',
+    cell: ({ row }) => <div>{row.original.taxValue}</div>,
+  },
+  {
+    accessorKey: 'quantity',
     header: 'Quantity',
     cell: ({ row }) => (
       <div className="font-medium">{row.original.quantity}</div>
     ),
   },
   {
-    accessorKey: 'totalQty',
-    header: 'Total',
+    accessorKey: 'avgPrice',
+    header: 'Avg Price',
     cell: ({ row }) => (
-      <div className="font-medium">{row.original.totalQty}</div>
+      <div className="font-medium">${row.original.avgPrice.toFixed(2)}</div>
+    ),
+  },
+  {
+    accessorKey: 'totalPriceOfSoldItem',
+    header: 'Total Price',
+    cell: ({ row }) => (
+      <div className="font-medium">
+        ${row.original.totalPriceOfSoldItem.toFixed(2)}
+      </div>
     ),
   },
   {
@@ -42,13 +71,12 @@ export const createSoldItemsColumns = (): ColumnDef<SoldItem>[] => [
     ),
   },
   {
-    accessorKey: 'parentCategory',
-    header: 'Parent Category',
-    cell: ({ row }) => <div>{row.original.parentCategory}</div>,
-  },
-  {
-    accessorKey: 'subCategory',
-    header: 'Sub Category',
-    cell: ({ row }) => <div>{row.original.subCategory}</div>,
+    accessorKey: 'netAmount',
+    header: 'Net Amount',
+    cell: ({ row }) => (
+      <div className="font-medium font-bold">
+        ${row.original.netAmount.toFixed(2)}
+      </div>
+    ),
   },
 ];

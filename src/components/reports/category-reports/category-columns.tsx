@@ -30,28 +30,32 @@ export const createCategoryColumns = (
     ),
   },
   {
-    accessorKey: 'parentCategory',
+    accessorKey: 'parentCategoryName',
     header: t('reports.category.columns.parentCategory') || 'Parent Category',
     cell: ({ row }) => (
-      <div className="text-muted-foreground">{row.original.parentCategory}</div>
+      <div className="text-muted-foreground">
+        {row.original.parentCategoryName}
+      </div>
     ),
   },
   {
-    accessorKey: 'soldItems',
+    accessorKey: 'totalItemSold',
     header: t('reports.category.columns.soldItems') || 'Total Sold Items',
     cell: ({ row }) => (
-      <div className="font-medium">{formatNumber(row.original.soldItems)}</div>
+      <div className="font-medium">
+        {formatNumber(row.original.totalItemSold)}
+      </div>
     ),
     meta: {
       className: 'text-center',
     },
   },
   {
-    accessorKey: 'totalAmount',
+    accessorKey: 'totalRevenue',
     header: t('reports.category.columns.totalAmount') || 'Total Amount',
     cell: ({ row }) => (
       <div className="font-medium">
-        {formatCurrency(row.original.totalAmount)}
+        {formatCurrency(row.original.totalRevenue)}
       </div>
     ),
     meta: {
