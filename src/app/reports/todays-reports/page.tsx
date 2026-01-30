@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PaperSizeButtons } from '@/components/reports/todays-reports/paper-size-buttons';
 import { ReportLayout } from '@/components/reports/todays-reports/report-layout';
 import { TodaysReportFilters } from '@/components/reports/report-filters/todays-report-filter';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 import { useTranslation } from '@/hooks/useTranslation';
 import {
   PaperSize,
@@ -394,6 +395,9 @@ export default function TodaysReportPage() {
             </Card>
           </div>
         </div>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
       </div>
 
       {/* Print-only view */}

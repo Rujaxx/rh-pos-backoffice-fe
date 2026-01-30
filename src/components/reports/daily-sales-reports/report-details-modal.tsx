@@ -57,9 +57,8 @@ const REPORT_TYPE_DISPLAY_NAMES: Record<string, string> = {
   [PaymentReportType.PAYMENT_SUMMARY]: 'Payment Summary Report',
 
   // Hourly Reports - use same values as DailyReportType but show as Hourly
-  [HourlyReportType.DAY_WISE]: 'Hourly Day Wise Report',
-  [HourlyReportType.DAY_WISE_SUMMARY]: 'Hourly Day Wise Summary Report',
-  [HourlyReportType.MONTH_WISE]: 'Hourly Month Wise Sales Report',
+  [HourlyReportType.HOURLY_REPORT]: 'Hourly Report',
+  [HourlyReportType.MONTHLY_HOURLY_REPORT]: 'Hourly Monthly Report',
 };
 
 // Determine report category based on report type

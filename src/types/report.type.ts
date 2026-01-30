@@ -1,6 +1,8 @@
 import { QueryParams } from './api';
 import { Bill, BillStatus, PaymentMethodsEnum } from './bill.type';
 import { MealTimeReportType } from './meal-time-report.type';
+import { WaiterIncentiveReportType } from './waiter-incentive-report.type';
+import { ItemReportType } from './item-report.type';
 
 // Report Summary for Sales Reports
 export interface ReportSummary {
@@ -53,9 +55,8 @@ export enum DailyReportType {
 
 // Hourly Report Types
 export enum HourlyReportType {
-  DAY_WISE = 'DAY_WISE_HOURLY',
-  DAY_WISE_SUMMARY = 'DAY_WISE_SUMMARY_HOURLY',
-  MONTH_WISE = 'MONTH_WISE_HOURLY_SALES',
+  HOURLY_REPORT = 'HOURLY_REPORT', // maps to reports/hourly-report
+  MONTHLY_HOURLY_REPORT = 'MONTHLY_HOURLY_REPORT', // maps to reports/monthly-hourly-report
 }
 
 export enum PaymentReportType {
@@ -66,6 +67,23 @@ export enum PaymentReportType {
 export enum DiscountReportType {
   DISCOUNT_SUMMARY = 'DISCOUNT_SUMMARY',
   DISCOUNT_ITEM_WISE = 'DISCOUNT_ITEM_WISE',
+}
+
+// Kitchen Department Report Types
+export enum KitchenDepartmentReportType {
+  KITCHEN_DEPARTMENT_SUMMARY = 'KITCHEN_DEPARTMENT_SUMMARY',
+}
+
+// Bill Print Report Types
+export enum BillPrintReportType {
+  BILL_PRINT_SUMMARY = 'BILL_PRINT_SUMMARY',
+}
+
+// Print Status
+export enum PrintStatus {
+  FULFILLED = 'FULFILLED',
+  PENDING = 'PENDING',
+  CANCELLED = 'CANCELLED',
 }
 
 // Generated Report (for DSR Page table)
@@ -80,7 +98,11 @@ export interface GeneratedReport {
     | PaymentReportType
     | HourlyReportType
     | MealTimeReportType
-    | DiscountReportType;
+    | DiscountReportType
+    | KitchenDepartmentReportType
+    | BillPrintReportType
+    | WaiterIncentiveReportType
+    | ItemReportType;
   generationStatus: ReportGenerationStatus;
   downloadUrl?: string;
   errorMessage?: string;
@@ -99,6 +121,9 @@ export interface ReportQueryParams extends QueryParams {
   restaurantIds?: string[];
   brandIds?: string[];
 
+  brandId?: string;
+  restaurantId?: string;
+
   // Category filters
   categoryIds?: string[];
 
@@ -106,16 +131,23 @@ export interface ReportQueryParams extends QueryParams {
   menuIds?: string[];
 
   // Order filters
-  orderTypeIds?: string[];
+  orderTypeIds?: string[]; // For order type IDs
+  orderType?: string; // For order type name filter
 
   // Payment filters
   paymentMethods?: PaymentMethodsEnum[];
 
+  taxProductGroupIds?: string[];
+
   // Bill filters
   billStatus?: BillStatus[];
 
+  // Print Status for bill print reports
+  printStatus?: PrintStatus;
+
   // Search
   term?: string;
+  search?: string; // For bill print reports
 
   // Sorting
   sortBy?: string;
@@ -133,8 +165,16 @@ export interface ReportQueryParams extends QueryParams {
   maxDiscountAmount?: string;
   minOrderAmount?: string;
 
+  // Kitchen Department specific filters
+  kitchenDepartmentIds?: string[];
+  categoryIdsKitchen?: string[];
+
+  // Download flag
+  isDownload?: boolean;
+
   page?: number;
   limit?: number;
+  top?: number;
 }
 
 // API Response for Generated Reports
@@ -157,7 +197,11 @@ export interface GenerateReportRequest {
     | PaymentReportType
     | HourlyReportType
     | MealTimeReportType
-    | DiscountReportType;
+    | DiscountReportType
+    | WaiterIncentiveReportType
+    | KitchenDepartmentReportType
+    | BillPrintReportType
+    | ItemReportType;
   filters: ReportQueryParams;
   email?: string;
   fileName?: string;

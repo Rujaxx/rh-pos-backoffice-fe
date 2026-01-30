@@ -4,18 +4,18 @@ import { BaseApiService } from '@/services/api/base/client';
 import { SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 import {
-  MealTimeReportResponseData,
+  MealTimeReportResponse,
   MealTimeReportQueryParams,
 } from '@/types/meal-time-report.type';
 
-class MealTimeReportService extends BaseApiService<MealTimeReportResponseData> {
+class MealTimeReportService extends BaseApiService<MealTimeReportResponse> {
   constructor() {
     super(API_ENDPOINTS.REPORTS.MEAL_TIME);
   }
 
   async getReport(
     params: MealTimeReportQueryParams,
-  ): Promise<SuccessResponse<MealTimeReportResponseData>> {
+  ): Promise<SuccessResponse<MealTimeReportResponse>> {
     const searchParams = new URLSearchParams();
 
     Object.entries(params).forEach(([key, value]) => {
@@ -30,7 +30,7 @@ class MealTimeReportService extends BaseApiService<MealTimeReportResponseData> {
 
     const url = `${this.baseEndpoint}?${searchParams.toString()}`;
     // Use api.get directly as BaseApiService.getAll expects array response
-    return api.get<SuccessResponse<MealTimeReportResponseData>>(url);
+    return api.get<SuccessResponse<MealTimeReportResponse>>(url);
   }
 }
 
@@ -39,7 +39,7 @@ const mealTimeReportService = new MealTimeReportService();
 export const useMealTimeReport = (
   params: MealTimeReportQueryParams,
   options?: Omit<
-    UseQueryOptions<SuccessResponse<MealTimeReportResponseData>>,
+    UseQueryOptions<SuccessResponse<MealTimeReportResponse>>,
     'queryKey' | 'queryFn'
   >,
 ) => {

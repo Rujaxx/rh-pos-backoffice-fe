@@ -23,6 +23,7 @@ import {
 import { Bill } from '@/types/bill.type';
 import { toast } from 'sonner';
 import { SalesReportFilters } from '@/components/reports/report-filters/sales-report-filter';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 // Default summary with 0 values
 const DEFAULT_SUMMARY = {
@@ -350,6 +351,9 @@ export default function SalesReportsPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Bill Details Modal */}
         <BillDetailsModal

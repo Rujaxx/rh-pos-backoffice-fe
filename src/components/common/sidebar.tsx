@@ -26,6 +26,10 @@ import {
   ShoppingBag,
   ShoppingCart,
   PercentIcon,
+  NotepadText,
+  ReceiptTextIcon,
+  Package,
+  Printer,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -339,6 +343,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         icon: ClipboardList,
       },
       {
+        id: 'item-reports',
+        label: t('navigation.itemReports') || 'Item Reports',
+        href: '/reports/item-reports',
+        icon: Package,
+      },
+      {
         id: 'kitchen-dept-reports',
         label:
           t('navigation.kitchenDepartmentReports') || 'Kitchen Dept Reports',
@@ -350,6 +360,24 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.discountReports') || 'Discount Reports',
         href: '/reports/discount-reports',
         icon: PercentIcon,
+      },
+      {
+        id: 'waiter-incentive-reports',
+        label: t('navigation.waiterIncentive') || 'Waiter Incentive Reports',
+        href: '/reports/waiter-incentive-reports',
+        icon: NotepadText,
+      },
+      {
+        id: 'bill-print-reports',
+        label: t('navigation.billPrintReports') || 'Bill Print Reports',
+        href: '/reports/bill-print-reports',
+        icon: Printer,
+      },
+      {
+        id: 'biller-wise-reports',
+        label: t('navigation.billerWiseReports') || 'Biller Wise Reports',
+        href: '/reports/biller-wise-reports',
+        icon: ReceiptTextIcon,
       },
     ],
   },

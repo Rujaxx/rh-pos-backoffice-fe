@@ -16,11 +16,11 @@ import { PaymentMethodsEnum } from '@/types/payment-report.type';
 import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
 import { toast } from 'sonner';
 import { PaymentReportFilters } from '@/components/reports/report-filters/payment-report-filter';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
 import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/components/ui/badge';
+
 import {
   PaginationState,
   SortingState,
@@ -177,7 +177,8 @@ export default function PaymentReportPage() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   // Fetch all generated reports from the system
-  const { data: generatedReports = [], isLoading } = useGeneratedReports();
+  const generatedReports: GeneratedReport[] = [];
+  const isLoading = false;
 
   // Filter mock data based on search term
   const filteredPaymentData = useMemo(() => {
@@ -481,18 +482,8 @@ export default function PaymentReportPage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Generated Reports Table using generic component */}
-        <GeneratedReportsTable
-          title="reports.payment.generatedReports"
-          data={generatedReports}
-          isLoading={isLoading}
-          onShowDetails={handleShowDetails}
-          onDownload={handleDownloadReport}
-          defaultCollapsed={false}
-          searchPlaceholder="reports.payment.searchPlaceholder"
-          emptyMessage="reports.payment.noGeneratedReports"
-        />
+        {/* Download Report Options */}
+        <DownloadReportOptions restaurantId={filters.restaurantIds?.[0]} />
 
         {/* Payment Method Distribution Table using TanStackTable */}
         <Card>

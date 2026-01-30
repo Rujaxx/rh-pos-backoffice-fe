@@ -1,11 +1,5 @@
-/**
- * Meal Time Frame Mutations
- * TanStack Query mutations for meal time frame operations
- */
-
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { SuccessResponse } from '@/types/api';
-import { QUERY_KEYS } from '@/config/api';
 import { useQueryUtils } from '@/lib/query-client';
 import { mealTimeFrameService } from './meal-time-frame.query';
 import { toast } from 'sonner';
@@ -14,10 +8,6 @@ import {
   MealTimeFrameFormData,
 } from '@/types/meal-time-frame.type';
 
-/**
- * Helper function to prepare data for the API.
- * This strips the _id for update operations, as it's passed in the URL.
- */
 function transformToBackendFormat(
   data: MealTimeFrameFormData,
   excludeId: boolean = false,

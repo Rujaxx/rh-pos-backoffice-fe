@@ -226,12 +226,12 @@ export function GeneratedReportsTable<T extends GeneratedReport>({
 
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out
-          ${
-            isCollapsed
-              ? 'max-h-0 opacity-0 translate-y-[-4px]'
-              : 'max-h-[1000px] opacity-100 translate-y-0'
-          }
-        `}
+            ${
+              isCollapsed
+                ? 'max-h-0 opacity-0 translate-y-[-4px]'
+                : 'max-h-[1000px] opacity-100 translate-y-0'
+            }
+          `}
       >
         <CardContent className="p-4 pt-0">
           {isLoading ? (
@@ -261,7 +261,9 @@ export function GeneratedReportsTable<T extends GeneratedReport>({
               manualPagination={false}
               showPagination={true}
               showSearch={true}
-              searchPlaceholder={t(searchPlaceholder) || 'Search reports...'}
+              searchPlaceholder={
+                t('reports.generated.searchPlaceholder') || 'Search reports...'
+              }
               isLoading={isLoading}
             />
           )}

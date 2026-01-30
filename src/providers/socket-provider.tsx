@@ -15,21 +15,6 @@ interface SocketContextValue {
 
 const SocketContext = createContext<SocketContextValue | null>(null);
 
-/**
- * Play error sound
- */
-const playErrorSound = () => {
-  try {
-    const audio = new Audio('/sounds/error.mp3');
-    audio.volume = 0.5;
-    audio.play().catch((err) => {
-      console.warn('Failed to play error sound:', err);
-    });
-  } catch (error) {
-    console.warn('Error sound not available:', error);
-  }
-};
-
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [connectionState, setConnectionState] = useState<ConnectionState>(
     ConnectionState.DISCONNECTED,
@@ -64,24 +49,10 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const handleError = (error: Error) => {
       setConnectionState(ConnectionState.ERROR);
       setErrorCount((prev) => prev + 1);
-
-      // Play error sound (only for first few errors to avoid spam)
-      if (errorCount < 3) {
-        playErrorSound();
-      }
-
-      // Show error toast with details
-      toast.error('Socket connection error', {
-        description: error.message || 'Failed to connect to server',
-        duration: 5000,
-        id: 'socket-error',
-      });
     };
 
     const handleReconnecting = (attemptNumber: number) => {
       setConnectionState(ConnectionState.RECONNECTING);
-
-      // Show reconnecting toast
       toast.loading('Reconnecting to server...', {
         duration: Infinity,
         id: 'socket-reconnecting',
@@ -95,7 +66,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         duration: 10000,
         id: 'socket-reconnect-failed',
       });
-      playErrorSound();
     };
 
     socketService.on(SocketEvent.CONNECT, handleConnect);

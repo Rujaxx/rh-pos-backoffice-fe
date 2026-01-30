@@ -1,38 +1,32 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ReportFilters } from '@/components/reports/report-filters/report-filters';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Clock, DownloadCloud, RefreshCw } from 'lucide-react';
-import {
-  ReportQueryParams,
-  GeneratedReport,
-  HourlyReportType,
-  ReportGenerationStatus,
-} from '@/types/report.type';
-import { ReportDetailsModal } from '@/components/reports/daily-sales-reports/report-details-modal';
+import { Clock, CalendarDays } from 'lucide-react';
+import { ReportQueryParams, HourlyReportType } from '@/types/report.type';
 import { toast } from 'sonner';
-import { useGeneratedReports } from '@/services/api/reports/generated-reports';
-import { GeneratedReportsTable } from '@/components/reports/generated-report-table';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
+import {
+  useGenerateHourlyReport,
+  useGenerateMonthlyHourlyReport,
+} from '@/services/api/reports/hourly-report.query';
 
 // Report Type Buttons
 const REPORT_TYPE_BUTTONS = [
   {
-    type: HourlyReportType.DAY_WISE,
-    translationKey: 'reports.hourly.reportTypes.dayWise',
+    type: HourlyReportType.HOURLY_REPORT,
+    translationKey: 'reports.hourly.hourlyReport',
+    label: 'Hourly Report',
     icon: Clock,
   },
   {
-    type: HourlyReportType.DAY_WISE_SUMMARY,
-    translationKey: 'reports.hourly.reportTypes.dayWiseSummary',
-    icon: DownloadCloud,
-  },
-  {
-    type: HourlyReportType.MONTH_WISE,
-    translationKey: 'reports.hourly.reportTypes.monthWise',
+    type: HourlyReportType.MONTHLY_HOURLY_REPORT,
+    translationKey: 'reports.hourly.monthlyHourlyReport',
+    label: 'Monthly Hourly Report',
     icon: CalendarDays,
   },
 ] as const;
@@ -40,34 +34,67 @@ const REPORT_TYPE_BUTTONS = [
 export default function HourlyReportPage() {
   const { t } = useTranslation();
 
-  // Initialize filters with today's date
+  // Initialize filters with today's date and 12:00 PM time
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
 
     return {
-      from: today.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 
-  // State for the filters that are actually applied (submitted)
-  const [submittedFilters, setSubmittedFilters] =
-    useState<ReportQueryParams | null>(null);
+  // Store ref to download component's refetch function
+  const downloadRefetchRef = useRef<(() => void) | null>(null);
 
-  const [selectedReportType, setSelectedReportType] =
-    useState<HourlyReportType | null>(null);
-  const [selectedReport, setSelectedReport] = useState<GeneratedReport | null>(
-    null,
-  );
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
+  // Setup mutation hooks for both report types
+  const hourlyReportMutation = useGenerateHourlyReport({
+    onSuccess: () => {
+      toast.success(t('reports.hourly.reportGenerated'));
+      // Trigger download component refresh
+      if (downloadRefetchRef.current) {
+        downloadRefetchRef.current();
+      }
+    },
+    onError: (error) => {
+      console.error('Hourly report generation failed:', error);
+      toast.error(t('reports.hourly.generationFailed'));
+    },
+  });
 
-  // Fetch all generated reports from the system
-  const {
-    data: generatedReports = [],
-    isLoading,
-    refetch,
-  } = useGeneratedReports();
+  const monthlyReportMutation = useGenerateMonthlyHourlyReport({
+    onSuccess: () => {
+      toast.success(t('reports.hourly.reportGenerated'));
+      // Trigger download component refresh
+      if (downloadRefetchRef.current) {
+        downloadRefetchRef.current();
+      }
+    },
+    onError: (error) => {
+      console.error('Monthly hourly report generation failed:', error);
+      toast.error(t('reports.hourly.generationFailed'));
+    },
+  });
+
+  // Build query params
+  const queryParams = useMemo(() => {
+    return {
+      from: filters.from,
+      to: filters.to,
+      brandId: Array.isArray(filters.brandIds)
+        ? filters.brandIds[0]
+        : undefined,
+      restaurantId: Array.isArray(filters.restaurantIds)
+        ? filters.restaurantIds[0]
+        : undefined,
+      isDownload: true, // Always set to true for report generation
+    };
+  }, [filters]);
 
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
@@ -75,86 +102,43 @@ export default function HourlyReportPage() {
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    setFilters({});
-    setSubmittedFilters(null);
+    const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
+
+    setFilters({
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
+    });
   }, []);
 
-  // Apply filters handler
-  const handleApplyFilters = useCallback(() => {
-    setSubmittedFilters(filters);
-  }, [filters]);
-
-  const handleGenerateReport = useCallback(
-    async (hourlyType: HourlyReportType) => {
-      setSelectedReportType(hourlyType);
-      setIsGenerating(true);
-
-      const reportBtn = REPORT_TYPE_BUTTONS.find(
-        (btn) => btn.type === hourlyType,
-      );
-      const reportLabel = reportBtn ? t(reportBtn.translationKey) : hourlyType;
-
-      toast.success(
-        t('reports.hourly.generatingReport', { reportName: reportLabel }),
-        {
-          description: t('reports.hourly.generatingDescription'),
-        },
-      );
-
-      try {
-        // TODO: Replace with actual API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        toast.success(t('reports.hourly.generationSuccess'));
-        refetch(); // Refresh the reports list after generating
-      } catch (error) {
-        console.error('Report generation failed:', error);
-        toast.error(t('reports.hourly.generationFailed'), {
-          description: t('common.errors.tryAgainLater'),
-        });
-      } finally {
-        setIsGenerating(false);
-      }
-    },
-    [t, refetch],
-  );
-
-  const handleShowDetails = useCallback((report: GeneratedReport) => {
-    setSelectedReport(report);
-    setIsDetailsModalOpen(true);
+  // Custom validation: require from, to, brandIds, and restaurantIds
+  const validateFilters = useCallback((filters: ReportQueryParams) => {
+    return !!(
+      filters.from &&
+      filters.to &&
+      filters.brandIds?.length &&
+      filters.restaurantIds?.length
+    );
   }, []);
 
-  const handleCloseDetailsModal = useCallback(() => {
-    setIsDetailsModalOpen(false);
-    setSelectedReport(null);
-  }, []);
+  const isValid = validateFilters(filters);
 
-  const handleDownloadReport = useCallback(
-    (report: GeneratedReport) => {
-      if (!report.downloadUrl) {
-        toast.error(t('reports.hourly.downloadUrlNotAvailable'));
-        return;
-      }
+  // Button click handlers
+  const handleGenerateHourlyReport = useCallback(() => {
+    if (!isValid) return;
+    toast.info(t('reports.hourly.generatingHourlyReport'));
+    hourlyReportMutation.mutate(queryParams);
+  }, [isValid, queryParams, hourlyReportMutation, t]);
 
-      // Create download link
-      const link = document.createElement('a');
-      link.href = report.downloadUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.download = `report-${report._id}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      toast.success(t('reports.hourly.downloadStarted'));
-    },
-    [t],
-  );
-
-  const handleRefresh = useCallback(() => {
-    toast.info(t('reports.hourly.refreshingReports'));
-    // TODO: Add API refetch here
-  }, [t]);
+  const handleGenerateMonthlyReport = useCallback(() => {
+    if (!isValid) return;
+    toast.info(t('reports.hourly.generatingMonthlyReport'));
+    monthlyReportMutation.mutate(queryParams);
+  }, [isValid, queryParams, monthlyReportMutation, t]);
 
   return (
     <Layout>
@@ -169,15 +153,6 @@ export default function HourlyReportPage() {
               {t('reports.hourly.description')}
             </p>
           </div>
-
-          <Button
-            variant="outline"
-            onClick={handleRefresh}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            {t('common.refresh')}
-          </Button>
         </div>
 
         {/* Filters */}
@@ -185,7 +160,8 @@ export default function HourlyReportPage() {
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
-          onSubmit={handleApplyFilters}
+          validateFilters={validateFilters}
+          showDownloadButton={false}
         />
 
         {/* Report Type Selection */}
@@ -196,34 +172,33 @@ export default function HourlyReportPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {REPORT_TYPE_BUTTONS.map((reportBtn) => {
                 const Icon = reportBtn.icon;
-                const isSelected = selectedReportType === reportBtn.type;
-                const isCurrentlyGenerating =
-                  isGenerating && selectedReportType === reportBtn.type;
-                const label = t(reportBtn.translationKey);
+                const label = t(reportBtn.translationKey) || reportBtn.label;
+                const isLoading =
+                  (reportBtn.type === HourlyReportType.HOURLY_REPORT &&
+                    hourlyReportMutation.isPending) ||
+                  (reportBtn.type === HourlyReportType.MONTHLY_HOURLY_REPORT &&
+                    monthlyReportMutation.isPending);
+                const handleClick =
+                  reportBtn.type === HourlyReportType.HOURLY_REPORT
+                    ? handleGenerateHourlyReport
+                    : handleGenerateMonthlyReport;
 
                 return (
                   <Button
                     key={reportBtn.type}
-                    variant={isSelected ? 'default' : 'outline'}
-                    className="h-auto py-4 px-4 flex flex-col items-start gap-2 relative"
-                    onClick={() => handleGenerateReport(reportBtn.type)}
-                    disabled={isGenerating}
+                    variant="outline"
+                    className="h-auto py-4 px-4 flex items-center gap-3"
+                    onClick={handleClick}
+                    disabled={!isValid || isLoading}
                   >
-                    <div className="flex items-center gap-2 w-full">
-                      <Icon className="h-5 w-5" />
-                      <span className="text-sm font-medium text-left flex-1">
-                        {label}
-                      </span>
-                      {isCurrentlyGenerating && (
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                      )}
-                    </div>
-                    {isCurrentlyGenerating && (
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500 animate-pulse rounded-b-md" />
-                    )}
+                    <Icon className="h-5 w-5" />
+                    <span className="text-sm font-medium text-left flex-1">
+                      {label}
+                    </span>
+                    {isLoading && <Clock className="h-4 w-4 animate-spin" />}
                   </Button>
                 );
               })}
@@ -231,27 +206,14 @@ export default function HourlyReportPage() {
           </CardContent>
         </Card>
 
-        {/* Generated Reports Table using generic component */}
-        <GeneratedReportsTable
-          title="reports.hourly.generatedReports"
-          data={generatedReports}
-          isLoading={isLoading}
-          onShowDetails={handleShowDetails}
-          onDownload={handleDownloadReport}
-          defaultCollapsed={false}
-          searchPlaceholder="reports.hourly.searchPlaceholder"
-          emptyMessage="reports.hourly.noGeneratedReports"
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={(refetchFn) => {
+            downloadRefetchRef.current = refetchFn;
+          }}
         />
       </div>
-
-      {/* Report Details Modal */}
-      {selectedReport && (
-        <ReportDetailsModal
-          report={selectedReport}
-          isOpen={isDetailsModalOpen}
-          onClose={handleCloseDetailsModal}
-        />
-      )}
     </Layout>
   );
 }

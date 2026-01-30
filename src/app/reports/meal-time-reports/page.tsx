@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import Layout from '@/components/common/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,17 +24,23 @@ import {
 import { toast } from 'sonner';
 import { MealTimeDataTable } from '@/components/reports/meal-time-reports/meal-time-data-table';
 import { useMealTimeReport } from '@/services/api/reports/meal-time-frame/meal-time-report.query';
+import { DownloadReportOptions } from '@/components/reports/download-report-options';
 
 export default function MealTimeReportPage() {
   const { t } = useTranslation();
 
-  // Initialize filters with today's date
+  // Initialize filters with today's date and 12:00 PM time
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
     const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
 
     return {
-      from: today.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 
@@ -60,6 +72,7 @@ export default function MealTimeReportPage() {
       menuId: Array.isArray(activeFilters.menuIds)
         ? activeFilters.menuIds[0]
         : undefined,
+      isDownload: activeFilters.isDownload,
     };
   }, [submittedFilters]);
 
@@ -72,27 +85,66 @@ export default function MealTimeReportPage() {
     enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
   });
 
+  // Store ref to download component's refetch function
+  const downloadRefetchRef = useRef<(() => void) | null>(null);
+
+  // Trigger download component refresh when report data loads
+  useEffect(() => {
+    if (reportData && downloadRefetchRef.current) {
+      downloadRefetchRef.current();
+    }
+  }, [reportData]);
+
   // Filter handlers
   const handleFilterChange = useCallback((newFilters: ReportQueryParams) => {
     setFilters(newFilters);
   }, []);
 
   const handleClearFilters = useCallback(() => {
-    setFilters({});
+    // Clear filters but set default times to 12:00 PM
+    const today = new Date();
+    const fromDate = new Date(today);
+    fromDate.setHours(12, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setHours(12, 0, 0, 0);
+
+    setFilters({
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
+    });
     setSubmittedFilters(null); // Clear submitted filters too
   }, []);
 
-  const handleApplyFilters = useCallback(() => {
-    if (JSON.stringify(filters) === JSON.stringify(submittedFilters)) {
-      refetch();
-    } else {
-      setSubmittedFilters(filters);
-    }
-  }, [filters, submittedFilters, refetch]);
+  const handleApplyFilters = useCallback(
+    (isDownload?: boolean) => {
+      const queryParams = {
+        ...filters,
+        ...(isDownload && { isDownload: true }),
+      };
+
+      if (JSON.stringify(queryParams) === JSON.stringify(submittedFilters)) {
+        refetch();
+      } else {
+        setSubmittedFilters(queryParams);
+      }
+    },
+    [filters, submittedFilters, refetch],
+  );
 
   const handleCloseDetailsModal = useCallback(() => {
     setIsDetailsModalOpen(false);
     setSelectedReport(null);
+  }, []);
+
+  // Custom validation: require from, to, brandIds, and restaurantIds
+  const validateFilters = useCallback((filters: ReportQueryParams) => {
+    return !!(
+      filters.from &&
+      filters.to &&
+      filters.brandIds?.length &&
+      filters.restaurantIds?.length
+    );
   }, []);
 
   const handleConfigureMealTimes = useCallback(() => {
@@ -135,6 +187,7 @@ export default function MealTimeReportPage() {
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
           onSubmit={handleApplyFilters}
+          validateFilters={validateFilters}
         >
           <MealTimeReportFilters
             filters={filters}
@@ -142,6 +195,14 @@ export default function MealTimeReportPage() {
             onClearFilters={handleClearFilters}
           />
         </ReportFilters>
+
+        {/* Download Report Options */}
+        <DownloadReportOptions
+          restaurantId={filters.restaurantIds?.[0]}
+          onRefetchReady={(refetchFn) => {
+            downloadRefetchRef.current = refetchFn;
+          }}
+        />
 
         {/* Meal Time Data Table */}
         <Card>

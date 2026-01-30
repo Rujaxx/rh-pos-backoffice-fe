@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { KitchenDepartmentReportItem } from '@/types/kitchen-dept-report.type';
+import { KitchenDepartmentReportItem } from '@/types/kitchen-department-report.type';
 import { useTranslation } from '@/hooks/useTranslation';
 
 // Helper functions
@@ -9,8 +9,8 @@ const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 };
 
@@ -23,70 +23,58 @@ export const createKitchenDepartmentColumns = (
   t: ReturnType<typeof useTranslation>['t'],
 ): ColumnDef<KitchenDepartmentReportItem>[] => [
   {
-    accessorKey: 'kitchenDepartment',
+    accessorKey: 'kitchenDepartmentName',
     header:
-      t('reports.kitchenDepartment.columns.kitchenDepartment') ||
+      t('reports.kitchenDepartment.kitchenDepartmentName') ||
       'Kitchen Department',
     cell: ({ row }) => (
-      <div className="font-medium">{row.original.kitchenDepartment}</div>
+      <div className="font-medium">{row.original.kitchenDepartmentName}</div>
     ),
   },
   {
-    accessorKey: 'categoryName',
-    header: t('reports.category.columns.categoryName') || 'Category Name',
+    accessorKey: 'totalItemSold',
+    header: () => <div className="text-right">Items Sold</div>,
     cell: ({ row }) => (
-      <div className="font-medium">{row.original.categoryName}</div>
-    ),
-  },
-  {
-    accessorKey: 'soldItems',
-    header: t('reports.category.columns.soldItems') || 'Total Sold Items',
-    cell: ({ row }) => (
-      <div className="font-medium">{formatNumber(row.original.soldItems)}</div>
-    ),
-    meta: {
-      className: 'text-center',
-    },
-  },
-  {
-    accessorKey: 'totalAmount',
-    header: t('reports.category.columns.totalAmount') || 'Total Amount',
-    cell: ({ row }) => (
-      <div className="font-medium">
-        {formatCurrency(row.original.totalAmount)}
+      <div className="text-right font-medium">
+        {formatNumber(row.original.totalItemSold)}
       </div>
     ),
-    meta: {
-      className: 'text-center',
-    },
+  },
+  {
+    accessorKey: 'totalRevenue',
+    header: () => <div className="text-right">Total Revenue</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium text-green-600">
+        {formatCurrency(row.original.totalRevenue)}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'itemLevelCharges',
+    header: () => <div className="text-right">Total Charges</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium text-blue-600">
+        {formatCurrency(row.original.itemLevelCharges)}
+      </div>
+    ),
   },
   {
     accessorKey: 'itemLevelDiscount',
-    header:
-      t('reports.kitchenDepartment.columns.itemLevelDiscount') ||
-      'Item Level Discount',
+    header: () => <div className="text-right">Total Discount</div>,
     cell: ({ row }) => (
-      <div className="font-medium">
+      <div className="text-right font-medium text-orange-600">
         {formatCurrency(row.original.itemLevelDiscount)}
       </div>
     ),
-    meta: {
-      className: 'text-center',
-    },
   },
   {
-    accessorKey: 'itemLevelTotalCharges',
-    header:
-      t('reports.kitchenDepartment.columns.itemLevelTotalCharges') ||
-      'Item Level Total Charges',
+    accessorKey: 'averagePrice',
+    header: () => <div className="text-right">Average Price</div>,
     cell: ({ row }) => (
-      <div className="font-medium">
-        {formatCurrency(row.original.itemLevelTotalCharges)}
+      <div className="text-right font-medium">
+        {formatCurrency(row.original.averagePrice)}
       </div>
     ),
-    meta: {
-      className: 'text-center',
-    },
   },
 ];
 
