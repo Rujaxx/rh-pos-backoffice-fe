@@ -9,6 +9,11 @@ export enum BillStatus {
   ACTIVE = 'ACTIVE',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
+  RUNNING = 'RUNNING',
+  FULFILLED = 'FULFILLED',
+  FOOD_READY = 'FOOD_READY',
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
 }
 
 export enum PaymentMethodsEnum {
@@ -41,7 +46,7 @@ export interface Payment {
 // Bill interface (matches backend schema)
 export interface Bill {
   _id: string;
-  billNumber: string;
+  orderNumber: string;
   restaurantId: string;
   brandId: string;
   orderTypeId: string;

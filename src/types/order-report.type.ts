@@ -8,7 +8,7 @@ export interface OrderSummary {
   discount: number;
   netAmount: number;
   orderDate: string;
-  status: 'PENDING' | 'CONFIRMED' | 'PREPARING' | 'COMPLETED' | 'CANCELLED';
+  status: 'PENDING' | 'CONFIRMED' | 'RUNNING' | 'COMPLETED' | 'CANCELLED';
   paymentMethod: string;
   restaurantName: string;
 }

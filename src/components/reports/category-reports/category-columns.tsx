@@ -34,7 +34,7 @@ export const createCategoryColumns = (
     header: t('reports.category.columns.parentCategory') || 'Parent Category',
     cell: ({ row }) => (
       <div className="text-muted-foreground">
-        {row.original.parentCategoryName}
+        {row.original.parentCategoryName || '—'}
       </div>
     ),
   },
@@ -46,9 +46,6 @@ export const createCategoryColumns = (
         {formatNumber(row.original.totalItemSold)}
       </div>
     ),
-    meta: {
-      className: 'text-center',
-    },
   },
   {
     accessorKey: 'totalRevenue',
@@ -58,9 +55,15 @@ export const createCategoryColumns = (
         {formatCurrency(row.original.totalRevenue)}
       </div>
     ),
-    meta: {
-      className: 'text-center',
-    },
+  },
+  {
+    accessorKey: 'averagePrice',
+    header: () => <div className="text-right">Average Price</div>,
+    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
+      <div className="font-medium">
+        {formatCurrency(row.original.averagePrice)}
+      </div>
+    ),
   },
 ];
 
