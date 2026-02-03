@@ -221,7 +221,7 @@ export function BillDetailsModal({
             <div className="flex items-center gap-2 text-2xl">
               <Receipt className="h-6 w-6" />
               {t('reports.billDetails.title') || 'Bill Details'} -{' '}
-              {bill.billNumber}
+              {bill.orderNumber}
             </div>
             {!isEditing && (
               <Button

@@ -37,6 +37,26 @@ export function createEditableBillColumns(
       value: BillStatus.CANCELLED,
       label: t('reports.table.billStatusOptions.cancelled'),
     },
+    {
+      value: BillStatus.PENDING,
+      label: t('reports.table.billStatusOptions.pending'),
+    },
+    {
+      value: BillStatus.RUNNING,
+      label: t('reports.table.billStatusOptions.running'),
+    },
+    {
+      value: BillStatus.FULFILLED,
+      label: t('reports.table.billStatusOptions.fulfilled'),
+    },
+    {
+      value: BillStatus.FOOD_READY,
+      label: t('reports.table.billStatusOptions.foodReady'),
+    },
+    {
+      value: BillStatus.CONFIRMED,
+      label: t('reports.table.billStatusOptions.confirmed'),
+    },
   ];
 
   // Format currency helper
@@ -50,14 +70,14 @@ export function createEditableBillColumns(
   return [
     // Bill Number
     {
-      accessorKey: 'billNumber',
+      accessorKey: 'orderNumber',
       enableSorting: true,
-      id: 'billNumber',
+      id: 'orderNumber',
       header: t('reports.table.billNumber'),
       size: 150,
       cell: ({ row }) => {
         const bill = row.original;
-        return <div className="font-medium text-sm">{bill.billNumber}</div>;
+        return <div className="font-medium text-sm">{bill.orderNumber}</div>;
       },
     },
 

@@ -180,7 +180,7 @@ export function WaiterIncentiveTable({
             <Button
               variant="default"
               onClick={onDownload}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+              className="flex items-center gap-2"
             >
               <Download className="h-4 w-4" />
               {t('common.download') || 'Download'}

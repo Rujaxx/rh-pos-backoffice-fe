@@ -70,7 +70,7 @@ const getOrderTypeColumns = () => [
     accessorKey: 'totalBillCount',
     header: 'Total Bills',
     cell: ({ row }: { row: { original: OrderTypeGroupedItem } }) => (
-      <div className="text-center font-medium">
+      <div className="font-medium">
         {formatNumber(row.original.totalBillCount)}
       </div>
     ),
@@ -79,7 +79,7 @@ const getOrderTypeColumns = () => [
     accessorKey: 'totalRevenue',
     header: 'Total Revenue',
     cell: ({ row }: { row: { original: OrderTypeGroupedItem } }) => (
-      <div className="text-center font-medium text-green-600">
+      <div className="font-medium text-green-600">
         {formatCurrency(row.original.totalRevenue)}
       </div>
     ),
@@ -231,14 +231,14 @@ export default function OrderTypeReportPage() {
         <div className="grid gap-4">
           <div className="grid grid-cols-3 gap-4 pb-2 border-b text-sm font-medium text-muted-foreground">
             <div>Status</div>
-            <div className="text-center">Bills</div>
-            <div className="text-center">Revenue</div>
+            <div>Bills</div>
+            <div>Revenue</div>
           </div>
           {breakdown.map((item, index) => (
             <div key={index} className="grid grid-cols-3 gap-4 text-sm">
               <div className="font-medium">{item.billStatus}</div>
-              <div className="text-center">{formatNumber(item.billCount)}</div>
-              <div className="text-center text-green-600">
+              <div>{formatNumber(item.billCount)}</div>
+              <div className="text-green-600">
                 {formatCurrency(item.totalRevenue)}
               </div>
             </div>

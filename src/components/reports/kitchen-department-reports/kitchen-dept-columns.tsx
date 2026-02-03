@@ -35,7 +35,7 @@ export const createKitchenDepartmentColumns = (
     accessorKey: 'totalItemSold',
     header: () => <div className="text-right">Items Sold</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium">
+      <div className="font-medium">
         {formatNumber(row.original.totalItemSold)}
       </div>
     ),
@@ -44,7 +44,7 @@ export const createKitchenDepartmentColumns = (
     accessorKey: 'totalRevenue',
     header: () => <div className="text-right">Total Revenue</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium text-green-600">
+      <div className="font-medium text-green-600">
         {formatCurrency(row.original.totalRevenue)}
       </div>
     ),
@@ -53,7 +53,7 @@ export const createKitchenDepartmentColumns = (
     accessorKey: 'itemLevelCharges',
     header: () => <div className="text-right">Total Charges</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium text-blue-600">
+      <div className="font-medium text-blue-600">
         {formatCurrency(row.original.itemLevelCharges)}
       </div>
     ),
@@ -62,7 +62,7 @@ export const createKitchenDepartmentColumns = (
     accessorKey: 'itemLevelDiscount',
     header: () => <div className="text-right">Total Discount</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium text-orange-600">
+      <div className="font-medium text-orange-600">
         {formatCurrency(row.original.itemLevelDiscount)}
       </div>
     ),
@@ -71,7 +71,7 @@ export const createKitchenDepartmentColumns = (
     accessorKey: 'averagePrice',
     header: () => <div className="text-right">Average Price</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium">
+      <div className="font-medium">
         {formatCurrency(row.original.averagePrice)}
       </div>
     ),

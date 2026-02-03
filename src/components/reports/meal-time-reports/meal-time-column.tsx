@@ -44,7 +44,7 @@ export const MealTimeDataColumns = (): ColumnDef<MealTimeReportItem>[] => {
       accessorKey: 'totalOrders',
       header: t('reports.mealTime.columns.totalOrders'),
       enableSorting: true,
-      size: 120,
+      size: 150,
       cell: ({ row }) => {
         const value = row.original.totalOrders;
         return (

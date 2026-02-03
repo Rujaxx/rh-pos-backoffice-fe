@@ -63,7 +63,7 @@ const createDiscountReportItemColumns = (
       </div>
     ),
     cell: ({ row }) => (
-      <div className="text-right font-medium text-orange-600">
+      <div className="font-medium text-orange-600">
         {formatAmount(row.original.totalDiscount)}
       </div>
     ),
@@ -77,7 +77,7 @@ const createDiscountReportItemColumns = (
       </div>
     ),
     cell: ({ row }) => (
-      <div className="text-center font-medium">{row.original.billCount}</div>
+      <div className="font-medium">{row.original.billCount}</div>
     ),
   },
 ];

@@ -19,6 +19,7 @@ import { CategoryReportItem } from '@/types/category-report.type';
 import { useCategoryReport } from '@/services/api/reports/category-report.query';
 import { DownloadReportOptions } from '@/components/reports/download-report-options';
 import { TanStackTable } from '@/components/ui/tanstack-table';
+import { useCategoryColumns } from '@/components/reports/category-reports/category-columns';
 import {
   PaginationState,
   SortingState,
@@ -39,56 +40,10 @@ const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-IN').format(num);
 };
 
-// Define columns for TanStackTable
-const getCategoryReportColumns = () => [
-  {
-    accessorKey: 'categoryName',
-    header: 'Category Name',
-    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
-      <div className="font-medium">{row.original.categoryName}</div>
-    ),
-  },
-  {
-    accessorKey: 'parentCategoryName',
-    header: 'Parent Category',
-    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
-      <div className="text-muted-foreground">
-        {row.original.parentCategoryName || '—'}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'totalItemSold',
-    header: () => <div className="text-right">Items Sold</div>,
-    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
-      <div className="text-right font-medium">
-        {formatNumber(row.original.totalItemSold)}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'totalRevenue',
-    header: () => <div className="text-right">Total Revenue</div>,
-    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
-      <div className="text-right font-medium text-green-600">
-        {formatCurrency(row.original.totalRevenue)}
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'averagePrice',
-    header: () => <div className="text-right">Average Price</div>,
-    cell: ({ row }: { row: { original: CategoryReportItem } }) => (
-      <div className="text-right font-medium">
-        {formatCurrency(row.original.averagePrice)}
-      </div>
-    ),
-  },
-];
-
 // Main Component
 export default function CategoryReportPage() {
   const { t } = useTranslation();
+  const columns = useCategoryColumns();
 
   // Initialize filters with today's date and 12:00 PM time
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
@@ -233,7 +188,7 @@ export default function CategoryReportPage() {
   }, [submittedFilters, refetch, t]);
 
   // Get columns
-  const columns = useMemo(() => getCategoryReportColumns(), []);
+  // const columns = useMemo(() => getCategoryReportColumns(), []);
 
   return (
     <Layout>
