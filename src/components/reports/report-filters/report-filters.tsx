@@ -120,7 +120,7 @@ export function ReportFilters({
 
       {/* Collapsible Content */}
       <div
-        className={`overflow-hidden tr  nsition-all duration-300 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 translate-y-[-4px]' : 'max-h-[2000px] opacity-100 translate-y-0'}`}
+        className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0 translate-y-[-4px]' : 'max-h-[2000px] opacity-100 translate-y-0'}`}
       >
         <CardContent className="p-4 pt-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
