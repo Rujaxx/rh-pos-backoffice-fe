@@ -2210,5 +2210,10 @@
   "reports.discount.columns.orderType": "نوع الطلب",
   "reports.discount.columns.billStatus": "حالة الفاتورة",
   "reports.discount.columns.totalDiscount": "إجمالي الخصم",
-  "reports.discount.columns.billCount": "عدد الفواتير"
+  "reports.discount.columns.billCount": "عدد الفواتير",
+  "reports.payment.cash": "نقدًا",
+  "reports.payment.card": "بطاقة",
+  "reports.payment.ofTotal": "من الإجمالي",
+  "reports.payment.upi": "يو بي آي",
+  "reports.payment.other": "أخرى"
 }

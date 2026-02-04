@@ -2088,5 +2088,10 @@
   "common.top": "Top",
   "common.topPlaceholder": "Top",
   "common.search": "Search",
-  "common.selectFiltersToBegin": "Select filters to begin"
+  "common.selectFiltersToBegin": "Select filters to begin",
+  "reports.payment.cash": "Cash",
+  "reports.payment.card": "Card",
+  "reports.payment.ofTotal": "of Total",
+  "reports.payment.upi": "UPI",
+  "reports.payment.other": "Other"
 }
