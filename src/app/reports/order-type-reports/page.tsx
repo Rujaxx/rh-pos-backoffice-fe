@@ -16,7 +16,10 @@ import { RefreshCw, ChevronRight, ChevronDown } from 'lucide-react';
 import { ReportQueryParams } from '@/types/report.type';
 import { toast } from 'sonner';
 import { OrderTypeGroupedItem } from '@/types/order-type-report.type';
-import { useOrderTypeReport } from '@/services/api/reports/order-type-report.query';
+import {
+  useOrderTypeReport,
+  useDownloadOrderTypeReport,
+} from '@/services/api/reports/order-type-report.query';
 import { DownloadReportOptions } from '@/components/reports/download-report-options';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import {
@@ -120,18 +123,18 @@ export default function OrderTypeReportPage() {
   // Store ref to download component's refetch function
   const downloadRefetchRef = useRef<(() => void) | null>(null);
 
-  // Build query params
+  // Build query params for view (without isDownload)
   const queryParams = useMemo(() => {
     const activeFilters = submittedFilters || {};
     return {
       ...activeFilters,
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
-      isDownload: activeFilters.isDownload,
+      // DO NOT include isDownload here
     };
   }, [submittedFilters, pagination]);
 
-  // Fetch reports
+  // Fetch reports for view
   const {
     data: reportsData,
     isLoading,
@@ -140,9 +143,12 @@ export default function OrderTypeReportPage() {
     enabled: !!submittedFilters && !!queryParams.from && !!queryParams.to,
   });
 
+  // Mutation for downloading report
+  const downloadMutation = useDownloadOrderTypeReport();
+
   // Use real API data
   const orderTypeData = reportsData?.data ?? [];
-  const totalCount = reportsData?.data?.length ?? 0;
+  const totalCount = orderTypeData.length;
 
   // Trigger download component refresh when report data loads
   useEffect(() => {
@@ -172,22 +178,6 @@ export default function OrderTypeReportPage() {
     setPagination({ pageIndex: 0, pageSize: 10 });
   }, []);
 
-  const handleApplyFilters = useCallback(
-    (isDownload?: boolean) => {
-      const queryParams = {
-        ...filters,
-        ...(isDownload && { isDownload: true }),
-      };
-
-      if (JSON.stringify(queryParams) === JSON.stringify(submittedFilters)) {
-        refetch();
-      } else {
-        setSubmittedFilters(queryParams);
-      }
-    },
-    [filters, submittedFilters, refetch],
-  );
-
   // Custom validation
   const validateFilters = useCallback((filters: ReportQueryParams) => {
     return !!(
@@ -197,6 +187,57 @@ export default function OrderTypeReportPage() {
       filters.restaurantIds?.length
     );
   }, []);
+
+  const handleApplyFilters = useCallback(
+    (isDownload?: boolean) => {
+      if (isDownload) {
+        // Validate filters for download
+        if (!validateFilters(filters)) {
+          toast.error(
+            t('reports.pleaseSelectRequiredFilters') ||
+              'Please select brand, restaurant, and date range',
+          );
+          return;
+        }
+
+        // Handle download separately
+        downloadMutation.mutate(filters, {
+          onSuccess: () => {
+            toast.success(
+              t('reports.downloadInitiated') ||
+                'Report generation started. Check Generated Reports section.',
+            );
+            // Refresh the download list after a short delay
+            setTimeout(() => {
+              if (downloadRefetchRef.current) {
+                downloadRefetchRef.current();
+              }
+            }, 1000);
+          },
+          onError: (error: Error) => {
+            console.error('Download error:', error);
+            toast.error(
+              t('reports.downloadFailed') ||
+                'Failed to generate report. Please try again.',
+            );
+          },
+        });
+        return;
+      }
+
+      // For normal view
+      const queryParams = {
+        ...filters,
+      };
+
+      if (JSON.stringify(queryParams) === JSON.stringify(submittedFilters)) {
+        refetch();
+      } else {
+        setSubmittedFilters(queryParams);
+      }
+    },
+    [filters, submittedFilters, refetch, downloadMutation, t, validateFilters],
+  );
 
   const handleRefresh = useCallback(() => {
     if (!submittedFilters) {
