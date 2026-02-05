@@ -37,4 +37,6 @@ export interface DownloadReportItem {
 export interface DownloadReportQueryParams extends QueryParams {
   brandId?: string;
   restaurantId?: string;
+  page?: number;
+  limit?: number;
 }

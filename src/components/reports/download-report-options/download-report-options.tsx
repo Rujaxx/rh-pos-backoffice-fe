@@ -17,7 +17,7 @@ import {
 } from '@/types/download-report.type';
 import { TanStackTable } from '@/components/ui/tanstack-table';
 import { Badge } from '@/components/ui/badge';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { useDownloadReports } from '@/services/api/reports/download-reports.query';
 import { toast } from 'sonner';
 
@@ -84,6 +84,10 @@ export function DownloadReportOptions({
 }: DownloadReportOptionsProps) {
   const { t } = useTranslation();
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const brandId =
     JSON.parse(localStorage.getItem('rh-pos-auth') ?? '{}')?.user?.brandIds?.[0]
       ?.id ?? null;
@@ -97,6 +101,8 @@ export function DownloadReportOptions({
     {
       brandId,
       restaurantId,
+      page: pagination.pageIndex + 1,
+      limit: pagination.pageSize,
     },
     {
       enabled: !!brandId,
@@ -118,6 +124,14 @@ export function DownloadReportOptions({
   };
 
   const reports = reportsData?.data || [];
+  const paginationMeta = reportsData?.meta;
+  const totalCount = paginationMeta?.total || 0;
+
+  // Handle pagination change
+  const handlePaginationChange = (newPagination: PaginationState) => {
+    setPagination(newPagination);
+    // The query will automatically refetch because page/limit changed
+  };
 
   // Handle download
   const handleDownload = (report: DownloadReportItem) => {
@@ -253,7 +267,7 @@ export function DownloadReportOptions({
           {!isCollapsed && (
             <div className="text-sm text-muted-foreground flex items-center gap-2">
               <span className="px-2 py-1 bg-muted rounded">
-                {reports.length} {t('reports.available') || 'available'}
+                {totalCount} {t('reports.available') || 'available'}
               </span>
             </div>
           )}
@@ -308,6 +322,12 @@ export function DownloadReportOptions({
               data={reports}
               columns={columns}
               isLoading={isLoading}
+              totalCount={totalCount}
+              pagination={pagination}
+              onPaginationChange={handlePaginationChange}
+              manualPagination={true} // Server-side pagination
+              showPagination={true}
+              showPageSizeSelector={true}
             />
           )}
         </CardContent>

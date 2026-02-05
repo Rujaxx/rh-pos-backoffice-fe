@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { BaseApiService } from '@/services/api/base/client';
-import { SuccessResponse } from '@/types/api';
+import { PaginatedResponse, SuccessResponse } from '@/types/api';
 import { API_ENDPOINTS, QUERY_KEYS } from '@/config/api';
 import {
   DownloadReportItem,
@@ -15,7 +15,7 @@ class DownloadReportService extends BaseApiService<DownloadReportItem[]> {
 
   async getReports(
     params: DownloadReportQueryParams,
-  ): Promise<SuccessResponse<DownloadReportItem[]>> {
+  ): Promise<PaginatedResponse<DownloadReportItem>> {
     const searchParams = new URLSearchParams();
 
     // Add brandId and restaurantId to query params
@@ -29,7 +29,7 @@ class DownloadReportService extends BaseApiService<DownloadReportItem[]> {
       ? `${this.baseEndpoint}?${searchParams.toString()}`
       : this.baseEndpoint;
 
-    return api.get<SuccessResponse<DownloadReportItem[]>>(url);
+    return api.get<PaginatedResponse<DownloadReportItem>>(url);
   }
 }
 
@@ -38,7 +38,7 @@ const downloadReportService = new DownloadReportService();
 export const useDownloadReports = (
   params: DownloadReportQueryParams,
   options?: Omit<
-    UseQueryOptions<SuccessResponse<DownloadReportItem[]>>,
+    UseQueryOptions<PaginatedResponse<DownloadReportItem>>,
     'queryKey' | 'queryFn'
   >,
 ) => {
