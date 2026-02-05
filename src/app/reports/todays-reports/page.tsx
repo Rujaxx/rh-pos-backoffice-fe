@@ -316,7 +316,15 @@ export default function TodaysReportPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Date Range</span>
                     <span className="font-medium">
-                      {filters.from} to {filters.to}
+                      {(() => {
+                        // Helper to format date consistently
+                        const formatDate = (dateStr: string) => {
+                          if (!dateStr) return '';
+                          // Remove time part if present
+                          return dateStr.split('T')[0];
+                        };
+                        return `${formatDate(filters.from)} to ${formatDate(filters.to)}`;
+                      })()}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
