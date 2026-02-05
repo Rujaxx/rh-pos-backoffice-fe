@@ -36,12 +36,12 @@ export default function HourlyReportPage() {
 
   // Initialize filters with today's date and 12:00 PM time
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
-    const today = new Date();
+    const today = new Date().toISOString().split('T')[0];
     const fromDate = new Date(today);
-    fromDate.setHours(12, 0, 0, 0);
+    fromDate.setUTCHours(0, 0, 0, 0);
 
     const toDate = new Date(today);
-    toDate.setHours(12, 0, 0, 0);
+    toDate.setUTCHours(23, 59, 59, 999);
 
     return {
       from: fromDate.toISOString(),

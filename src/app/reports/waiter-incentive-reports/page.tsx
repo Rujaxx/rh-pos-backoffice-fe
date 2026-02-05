@@ -125,10 +125,16 @@ export default function WaiterIncentivePage() {
 
   // Filters
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
-    const today = new Date();
+    const today = new Date().toISOString().split('T')[0];
+    const fromDate = new Date(today);
+    fromDate.setUTCHours(0, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setUTCHours(23, 59, 59, 999);
+
     return {
-      from: today.toISOString(),
-      to: today.toISOString(),
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 

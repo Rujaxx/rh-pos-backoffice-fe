@@ -44,13 +44,16 @@ export default function BillerWiseReportPage() {
 
   // Initialize filters
   const [filters, setFilters] = useState<ReportQueryParams>(() => {
-    const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setDate(today.getDate() - 30);
+    const today = new Date().toISOString().split('T')[0];
+    const fromDate = new Date(today);
+    fromDate.setUTCHours(0, 0, 0, 0);
+
+    const toDate = new Date(today);
+    toDate.setUTCHours(23, 59, 59, 999);
 
     return {
-      from: lastMonth.toISOString().split('T')[0],
-      to: today.toISOString().split('T')[0],
+      from: fromDate.toISOString(),
+      to: toDate.toISOString(),
     };
   });
 
