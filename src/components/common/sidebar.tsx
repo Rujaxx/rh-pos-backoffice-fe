@@ -290,6 +290,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
     ],
   },
   {
+    id: 'inventory',
+    label: t('navigation.inventory'),
+    items: [
+      {
+        id: 'raw-materials',
+        label: t('navigation.rawMaterials') || 'Raw Materials',
+        href: '/inventory/raw-materials',
+        icon: Package,
+      },
+    ],
+  },
+  {
     id: 'reports',
     label: t('navigation.reports'),
     items: [
