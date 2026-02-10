@@ -28,23 +28,22 @@ export const rawItemSchema = z.object({
 
   expectedWasteRatio: z
     .number()
-    .min(0, 'Waste ratio must be positive')
+    .min(0, 'Waste ratio must be at least 0')
     .max(1, 'Waste ratio cannot exceed 1')
     .optional()
     .default(0),
 
   minimumStock: z
     .number()
-    .min(0, 'Minimum stock must be positive')
-    .max(1000000, 'Minimum stock is too high')
+    .int('Minimum stock must be a whole number')
+    .min(0, 'Minimum stock must be at least 0')
+    .max(1000000, 'Minimum stock cannot exceed 1,000,000')
     .optional()
     .default(0),
 
-  isActive: z.boolean().default(true),
-
-  // These will be populated from user context when submitting
   restaurantId: z.string().optional(),
   brandId: z.string().optional(),
+  isActive: z.boolean().default(true),
 });
 
 export type RawItemFormData = z.input<typeof rawItemSchema>;

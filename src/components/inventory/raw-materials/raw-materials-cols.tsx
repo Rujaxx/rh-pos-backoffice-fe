@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Copy, Pencil, Trash2, Eye, Calendar } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useI18n } from '@/providers/i18n-provider';
 
 // Column definitions for the raw items table
 export const createRawItemColumns = (
@@ -15,7 +14,6 @@ export const createRawItemColumns = (
   onCopy: (item: RawItem) => void,
   onViewDetails: (item: RawItem) => void,
   t: ReturnType<typeof useTranslation>['t'],
-  locale: 'en' | 'ar',
 ): ColumnDef<RawItem>[] => [
   {
     accessorKey: 'name',
@@ -37,9 +35,9 @@ export const createRawItemColumns = (
       // Format display text
       const typeDisplay =
         {
-          RAW: t('rawMaterials.types.RAW') || 'Raw Material',
-          SEMI: t('rawMaterials.types.SEMI') || 'Semi-Finished',
-          FINISHED: t('rawMaterials.types.FINISHED') || 'Finished Product',
+          RAW: t('rawMaterials.type.raw') || 'Raw Material',
+          SEMI: t('rawMaterials.type.semiFinished') || 'Semi-Finished',
+          FINISHED: t('rawMaterials.type.finished') || 'Finished Product',
         }[item.type] || item.type;
 
       return (
@@ -72,6 +70,16 @@ export const createRawItemColumns = (
     },
   },
   {
+    accessorKey: 'minimumStock',
+    id: 'minStock',
+    header: t('rawMaterials.columns.minStock') || 'Min Stock',
+    enableSorting: true,
+    cell: ({ row }) => {
+      const item = row.original;
+      return <div className="text-sm">{item.minimumStock || 0}</div>;
+    },
+  },
+  {
     accessorKey: 'isActive',
     id: 'status',
     header: t('rawMaterials.columns.status') || 'Status',
@@ -80,7 +88,9 @@ export const createRawItemColumns = (
       const item = row.original;
       return (
         <Badge variant={item.isActive ? 'default' : 'secondary'}>
-          {item.isActive ? t('common.active') : t('common.inactive')}
+          {item.isActive
+            ? t('rawMaterials.active')
+            : t('rawMaterials.inactive')}
         </Badge>
       );
     },
@@ -170,15 +180,7 @@ export const useRawItemColumns = (
   onViewDetails: (item: RawItem) => void,
 ) => {
   const { t } = useTranslation();
-  const { locale } = useI18n();
-  return createRawItemColumns(
-    onEdit,
-    onDelete,
-    onCopy,
-    onViewDetails,
-    t,
-    locale,
-  );
+  return createRawItemColumns(onEdit, onDelete, onCopy, onViewDetails, t);
 };
 
 // Helper function to get sortable field from TanStack sorting state
@@ -192,6 +194,7 @@ export const getSortFieldForQuery = (
     name: 'name',
     type: 'type',
     unit: 'baseUnit',
+    minStock: 'minimumStock',
     status: 'isActive',
     modified: 'updatedAt',
   };

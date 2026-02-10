@@ -23,6 +23,7 @@ import {
 } from '@/components/inventory/raw-materials/raw-materials-form';
 import { useRawItemColumns } from '@/components/inventory/raw-materials/raw-materials-cols';
 import { RawItemDetailsModal } from '@/components/inventory/raw-materials/raw-materials-details-modal';
+import { CopyRawMaterialModal } from '@/components/inventory/raw-materials/copy-raw-material-modal';
 import Layout from '@/components/common/layout';
 import {
   Plus,
@@ -39,11 +40,7 @@ import {
   FileUp,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  RawItem,
-  RawItemQueryParams,
-  RawItemType,
-} from '@/types/raw-materials.type';
+import { RawItem, RawItemType } from '@/types/raw-materials.type';
 import { RawItemFormData } from '@/lib/validations/raw-item.validation';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
@@ -54,15 +51,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
 // Minimal mock data for testing
 const mockRawItems: RawItem[] = [
@@ -97,129 +85,6 @@ const mockRawItems: RawItem[] = [
     updatedAt: new Date('2023-06-14T10:59:42Z'),
   },
 ];
-
-// Mock outlets data
-const mockOutlets = [
-  { id: 'outlet1', name: 'Main Restaurant' },
-  { id: 'outlet2', name: 'Food Court Stall' },
-  { id: 'outlet3', name: 'Express Counter' },
-  { id: 'outlet4', name: 'Cafeteria' },
-];
-
-// Copy Raw Material Modal Component
-function CopyRawMaterialModal({
-  isOpen,
-  onClose,
-  items,
-  onCopy,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  items: RawItem[];
-  onCopy: (outletIds: string[]) => void;
-}) {
-  const { t } = useTranslation();
-  const [selectedOutlets, setSelectedOutlets] = useState<string[]>([]);
-
-  const handleSelectAllOutlets = () => {
-    if (selectedOutlets.length === mockOutlets.length) {
-      setSelectedOutlets([]);
-    } else {
-      setSelectedOutlets(mockOutlets.map((outlet) => outlet.id));
-    }
-  };
-
-  const toggleOutlet = (outletId: string) => {
-    setSelectedOutlets((prev) =>
-      prev.includes(outletId)
-        ? prev.filter((id) => id !== outletId)
-        : [...prev, outletId],
-    );
-  };
-
-  const handleCopy = () => {
-    if (selectedOutlets.length === 0) {
-      toast.error('Please select at least one outlet');
-      return;
-    }
-    onCopy(selectedOutlets);
-    onClose();
-  };
-
-  const getItemNames = () => {
-    if (items.length === 1) {
-      return items[0].name;
-    }
-    return `${items.length} items`;
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Copy className="h-5 w-5" />
-            Copy Raw Material
-          </DialogTitle>
-          <DialogDescription>
-            Copy `&quot;`{getItemNames()}`&quot;` to selected outlets
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label>Select Outlets</Label>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSelectAllOutlets}
-              className="h-7"
-            >
-              {selectedOutlets.length === mockOutlets.length
-                ? 'Deselect All'
-                : 'Select All'}
-            </Button>
-          </div>
-
-          {/* Replace ScrollArea with div and max-height */}
-          <div className="max-h-60 overflow-y-auto border rounded-md p-4">
-            <div className="space-y-3">
-              {mockOutlets.map((outlet) => (
-                <div key={outlet.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`outlet-${outlet.id}`}
-                    checked={selectedOutlets.includes(outlet.id)}
-                    onCheckedChange={() => toggleOutlet(outlet.id)}
-                  />
-                  <Label
-                    htmlFor={`outlet-${outlet.id}`}
-                    className="flex-1 cursor-pointer"
-                  >
-                    {outlet.name}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            {selectedOutlets.length} outlet(s) selected
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleCopy}>
-            <Copy className="mr-2 h-4 w-4" />
-            Copy to {selectedOutlets.length} Outlet(s)
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 export default function RawMaterialsPage() {
   const { t } = useTranslation();
@@ -374,12 +239,12 @@ export default function RawMaterialsPage() {
   // Get selection info text
   const getSelectionInfo = useCallback(() => {
     if (selectAllMode) {
-      return `All ${totalCount} items selected`;
+      return t('rawMaterials.allItemsSelected', { count: totalCount });
     } else if (selectedIds.length > 0) {
-      return `${selectedIds.length} item${selectedIds.length !== 1 ? 's' : ''} selected`;
+      return t('rawMaterials.itemsSelected', { count: selectedIds.length });
     }
     return null;
-  }, [selectedIds.length, selectAllMode, totalCount]);
+  }, [selectedIds.length, selectAllMode, totalCount, t]);
 
   // Handlers
   const handleViewDetails = useCallback((item: RawItem) => {
@@ -394,12 +259,14 @@ export default function RawMaterialsPage() {
 
   const handleBulkCopy = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to copy');
+      toast.error(
+        t('rawMaterials.selectItemsToCopy') || 'Please select items to copy',
+      );
       return;
     }
     setItemsToCopy(selectedItems);
     setIsCopyModalOpen(true);
-  }, [selectedItems]);
+  }, [selectedItems, t]);
 
   const handleCopyToOutlets = useCallback(
     (outletIds: string[]) => {
@@ -407,28 +274,20 @@ export default function RawMaterialsPage() {
       try {
         // Simulate API call
         setTimeout(() => {
-          const itemNames = itemsToCopy.map((item) => item.name).join(', ');
-          const outletNames = outletIds
-            .map((id) => mockOutlets.find((o) => o.id === id)?.name || id)
-            .join(', ');
-
-          toast.success(
-            `Copied ${itemsToCopy.length} item(s) to ${outletIds.length} outlet(s)`,
-            {
-              description: `${itemNames} copied to ${outletNames}`,
-            },
-          );
+          toast.success(t('rawMaterials.copySuccess'), {
+            description: t('rawMaterials.copiedSuccess'),
+          });
 
           // Clear selection after copy
           clearSelection();
           setIsLoading(false);
         }, 1000);
       } catch (error) {
-        toast.error('Failed to copy items');
+        toast.error(t('rawMaterials.copyFailed') || 'Failed to copy items');
         setIsLoading(false);
       }
     },
-    [itemsToCopy, clearSelection],
+    [clearSelection, t],
   );
 
   const handleDelete = useCallback(
@@ -438,15 +297,12 @@ export default function RawMaterialsPage() {
           setIsLoading(true);
           try {
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            toast.success(
-              t('rawMaterials.deletedSuccess') || 'Raw material deleted',
-            );
+            toast.success(t('rawMaterials.deletedSuccess'));
           } catch (error) {
             const msg =
               error instanceof Error
                 ? error.message
-                : t('rawMaterials.deleteError') ||
-                  'Failed to delete raw material';
+                : t('rawMaterials.deleteError');
             toast.error(msg);
           } finally {
             setIsLoading(false);
@@ -467,7 +323,10 @@ export default function RawMaterialsPage() {
 
   const handleBulkDelete = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to delete');
+      toast.error(
+        t('rawMaterials.selectItemsToDelete') ||
+          'Please select items to delete',
+      );
       return;
     }
 
@@ -477,20 +336,26 @@ export default function RawMaterialsPage() {
         try {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           const itemCount = selectAllMode ? totalCount : selectedItems.length;
-          toast.success(`Deleted ${itemCount} item(s)`);
+          toast.success(
+            t('rawMaterials.bulkDeleteSuccess', { count: itemCount }),
+          );
           clearSelection();
         } catch (error) {
-          toast.error('Failed to delete items');
+          toast.error(
+            t('rawMaterials.bulkDeleteFailed') || 'Failed to delete items',
+          );
         } finally {
           setIsLoading(false);
         }
       },
       {
-        title: 'Delete Selected Items',
+        title: t('rawMaterials.bulkDeleteTitle'),
         description: selectAllMode
-          ? `Are you sure you want to delete all ${totalCount} items?`
-          : `Are you sure you want to delete ${selectedItems.length} selected item(s)?`,
-        confirmButtonText: 'Delete',
+          ? t('rawMaterials.bulkDeleteAll', { count: totalCount })
+          : t('rawMaterials.bulkDeleteSelected', {
+              count: selectedItems.length,
+            }),
+        confirmButtonText: t('rawMaterials.deleteButton'),
         variant: 'destructive',
       },
     );
@@ -500,61 +365,83 @@ export default function RawMaterialsPage() {
     totalCount,
     openConfirmationModal,
     clearSelection,
+    t,
   ]);
 
   const handleBarcodeGeneration = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to generate barcodes');
+      toast.error(
+        t('rawMaterials.selectItemsForBarcode') ||
+          'Please select items to generate barcodes',
+      );
       return;
     }
 
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Generated barcodes for ${selectedItems.length} item(s)`);
+        toast.success(
+          t('rawMaterials.barcodeSuccess', { count: selectedItems.length }),
+        );
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to generate barcodes');
+      toast.error(
+        t('rawMaterials.barcodeFailed') || 'Failed to generate barcodes',
+      );
       setIsLoading(false);
     }
-  }, [selectedItems]);
+  }, [selectedItems, t]);
 
   const handleBulkActivate = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to activate');
+      toast.error(
+        t('rawMaterials.selectItemsToActivate') ||
+          'Please select items to activate',
+      );
       return;
     }
 
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Activated ${selectedItems.length} item(s)`);
+        toast.success(
+          t('rawMaterials.activateSuccess', { count: selectedItems.length }),
+        );
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to activate items');
+      toast.error(
+        t('rawMaterials.activateFailed') || 'Failed to activate items',
+      );
       setIsLoading(false);
     }
-  }, [selectedItems]);
+  }, [selectedItems, t]);
 
   const handleBulkDeactivate = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to deactivate');
+      toast.error(
+        t('rawMaterials.selectItemsToDeactivate') ||
+          'Please select items to deactivate',
+      );
       return;
     }
 
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Deactivated ${selectedItems.length} item(s)`);
+        toast.success(
+          t('rawMaterials.deactivateSuccess', { count: selectedItems.length }),
+        );
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to deactivate items');
+      toast.error(
+        t('rawMaterials.deactivateFailed') || 'Failed to deactivate items',
+      );
       setIsLoading(false);
     }
-  }, [selectedItems]);
+  }, [selectedItems, t]);
 
   // Export handlers
   const handleExportCurrentPage = useCallback(() => {
@@ -562,32 +449,41 @@ export default function RawMaterialsPage() {
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Exported current page (${itemCount} items)`);
+        toast.success(
+          t('rawMaterials.exportCurrentPageSuccess', { count: itemCount }),
+        );
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to export current page');
+      toast.error(
+        t('rawMaterials.exportFailed') || 'Failed to export current page',
+      );
       setIsLoading(false);
     }
-  }, [paginatedData]);
+  }, [paginatedData, t]);
 
   const handleExportAll = useCallback(() => {
     const itemCount = filteredItems.length;
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Exported all data (${itemCount} items)`);
+        toast.success(t('rawMaterials.exportAllSuccess', { count: itemCount }));
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to export all data');
+      toast.error(
+        t('rawMaterials.exportFailed') || 'Failed to export all data',
+      );
       setIsLoading(false);
     }
-  }, [filteredItems]);
+  }, [filteredItems, t]);
 
   const handleExportSelected = useCallback(() => {
     if (selectedItems.length === 0) {
-      toast.error('Please select items to export');
+      toast.error(
+        t('rawMaterials.selectItemsToExport') ||
+          'Please select items to export',
+      );
       return;
     }
 
@@ -595,45 +491,52 @@ export default function RawMaterialsPage() {
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success(`Exported ${itemCount} selected item(s)`);
+        toast.success(
+          t('rawMaterials.exportSelectedSuccess', { count: itemCount }),
+        );
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to export selected items');
+      toast.error(
+        t('rawMaterials.exportFailed') || 'Failed to export selected items',
+      );
       setIsLoading(false);
     }
-  }, [selectedItems, selectAllMode, totalCount]);
+  }, [selectedItems, selectAllMode, totalCount, t]);
 
   // Import handlers
   const handleDownloadTemplate = useCallback(() => {
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success('Template downloaded successfully');
+        toast.success(t('rawMaterials.templateDownloadSuccess'));
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to download template');
+      toast.error(
+        t('rawMaterials.templateDownloadFailed') ||
+          'Failed to download template',
+      );
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   const handleUploadData = useCallback(() => {
     setIsLoading(true);
     try {
       setTimeout(() => {
-        toast.success('Data uploaded successfully');
+        toast.success(t('rawMaterials.uploadSuccess'));
         setIsLoading(false);
       }, 1000);
     } catch (error) {
-      toast.error('Failed to upload data');
+      toast.error(t('rawMaterials.uploadFailed') || 'Failed to upload data');
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   // Get columns with all actions
   const baseColumns = useRawItemColumns(
-    openModal,
+    (item) => openModal(item),
     handleDelete,
     handleSingleCopy,
     handleViewDetails,
@@ -654,7 +557,10 @@ export default function RawMaterialsPage() {
             <Checkbox
               checked={isAllOnPageSelected}
               onCheckedChange={handleSelectCurrentPage}
-              aria-label="Select all on current page"
+              aria-label={
+                t('rawMaterials.selectAllCurrentPage') ||
+                'Select all on current page'
+              }
             />
           </div>
         );
@@ -667,7 +573,10 @@ export default function RawMaterialsPage() {
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => toggleSelectItem(item._id)}
-            aria-label={`Select ${item.name}`}
+            aria-label={
+              t('rawMaterials.selectItem', { name: item.name }) ||
+              `Select ${item.name}`
+            }
           />
         );
       },
@@ -684,6 +593,7 @@ export default function RawMaterialsPage() {
     handleSelectCurrentPage,
     selectAllMode,
     toggleSelectItem,
+    t,
   ]);
 
   // Submit handler
@@ -694,19 +604,13 @@ export default function RawMaterialsPage() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (editingRawItem) {
-          toast.success(
-            t('rawMaterials.updatedSuccess') || 'Raw material updated',
-          );
+          toast.success(t('rawMaterials.updatedSuccess'));
         } else {
-          toast.success(
-            t('rawMaterials.createdSuccess') || 'Raw material created',
-          );
+          toast.success(t('rawMaterials.createdSuccess'));
         }
         closeModal();
       } catch (error) {
-        toast.error(
-          t('rawMaterials.saveError') || 'Failed to save raw material',
-        );
+        toast.error(t('rawMaterials.saveError'));
       } finally {
         setIsLoading(false);
       }
@@ -758,6 +662,22 @@ export default function RawMaterialsPage() {
     setItemsToCopy([]);
   }, []);
 
+  const handleDetailsModalDelete = useCallback(
+    (item: RawItem) => {
+      setIsDetailsModalOpen(false);
+      handleDelete(item);
+    },
+    [handleDelete],
+  );
+
+  const handleDetailsModalEdit = useCallback(
+    (item: RawItem) => {
+      setIsDetailsModalOpen(false);
+      openModal(item);
+    },
+    [openModal],
+  );
+
   const selectionInfo = getSelectionInfo();
 
   return (
@@ -786,36 +706,36 @@ export default function RawMaterialsPage() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="h-7">
-                      Bulk Actions
+                      {t('rawMaterials.bulkActions')}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleBulkCopy}>
                       <Copy className="mr-2 h-4 w-4" />
-                      Copy {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.copySelected')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleBarcodeGeneration}>
                       <Barcode className="mr-2 h-4 w-4" />
-                      Generate Barcode {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.generateBarcode')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleExportSelected}>
                       <Download className="mr-2 h-4 w-4" />
-                      Export {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.exportSelected')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleBulkActivate}>
                       <CheckSquare className="mr-2 h-4 w-4" />
-                      Activate {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.activateSelected')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleBulkDeactivate}>
                       <Square className="mr-2 h-4 w-4" />
-                      Deactivate {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.deactivateSelected')}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={handleBulkDelete}
                       className="text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Delete {selectAllMode ? 'All' : 'Selected'}
+                      {t('rawMaterials.bulkActions.deleteSelected')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -826,7 +746,9 @@ export default function RawMaterialsPage() {
                   onClick={handleSelectAll}
                   className="h-7"
                 >
-                  {selectAllMode ? 'Deselect All' : 'Select All'}
+                  {selectAllMode
+                    ? t('rawMaterials.deselectAll')
+                    : t('rawMaterials.selectAll')}
                 </Button>
 
                 {/* Copy button for selected items */}
@@ -837,7 +759,7 @@ export default function RawMaterialsPage() {
                   className="h-7 flex items-center gap-1"
                 >
                   <Copy className="h-3 w-3" />
-                  Copy
+                  {t('rawMaterials.copy')}
                 </Button>
               </div>
             ) : (
@@ -847,7 +769,7 @@ export default function RawMaterialsPage() {
                 onClick={handleSelectAll}
                 className="h-7"
               >
-                Select All
+                {t('rawMaterials.selectAll')}
               </Button>
             )}
 
@@ -891,12 +813,12 @@ export default function RawMaterialsPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={handleDownloadTemplate}>
                   <FileDown className="mr-2 h-4 w-4" />
-                  Download Template
+                  {t('rawMaterials.downloadTemplate')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleUploadData}>
                   <FileUp className="mr-2 h-4 w-4" />
-                  Upload Data
+                  {t('rawMaterials.uploadData')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -915,16 +837,16 @@ export default function RawMaterialsPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={handleExportCurrentPage}>
                   <FileDown className="mr-2 h-4 w-4" />
-                  Export Current Page
+                  {t('rawMaterials.exportCurrentPage')}
                   <span className="ml-auto text-xs text-muted-foreground">
-                    ({paginatedData.length} items)
+                    ({paginatedData.length} {t('common.items')})
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleExportAll}>
                   <FileDown className="mr-2 h-4 w-4" />
-                  Export All Data
+                  {t('rawMaterials.exportAll')}
                   <span className="ml-auto text-xs text-muted-foreground">
-                    ({filteredItems.length} items)
+                    ({filteredItems.length} {t('common.items')})
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -933,12 +855,12 @@ export default function RawMaterialsPage() {
                   disabled={selectedItems.length === 0 && !selectAllMode}
                 >
                   <FileDown className="mr-2 h-4 w-4" />
-                  Export Selected
+                  {t('rawMaterials.exportSelected')}
                   <span className="ml-auto text-xs text-muted-foreground">
                     {selectAllMode
-                      ? `(${totalCount} items)`
+                      ? `(${totalCount} ${t('common.items')})`
                       : selectedItems.length > 0
-                        ? `(${selectedItems.length} items)`
+                        ? `(${selectedItems.length} ${t('common.items')})`
                         : ''}
                   </span>
                 </DropdownMenuItem>
@@ -1023,6 +945,8 @@ export default function RawMaterialsPage() {
           item={selectedItem}
           isOpen={isDetailsModalOpen}
           onClose={handleCloseDetailsModal}
+          onDelete={handleDetailsModalDelete}
+          onEdit={handleDetailsModalEdit}
         />
 
         {/* Copy Raw Material Modal */}
