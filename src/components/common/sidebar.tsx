@@ -299,6 +299,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         href: '/inventory/raw-materials',
         icon: Package,
       },
+      {
+        id: 'recipe',
+        label: t('navigation.recipe') || 'Recipe',
+        href: '/inventory/recipe-management',
+        icon: NotepadText,
+      },
     ],
   },
   {

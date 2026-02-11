@@ -553,7 +553,7 @@ export default function RawMaterialsPage() {
       id: 'select',
       header: () => {
         return (
-          <div className="flex items-center">
+          <div className="flex items-center p-2">
             <Checkbox
               checked={isAllOnPageSelected}
               onCheckedChange={handleSelectCurrentPage}
@@ -570,14 +570,16 @@ export default function RawMaterialsPage() {
         const isSelected = selectAllMode || selectedIds.includes(item._id);
 
         return (
-          <Checkbox
-            checked={isSelected}
-            onCheckedChange={() => toggleSelectItem(item._id)}
-            aria-label={
-              t('rawMaterials.selectItem', { name: item.name }) ||
-              `Select ${item.name}`
-            }
-          />
+          <div className="p-2">
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={() => toggleSelectItem(item._id)}
+              aria-label={
+                t('rawMaterials.selectItem', { name: item.name }) ||
+                `Select ${item.name}`
+              }
+            />
+          </div>
         );
       },
       size: 50,

@@ -90,6 +90,22 @@ export const API_ENDPOINTS = {
     DELETE: (id: string) => `/menu-items/${id}`,
     GET: (id: string) => `/menu-items/${id}`,
   },
+  // RAW MATERIALS ENDPOINTS
+  RAW_MATERIALS: {
+    LIST: '/raw-materials',
+    CREATE: '/raw-materials',
+    UPDATE: (id: string) => `/raw-materials/${id}`,
+    DELETE: (id: string) => `/raw-materials/${id}`,
+    GET: (id: string) => `/raw-materials/${id}`,
+  },
+  // RECIPES ENDPOINTS
+  RECIPES: {
+    LIST: '/recipes',
+    CREATE: '/recipes',
+    UPDATE: (id: string) => `/recipes/${id}`,
+    DELETE: (id: string) => `/recipes/${id}`,
+    GET: (id: string) => `/recipes/${id}`,
+  },
   KITCHEN_DEPARTMENTS: {
     LIST: '/kitchen-departments',
     CREATE: '/kitchen-departments',
@@ -148,7 +164,6 @@ export const API_ENDPOINTS = {
     BILL_PRINT_DOWNLOAD: '/download/bill-print-report',
     SOLD_ITEM: '/reports/sold-item-report',
   },
-
   BILLS: {
     UPDATE: (id: string) => `/bills/${id}`,
     DELETE: (id: string) => `/bills/${id}`,
@@ -230,6 +245,22 @@ export const QUERY_KEYS = {
     LIST: (params?: Record<string, unknown>) =>
       ['menu-items', 'list', params] as const,
     DETAIL: (id: string) => ['menu-items', 'detail', id] as const,
+  },
+  RAW_MATERIALS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['raw-materials', 'list', params] as const,
+    DETAIL: (id: string) => ['raw-materials', 'detail', id] as const,
+    CREATE: ['raw-materials', 'create'] as const,
+    UPDATE: (id: string) => ['raw-materials', 'update', id] as const,
+    DELETE: (id: string) => ['raw-materials', 'delete', id] as const,
+  },
+  RECIPES: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['recipes', 'list', params] as const,
+    DETAIL: (id: string) => ['recipes', 'detail', id] as const,
+    CREATE: ['recipes', 'create'] as const,
+    UPDATE: (id: string) => ['recipes', 'update', id] as const,
+    DELETE: (id: string) => ['recipes', 'delete', id] as const,
   },
   KITCHEN_DEPARTMENTS: {
     LIST: (params?: Record<string, unknown>) =>
