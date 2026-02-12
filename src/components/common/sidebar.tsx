@@ -30,6 +30,7 @@ import {
   ReceiptTextIcon,
   Package,
   Printer,
+  Truck,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -304,6 +305,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.recipe') || 'Recipe',
         href: '/inventory/recipe-management',
         icon: NotepadText,
+      },
+      {
+        id: 'vendors',
+        label: t('navigation.vendors') || 'Vendors',
+        href: '/inventory/vendors',
+        icon: Truck,
       },
     ],
   },
