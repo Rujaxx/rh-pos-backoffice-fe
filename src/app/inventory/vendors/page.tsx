@@ -47,12 +47,12 @@ import {
 } from '@/types/vendors.type';
 import { useVendorColumns } from '@/components/inventory/vendors/vendors-columns';
 import { VendorDetailsModal } from '@/components/inventory/vendors/vendors-details-modal';
-import { VendorPaymentSettlementModal } from '@/components/inventory/vendors/payment-settlement-modal';
 import {
   VendorFormContent,
   useVendorForm,
 } from '@/components/inventory/vendors/vendors-form';
 import { CreateVendorData } from '@/lib/validations/vendors.validation';
+import { useRouter } from 'next/navigation';
 
 // Mock data
 const mockVendors: Vendor[] = [
@@ -106,6 +106,7 @@ const mockVendors: Vendor[] = [
 
 export default function VendorsPage() {
   const { t } = useTranslation();
+  const router = useRouter();
 
   // Table state
   const [pagination, setPagination] = useState<PaginationState>({
@@ -126,11 +127,6 @@ export default function VendorsPage() {
   // Modal states
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-
-  // Payment Settlement Modal
-  const [isPaymentSettlementModalOpen, setIsPaymentSettlementModalOpen] =
-    useState(false);
-  const [settlementVendor, setSettlementVendor] = useState<Vendor | null>(null);
 
   // Modal hooks
   const {
@@ -249,11 +245,13 @@ export default function VendorsPage() {
     [openConfirmationModal, t],
   );
 
-  // Make Payment opens settlement modal
-  const handleMakePayment = useCallback((vendor: Vendor) => {
-    setSettlementVendor(vendor);
-    setIsPaymentSettlementModalOpen(true);
-  }, []);
+  // Make Payment - Navigate to payment-settlement page
+  const handleMakePayment = useCallback(
+    (vendor: Vendor) => {
+      router.push(`/inventory/payment-settlement?vendorId=${vendor._id}`);
+    },
+    [router],
+  );
 
   const handleBulkDelete = useCallback(() => {
     if (selectedVendors.length === 0 && !selectAllMode) {
@@ -291,7 +289,7 @@ export default function VendorsPage() {
     );
   }, [selectedVendors, selectAllMode, totalCount, openConfirmationModal, t]);
 
-  // Bulk Status Change Handler - Single or Multiple
+  // Bulk Status Change Handler
   const handleBulkStatusChange = useCallback(
     (activate: boolean) => {
       if (selectedVendors.length === 0 && !selectAllMode) {
@@ -351,7 +349,7 @@ export default function VendorsPage() {
   );
 
   const handleSubmit = useCallback(
-    async (data: CreateVendorData) => {
+    async (_data: CreateVendorData) => {
       setIsLoading(true);
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -476,19 +474,6 @@ export default function VendorsPage() {
     },
     [handleDelete],
   );
-
-  // Payment settlement modal handlers
-  const handleClosePaymentSettlementModal = useCallback(() => {
-    setIsPaymentSettlementModalOpen(false);
-    setSettlementVendor(null);
-  }, []);
-
-  const handlePaymentSuccess = useCallback(() => {
-    toast.success(
-      t('vendors.payment.success') || 'Payment recorded successfully',
-    );
-    handleClosePaymentSettlementModal();
-  }, [t, handleClosePaymentSettlementModal]);
 
   // ============ SEARCH & PAGINATION ============
   const handleSearchChange = useCallback(
@@ -767,14 +752,6 @@ export default function VendorsPage() {
           onClose={handleCloseDetailsModal}
           onEdit={handleDetailsModalEdit}
           onDelete={handleDetailsModalDelete}
-        />
-
-        {/* Payment Settlement Modal */}
-        <VendorPaymentSettlementModal
-          vendor={settlementVendor}
-          isOpen={isPaymentSettlementModalOpen}
-          onClose={handleClosePaymentSettlementModal}
-          onSuccess={handlePaymentSuccess}
         />
       </div>
     </Layout>

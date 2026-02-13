@@ -2767,5 +2767,51 @@
   "vendors.payment.amountInExcess": "المبلغ الزائد:",
   "vendors.payment.payAmount": "دفع المبلغ",
   "vendors.payment.success": "تم معالجة الدفع بنجاح",
-  "vendors.payment.failed": "فشل معالجة الدفع"
+  "vendors.payment.failed": "فشل معالجة الدفع",
+
+  "navigation.paymentSettlement": "تسوية المدفوعات",
+  "paymentSettlement.title": "تسوية فاتورة الشراء",
+  "paymentSettlement.subtitle": "الدفع للمورد",
+
+  "paymentSettlement.filters.from": "من",
+  "paymentSettlement.filters.selectType": "اختر النوع",
+  "paymentSettlement.filters.vendor": "المورد",
+  "paymentSettlement.filters.restaurant": "المطعم",
+  "paymentSettlement.filters.kitchen": "المطبخ",
+  "paymentSettlement.filters.selectVendor": "اختر المورد",
+  "paymentSettlement.filters.selectRestaurant": "اختر المطعم",
+  "paymentSettlement.filters.selectKitchen": "اختر المطبخ",
+  "paymentSettlement.filters.startDate": "تاريخ البداية",
+  "paymentSettlement.filters.endDate": "تاريخ النهاية",
+  "paymentSettlement.filters.datePlaceholder": "يوم شهر سنة",
+  "paymentSettlement.filters.search": "بحث",
+
+  "paymentSettlement.summary.from": "من",
+  "paymentSettlement.summary.supplier": "المورد",
+  "paymentSettlement.summary.startDate": "تاريخ البداية",
+  "paymentSettlement.summary.endDate": "تاريخ النهاية",
+  "paymentSettlement.summary.newSearch": "بحث جديد",
+
+  "paymentSettlement.invoices.title": "الفواتير المستحقة",
+  "paymentSettlement.invoices.vendor": "المورد",
+  "paymentSettlement.invoices.date": "تاريخ الفاتورة",
+  "paymentSettlement.invoices.invoiceNo": "رقم الفاتورة",
+  "paymentSettlement.invoices.amount": "المبلغ",
+  "paymentSettlement.invoices.paidAmount": "المبلغ المدفوع",
+  "paymentSettlement.invoices.remainingAmount": "المبلغ المتبقي",
+  "paymentSettlement.invoices.payment": "الدفع",
+  "paymentSettlement.invoices.payInFull": "الدفع كاملاً",
+
+  "paymentSettlement.footer.totalOutstanding": "إجمالي المستحق",
+  "paymentSettlement.footer.toPay": "للدفع",
+  "paymentSettlement.footer.excess": "الزيادة",
+  "paymentSettlement.footer.paymentMode": "طريقة الدفع",
+  "paymentSettlement.footer.payAmount": "دفع المبلغ",
+  "paymentSettlement.footer.processing": "جاري المعالجة...",
+
+  "paymentSettlement.messages.showingInvoices": "عرض فواتير {name}",
+  "paymentSettlement.messages.selectVendor": "الرجاء اختيار مورد",
+  "paymentSettlement.messages.searchingBy": "البحث حسب {type} - قريباً",
+  "paymentSettlement.messages.noVendorFound": "لم يتم العثور على مورد بالمعايير المحددة",
+  "paymentSettlement.messages.paymentSuccess": "تم تسجيل الدفع بنجاح"
 }

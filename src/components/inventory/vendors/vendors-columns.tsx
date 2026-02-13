@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Pencil, Eye, CreditCard } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useRouter } from 'next/navigation';
 
 // Column definitions for the vendor table
 export const createVendorColumns = (
@@ -14,6 +15,7 @@ export const createVendorColumns = (
   onViewDetails: (vendor: Vendor) => void,
   onMakePayment: (vendor: Vendor) => void,
   t: ReturnType<typeof useTranslation>['t'],
+  router: ReturnType<typeof useRouter>,
 ): ColumnDef<Vendor>[] => [
   {
     accessorKey: 'name',
@@ -76,6 +78,45 @@ export const createVendorColumns = (
     },
   },
   {
+    accessorKey: 'creditLimit',
+    id: 'creditLimit',
+    header: t('vendors.table.creditLimit') || 'Credit Limit',
+    enableSorting: false,
+    cell: ({ row }) => {
+      const vendor = row.original;
+      return (
+        <div className="text-sm">
+          {vendor.creditLimit?.toLocaleString() || '0'}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'currentBalance',
+    id: 'currentBalance',
+    header: t('vendors.table.balance') || 'Balance',
+    enableSorting: false,
+    cell: ({ row }) => {
+      const vendor = row.original;
+      const balance = vendor.currentBalance || 0;
+      const isPayable = vendor.balanceType === 'PAYABLE';
+      return (
+        <div className="text-sm">
+          <span
+            className={
+              balance > 0 && isPayable ? 'text-destructive font-medium' : ''
+            }
+          >
+            {balance.toLocaleString()}
+          </span>
+          <span className="text-xs text-muted-foreground ml-1">
+            ({isPayable ? t('vendors.payable') : t('vendors.receivable')})
+          </span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: 'isActive',
     id: 'status',
     header: t('vendors.table.status') || 'Status',
@@ -96,6 +137,7 @@ export const createVendorColumns = (
     size: 120,
     cell: ({ row }) => {
       const vendor = row.original;
+
       return (
         <div className="flex items-center gap-1">
           <Button
@@ -127,7 +169,9 @@ export const createVendorColumns = (
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              onMakePayment(vendor);
+              router.push(
+                `/inventory/payment-settlement?vendorId=${vendor._id}`,
+              );
             }}
             title={t('vendors.actions.makePayment') || 'Make Payment'}
             className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
@@ -148,5 +192,14 @@ export const useVendorColumns = (
   onMakePayment: (vendor: Vendor) => void,
 ) => {
   const { t } = useTranslation();
-  return createVendorColumns(onEdit, onDelete, onViewDetails, onMakePayment, t);
+  const router = useRouter();
+
+  return createVendorColumns(
+    onEdit,
+    onDelete,
+    onViewDetails,
+    onMakePayment,
+    t,
+    router,
+  );
 };

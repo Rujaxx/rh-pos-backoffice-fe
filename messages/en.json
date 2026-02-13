@@ -2646,5 +2646,51 @@
   "vendors.payment.amountPaid": "Amount Paid:",
   "vendors.payment.amountUsed": "Amount used for Payments:",
   "vendors.payment.amountInExcess": "Amount in Excess:",
-  "vendors.payment.payAmount": "Pay Amount"
+  "vendors.payment.payAmount": "Pay Amount",
+
+  "navigation.paymentSettlement": "Payment Settlement",
+  "paymentSettlement.title": "Purchase Invoice Settlement",
+  "paymentSettlement.subtitle": "Make payment to supplier",
+
+  "paymentSettlement.filters.from": "From",
+  "paymentSettlement.filters.selectType": "Select type",
+  "paymentSettlement.filters.vendor": "Vendor",
+  "paymentSettlement.filters.restaurant": "Restaurant",
+  "paymentSettlement.filters.kitchen": "Kitchen",
+  "paymentSettlement.filters.selectVendor": "Select vendor",
+  "paymentSettlement.filters.selectRestaurant": "Select restaurant",
+  "paymentSettlement.filters.selectKitchen": "Select kitchen",
+  "paymentSettlement.filters.startDate": "Start Date",
+  "paymentSettlement.filters.endDate": "End Date",
+  "paymentSettlement.filters.datePlaceholder": "dd Mmm yyyy",
+  "paymentSettlement.filters.search": "Search",
+
+  "paymentSettlement.summary.from": "From",
+  "paymentSettlement.summary.supplier": "Supplier",
+  "paymentSettlement.summary.startDate": "Start Date",
+  "paymentSettlement.summary.endDate": "End Date",
+  "paymentSettlement.summary.newSearch": "New Search",
+
+  "paymentSettlement.invoices.title": "Outstanding Invoices",
+  "paymentSettlement.invoices.vendor": "Vendor",
+  "paymentSettlement.invoices.date": "Invoice Date",
+  "paymentSettlement.invoices.invoiceNo": "Invoice No.",
+  "paymentSettlement.invoices.amount": "Amount",
+  "paymentSettlement.invoices.paidAmount": "Paid Amount",
+  "paymentSettlement.invoices.remainingAmount": "Remaining Amount",
+  "paymentSettlement.invoices.payment": "Payment",
+  "paymentSettlement.invoices.payInFull": "Pay in full",
+
+  "paymentSettlement.footer.totalOutstanding": "Total Outstanding",
+  "paymentSettlement.footer.toPay": "To Pay",
+  "paymentSettlement.footer.excess": "Excess",
+  "paymentSettlement.footer.paymentMode": "Payment mode",
+  "paymentSettlement.footer.payAmount": "Pay Amount",
+  "paymentSettlement.footer.processing": "Processing...",
+
+  "paymentSettlement.messages.showingInvoices": "Showing invoices for {name}",
+  "paymentSettlement.messages.selectVendor": "Please select a vendor",
+  "paymentSettlement.messages.searchingBy": "Searching by {type} - Feature coming soon",
+  "paymentSettlement.messages.noVendorFound": "No vendor found with selected filters",
+  "paymentSettlement.messages.paymentSuccess": "Payment recorded successfully"
 }

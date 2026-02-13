@@ -31,6 +31,7 @@ import {
   Package,
   Printer,
   Truck,
+  CreditCard,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -311,6 +312,12 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.vendors') || 'Vendors',
         href: '/inventory/vendors',
         icon: Truck,
+      },
+      {
+        id: 'payment-settlement',
+        label: t('navigation.paymentSettlement') || 'Payment Settlement',
+        href: '/inventory/payment-settlement',
+        icon: CreditCard,
       },
     ],
   },
