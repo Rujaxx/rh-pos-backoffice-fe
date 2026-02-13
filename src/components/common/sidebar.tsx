@@ -30,6 +30,8 @@ import {
   ReceiptTextIcon,
   Package,
   Printer,
+  Truck,
+  CreditCard,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -286,6 +288,36 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.taxGroup'),
         href: '/taxgroup/tax-product-group',
         icon: Percent,
+      },
+    ],
+  },
+  {
+    id: 'inventory',
+    label: t('navigation.inventory'),
+    items: [
+      {
+        id: 'raw-materials',
+        label: t('navigation.rawMaterials') || 'Raw Materials',
+        href: '/inventory/raw-materials',
+        icon: Package,
+      },
+      {
+        id: 'recipe',
+        label: t('navigation.recipe') || 'Recipe',
+        href: '/inventory/recipe-management',
+        icon: NotepadText,
+      },
+      {
+        id: 'vendors',
+        label: t('navigation.vendors') || 'Vendors',
+        href: '/inventory/vendors',
+        icon: Truck,
+      },
+      {
+        id: 'payment-settlement',
+        label: t('navigation.paymentSettlement') || 'Payment Settlement',
+        href: '/inventory/payment-settlement',
+        icon: CreditCard,
       },
     ],
   },
