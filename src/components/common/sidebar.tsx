@@ -30,6 +30,7 @@ import {
   ReceiptTextIcon,
   Package,
   Printer,
+  MessageSquare,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -437,6 +438,18 @@ const getPOSMenuData = (t: (key: string) => string): MenuSection[] => [
         label: t('navigation.customers'),
         href: '/customers',
         icon: UserPlus,
+      },
+    ],
+  },
+  {
+    id: 'feedback',
+    label: t('navigation.feedback') || 'Feedback',
+    items: [
+      {
+        id: 'feedback-config',
+        label: t('navigation.feedbackConfig') || 'Configuration',
+        href: '/feedback-config',
+        icon: MessageSquare,
       },
     ],
   },

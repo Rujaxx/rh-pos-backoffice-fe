@@ -184,6 +184,13 @@ export const API_ENDPOINTS = {
     GET: (id: string) => `/orders/${id}`,
     UPDATE: (id: string) => `/orders/${id}`,
   },
+  FEEDBACK_CONFIGS: {
+    LIST: '/feedback/config',
+    CREATE: '/feedback/config',
+    UPDATE: (id: string) => `/feedback/config/${id}`,
+    DELETE: (id: string) => `/feedback/config/${id}`,
+    GET: (id: string) => `/feedback/config/${id}`,
+  },
 } as const;
 
 // Query keys for consistent caching
@@ -306,5 +313,10 @@ export const QUERY_KEYS = {
       ['orders', 'list', params] as const,
     DETAIL: (id: string) => ['orders', 'detail', id] as const,
     UPDATE: (id: string) => ['orders', 'update', id] as const,
+  },
+  FEEDBACK_CONFIGS: {
+    LIST: (params?: Record<string, unknown>) =>
+      ['feedback/config', 'list', params] as const,
+    DETAIL: (id: string) => ['feedback/config', 'detail', id] as const,
   },
 } as const;
