@@ -160,7 +160,7 @@ export const restaurantSchema = z
     isFeedBackActive: z.boolean().default(false),
     trnOrGstNo: z.string().max(50).optional(),
     customQRcode: z.array(customQRCodeSchema).default([]),
-    inventoryWarehouse: z.string().optional(),
+    warehouseId: z.string().optional(),
     deductFromInventory: z.boolean().default(true),
     multiplePriceSetting: z.boolean().default(false),
     tableReservation: z.boolean().default(false),

@@ -139,7 +139,7 @@ export interface Restaurant extends Record<string, unknown> {
   isFeedBackActive: boolean;
   trnOrGstNo?: string;
   customQRcode: CustomQRCode[];
-  inventoryWarehouse?: string;
+  warehouseId?: string;
   createdBy: string;
   updatedBy: string;
   deletedBy?: string;

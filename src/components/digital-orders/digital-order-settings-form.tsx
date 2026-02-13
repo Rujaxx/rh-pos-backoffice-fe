@@ -800,7 +800,7 @@ export function useDigitalOrderSettingsForm(
         isFeedBackActive: false,
         trnOrGstNo: '',
         customQRcode: [],
-        inventoryWarehouse: '',
+        warehouseId: '',
         deductFromInventory: true,
         multiplePriceSetting: false,
         tableReservation: false,

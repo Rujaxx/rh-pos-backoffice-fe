@@ -670,7 +670,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
       isFeedBackActive: false, // Backend default: false
       trnOrGstNo: '',
       customQRcode: [],
-      inventoryWarehouse: '',
+      warehouseId: '',
       deductFromInventory: true, // Backend default: true
       multiplePriceSetting: false, // Backend default: false
       tableReservation: false, // Backend default: false
@@ -800,7 +800,7 @@ export function useRestaurantForm(editingRestaurant?: Restaurant | null): {
         isFeedBackActive: false,
         trnOrGstNo: '',
         customQRcode: [],
-        inventoryWarehouse: '',
+        warehouseId: '',
         deductFromInventory: true,
         multiplePriceSetting: false,
         tableReservation: false,
